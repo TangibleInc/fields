@@ -1,1 +1,10 @@
-// Empty for now
+$field-padding: 0 12px;
+$field-height: 32px;
+$field-width: 192px;
+$field-border: solid 1px #d3d3d3; 
+$field-border-radius: 4px;
+$field-background: white;
+$field-focus-color: #4b84ce;
+
+@import './components/base/index.scss';
+@import './components/field/index.scss';

@@ -33,7 +33,14 @@ $fields->format_args = function(string $name, array $args) {
         $args['maxValue'] = $args['max'];
         unset($args['max']);
       }
-    break; 
+    break;
+
+    case 'select': 
+      if( isset($args['options']) ) {
+        $args['items'] = $args['options'];
+        unset($args['options']);
+      }
+      break; 
 
   }
 

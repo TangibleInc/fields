@@ -1,0 +1,30 @@
+.tf-list-box {
+  padding: 0;
+  margin: 5px 0;
+  list-style: none;
+  border: 1px solid gray;
+  max-width: 250;
+  max-height: 300;
+  overflow: auto;
+}
+
+.tf-list-box-option {
+  background: transparent;
+  padding: 2px 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+.tf-list-box-option-selected {
+  background: $field-focus-color;
+  color: white;
+}
+
+.tf-list-box-option-disabled {
+  color: #aaa;
+}
+
+.tf-list-box-option-focus {
+  outline: 2px solid orange;
+}
+
