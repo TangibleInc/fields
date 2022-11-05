@@ -4,12 +4,10 @@ import {
   useEffect 
 } from 'react'
 
-import { 
-  TextField, 
+import {  
   DialogTrigger, 
   ActionButton,
   Dialog,
-  Flex,
   ComboBox,
   Item,
   Section
@@ -17,6 +15,8 @@ import {
 
 import { VisuallyHidden } from 'react-aria'
 import { uniqid } from '../../../utils'
+
+import { Text } from '../'
 
 import createInput from './codemirror'
 
@@ -50,16 +50,16 @@ const DynamicText = props => {
   }
 
   return(
-    <Flex alignItems={ 'flex-end' }>
+    <div class="tf-dynamic-text">
       <VisuallyHidden>
-        <TextField 
+        <Text 
           label={ props.label ?? false } 
           name={ props.name ?? '' } 
           value={ value }
           onChange={ value => console.log(value) }
         />
       </VisuallyHidden>
-      <div ref={ input } style={ style }></div>
+      <div ref={ input } class="tf-dynamic-text-input"></div>
       <DialogTrigger 
         type="popover" 
         placement="bottom right"
@@ -86,27 +86,13 @@ const DynamicText = props => {
           </Dialog>
         )}
       </DialogTrigger>
-    </Flex>
+    </div>
   )
-}
-
-const style = {
-  MozAppearance: 'textfield',
-  WebkitAppearance: 'textfield',
-  backgroundColor: 'white',
-  marginTop: 5,
-  minWidth: 220,
-  lineHeight: 2,
-  boxShadow: '0 0 0 transparent',
-  borderRadius: 4,
-  border: '1px solid #8c8f94',
-  color: '#2c3338'
 }
 
 const span = {
   border: '1px solid #8c8f94',
   padding: 5
-  
 }
 
 export default DynamicText

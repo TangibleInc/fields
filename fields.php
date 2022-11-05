@@ -35,7 +35,8 @@ $fields->format_args = function(string $name, array $args) {
       }
     break;
 
-    case 'select': 
+    case 'combo-box':
+    case 'select':
       if( isset($args['options']) ) {
         $args['items'] = $args['options'];
         unset($args['options']);

@@ -119,6 +119,18 @@ $fields->render_field('select_name', [
   'description' => 'Example description' // Optionals
 ]);
 
+$fields->render_field('select_name', [
+  'type'    => 'combo-box',
+  'value'   => '1',
+  'options' => [
+    [ 'id' => '1', 'name' => 'Value 1' ],
+    [ 'id' => '2', 'name' => 'Value 2' ],
+  ],
+  'label'       => 'Label', // Optional
+  'placeholder' => 'Example placeholder', // Optional
+  'description' => 'Example description' // Optionals
+]);
+
 $fields->render_field('text_suggestion_name', [
   'type'       => 'text-suggestion',
   'value'      => 'Text with a [[placeholder_1]]',

@@ -1,0 +1,12 @@
+.tf-dynamic-text {
+  display: flex;
+  align-items: center;
+}
+
+.tf-dynamic-text-input {
+  height: $field-height;
+  width: $field-width;
+  background-color: $field-background;
+  border: $field-border; 
+  border-radius: $field-border-radius; 
+}

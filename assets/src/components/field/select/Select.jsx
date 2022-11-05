@@ -55,10 +55,7 @@ const Select = props => {
             ? state.selectedItem.rendered
             : 'Select an option' }
         </span>
-        <span
-          aria-hidden="true"
-          style={{ paddingLeft: 5 }}
-        >
+        <span aria-hidden="true" style={{ paddingLeft: 5 }}>
           ▼
         </span>
       </Button>
@@ -81,7 +78,11 @@ const Select = props => {
 }
 
 export default props => (
-  <Select selectedKey={ props.value } onSelectionChange={ props.onChange } { ...props }>
+  <Select 
+    selectedKey={ props.value } 
+    onSelectionChange={ props.onChange } 
+    { ...props }
+  >
     { item => <Item key={ item.name }>{ item.name }</Item> }
   </Select>
 )

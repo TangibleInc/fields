@@ -1,0 +1,40 @@
+.tf-combo-box {
+  display: inline-flex;
+  flex-direction: column;  
+}
+
+.tf-combo-box-text {
+  position: relative;
+  display: inline-block;
+  
+  input {
+    height: $field-height;
+    width: $field-width;
+    background-color: $field-background;
+    border: $field-border; 
+    border-radius: $field-border-radius;
+  }
+
+  button {
+    background: $button-background;
+    border: $button-border;
+    border-radius: $button-border-radius;
+    color: $button-color;
+    padding: $button-padding;
+    height: $button-height;
+  }
+
+}
+
+.tf-combo-box-list {
+  position: absolute;
+  z-index: 100000;
+  width: $field-width;
+  background-color: $field-background;
+  border: $field-border; 
+  border-radius: $field-border-radius;
+  list-style: 'none';
+  overflow: hidden;
+  overflow-y: scroll;
+  max-height: 200px;
+}
