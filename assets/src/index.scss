@@ -13,5 +13,8 @@ $button-color: #505050;
 $button-padding: 0 12px;
 $button-height: 32px;
 
+$popover-index: 1000000;
+
 @import './components/base/index.scss';
 @import './components/field/index.scss';
+@import './components/repeater/index.scss';

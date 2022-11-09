@@ -2,12 +2,14 @@
   position: relative;
   display: inline-block;
 
-  button {
+  .tf-button-select {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 10px;
+
     height: $field-height;
-    width: $field-width;
+    width: calc($field-width - 10px);
     background-color: $field-background;
     border: $field-border; 
     border-radius: $field-border-radius;

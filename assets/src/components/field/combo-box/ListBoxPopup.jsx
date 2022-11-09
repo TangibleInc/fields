@@ -5,7 +5,10 @@ import {
   useListBox, 
 } from 'react-aria'
 
-import { Option } from '../../base/'
+import { 
+  Option, 
+  Section 
+} from '../../base/'
 
 /**
  * Maybe should try to use same component than for select instead (base/list-box) 
@@ -48,22 +51,16 @@ const ListBoxPopup = props => {
    */
 
   return (
-    <div { ...overlayProps } ref={ popoverRef }>
+    <div class="tf-combo-box-popover" { ...overlayProps } ref={ popoverRef }>
       <ul
         { ...mergeProps(listBoxProps, otherProps) }
         ref={ listBoxRef }
         class="tf-combo-box-list"
-        style={{
-    
-        }}
       >
         { [...state.collection].map(item => (
-          <Option
-            shouldUseVirtualFocus
-            key={item.key}
-            item={item}
-            state={state}
-          />
+          item.type === 'section'
+            ? <Section key={ item.name } section={ item } state={ state } shouldUseVirtualFocus />
+            : <Option key={ item.name } item={ item } state={ state } shouldUseVirtualFocus />
         )) }
       </ul>
       <DismissButton onDismiss={ state.close } />

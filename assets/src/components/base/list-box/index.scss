@@ -28,3 +28,24 @@
   outline: 2px solid orange;
 }
 
+.tf-list-box-section-separator {
+  border-top: 1px solid gray;
+  margin: 2px 5px;
+}
+
+.tf-list-box-section {
+
+  & > span {
+    font-weight: bold;
+    font-size: 1.1em;
+    padding: 2px 5px;
+  }
+
+  & > ul {
+    padding: 0;
+    list-style: none;
+  }
+
+}
+
+

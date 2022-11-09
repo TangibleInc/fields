@@ -5,10 +5,13 @@
 
 .tf-combo-box-text {
   position: relative;
-  display: inline-block;
-  
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+
   input {
     height: $field-height;
+    min-height: $field-height;
     width: $field-width;
     background-color: $field-background;
     border: $field-border; 
@@ -24,17 +27,27 @@
     height: $button-height;
   }
 
+  .tf-combo-box-popover {
+    position: absolute;
+    z-index: $popover-index;
+    top: calc(100% + 5px);
+    left: 0;
+  }
+
+  .tf-button-action span {
+    padding: 0 2px;
+  }
+  
 }
 
 .tf-combo-box-list {
-  position: absolute;
-  z-index: 100000;
   width: $field-width;
   background-color: $field-background;
   border: $field-border; 
   border-radius: $field-border-radius;
-  list-style: 'none';
+  list-style: none;
   overflow: hidden;
   overflow-y: scroll;
   max-height: 200px;
+  margin: 0;
 }

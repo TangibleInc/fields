@@ -1,5 +1,5 @@
-import { NumberField } from '@react-spectrum/numberfield'
-import { DatePicker } from '@react-spectrum/datepicker'
+// import { NumberField } from '@react-spectrum/numberfield'
+// import { DatePicker } from '@react-spectrum/datepicker'
 
 import Repeater from './components/repeater/table/Repeater'
 
@@ -12,8 +12,8 @@ import {
 
 export default {
   'text'            : Text,
-  'number'          : NumberField,
-  'date'            : DatePicker,
+  // 'number'          : NumberField,
+  // 'date'            : DatePicker,
   'repeater-table'  : Repeater,
   'select'          : Select,
   'combo-box'       : ComboBox,

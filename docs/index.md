@@ -134,7 +134,7 @@ $fields->render_field('select_name', [
 $fields->render_field('text_suggestion_name', [
   'type'       => 'text-suggestion',
   'value'      => 'Text with a [[placeholder_1]]',
-  'suggestion' => [
+  'options' => [
     [
       'name'     => 'Category 1',
       'children' => [ 

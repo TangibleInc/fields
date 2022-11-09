@@ -34,7 +34,7 @@ new class {
 
     remove_all_filters( $this->name ); // First one to load wins
     
-    $fields = tangible_object(); // TODO: Should not assumer that framework is installed
+    $fields = tangible_object(); // TODO: Should not assume that framework is installed
     $fields->module = $this; 
 
     $fields = tangible_fields( $fields );

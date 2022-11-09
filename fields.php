@@ -17,10 +17,17 @@ $fields->render_field = function(string $name, array $args) use($fields) {
  * 
  * @see ./assets/src/controls-list.js
  */
-$fields->format_args = function(string $name, array $args) {
+$fields->format_args = function(
+  string $name, 
+  array $args, 
+  bool $element = true
+) use($fields) {
 
   $type = $args['type'] ?? '';
-  $args['element'] = uniqid( 'tangible-field-' . $name .'-' );
+  
+  if( $element ) {  
+    $args['element'] = uniqid( 'tangible-field-' . $name .'-' );
+  }
 
   switch($type) {
 
@@ -33,16 +40,26 @@ $fields->format_args = function(string $name, array $args) {
         $args['maxValue'] = $args['max'];
         unset($args['max']);
       }
-    break;
+      break;
 
     case 'combo-box':
     case 'select':
+    case 'text-suggestion':
       if( isset($args['options']) ) {
         $args['items'] = $args['options'];
         unset($args['options']);
       }
       break; 
 
+    case 'repeater-table':
+      $args['fields'] = array_map(function($args) use($fields) {
+        return $fields->format_args( 
+          $args['name'] ?? '',
+          $args,
+          false
+        );
+      }, $args['fields'] ?? []);
+      break;
   }
 
   return $args;
@@ -52,7 +69,6 @@ $fields->format_args = function(string $name, array $args) {
  * Temporary function
  * 
  * Allows to test direct conversion form block <Contorl /> to react field
- * 
  */
 $fields->render_control_template = function(string $template) use($fields) {
 

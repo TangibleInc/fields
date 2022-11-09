@@ -1,6 +1,14 @@
 .tf-dynamic-text {
   display: flex;
   align-items: center;
+  position: relative;
+
+  .tf-dynamic-text-popover {
+    position: absolute;
+    top: 100%;
+    z-index: $popover-index;
+  }
+
 }
 
 .tf-dynamic-text-input {

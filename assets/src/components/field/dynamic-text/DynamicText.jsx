@@ -4,19 +4,21 @@ import {
   useEffect 
 } from 'react'
 
-import {  
-  DialogTrigger, 
-  ActionButton,
-  Dialog,
-  ComboBox,
-  Item,
-  Section
-} from '@adobe/react-spectrum'
+import { 
+  VisuallyHidden,
+  DismissButton,
+  useOverlayTrigger
+} from 'react-aria'
 
-import { VisuallyHidden } from 'react-aria'
+import { useOverlayTriggerState } from 'react-stately'
+
 import { uniqid } from '../../../utils'
+import { Button } from '../../base'
 
-import { Text } from '../'
+import { 
+  Text,
+  ComboBox
+} from '../'
 
 import createInput from './codemirror'
 
@@ -26,9 +28,11 @@ const DynamicText = props => {
   
   const [value, setValue] = useState(props.value ?? '')
   const [id, setID] = useState(uniqid())
- 
+  
   const input = useRef(null)
-    
+  const triggerRef = useRef(null)
+  const overlayRef = useRef(null)
+
   useEffect(() => {
     editors[id] = createInput(input.current, value, setValue)
   }, [])
@@ -36,6 +40,13 @@ const DynamicText = props => {
   if( props.onChange ) {
     useEffect(() => props.onChange(value), [value])
   }
+
+  const state =  useOverlayTriggerState({})
+  const { triggerProps, overlayProps } = useOverlayTrigger(
+    { type: 'dialog' },
+    state,
+    triggerRef
+  )
   
   /**
    * @see https://codemirror.net/examples/change/
@@ -60,39 +71,29 @@ const DynamicText = props => {
         />
       </VisuallyHidden>
       <div ref={ input } class="tf-dynamic-text-input"></div>
-      <DialogTrigger 
-        type="popover" 
-        placement="bottom right"
-        hideArrow={ true }
-      >
-        <ActionButton>Add</ActionButton>
-        { close => (
-          <Dialog minWidth={ 200 } minHeight={ 0 } width={ 'auto' } height={ 0 }>
-            <ComboBox 
-              minWidth={ 200 } 
-              width={ '100%' } 
-              defaultItems={ props.suggestion ?? [] }
-              onSelectionChange={ id => {
-                addDynamicElement(id)
-                close()
-              }}
-            >
-              { item => (
-                <Section key={ item.name } items={ item.children } title={ item.name }>
-                  { item => <Item key={ item.name }>{ item.name }</Item> }
-                </Section>
-              ) }
-            </ComboBox>
-          </Dialog>
-        )}
-      </DialogTrigger>
+      <Button type="action" ref={ triggerRef } { ...triggerProps }>
+        Add
+      </Button>
+      { state.isOpen && (
+        <div class="tf-dynamic-text-popover" ref={ overlayRef } { ...overlayProps }>
+          <ComboBox 
+            items={ props.items }
+            onChange={ value => {
+              if( value === null ) return;
+              addDynamicElement(value)
+              state.close()
+            }}
+            onFocusChange={ isFocus =>
+              isFocus 
+                ? ! state.isOpen && state.open() 
+                : state.close() 
+            }
+          /> 
+          <DismissButton onDismiss={ state.close } />
+        </div>
+      ) }
     </div>
   )
-}
-
-const span = {
-  border: '1px solid #8c8f94',
-  padding: 5
 }
 
 export default DynamicText

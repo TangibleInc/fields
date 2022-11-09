@@ -1,7 +1,14 @@
-import { useEffect, useReducer } from 'react'
-import { ActionButton } from '@adobe/react-spectrum' 
-import { repeaterDispatcher, initDispatcher } from '../index.js'
+import { 
+  useEffect, 
+  useReducer 
+} from 'react'
 
+import { 
+  repeaterDispatcher, 
+  initDispatcher 
+} from '../index.js'
+
+import { Button } from '../../base'
 import Control from '../../../Control'
 
 const Repeater = props => {
@@ -55,9 +62,9 @@ const Repeater = props => {
    */
   
   return(
-    <>
+    <div class='tf-repeater-table'>
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(items) } />
-      <table class='tangible-field-table-repeater'>
+      <table>
         <thead>
           <tr>
             { fields.map(field => (
@@ -86,21 +93,23 @@ const Repeater = props => {
                 )
               )}
               <td>
-                <ActionButton onPress={ () => dispatch({ type: 'remove', item: i }) }>
+                <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
                   Remove
-                </ActionButton>
+                </Button>
               </td>
             </tr>
           )) }
         </tbody>
       </table>
-      <ActionButton onPress={ () => dispatch({ type: 'add' }) }>
-        Add item
-      </ActionButton>
-      <ActionButton onPress={ () => dispatch({ type: 'clear' }) }>
-        Clear item
-      </ActionButton>
-   </>
+      <div class="tf-repeater-table-actions">
+        <Button type="action" onPress={ () => dispatch({ type: 'add' }) }>
+          Add item
+        </Button>
+        <Button type="action" onPress={ () => dispatch({ type: 'clear' }) }>
+          Clear item
+        </Button>
+      </div>
+    </div>
   )
 }
 

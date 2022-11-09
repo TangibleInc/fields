@@ -1,5 +1,9 @@
 import { useRef } from 'react'
-import { useSelectState, Item } from 'react-stately'
+
+import { 
+  useSelectState, 
+  Item 
+} from 'react-stately'
 
 import {
   HiddenSelect, 
@@ -46,9 +50,10 @@ const Select = props => {
         name={ props.name }
       />
       <Button
-        { ...triggerProps }
         ref={ ref }
         style={{ height: 30, fontSize: 14 }}
+        type={ 'select' }
+        { ...triggerProps }
       >
         <span { ...valueProps }>
           { state.selectedItem

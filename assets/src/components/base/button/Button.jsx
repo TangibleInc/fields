@@ -12,9 +12,9 @@ const Button = props => {
   const { children } = props
 
   return (
-    <button { ...buttonProps } ref={ ref }>
+    <span class={ props.type ? `tf-button-${props.type}` : ''} { ...buttonProps } ref={ ref }>
       { children }
-    </button>
+    </span>
   )
 }
 

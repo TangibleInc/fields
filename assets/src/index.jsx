@@ -1,6 +1,5 @@
 import { render } from 'react-dom'
-import { Provider } from '@react-spectrum/provider'
-import { theme } from '@react-spectrum/theme-light'
+import { OverlayProvider } from 'react-aria'
 
 import Control from './Control'
 
@@ -16,9 +15,9 @@ window.addEventListener('load', () => {
     if( ! element ) continue;
 
     render(
-      <Provider theme={ theme } colorScheme={ 'light' }>
+      <OverlayProvider>
         <Control name={ field } { ...props } />
-      </Provider>
+      </OverlayProvider>
     , element)
   }
 

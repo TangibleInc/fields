@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useListBox } from 'react-aria'
 
 import Option from './Option'
+import Section from './Section'
 
 /**
  * <ListBox label='Alignment' selectionMode='single'>
@@ -34,7 +35,9 @@ const ListBox = props => {
         class='tf-list-box'
       >
         { [...state.collection].map(item => (
-          <Option key={ item.key } item={ item } state={ state } />
+          item.children
+            ? <Section key={ item.key } section={ item } state={ state } />
+            : <Option key={ item.key } item={ item } state={ state } />
         )) }
       </ul>
     </>

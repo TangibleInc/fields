@@ -5,16 +5,19 @@ import {
 } from 'react'
 
 import {  
-  useButton,
   useFilter,
-  useComboBox
+  useComboBox,
+  useFocusWithin,
+  FocusScope
 } from 'react-aria'
 
-import {
+import { 
+  useComboBoxState, 
   Item, 
-  useComboBoxState
+  Section 
 } from 'react-stately'
 
+import { Button } from '../../base'
 import ListBoxPopup from './ListBoxPopup'
 
 /**
@@ -37,7 +40,7 @@ const ComboBox = props => {
    */
   const { contains } = useFilter({ sensitivity: 'base' })
   const state = useComboBoxState({ ...props, defaultFilter: contains })
-
+  
   const triggerRef = useRef()
   const inputRef   = useRef()
   const listBoxRef = useRef()
@@ -57,30 +60,41 @@ const ComboBox = props => {
       menuTrigger: 'input'
   }, state)
 
-  const { buttonProps } = useButton(triggerProps, triggerRef)
+  /**
+   * @see https://react-spectrum.adobe.com/react-aria/useFocusWithin.html
+   */
+  const { focusWithinProps } = useFocusWithin({
+    onFocusWithinChange:  isFocus => {
+      props.onFocusChange ? props.onFocusChange(isFocus) : false
+    }
+  })
 
   return (
-    <div class="tf-combo-box">
-      <label { ...labelProps }>
-        { props.label }
-      </label>
-      <div class="tf-combo-box-text">
-        <input { ...inputProps } ref={ inputRef } />
-        <button { ...buttonProps } ref={ triggerRef }>
-          <span aria-hidden="true" style={{ padding: '0 2px' }}>
-            ▼
-          </span>
-        </button>
-        { state.isOpen && (
-          <ListBoxPopup
-            { ...listBoxProps }
-            shouldUseVirtualFocus
-            listBoxRef={ listBoxRef }
-            popoverRef={ popoverRef }
-            state={ state }
-          />
-        ) }
-      </div>
+    <div class="tf-combo-box" { ...focusWithinProps }>
+      { props.label &&
+        <label { ...labelProps }>
+          { props.label }
+        </label> }
+      <FocusScope autoFocus restoreFocus>
+        <div class="tf-combo-box-text">
+          <input { ...inputProps } ref={ inputRef } />
+          <Button type="action" ref={ triggerRef } preventFocusOnPress={ true } { ...triggerProps }>
+            <span aria-hidden="true">
+              ▼
+            </span>
+          </Button>
+          { state.isOpen && (
+            <ListBoxPopup
+              { ...listBoxProps }
+              listBoxRef={ listBoxRef }
+              popoverRef={ popoverRef }
+              state={ state }
+              focusWithinProps
+              shouldUseVirtualFocus
+            />
+          ) }
+        </div>
+      </FocusScope>
     </div>
   )
 }
@@ -90,7 +104,7 @@ export default props => {
   const [value, setValue] = useState(props.value ?? null)
   
   if( props.onChange ) {
-    useEffect(props.onChange, [value])
+    useEffect( () => props.onChange(value), [value])
   }
   
   return(
@@ -101,9 +115,14 @@ export default props => {
         label={ props.label ?? null }
         defaultItems={ props.items ?? [] }
         selectedKey={ value } 
-        onSelectionChange={ setValue } 
+        onSelectionChange={ setValue }
+        onFocusChange={ props.onFocusChange ?? false }
       >
-        { item => <Item>{ item.name }</Item> }
+        { item => item.children 
+          ? <Section key={ item.name } title={ item.name } items={ item.children }>
+              { item => <Item key={ item.name }>{ item.name }</Item> }
+            </Section>
+          : <Item key={ item.name }>{ item.name }</Item> }
       </ComboBox>
     </>  
   )
