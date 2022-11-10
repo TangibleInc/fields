@@ -70,7 +70,7 @@ const createInput = (
       /**
        * onChange callback
        * 
-       * https://discuss.codemirror.net/t/codemirror-6-proper-way-to-listen-for-changes/2395/11
+       * @see https://discuss.codemirror.net/t/codemirror-6-proper-way-to-listen-for-changes/2395/11
        */
       EditorView.updateListener.of(v => {
         if( v.docChanged && onChange ) {

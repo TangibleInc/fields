@@ -1,9 +1,25 @@
 .tf-repeater-table {
   display: flex;
   flex-direction: column;
+  width: fit-content;
+  padding: 4px;
+    
+  border: $field-border;
+  border-radius: $field-border-radius;
+  background: $field-background;
+
+  table {
+    th, tr {
+      min-height: $field-height;
+      padding: 2px;
+    }
+  }
+  
 }
 
 .tf-repeater-table-actions {
   display: flex;
   justify-content: flex-end;
+  padding: 2px;
+  padding-bottom: 4px;
 }
