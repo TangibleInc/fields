@@ -10,21 +10,11 @@
   flex-wrap: nowrap;
 
   input {
-    height: $field-height;
-    min-height: $field-height;
-    width: $field-width;
-    background-color: $field-background;
-    border: $field-border; 
-    border-radius: $field-border-radius;
+    @include field;
   }
 
   button {
-    background: $button-background;
-    border: $button-border;
-    border-radius: $button-border-radius;
-    color: $button-color;
-    padding: $button-padding;
-    height: $button-height;
+    @include button;
   }
 
   .tf-combo-box-popover {

@@ -1,0 +1,29 @@
+.tf-number input {
+  @include field;
+}
+
+.tf-number-field {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.tf-number-button-group {
+  @include button;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  padding: 0;
+
+  .tf-button-number {
+    height: 50%;
+    width: 100%;
+    padding: $button-padding;
+
+    &:last-child {
+      border-top: $button-border;
+    }
+
+  }
+  
+}

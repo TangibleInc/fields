@@ -3,11 +3,7 @@
   flex-direction: column; 
 
   input {
-    height: $field-height;
-    width: $field-width;
-    background-color: $field-background;
-    border: $field-border; 
-    border-radius: $field-border-radius;
+    @include field;
   }
   
 }

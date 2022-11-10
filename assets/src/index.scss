@@ -7,13 +7,35 @@ $field-background: white;
 $field-focus-color: #4b84ce;
 
 $button-background: white;
-$button-border: solid 1px #d3d3d3;
+$button-border-color: #d3d3d3;
+$button-border-type: solid;
+$button-border-size: 1px;
+$button-border: $button-border-type $button-border-size $button-border-color;
 $button-border-radius: 4px;
 $button-color: #505050;
 $button-padding: 0 12px;
 $button-height: 32px;
 
 $popover-index: 1000000;
+
+@mixin field {
+  padding: $field-padding;
+  height: $field-height;
+  width: $field-width;
+  border: $field-border;
+  border-radius: $field-border-radius;
+  background: $field-background;
+}
+
+@mixin button {
+  background: $button-background;
+  border: $button-border;
+  border-radius: $button-border-radius;
+  color: $button-color;
+  padding: $button-padding;
+  height: calc(#{$button-height} - #{$button-border-size *  2}); // Remove border
+  cursor: pointer;
+}
 
 @import './components/base/index.scss';
 @import './components/field/index.scss';

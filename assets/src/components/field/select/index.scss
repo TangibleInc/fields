@@ -3,16 +3,12 @@
   display: inline-block;
 
   .tf-button-select {
+    @include field;
+    width: calc($field-width - 10px); // Overwrite mixin value 
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 10px;
-
-    height: $field-height;
-    width: calc($field-width - 10px);
-    background-color: $field-background;
-    border: $field-border; 
-    border-radius: $field-border-radius;
   }
 
 }

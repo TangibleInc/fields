@@ -4,10 +4,5 @@
   align-items: center;
   cursor: pointer;
 
-  background: $button-background;
-  border: $button-border;
-  border-radius: $button-border-radius;
-  color: $button-color;
-  padding: $button-padding;
-  height: $button-height;
+  @include button;
 }
