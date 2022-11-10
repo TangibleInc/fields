@@ -1,12 +1,13 @@
 import { useRef } from 'react'
 import { useDateFieldState } from 'react-stately'
-import { createCalendar, parseAbsoluteToLocal } from '@internationalized/date'
+import { createCalendar } from '@internationalized/date'
 
 import { 
   useDateField, 
   useLocale 
 } from 'react-aria'
 
+import { Label } from '../../base'
 import Segment from './Segment'
 
 /**
@@ -30,14 +31,16 @@ const Date = props => {
   const ref = useRef()
   const { 
     labelProps, 
-    fieldProps 
+    fieldProps,
+    descriptionProps
   } = useDateField(props, state, ref)
 
   return (
     <div class="tf-date">
-      <div { ...labelProps }>
-        { props.label }
-      </div>
+      { props.label &&
+        <Label { ...labelProps }>
+          { props.label }
+        </Label> }
       <div class="tf-date-field" { ...fieldProps } ref={ ref }>
         { state.segments.map((segment, i) => (
           <Segment key={ i } segment={ segment } state={ state } />

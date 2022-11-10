@@ -1,6 +1,11 @@
 import { useRef } from 'react'
 import { useTextField } from 'react-aria'
 
+import { 
+  Description,
+  Label 
+} from '../../base'
+
 /**
  * @see https://react-spectrum.adobe.com/react-aria/useTextField.html
  */
@@ -17,21 +22,17 @@ const TextField = props => {
     errorMessageProps 
   } = useTextField(props, ref)
 
-  return (
+  return(
     <div class='tf-text'>
-      <label  {...labelProps }>
-        { label }
-      </label>
+      { props.label &&
+        <Label { ...labelProps }>
+          { props.label }
+        </Label> }
       <input { ...inputProps } ref={ ref } />
-      { props.description && (
-        <div { ...descriptionProps }>
+      { props.description &&
+        <Description { ...descriptionProps }>
           { props.description }
-        </div>
-      ) }
-      { props.errorMessage &&
-        <div { ...errorMessageProps }>
-          { props.errorMessage }
-        </div> }
+        </Description> }
     </div>
   )
 }

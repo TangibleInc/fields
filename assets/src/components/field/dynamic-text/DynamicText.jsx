@@ -7,13 +7,18 @@ import {
 import { 
   VisuallyHidden,
   DismissButton,
-  useOverlayTrigger
+  useOverlayTrigger,
+  useTextField
 } from 'react-aria'
 
 import { useOverlayTriggerState } from 'react-stately'
-
 import { uniqid } from '../../../utils'
-import { Button } from '../../base'
+
+import { 
+  Button,
+  Label,
+  Description
+ } from '../../base'
 
 import { 
   Text,
@@ -32,6 +37,12 @@ const DynamicText = props => {
   const input = useRef(null)
   const triggerRef = useRef(null)
   const overlayRef = useRef(null)
+
+  const { 
+    labelProps, 
+    inputProps, 
+    descriptionProps,  
+  } = useTextField(props, input)
 
   useEffect(() => {
     editors[id] = createInput(input.current, value, setValue)
@@ -62,36 +73,47 @@ const DynamicText = props => {
 
   return(
     <div class="tf-dynamic-text">
-      <VisuallyHidden>
-        <Text 
-          label={ props.label ?? false } 
-          name={ props.name ?? '' } 
-          value={ value }
-          onChange={ value => console.log(value) }
-        />
-      </VisuallyHidden>
-      <div ref={ input } class="tf-dynamic-text-input"></div>
-      <Button type="action" ref={ triggerRef } { ...triggerProps }>
-        Add
-      </Button>
-      { state.isOpen && (
-        <div class="tf-dynamic-text-popover" ref={ overlayRef } { ...overlayProps }>
-          <ComboBox 
-            items={ props.items }
-            onChange={ value => {
-              if( value === null ) return;
-              addDynamicElement(value)
-              state.close()
-            }}
-            onFocusChange={ isFocus =>
-              isFocus 
-                ? ! state.isOpen && state.open() 
-                : state.close() 
-            }
-          /> 
-          <DismissButton onDismiss={ state.close } />
-        </div>
-      ) }
+      { props.label &&
+        <Label { ...labelProps }>
+          { props.label }
+        </Label> }
+      <div class="tf-dynamic-text-field">
+        <VisuallyHidden>
+          <Text 
+            label={ props.label ?? false } 
+            name={ props.name ?? '' } 
+            value={ value }
+            onChange={ value => console.log(value) }
+          />
+        </VisuallyHidden>
+        <div ref={ input } class="tf-dynamic-text-input" { ...inputProps }></div>
+        <Button type="action" ref={ triggerRef } { ...triggerProps }>
+          Add
+        </Button>
+        { state.isOpen && (
+          <div class="tf-dynamic-text-popover" ref={ overlayRef } { ...overlayProps }>
+            <ComboBox 
+              items={ props.items }
+              autoFocus={ true }
+              onChange={ value => {
+                if( value === null ) return;
+                addDynamicElement(value)
+                state.close()
+              }}
+              onFocusChange={ isFocus =>
+                isFocus 
+                  ? ! state.isOpen && state.open() 
+                  : state.close() 
+              }
+            /> 
+            <DismissButton onDismiss={ state.close } />
+          </div>
+        ) }
+      </div>
+      { props.description &&
+        <Description { ...descriptionProps }>
+          { props.description }
+        </Description> }
     </div>
   )
 }

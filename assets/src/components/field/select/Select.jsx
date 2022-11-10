@@ -13,7 +13,9 @@ import {
 import { 
   Button, 
   ListBox, 
-  Popover 
+  Popover,
+  Label,
+  Description
 } from '../../base'
 
 /**
@@ -33,6 +35,7 @@ const Select = props => {
   const ref = useRef(null)
   const {
     labelProps,
+    descriptionProps,
     triggerProps,
     valueProps,
     menuProps
@@ -40,9 +43,10 @@ const Select = props => {
   
   return(
     <div class="tf-select">
-      <div { ...labelProps }>
-        { props.label }
-      </div>
+      { props.label &&
+        <Label { ...labelProps }>
+          { props.label }
+        </Label> }
       <HiddenSelect
         state={ state }
         triggerRef={ ref }
@@ -78,6 +82,10 @@ const Select = props => {
             { item => <Item>{ item.name }</Item> }
           </ListBox>
         </Popover> }
+        { props.description &&
+          <Description { ...descriptionProps }>
+            { props.description }
+          </Description> }
     </div>
   )
 }

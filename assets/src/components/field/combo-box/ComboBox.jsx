@@ -17,7 +17,12 @@ import {
   Section 
 } from 'react-stately'
 
-import { Button } from '../../base'
+import { 
+  Button,
+  Label,
+  Description
+ } from '../../base'
+
 import ListBoxPopup from './ListBoxPopup'
 
 /**
@@ -50,7 +55,8 @@ const ComboBox = props => {
     buttonProps: triggerProps,
     inputProps,
     listBoxProps,
-    labelProps
+    labelProps,
+    descriptionProps
   } = useComboBox({
       ...props,
       inputRef,
@@ -72,9 +78,9 @@ const ComboBox = props => {
   return (
     <div class="tf-combo-box" { ...focusWithinProps }>
       { props.label &&
-        <label { ...labelProps }>
+        <Label { ...labelProps }>
           { props.label }
-        </label> }
+        </Label> }
       <FocusScope autoFocus restoreFocus>
         <div class="tf-combo-box-text">
           <input { ...inputProps } ref={ inputRef } />
@@ -95,6 +101,10 @@ const ComboBox = props => {
           ) }
         </div>
       </FocusScope>
+      { props.description &&
+        <Description { ...descriptionProps }>
+          { props.description }
+        </Description> }
     </div>
   )
 }
@@ -113,6 +123,7 @@ export default props => {
       <ComboBox 
         focusStrategy={ 'first' }
         label={ props.label ?? null }
+        description={ props.description ?? false }
         defaultItems={ props.items ?? [] }
         selectedKey={ value } 
         onSelectionChange={ setValue }

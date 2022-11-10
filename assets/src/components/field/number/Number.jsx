@@ -6,7 +6,11 @@ import {
   useNumberField 
 } from 'react-aria'
 
-import { Button } from '../../base/'
+import { 
+  Button,
+  Description,
+  Label
+} from '../../base/'
 
 const Number = props => {
 
@@ -16,6 +20,7 @@ const Number = props => {
 
   const {
     labelProps,
+    descriptionProps,
     groupProps,
     inputProps,
     incrementButtonProps,
@@ -24,9 +29,10 @@ const Number = props => {
 
   return (
     <div class='tf-number'>
-      <label { ...labelProps }>
-        { props.label }
-      </label>
+      { props.label &&
+        <Label { ...labelProps }>
+          { props.label }
+        </Label> }
       <div div class='tf-number-field' { ...groupProps }>
         <input { ...inputProps} ref={ inputRef } />
         <div class='tf-number-button-group'>
@@ -34,6 +40,10 @@ const Number = props => {
           <Button type="number" { ...decrementButtonProps }>-</Button>
         </div>
       </div>
+      { props.description &&
+        <Description { ...descriptionProps }>
+          { props.description }
+        </Description> }
     </div>
   )
 }
