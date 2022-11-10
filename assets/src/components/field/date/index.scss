@@ -1,0 +1,30 @@
+.tf-date {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.tf-date-field {
+  @include field;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  &:focus-within {
+    border-color: var(--blue);
+  }
+}
+
+.tf-date-segment {
+  padding: 0 2px;
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+
+  &:focus {
+    color: white;
+    background: $field-focus-color;
+    outline: none;
+    border-radius: 2px;
+  }
+  
+}
