@@ -52,6 +52,9 @@ $fields->format_args = function(
       break; 
 
     case 'repeater-table':
+
+      if( empty($args['value']) ) $args['value'] = '[]';
+
       $args['fields'] = array_map(function($args) use($fields) {
         return $fields->format_args( 
           $args['name'] ?? '',
