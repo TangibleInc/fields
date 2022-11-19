@@ -29,7 +29,7 @@ class DynamicString extends WidgetType {
  * Apply decoration on string like [[this]]
  */
 const placeholderMatcher = new MatchDecorator({
-  regexp: /\[\[(\w+)\]\]/g,
+  regexp: /\[\[([A-zÀ-ú0-9_\- ][^\[\]]+)\]\]/g,
   decoration: match => Decoration.replace({
     widget: new DynamicString(match[1]),
   })
