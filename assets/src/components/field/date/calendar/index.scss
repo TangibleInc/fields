@@ -1,0 +1,29 @@
+.tf-calendar {
+  width: 100%;
+  padding: 20px;
+}
+
+.tf-calendar-month {
+  display: flex;
+  justify-content: center;
+}
+
+.tf-calendar-buttons {
+  display: flex;
+  justify-content: space-between;
+
+  span {
+    cursor: pointer;
+  }
+}
+
+.tf-calendar-table {
+  width: 100%;
+  padding: 10px;
+}
+
+.tf-calendar-cell {
+  cursor: pointer;
+}
+
+

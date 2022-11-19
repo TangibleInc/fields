@@ -2,7 +2,7 @@ import Repeater from './components/repeater/table/Repeater'
 
 import {
   ComboBox,
-  Date,
+  DatePicker,
   DynamicText,
   Select,
   Text,
@@ -12,7 +12,7 @@ import {
 export default {
   'text'            : Text,
   'number'          : Number,
-  'date'            : Date,
+  'date'            : DatePicker,
   'repeater-table'  : Repeater,
   'select'          : Select,
   'combo-box'       : ComboBox,

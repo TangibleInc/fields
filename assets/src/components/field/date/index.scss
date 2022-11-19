@@ -4,6 +4,28 @@
   align-items: flex-start;
 }
 
+.tf-date-field-container {
+  position: relative;
+
+  .tf-popover {
+    display: flex;
+    justify-content: center;
+
+    @import './calendar/';
+  }
+}
+
+.tf-date-group {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  .tf-button-action {
+    height: $field-height;
+  }
+  
+}
+
 .tf-date-field {
   @include field;
   display: inline-flex;
