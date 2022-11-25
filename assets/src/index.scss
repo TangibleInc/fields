@@ -5,6 +5,11 @@ $field-border: solid 1px #d3d3d3;
 $field-border-radius: 4px;
 $field-background: white;
 $field-focus-color: #4b84ce;
+$field-font-size: inherit;
+$field-font-style: inherit;
+$field-font-weight: inherit;
+$field-font-color: inherit;
+$field-placeholder-color: inherit;
 
 $label-font-size: inherit;
 $label-font-style: inherit;
@@ -35,6 +40,18 @@ $popover-index: 1000000;
   border: $field-border;
   border-radius: $field-border-radius;
   background: $field-background;
+
+  color: $field-font-color;
+  font-size: $field-font-size;
+  font-style: $field-font-style;
+  font-weight: $field-font-weight;
+
+  &::placeholder {
+    color: $field-placeholder-color;
+    font-size: $field-font-size;
+    font-style: $field-font-style;
+    font-weight: $field-font-weight;      
+  }
 }
 
 @mixin label {
