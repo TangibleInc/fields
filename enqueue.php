@@ -20,13 +20,6 @@ $fields->enqueue_field = function(string $name, array $args) use($fields) {
     $fields->module->version 
   );
 
-  wp_enqueue_style( 
-    'tangible-fields-module', 
-    plugins_url( '/assets', __FILE__ ) . '/build/index.min.module.css', 
-    [], 
-    $fields->module->version 
-  );
-
 };
 
 $fields->maybe_enqueue_scripts = function() use($fields) {

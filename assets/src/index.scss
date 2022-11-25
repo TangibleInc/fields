@@ -62,12 +62,10 @@ $popover-index: 1000000;
 }
 
 @mixin description {
-  padding: $field-padding;
-  height: $field-height;
-  width: $field-width;
-  border: $field-border;
-  border-radius: $field-border-radius;
-  background: $field-background;
+  color: $description-font-color;
+  font-size: $description-font-size;
+  font-style: $description-font-style;
+  font-weight: $description-font-weight;
 }
 
 @mixin button {
