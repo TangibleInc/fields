@@ -1,52 +1,48 @@
-import { useRef } from 'react'
-import { useDatePicker } from 'react-aria'
+import { 
+  useRef, 
+  useState,
+  useEffect 
+} from 'react'
+
 import { useDatePickerState } from 'react-stately'
+import { useDatePicker } from 'react-aria'
 
 import { 
   today, 
-  getLocalTimeZone 
-} from "@internationalized/date";
+  getLocalTimeZone,
+  CalendarDate
+} from '@internationalized/date'
 
-import {
-  Button,
-  Popover,
+import { 
+  Button, 
+  Popover, 
   Label,
   Description
 } from '../../base'
 
-import Field from './Field'
 import Calendar from './calendar/Calendar'
+import DateField from './DateField'
 
 /**
- * @see https://react-spectrum.adobe.com/react-aria/useDatePicker.html
+ * @see https://codesandbox.io/s/reverent-faraday-5nwk87?file=/src/DatePicker.js
  */
 
 const DatePicker = props => {
   
-  console.log(props)
-
-  console.log({ 
-    ...props,
-    value: today(getLocalTimeZone())
-  })
-
-  const state = useDatePickerState({
-    ...props,
-    value: today(getLocalTimeZone())
-  })
+  const state = useDatePickerState(props)
   const ref = useRef()
-  
+
   const {
     groupProps,
     labelProps,
+    descriptionProps,
     fieldProps,
     buttonProps,
     dialogProps,
-    calendarProps,
-    descriptionProps
+    calendarProps
   } = useDatePicker(props, state, ref)
 
-  return (
+  return(
     <div class="tf-date">
       { props.label &&
         <Label { ...labelProps }>
@@ -54,11 +50,13 @@ const DatePicker = props => {
         </Label> }
       <div class="tf-date-field-container">
         <div class="tf-date-group" { ...groupProps } ref={ ref }>
-          <Field { ...fieldProps } /> 
-          <Button type="action" { ...buttonProps }>🗓</Button>
+          <DateField { ...fieldProps } /> 
+          <Button type="action" { ...buttonProps } isPressed={ state.isOpen }>
+            🗓
+          </Button>
         </div>
         { state.isOpen &&
-          <Popover state={ state } ref={ ref } { ...dialogProps } placement="bottom start">
+          <Popover { ...dialogProps } ref={ ref } state={ state } placement="bottom start">
             <Calendar { ...calendarProps } />
           </Popover> }
       </div>
@@ -70,4 +68,46 @@ const DatePicker = props => {
   )
 }
 
-export default DatePicker
+export default props => {
+
+  const minValue = today(getLocalTimeZone())  
+  const [value, setValue] = useState()
+
+  /**
+   * Init value on first render
+   * 
+   * @see https://react-spectrum.adobe.com/internationalized/date/
+   */
+  useEffect(() => {
+
+    const initialValue = (props.value ?? '').split('-')
+
+    setValue(initialValue.length === 3
+      ? new CalendarDate('AD', initialValue[0], initialValue[1], initialValue[2])
+      : minValue
+    )
+  }, [])
+
+  if( props.onChange ) {
+    useEffect(() => {
+      props.onChange( getStringValue() )
+    }, [value])
+  }
+
+  const getStringValue = () => (
+    value && value.toString ? value.toString() : ''
+  ) 
+
+  return(
+    <>
+      <input type='hidden' name={ props.name ?? '' } value={ getStringValue() } /> 
+      <DatePicker
+        label={ props.label ?? false }
+        description={ props.description ?? false }
+        minValue={ minValue }
+        value={ value }
+        onChange={ setValue }
+      />
+    </>
+  )
+}

@@ -33,7 +33,7 @@
   align-items: center;
 
   &:focus-within {
-    border-color: var(--blue);
+    border-color: $field-focus-color;
   }
 }
 
@@ -48,5 +48,13 @@
     outline: none;
     border-radius: 2px;
   }
+
+  span { 
+    display: none; 
+  }
   
+}
+
+.tf-date-segment-placeholder span {
+  display: flex;
 }
