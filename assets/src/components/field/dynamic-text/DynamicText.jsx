@@ -83,7 +83,6 @@ const DynamicText = props => {
             label={ props.label ?? false } 
             name={ props.name ?? '' } 
             value={ value }
-            onChange={ value => console.log(value) }
           />
         </VisuallyHidden>
         <div ref={ input } class="tf-dynamic-text-input" { ...inputProps }></div>

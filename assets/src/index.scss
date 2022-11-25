@@ -6,6 +6,16 @@ $field-border-radius: 4px;
 $field-background: white;
 $field-focus-color: #4b84ce;
 
+$label-font-size: inherit;
+$label-font-style: inherit;
+$label-font-weight: inherit;
+$label-font-color: inherit;
+
+$description-font-size: inherit;
+$description-font-style: inherit;
+$description-font-weight: inherit;
+$description-font-color: inherit;
+
 $button-background: white;
 $button-border-color: #d3d3d3;
 $button-border-type: solid;
@@ -19,6 +29,22 @@ $button-height: 32px;
 $popover-index: 1000000;
 
 @mixin field {
+  padding: $field-padding;
+  height: $field-height;
+  width: $field-width;
+  border: $field-border;
+  border-radius: $field-border-radius;
+  background: $field-background;
+}
+
+@mixin label {
+  color: $label-font-color;
+  font-size: $label-font-size;
+  font-style: $label-font-style;
+  font-weight: $label-font-weight;
+}
+
+@mixin description {
   padding: $field-padding;
   height: $field-height;
   width: $field-width;
