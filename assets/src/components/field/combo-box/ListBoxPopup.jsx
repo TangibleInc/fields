@@ -60,7 +60,7 @@ const ListBoxPopup = props => {
         { [...state.collection].map(item => (
           item.type === 'section'
             ? <Section key={ item.name } section={ item } state={ state } shouldUseVirtualFocus />
-            : <Option key={ item.name } item={ item } state={ state } shouldUseVirtualFocus />
+            : <Option key={ item.id ?? item.name } item={ item } state={ state } shouldUseVirtualFocus />
         )) }
       </ul>
       <DismissButton onDismiss={ state.close } />

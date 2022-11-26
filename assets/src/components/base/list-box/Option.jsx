@@ -14,7 +14,7 @@ const Option = ({ item, state }) => {
     isSelected, 
     isDisabled 
   } = useOption({ key: item.key }, state, ref)
-
+  
   const { isFocusVisible, focusProps } = useFocusRing()
   
   let classes = 'tf-list-box-option'

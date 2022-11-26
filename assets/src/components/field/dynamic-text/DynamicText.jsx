@@ -27,7 +27,7 @@ import {
 
 import createInput from './codemirror'
 
-const editors = {} // CodeMirror instance
+const editors = {} // CodeMirror instance (useRef instead?)
 
 const DynamicText = props => {
   
@@ -45,14 +45,19 @@ const DynamicText = props => {
   } = useTextField(props, input)
 
   useEffect(() => {
-    editors[id] = createInput(input.current, value, setValue)
+    editors[id] = createInput(
+      input.current, 
+      value, 
+      setValue,
+      props.items ?? []
+    )
   }, [])
 
   if( props.onChange ) {
     useEffect(() => props.onChange(value), [value])
   }
 
-  const state =  useOverlayTriggerState({})
+  const state = useOverlayTriggerState({})
   const { triggerProps, overlayProps } = useOverlayTrigger(
     { type: 'dialog' },
     state,
@@ -101,7 +106,7 @@ const DynamicText = props => {
               }}
               onFocusChange={ isFocus =>
                 isFocus 
-                  ? ! state.isOpen && state.open() 
+                  ? (! state.isOpen && state.open())
                   : state.close() 
               }
             /> 

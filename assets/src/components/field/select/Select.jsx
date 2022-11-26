@@ -79,7 +79,7 @@ const Select = props => {
             state={ state }
             items={ props.items }
           >
-            { item => <Item>{ item.name }</Item> }
+            { item => <Item key={ item.id }>{ item.name }</Item> }
           </ListBox>
         </Popover> }
         { props.description &&
@@ -96,7 +96,7 @@ export default props => (
     onSelectionChange={ props.onChange } 
     { ...props }
   >
-    { item => <Item key={ item.name }>{ item.name }</Item> }
+    { item => <Item key={ item.id }>{ item.name }</Item> }
   </Select>
 )
 

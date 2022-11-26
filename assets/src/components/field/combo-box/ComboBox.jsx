@@ -116,7 +116,7 @@ export default props => {
   if( props.onChange ) {
     useEffect( () => props.onChange(value), [value])
   }
-  
+
   return(
     <>
       <input type="hidden" name={ props.name ?? '' } value={ value } />
@@ -131,9 +131,9 @@ export default props => {
       >
         { item => item.children 
           ? <Section key={ item.name } title={ item.name } items={ item.children }>
-              { item => <Item key={ item.name }>{ item.name }</Item> }
+              { item => <Item key={ item.id }>{ item.name }</Item> }
             </Section>
-          : <Item key={ item.name }>{ item.name }</Item> }
+          : <Item key={ item.id }>{ item.name }</Item> }
       </ComboBox>
     </>  
   )

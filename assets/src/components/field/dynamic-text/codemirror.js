@@ -7,80 +7,114 @@ import {
 } from '@codemirror/view'
 
 /**
- * @see https://codemirror.net/examples/decoration/ 
- */
-
-class DynamicString extends WidgetType {
-
-  constructor(slug) {
-    super(slug)
-    this.slug = slug
-  }
-
-  toDOM() {
-    const span = document.createElement('span')
-    span.setAttribute('style', 'border: 1px grey solid; padding: 2px 5px')
-    span.textContent = this.slug
-    return span
-  }
-}
-
-/**
- * Apply decoration on string like [[this]]
- */
-const placeholderMatcher = new MatchDecorator({
-  regexp: /\[\[([A-zÀ-ú0-9_\- ][^\[\]]+)\]\]/g,
-  decoration: match => Decoration.replace({
-    widget: new DynamicString(match[1]),
-  })
-})
-
-const dynamicString = ViewPlugin.fromClass(class {
-
-  constructor(view) {
-    this.placeholders = placeholderMatcher.createDeco(view)
-  }
-
-  update(update) {
-    this.placeholders = placeholderMatcher.updateDeco(update, this.placeholders)
-  }
-  
-},{
-  decorations: instance => instance.placeholders,
-  provide: plugin => EditorView.atomicRanges.of(view => (
-    view.plugin(plugin)?.placeholders || Decoration.none
-  ))
-})
-
-/**
  * Create code mirror example 
  */
 const createInput = (
   element, 
   initialText = '', 
-  onChange = false
+  onChange = false,
+  sections = []
 ) => (
-  
   new EditorView({
     doc: initialText,
     parent: element,
     extensions: [
-      dynamicString,
+      
+      /**
+       * Needed to display a string like [[this]] as a span element instead
+       * 
+       * @see DynamicString class below
+       * @see https://codemirror.net/examples/decoration/ 
+       */
+      ViewPlugin.fromClass(class {
+
+        constructor(view) {      
+          this.items = getItemsObject(sections)
+          this.placeholders = this.matchResults(this.items).createDeco(view)
+        }
+      
+        update(update){
+          this.placeholders = this.matchResults(this.items).updateDeco(update, this.placeholders)
+        }
+
+        matchResults(items) {  
+          return new MatchDecorator({
+            regexp: /\[\[([A-zÀ-ú0-9_\- ][^\[\]]+)\]\]/g,
+            decoration: match => Decoration.replace({
+              widget: new DynamicString(
+                match[1],
+                items[ match[1] ] ?? match[1]
+              ),
+            })
+          })
+        }
+        
+      },{
+        decorations: instance => instance.placeholders,
+        provide: plugin => EditorView.atomicRanges.of(view => (
+          view.plugin(plugin)?.placeholders || Decoration.none
+        ))
+      }),
 
       /**
        * onChange callback
        * 
        * @see https://discuss.codemirror.net/t/codemirror-6-proper-way-to-listen-for-changes/2395/11
        */
-      EditorView.updateListener.of(v => {
-        if( v.docChanged && onChange ) {
-          onChange(v.state.doc.toString())
+      EditorView.updateListener.of(view => {
+        if( view.docChanged && onChange ) {
+          onChange(view.state.doc.toString())
         } 
       })
       
     ]
   })
 )
+
+/**
+ * Convert array of item or sections to an object, so that we can easily access the label 
+ * associated to each value
+ */
+const getItemsObject = sections => {
+  
+  /**
+   * Get all items from each sections (if there is sections) 
+   */
+   const items = sections.reduce(
+    (accumulator, item) => ([ 
+      ...accumulator, 
+      ...(item.children ?? [ item ])
+    ]), []
+  )
+
+  return items.reduce(
+    (accumulator, item) => ({
+      ...accumulator, 
+      [item.id]: item.name
+    }), {}
+  )
+}
+
+class DynamicString extends WidgetType {
+
+  constructor(slug, label) {
+    super(slug)
+    this.slug = slug
+    this.label = label
+  }
+
+  toDOM() {
+
+    const span = document.createElement('span')
+
+    span.setAttribute('class', 'tf-dynamic-text-item')
+    span.setAttribute('data-id', this.slug)
+    span.textContent = this.label
+    
+    return span
+  }
+
+}
 
 export default createInput
 

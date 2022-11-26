@@ -11,6 +11,11 @@ import {
 import { Button } from '../../base'
 import Control from '../../../Control'
 
+/**
+ * TODO: Implement useTable hook
+ *  
+ * @see https://react-spectrum.adobe.com/react-aria/useTable.html 
+ */
 const Repeater = props => {
 
   const fields = props.fields ?? []
@@ -37,30 +42,6 @@ const Repeater = props => {
 
   useEffect(() => props.onChange(items), [items])
 
-  /**
-   * We can't use the react-spectrum TableView component for now, because there is an issue
-   * that prevent item inside a row to be focused 
-   * 
-   * They are aware of the issue, but the fix is planned for 2023, so we will use a regular 
-   * table for now
-   * 
-   * @see https://react-spectrum.adobe.com/react-spectrum/TableView.html
-   * @see https://github.com/adobe/react-spectrum/issues/2328
-   * 
-   * import { ... } '@react-spectrum/table'
-   * 
-   * <TableView>
-   *  <TableHeader>
-   *    <Column></Column>
-   *  </TableHeader>
-   *  <TableBody>
-   *    <Row>
-   *      <Cell></Cell>  
-   *    </Row>
-   *  </TableBody>
-   * </TableView>
-   */
-  
   return(
     <div class='tf-repeater-table'>
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(items) } />
