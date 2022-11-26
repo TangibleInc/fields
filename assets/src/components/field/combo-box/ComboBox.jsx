@@ -37,7 +37,7 @@ import ListBoxPopup from './ListBoxPopup'
  */
 
 const ComboBox = props => {
-  
+
   /**
    * Needed to filter item results according to input value
    * 
@@ -81,7 +81,7 @@ const ComboBox = props => {
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <FocusScope autoFocus restoreFocus>
+      <FocusScope autoFocus={ props.autoFocus } restoreFocus>
         <div class="tf-combo-box-text">
           <input { ...inputProps } ref={ inputRef } />
           <Button type="action" ref={ triggerRef } preventFocusOnPress={ true } { ...triggerProps }>
@@ -128,6 +128,7 @@ export default props => {
         selectedKey={ value } 
         onSelectionChange={ setValue }
         onFocusChange={ props.onFocusChange ?? false }
+        autoFocus={ props.autoFocus ?? false }
       >
         { item => item.children 
           ? <Section key={ item.name } title={ item.name } items={ item.children }>
