@@ -131,6 +131,15 @@ $fields->render_field('select_name', [
   'description' => 'Example description' // Optionals
 ]);
 
+$fields->render_field('switch_name', [
+  'type'        => 'switch',
+  'label'       => 'Switch field',
+  'description' => 'Description',
+  'activated'   => 'on', // Optional, default on
+  'desactivated'=> 'off', // Optional, default off
+  'value'       => 'on',
+]);
+
 $fields->render_field('text_suggestion_name', [
   'type'       => 'text-suggestion',
   'value'      => 'Text with a [[placeholder_1]]',

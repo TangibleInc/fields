@@ -12,14 +12,12 @@ import {
 
 const TextField = props => {
 
-  const { label } = props
   const ref = useRef()
 
   const { 
     labelProps, 
     inputProps, 
     descriptionProps, 
-    errorMessageProps 
   } = useTextField(props, ref)
 
   return(

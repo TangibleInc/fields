@@ -33,7 +33,7 @@ const Number = props => {
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <div div class='tf-number-field' { ...groupProps }>
+      <div class='tf-number-field' { ...groupProps }>
         <input { ...inputProps} ref={ inputRef } />
         <div class='tf-number-button-group'>
           <Button type="number" { ...incrementButtonProps }>+</Button>

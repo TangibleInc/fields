@@ -1,0 +1,44 @@
+.tf-switch-element,
+.tf-switch-element-selected {
+  position: relative;
+  display: inline-block;
+  width: $field-height * 2;
+  height: $field-height;
+}
+
+.tf-switch-element span,
+.tf-switch-element-selected span {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: $field-height;
+
+  &::before {
+    border-radius: 50%;
+    position: absolute;
+    content: '';
+    height: $field-height - 8px;
+    width: $field-height - 8px;
+    left: 4px;
+    bottom: 4px;
+    background-color: $field-background;
+    transition: .4s;
+  }
+}
+
+.tf-switch-element-selected span {
+  background-color: $field-focus-color;
+
+  &:focus {
+    box-shadow: 0 0 1px $field-focus-color;
+  }
+
+  &::before {
+    transform: translateX($field-height);
+  }
+}

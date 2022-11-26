@@ -4,17 +4,19 @@ import {
   ComboBox,
   DatePicker,
   DynamicText,
+  Number,
   Select,
+  Switch,
   Text,
-  Number
 } from './components/field/'
 
 export default {
-  'text'            : Text,
-  'number'          : Number,
+  'combo-box'       : ComboBox,
   'date'            : DatePicker,
+  'number'          : Number,
   'repeater-table'  : Repeater,
   'select'          : Select,
-  'combo-box'       : ComboBox,
+  'switch'          : Switch,
+  'text'            : Text,
   'text-suggestion' : DynamicText,
 }
