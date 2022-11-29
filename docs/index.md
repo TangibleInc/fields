@@ -89,61 +89,30 @@ require_once __DIR__ . '/vendor/tangible/fields/index.php';
 
 $fields = tangible_fields();
 
-$fields->render_field('text_field_name', [
-  'type'        => 'text',
-  'value'       => 'Field value', 
-  'label'       => 'Label', // Optional
-  'placeholder' => 'Example placeholder', // Optional
-  'description' => 'Example description' // Optional
+$fields->render_field('button_group_name', [
+  'type'        => 'button-group',
+  'value'       => 'center', 
+  'label'       => 'Button group field', // Optional
+  'description' => 'Description', // Optional
+  'options'     => [
+    [
+      'value'     => 'left',
+      'dashicon'  => 'editor-alignleft'
+    ],[
+      'value'     => 'center',
+      'dashicon'  => 'editor-aligncenter'
+    ],[
+      'value'     => 'right',
+      'dashicon'  => 'editor-alignright'
+    ]
+  ]
 ]);
 
-$fields->render_field('number_name', [
-  'type'        => 'number',
-  'value'       => 30,
-  'min'         => 10, // Optional
-  'max'         => 100, // Optional
-  'label'       => 'Label', // Optional
-  'placeholder' => 'Example placeholder', // Optional
-  'description' => 'Example description' // Optional
-]);
-
-$fields->render_field('select_name', [
-  'type'    => 'select',
-  'value'   => '1',
-  'options' => [
-    [ 'id' => '1', 'name' => 'Value 1' ],
-    [ 'id' => '2', 'name' => 'Value 2' ],
-  ],
-  'label'       => 'Label', // Optional
-  'placeholder' => 'Example placeholder', // Optional
-  'description' => 'Example description' // Optionals
-]);
-
-$fields->render_field('select_name', [
+$fields->render_field('combo_box_name', [
   'type'    => 'combo-box',
   'value'   => '1',
   'options' => [
-    [ 'id' => '1', 'name' => 'Value 1' ],
-    [ 'id' => '2', 'name' => 'Value 2' ],
-  ],
-  'label'       => 'Label', // Optional
-  'placeholder' => 'Example placeholder', // Optional
-  'description' => 'Example description' // Optionals
-]);
-
-$fields->render_field('switch_name', [
-  'type'        => 'switch',
-  'label'       => 'Switch field',
-  'description' => 'Description',
-  'activated'   => 'on', // Optional, default on
-  'desactivated'=> 'off', // Optional, default off
-  'value'       => 'on',
-]);
-
-$fields->render_field('text_suggestion_name', [
-  'type'       => 'text-suggestion',
-  'value'      => 'Text with a [[placeholder_1]]',
-  'options' => [
+    // Can be used without categories
     [
       'name'     => 'Category 1',
       'children' => [ 
@@ -157,7 +126,27 @@ $fields->render_field('text_suggestion_name', [
         [ 'id' => 'placeholder_4', 'name' => 'Label 4' ]
       ]
     ]
-  ]
+  ],
+  'label'       => 'Label', // Optional
+  'placeholder' => 'Example placeholder', // Optional
+  'description' => 'Example description' // Optional
+]);
+
+$fields->render_field('date_name', [
+  'type'        => 'date',
+  'value'       => '2025-01-31',
+  'label'       => 'Date field', // Optional
+  'description' => 'Description', // Optional
+]);
+
+$fields->render_field('number_name', [
+  'type'        => 'number',
+  'value'       => 30,
+  'min'         => 10, // Optional
+  'max'         => 100, // Optional
+  'label'       => 'Label', // Optional
+  'placeholder' => 'Example placeholder', // Optional
+  'description' => 'Example description' // Optional
 ]);
 
 $fields->render_field('repeater_name', [
@@ -170,6 +159,56 @@ $fields->render_field('repeater_name', [
       'name'  => 'repeater_text_name'
     ],[
       // Any existing field
+    ]
+  ]
+]);
+
+$fields->render_field('select_name', [
+  'type'    => 'select',
+  'value'   => '1',
+  'options' => [
+    [ 'id' => '1', 'name' => 'Value 1' ],
+    [ 'id' => '2', 'name' => 'Value 2' ],
+  ],
+  'label'       => 'Label', // Optional
+  'placeholder' => 'Example placeholder', // Optional
+  'description' => 'Example description' // Optional
+]);
+
+$fields->render_field('switch_name', [
+  'type'        => 'switch',
+  'label'       => 'Switch field',
+  'description' => 'Description',
+  'activated'   => 'on', // Optional, default on
+  'desactivated'=> 'off', // Optional, default off
+  'value'       => 'on',
+]);
+
+$fields->render_field('text_field_name', [
+  'type'        => 'text',
+  'value'       => 'Field value', 
+  'label'       => 'Label', // Optional
+  'placeholder' => 'Example placeholder', // Optional
+  'description' => 'Example description' // Optional
+]);
+
+$fields->render_field('text_suggestion_name', [
+  'type'       => 'text-suggestion',
+  'value'      => 'Text with a [[placeholder_1]]',
+  'options'    => [ 
+    // Can be used without categories
+    [
+      'name'     => 'Category 1',
+      'children' => [ 
+        [ 'id' => 'placeholder_1', 'name' => 'Label 1' ],
+        [ 'id' => 'placeholder_2', 'name' => 'Label 2' ]
+      ],
+    ],[
+      'name'     => 'Category 2',
+      'children' => [ 
+        [ 'id' => 'placeholder_3', 'name' => 'Label 3' ],
+        [ 'id' => 'placeholder_4', 'name' => 'Label 4' ]
+      ]
     ]
   ]
 ]);
