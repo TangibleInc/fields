@@ -1,16 +1,18 @@
 import Repeater from './components/repeater/table/Repeater'
 
 import {
+  ButtonGroup,
   ComboBox,
   DatePicker,
   DynamicText,
   Number,
   Select,
   Switch,
-  Text,
+  Text
 } from './components/field/'
 
 export default {
+  'button-group'    : ButtonGroup,
   'combo-box'       : ComboBox,
   'date'            : DatePicker,
   'number'          : Number,
@@ -18,5 +20,5 @@ export default {
   'select'          : Select,
   'switch'          : Switch,
   'text'            : Text,
-  'text-suggestion' : DynamicText,
+  'text-suggestion' : DynamicText
 }

@@ -1,3 +1,4 @@
+import ButtonGroup from './button-group/ButtonGroup'
 import ComboBox from './combo-box/ComboBox'
 import DatePicker from './date/DatePicker'
 import DynamicText from './dynamic-text/DynamicText'
@@ -7,6 +8,7 @@ import Switch from './switch/Switch'
 import Text from './text/Text'
 
 export {
+  ButtonGroup,
   ComboBox,
   DatePicker,
   DynamicText,

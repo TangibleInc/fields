@@ -5,8 +5,7 @@ import {
   useFocusRing, 
   useSwitch, 
   VisuallyHidden,
-  useField,
-  mergeProps
+  useField
 } from 'react-aria'
 
 import { 
