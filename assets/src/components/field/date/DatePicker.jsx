@@ -1,17 +1,6 @@
-import { 
-  useRef, 
-  useState,
-  useEffect 
-} from 'react'
-
+import { useRef } from 'react'
 import { useDatePickerState } from 'react-stately'
 import { useDatePicker } from 'react-aria'
-
-import { 
-  today, 
-  getLocalTimeZone,
-  CalendarDate
-} from '@internationalized/date'
 
 import { 
   Button, 
@@ -68,46 +57,5 @@ const DatePicker = props => {
   )
 }
 
-export default props => {
+export default DatePicker
 
-  const minValue = today(getLocalTimeZone())  
-  const [value, setValue] = useState()
-
-  /**
-   * Init value on first render
-   * 
-   * @see https://react-spectrum.adobe.com/internationalized/date/
-   */
-  useEffect(() => {
-
-    const initialValue = (props.value ?? '').split('-')
-
-    setValue(initialValue.length === 3
-      ? new CalendarDate('AD', initialValue[0], initialValue[1], initialValue[2])
-      : minValue
-    )
-  }, [])
-
-  if( props.onChange ) {
-    useEffect(() => {
-      props.onChange( getStringValue() )
-    }, [value])
-  }
-
-  const getStringValue = () => (
-    value && value.toString ? value.toString() : ''
-  ) 
-
-  return(
-    <>
-      <input type='hidden' name={ props.name ?? '' } value={ getStringValue() } /> 
-      <DatePicker
-        label={ props.label ?? false }
-        description={ props.description ?? false }
-        minValue={ minValue }
-        value={ value }
-        onChange={ setValue }
-      />
-    </>
-  )
-}

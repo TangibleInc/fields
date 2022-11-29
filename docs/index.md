@@ -132,6 +132,15 @@ $fields->render_field('combo_box_name', [
   'description' => 'Example description' // Optional
 ]);
 
+$fields->render_field($plugin->get_settings_key() . '[setting_dimensions_name]', [
+  'type'        => 'dimensions',
+  'value'       => '',
+  'label'       => 'Dimensions field', // Optional
+  'description' => 'Description',  // Optional
+  'units'       => [ 'px','vw' ],  // Optional, default ['px']
+  'linked'      => false,  // Optional, default false
+]);
+
 $fields->render_field('date_name', [
   'type'        => 'date',
   'value'       => '2025-01-31',
@@ -147,6 +156,7 @@ $fields->render_field('number_name', [
   'label'       => 'Label', // Optional
   'placeholder' => 'Example placeholder', // Optional
   'description' => 'Example description' // Optional
+  'hasButtons'  => true, // Optionals
 ]);
 
 $fields->render_field('repeater_name', [

@@ -49,7 +49,7 @@ $fields->format_args = function(
         $args['items'] = $args['options'];
         unset($args['options']);
       }
-      break; 
+      break;
 
     case 'repeater-table':
 

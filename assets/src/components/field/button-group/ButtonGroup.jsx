@@ -19,7 +19,6 @@ const ButtonGroupContext = createContext(null)
  */
 const ButtonGroup = props => {
 
-
   const state = useRadioGroupState(props)
 
   const {

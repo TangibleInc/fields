@@ -55,16 +55,15 @@ const Select = props => {
       />
       <Button
         ref={ ref }
-        style={{ height: 30, fontSize: 14 }}
         type={ 'select' }
         { ...triggerProps }
       >
         <span { ...valueProps }>
           { state.selectedItem
             ? state.selectedItem.rendered
-            : 'Select an option' }
+            : (props.placeholder ?? 'Select an option') }
         </span>
-        <span aria-hidden="true" style={{ paddingLeft: 5 }}>
+        <span aria-hidden="true" class="tf-select-icon">
           ▼
         </span>
       </Button>
@@ -90,14 +89,4 @@ const Select = props => {
   )
 }
 
-export default props => (
-  <Select 
-    selectedKey={ props.value } 
-    onSelectionChange={ props.onChange } 
-    { ...props }
-  >
-    { item => <Item key={ item.id }>{ item.name }</Item> }
-  </Select>
-)
-
-
+export default Select

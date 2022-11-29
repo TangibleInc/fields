@@ -4,6 +4,7 @@ import {
   ButtonGroup,
   ComboBox,
   DatePicker,
+  Dimensions,
   DynamicText,
   Number,
   Select,
@@ -14,6 +15,7 @@ import {
 export default {
   'button-group'    : ButtonGroup,
   'combo-box'       : ComboBox,
+  'dimensions'      : Dimensions,
   'date'            : DatePicker,
   'number'          : Number,
   'repeater-table'  : Repeater,

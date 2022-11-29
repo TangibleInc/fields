@@ -27,6 +27,8 @@ const Number = props => {
     decrementButtonProps
   } = useNumberField(props, state, inputRef)
 
+  const hasButtons = props.hasButtons ?? true
+
   return (
     <div class='tf-number'>
       { props.label &&
@@ -35,10 +37,10 @@ const Number = props => {
         </Label> }
       <div class='tf-number-field' { ...groupProps }>
         <input { ...inputProps} ref={ inputRef } />
-        <div class='tf-number-button-group'>
+        { hasButtons && <div class='tf-number-button-group'>
           <Button type="number" { ...incrementButtonProps }>+</Button>
           <Button type="number" { ...decrementButtonProps }>-</Button>
-        </div>
+        </div> }
       </div>
       { props.description &&
         <Description { ...descriptionProps }>

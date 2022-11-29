@@ -16,8 +16,12 @@
   padding: 0;
 
   .tf-button-number {
-    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
     padding: $button-padding;
+    height: 50%;
 
     &:last-child {
       border-top: $button-border;
