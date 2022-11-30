@@ -1,5 +1,6 @@
 .tf-dimensions {
   display: flex;
+  flex-direction: column;
 
   .tf-select,
   .tf-select .tf-button-select {

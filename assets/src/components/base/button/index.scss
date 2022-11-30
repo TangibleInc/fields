@@ -6,3 +6,8 @@
 
   @include button;
 }
+
+.tf-button-action[disabled] {
+  @include button-disabled;
+}
+

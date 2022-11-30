@@ -148,6 +148,23 @@ $fields->render_field('date_name', [
   'description' => 'Description', // Optional
 ]);
 
+$fields->render_field('file_upload_name', [
+  'label'         => 'Dimensions field',
+  'type'          => 'file-upload',
+  'description'   => 'Description',
+  'value'         => '',
+  'allowed_types' => [ // Optional, Default all allowed types
+    'image/jpeg', 
+    'image/gif', 
+    'image/png', 
+    'image/bmp', 
+    'image/tiff', 
+    'image/webp', 
+    'image/x-icon', 
+    'image/heic'
+  ]
+]);
+
 $fields->render_field('number_name', [
   'type'        => 'number',
   'value'       => 30,
@@ -156,7 +173,7 @@ $fields->render_field('number_name', [
   'label'       => 'Label', // Optional
   'placeholder' => 'Example placeholder', // Optional
   'description' => 'Example description' // Optional
-  'hasButtons'  => true, // Optionals
+  'hasButtons'  => true, // Optional
 ]);
 
 $fields->render_field('repeater_name', [

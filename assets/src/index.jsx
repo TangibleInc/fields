@@ -5,7 +5,7 @@ import Control from './Control'
 
 window.addEventListener('load', () => {
 
-  const { TangibleFields: fields } = window
+  const { fields } = TangibleFields
 
   for( const field in fields ) {
 

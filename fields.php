@@ -50,7 +50,14 @@ $fields->format_args = function(
         unset($args['options']);
       }
       break;
-
+    
+    case 'file-upload':
+      if( isset($args['allowed_types']) ) {
+        $args['allowedTypes'] = $args['allowed_types'];
+        unset($args['allowed_types']);
+      }
+      break;
+      
     case 'repeater-table':
 
       if( empty($args['value']) ) $args['value'] = '[]';

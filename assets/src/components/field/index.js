@@ -3,6 +3,7 @@ import ComboBox from './combo-box/'
 import DatePicker from './date/'
 import Dimensions from './dimensions/Dimensions'
 import DynamicText from './dynamic-text/DynamicText'
+import FileUpload from './file-upload/FileUpload'
 import Number from './number/Number'
 import Select from './select/'
 import Switch from './switch/Switch'
@@ -14,6 +15,7 @@ export {
   DatePicker,
   Dimensions,
   DynamicText,
+  FileUpload,
   Number,
   Select,
   Switch,

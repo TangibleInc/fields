@@ -10,6 +10,11 @@ import {
 import Number from '../number/Number'
 import Select from '../select/Select'
 
+/**
+ * TODO:
+ * - Support onChange props 
+ */
+
 const Dimensions = props => {
 
   const units = props.units ?? ['px']

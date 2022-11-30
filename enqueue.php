@@ -33,12 +33,19 @@ $fields->maybe_enqueue_scripts = function() use($fields) {
     $fields->module->version, 
     true 
   );
+  
+  $data =  [
+    'fields' => $fields->enqueued_fields,
+    'api'    => [
+      'nonce'    => wp_create_nonce( 'wp_rest' ),
+      'endpoint' => [
+        'media' => esc_url_raw( rest_url( '/wp/v2/media/' ) ),
+      ],
+    ],
+    'mimetypes' => get_allowed_mime_types()
+  ];
 
-  wp_localize_script( 
-    'tangible-fields', 
-    'TangibleFields', 
-    $fields->enqueued_fields 
-  );
+  wp_localize_script( 'tangible-fields', 'TangibleFields', $data );
   
 };
 

@@ -1,0 +1,32 @@
+.tf-file-upload-field {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.tf-file-upload-text {
+  width: $field-width;
+  padding: $field-padding;
+}
+
+.tf-file-upload-list {
+  width: 300px;
+}
+
+.tf-file-upload-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  span {
+    flex: 1;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .tf-button-upload-list {
+    text-decoration: underline;
+    font-style: italic;
+    cursor: pointer;
+  }
+}

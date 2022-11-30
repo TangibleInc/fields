@@ -78,6 +78,12 @@ $popover-index: 1000000;
   cursor: pointer;
 }
 
+@mixin button-disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 @import './components/base/index.scss';
 @import './components/field/index.scss';
 @import './components/repeater/index.scss';
