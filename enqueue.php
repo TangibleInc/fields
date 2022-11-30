@@ -33,8 +33,8 @@ $fields->maybe_enqueue_scripts = function() use($fields) {
     $fields->module->version, 
     true 
   );
-  
-  $data =  [
+
+  $data = [
     'fields' => $fields->enqueued_fields,
     'api'    => [
       'nonce'    => wp_create_nonce( 'wp_rest' ),

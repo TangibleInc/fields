@@ -72,6 +72,10 @@ $fields->format_args = function(
       break;
   }
 
+  if( $args['value'] === false ) {
+    $args['value'] = '';
+  }
+  
   return $args;
 };
 

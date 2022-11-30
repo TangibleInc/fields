@@ -44,10 +44,10 @@ const FileUpload = (props) => {
   const placeholder = props.placeholder ?? 'No file selected'
 
   /**
-   * We will upload the file with an ajax call, so the field value can just be
+   * We will upload the file with an ajax call, so that the value can just be
    * attachment ids
    * 
-   * That way, we won't have to deal directly uploading files outside of the module 
+   * That way, we won't have to deal with uploading files outside of the module 
    */
   const upload = async () => {
     
