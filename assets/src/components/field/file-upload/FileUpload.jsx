@@ -55,7 +55,7 @@ const FileUpload = (props) => {
 
     const data = await postMedia(file[0])
 
-    setFile([])
+    setFile(false)
     setUploads([...uploads, data.id])
     isLoading(false)
   }  
@@ -108,7 +108,7 @@ const FileUpload = (props) => {
               ? file[0].name
               : placeholder }
           </div>
-          <Button type='action' onPress={ upload } isDisabled={ loading }>
+          <Button type='action' onPress={ upload } isDisabled={ loading || file === false }>
             { props.uploadText ?? 'Upload' }
           </Button>
         </div>
