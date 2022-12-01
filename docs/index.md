@@ -13,7 +13,7 @@ Add module to your composer.json:
     "url": "git@bitbucket.org:/tangibleinc/tangible-fields-module.git"
   }],
   "require": {
-    "tangible/logic": "dev-master"
+    "tangible/fields": "dev-main"
   },
   "minimum-stability": "dev"
 }

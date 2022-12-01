@@ -72,7 +72,7 @@ $fields->format_args = function(
       break;
   }
 
-  if( $args['value'] === false ) {
+  if( isset($args['value']) && $args['value'] === false ) {
     $args['value'] = '';
   }
   
@@ -82,7 +82,7 @@ $fields->format_args = function(
 /**
  * Temporary function
  * 
- * Allows to test direct conversion form block <Contorl /> to react field
+ * Allows to test direct conversion form block <Control /> to react field
  */
 $fields->render_control_template = function(string $template) use($fields) {
 
