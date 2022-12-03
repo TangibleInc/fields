@@ -1,1 +1,9 @@
-@import './table'
+@import './list';
+@import './table';
+
+.tf-repeater-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 2px;
+  padding-bottom: 4px;
+}

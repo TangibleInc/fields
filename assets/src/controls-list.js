@@ -1,4 +1,5 @@
-import Repeater from './components/repeater/table/Repeater'
+import RepeaterList from './components/repeater/list/RepeaterList'
+import RepeaterTable from './components/repeater/table/RepeaterTable'
 
 import {
   ButtonGroup,
@@ -20,7 +21,8 @@ export default {
   'date'            : DatePicker,
   'file-upload'     : FileUpload,
   'number'          : Number,
-  'repeater-table'  : Repeater,
+  'repeater-list'   : RepeaterList,
+  'repeater-table'  : RepeaterTable,
   'select'          : Select,
   'switch'          : Switch,
   'text'            : Text,

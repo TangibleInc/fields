@@ -16,7 +16,7 @@ import Control from '../../../Control'
  *  
  * @see https://react-spectrum.adobe.com/react-aria/useTable.html 
  */
-const Repeater = props => {
+const RepeaterTable = props => {
 
   const fields = props.fields ?? []
 
@@ -25,6 +25,7 @@ const Repeater = props => {
     const rowField = Object.assign({}, field)
     
     delete rowField.label
+    delete rowField.description
     delete rowField.value
     delete rowField.onChange
     
@@ -82,7 +83,7 @@ const Repeater = props => {
           )) }
         </tbody>
       </table>
-      <div class="tf-repeater-table-actions">
+      <div class="tf-repeater-actions">
         <Button type="action" onPress={ () => dispatch({ type: 'add' }) }>
           Add item
         </Button>
@@ -94,4 +95,4 @@ const Repeater = props => {
   )
 }
 
-export default Repeater
+export default RepeaterTable

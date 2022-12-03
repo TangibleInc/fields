@@ -1,0 +1,40 @@
+.tf-repeater-list-item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 4px;
+    
+  border: $field-border;
+  border-radius: $field-border-radius;
+  background: $field-background;
+
+  &[data-status=open] .tf-repeater-list-item-actions {
+    border-top: $field-border;
+  }
+}
+
+.tf-repeater-list-item-header{
+  display: flex;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+
+  height: $field-height;
+  border-bottom: $field-border;
+
+  strong {
+    padding: $field-padding;    
+  }
+}
+
+.tf-repeater-list-item-actions,
+.tf-repeater-list-item-field {
+  padding: $field-padding;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.tf-repeater-list-item-actions {
+  display: flex;
+  justify-content: flex-end;
+}

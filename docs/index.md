@@ -177,7 +177,21 @@ $fields->render_field('number_name', [
   'hasButtons'  => true, // Optional
 ]);
 
-$fields->render_field('repeater_name', [
+$fields->render_field('repeater_list_name', [
+  'type'    => 'repeater-list',
+  'value'   => '',
+  'fields'  => [          
+    [
+      'type'  => 'text',
+      'value' => 'Field value', 
+      'name'  => 'repeater_text_name'
+    ],[
+      // Any existing field
+    ]
+  ]
+]);
+
+$fields->render_field('repeater_table_name', [
   'type'    => 'repeater-table',
   'value'   => '',
   'fields'  => [          

@@ -62,6 +62,7 @@ $fields->format_args = function(
       }
       break;
       
+    case 'repeater-list':
     case 'repeater-table':
 
       if( empty($args['value']) ) $args['value'] = '[]';
