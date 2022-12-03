@@ -1,6 +1,7 @@
 import { 
   useRef,
-  useState
+  useState,
+  useEffect
 } from 'react'
 
 import { 
@@ -20,20 +21,21 @@ import FilePreview from './FilePreview'
 /**
  * TODO:
  * - Better styling
- * - Limit update number
- * - Possibility to use another previw component (keep current as default)
- * - Support onChange props
+ * - Possibility to use another preview component (keep current as default)
  */
 
-const FileUpload = (props) => {
+const FileUpload = props => {
   
   const { mimetypes } = TangibleFields
   
   const ref = useRef(null)
 
   const [file, setFile] = useState(false)
-  const [uploads, setUploads] = useState(JSON.parse(props.value ?? ''))
   const [loading, isLoading] = useState(false)
+  const [uploads, setUploads] = useState(props.value 
+    ? (Array.isArray(props.value) ? props.value : JSON.parse(props.value))
+    : []
+  )
 
   const {
     labelProps, 
@@ -41,7 +43,20 @@ const FileUpload = (props) => {
     descriptionProps
   } = useField(props)
   
+  if( props.onChange ) {
+    useEffect(() => props.onChange(uploads), [uploads])
+  }
+  
   const placeholder = props.placeholder ?? 'No file selected'
+  const maxUpload = props.maxUpload ?? false
+
+  const canUpload = () => (
+    (maxUpload === false || uploads.length < maxUpload) && ! loading && file !== false
+  )
+
+  const canChooseFile = () => (
+    (maxUpload === false || uploads.length < maxUpload) && ! loading
+  )
 
   /**
    * We will upload the file with an ajax call, so that the value can just be
@@ -100,7 +115,12 @@ const FileUpload = (props) => {
           )) }
         </ul>
         <div class="tf-file-upload-field">
-          <Button type='action' onPress={ () => ref.current.click() } isDisabled={ loading } aria-hidden="true">
+          <Button 
+            type='action' 
+            onPress={ () => ref.current.click() } 
+            isDisabled={ ! canChooseFile() } 
+            aria-hidden="true"
+          >
             { props.buttonText ?? 'Choose' }
           </Button>
           <div class="tf-file-upload-text" aria-hidden="true">
@@ -108,7 +128,7 @@ const FileUpload = (props) => {
               ? file[0].name
               : placeholder }
           </div>
-          <Button type='action' onPress={ upload } isDisabled={ loading || file === false }>
+          <Button type='action' onPress={ upload } isDisabled={ ! canUpload() }>
             { props.uploadText ?? 'Upload' }
           </Button>
         </div>

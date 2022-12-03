@@ -56,6 +56,10 @@ $fields->format_args = function(
         $args['allowedTypes'] = $args['allowed_types'];
         unset($args['allowed_types']);
       }
+      if( isset($args['max_upload']) ) {
+        $args['maxUpload'] = $args['max_upload'];
+        unset($args['max_upload']);
+      }
       break;
       
     case 'repeater-table':

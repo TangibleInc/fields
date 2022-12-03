@@ -7,6 +7,8 @@
 .tf-file-upload-text {
   width: $field-width;
   padding: $field-padding;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .tf-file-upload-list {

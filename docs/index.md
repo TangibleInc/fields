@@ -153,6 +153,7 @@ $fields->render_field('file_upload_name', [
   'type'          => 'file-upload',
   'description'   => 'Description',
   'value'         => '',
+  'max_upload'    => 5, // Optional, default none
   'allowed_types' => [ // Optional, Default all allowed types
     'image/jpeg', 
     'image/gif', 
