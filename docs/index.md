@@ -108,6 +108,16 @@ $fields->render_field('button_group_name', [
   ]
 ]);
 
+$fields->render_field('color_name', [
+  'type'        => 'color',
+  'value'       => '#FFFFFF',
+  'label'       => 'Color',
+  'hasAlpha'    => true, // Optional, default true
+  'format'      => 'rgba', // Optional, default hexa
+  'placeholder' => 'Example placeholder', // Optional
+  'description' => 'Example description' // Optional
+]),
+
 $fields->render_field('combo_box_name', [
   'type'    => 'combo-box',
   'value'   => '1',

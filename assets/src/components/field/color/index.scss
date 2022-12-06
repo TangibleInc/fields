@@ -1,0 +1,71 @@
+.tf-color-area-gradient,
+.tf-color-area {
+  width: 100%;
+  height: $field-width;
+}
+
+.tf-color-area-thumb {
+  height: 20px;
+  width: 20px;
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px black, inset 0 0 0 1px black;
+  top: 50%;
+}
+
+.tf-color-container {
+  width: fit-content;
+}
+
+.tf-popover {
+  width: 100%;
+  position: relative;
+}
+
+.tf-color-picker {
+  position: absolute;
+  width: 100%;
+  z-index: $popover-index;
+  background: $field-background;
+
+  .tf-color-area {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    .tf-color-area-thumb {
+      transform: translate(-50%, -50%) !important; // :(
+    }
+  }
+
+  .tf-color-sliders {
+    padding: $field-padding;
+    padding-bottom: 10px;
+  }
+}
+
+.tf-color-slider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.tf-color-slider-label {
+  display: flex; 
+  align-self: stretch;
+
+  output {
+    flex: 1 0 auto;
+    text-align: end;
+  }
+}
+
+.tf-color-slider-container {
+  height: 20px;
+  border-radius: 10px;
+  width: 100%;
+  border: $field-border;
+}

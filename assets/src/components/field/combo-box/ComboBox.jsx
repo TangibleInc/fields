@@ -61,7 +61,7 @@ const ComboBox = props => {
    * @see https://react-spectrum.adobe.com/react-aria/useFocusWithin.html
    */
   const { focusWithinProps } = useFocusWithin({
-    onFocusWithinChange:  isFocus => {
+    onFocusWithinChange: isFocus => {
       props.onFocusChange ? props.onFocusChange(isFocus) : false
     }
   })

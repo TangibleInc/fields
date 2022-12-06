@@ -3,6 +3,7 @@ import RepeaterTable from './components/repeater/table/RepeaterTable'
 
 import {
   ButtonGroup,
+  Color,
   ComboBox,
   DatePicker,
   Dimensions,
@@ -16,6 +17,7 @@ import {
 
 export default {
   'button-group'    : ButtonGroup,
+  'color'           : Color,
   'combo-box'       : ComboBox,
   'dimensions'      : Dimensions,
   'date'            : DatePicker,
