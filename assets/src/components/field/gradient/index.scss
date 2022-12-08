@@ -1,0 +1,45 @@
+.tf-gradient-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: $field-width;
+
+  & > .tf-popover {
+    top: 100%;
+    width: fit-content;
+  }
+
+  .tf-popover {
+    border: $field-border;
+  }
+}
+
+.tf-gradient-input {
+  @include field;
+}
+
+.tf-gradient-settings {
+  padding: $field-padding;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  .tf-gradient-settings-row {
+    padding: 10px 0px;
+  }
+}
+
+.tf-gradient-preview {
+  position: relative;
+  padding: $field-padding;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.tf-gradient-colors {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: $field-padding;
+  align-items: center;
+  height: $field-height;
+}

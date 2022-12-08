@@ -55,7 +55,8 @@ const Color = props =>{
           isOpen(true)
           inputProps.onFocus(e)  
         } }/>
-        { open && <Popover ref={ popover }>
+        { open && 
+          <Popover ref={ popover }>
             <ColorPicker 
               value={ props.value ?? false }
               onChange={ onChange } 

@@ -66,7 +66,7 @@ const ComboBox = props => {
     }
   })
 
-  return (
+  return(
     <div class="tf-combo-box" { ...focusWithinProps }>
       { props.label &&
         <Label { ...labelProps }>

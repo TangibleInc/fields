@@ -14,12 +14,8 @@
 }
 
 .tf-color-container {
-  width: fit-content;
-}
-
-.tf-popover {
-  width: 100%;
   position: relative;
+  width: fit-content;
 }
 
 .tf-color-picker {
@@ -27,6 +23,7 @@
   width: 100%;
   z-index: $popover-index;
   background: $field-background;
+  border: $field-border;
 
   .tf-color-area {
     display: flex;

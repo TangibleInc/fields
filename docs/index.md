@@ -142,7 +142,7 @@ $fields->render_field('combo_box_name', [
   'description' => 'Example description' // Optional
 ]);
 
-$fields->render_field($plugin->get_settings_key() . '[setting_dimensions_name]', [
+$fields->render_field('dimensions_name', [
   'type'        => 'dimensions',
   'value'       => '',
   'label'       => 'Dimensions field', // Optional
@@ -174,6 +174,14 @@ $fields->render_field('file_upload_name', [
     'image/x-icon', 
     'image/heic'
   ]
+]);
+
+$fields->render_field('gradient_name', [
+  'type'        => 'gradient',
+  'value'       => '',
+  'label'       => 'Gradient field', // Optional
+  'placeholder' => 'Example placeholder', // Optional
+  'description' => 'Description',  // Optional
 ]);
 
 $fields->render_field('number_name', [
