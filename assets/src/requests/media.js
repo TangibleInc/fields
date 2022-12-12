@@ -13,9 +13,9 @@ const postMedia = file => {
 
   const formData = new FormData()
 	
-  formData.append( 'file', file )
-	formData.append( 'title', file.name )
-	formData.append( 'caption', file.caption )
+  formData.append('file', file)
+	formData.append('title', file.name)
+	formData.append('caption', file.caption)
 
   return post(api.endpoint.media, formData)
 }

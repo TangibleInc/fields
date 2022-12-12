@@ -39,6 +39,8 @@ new class {
 
     $fields = tangible_fields( $fields );
     
+    require_once __DIR__ . '/format.php';
+    require_once __DIR__ . '/dynamic-value.php';
     require_once __DIR__ . '/fields.php';
     require_once __DIR__ . '/enqueue.php';
   }

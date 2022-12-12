@@ -9,6 +9,8 @@ import {
 } from '../index.js'
 
 import { Button } from '../../base'
+import { applyDynamicValues } from '../../../dynamic' 
+
 import Control from '../../../Control'
 
 /**
@@ -57,8 +59,12 @@ const RepeaterTable = props => {
         </thead>
         <tbody>
           { items && items.map((item, i) => (
-            <tr key={ item.key }>
-              { rowFields.map(
+            <tr key={ item.key }>{ 
+              applyDynamicValues(
+                props.element ?? false,
+                rowFields,
+                item
+              ).map(
                 control => ( 
                   <td>
                     <Control 

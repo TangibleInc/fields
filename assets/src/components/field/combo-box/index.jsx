@@ -18,11 +18,11 @@ import ComboBox from './ComboBox'
 export default props => {
   
   const [value, setValue] = useState(props.value ?? null)
-  
+
   if( props.onChange ) {
     useEffect( () => props.onChange(value), [value])
   }
-
+  
   return(
     <>
       <input type="hidden" name={ props.name ?? '' } value={ value } />

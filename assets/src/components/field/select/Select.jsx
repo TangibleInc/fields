@@ -33,8 +33,6 @@ const Select = props => {
   const state = useSelectState(props)
 
   const ref = useRef()
-  const selectRef = useRef()
-  
   const {
     labelProps,
     descriptionProps,

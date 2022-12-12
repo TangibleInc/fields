@@ -6,7 +6,7 @@ import {
 import controls from './controls-list.js'
 
 const Control = props => {
-  
+
   const [value, setValue] = useState(props.value ?? '')
 
   if( props.onChange ) {
@@ -24,7 +24,7 @@ const Control = props => {
   delete childProps.onChange
 
   return(
-    <ControlComponent onChange={ setValue } value={ value } { ...childProps } />
+    <ControlComponent value={ value } onChange={ setValue } { ...props }  />
   )
 }
 

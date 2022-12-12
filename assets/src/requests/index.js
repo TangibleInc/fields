@@ -16,11 +16,11 @@ const post = (url, data) => {
   .then(resp => (resp.json()))
 }
 
-const get = url => {
+const get = (url, data = false) => {
 
   const { api } = TangibleFields
 
-  return fetch(url, {
+  return fetch(`${url}?${data ? new URLSearchParams(data) : ''}`, {
     method: 'GET',
     headers:{
       'X-WP-Nonce': api.nonce ?? false,

@@ -10,6 +10,8 @@ import {
 } from '../index.js'
 
 import { Button } from '../../base'
+import { applyDynamicValues } from '../../../dynamic' 
+
 import Control from '../../../Control'
 
 const RepeaterList = props => {
@@ -50,8 +52,12 @@ const RepeaterList = props => {
               <strong>Item { i + 1 }</strong>
             </div>
             { activeItem === i && 
-              <div class="tf-repeater-list-item-content">
-                { rowFields.map(
+              <div class="tf-repeater-list-item-content">{ 
+                applyDynamicValues(
+                  props.element ?? false,
+                  rowFields,
+                  item
+                ).map(
                   control => ( 
                     <div class="tf-repeater-list-item-field">
                       <Control 

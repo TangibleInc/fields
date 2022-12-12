@@ -9,7 +9,10 @@ defined('ABSPATH') or die();
  */
 $fields->enqueued_fields = [];
 
-$fields->enqueue_field = function(string $name, array $args) use($fields) {
+$fields->enqueue_field = function(
+  string $name, 
+  array $args
+) use($fields) : void {
 
   $fields->enqueued_fields[ $name ] = $args;
 
@@ -22,7 +25,7 @@ $fields->enqueue_field = function(string $name, array $args) use($fields) {
 
 };
 
-$fields->maybe_enqueue_scripts = function() use($fields) {
+$fields->maybe_enqueue_scripts = function() use($fields) : void {
 
   if( empty($fields->enqueued_fields) ) return;
 
@@ -35,13 +38,14 @@ $fields->maybe_enqueue_scripts = function() use($fields) {
   );
 
   $data = [
-    'fields' => $fields->enqueued_fields,
-    'api'    => [
-      'nonce'    => wp_create_nonce( 'wp_rest' ),
+    'api' => [
+      'nonce' => wp_create_nonce( 'wp_rest' ),
       'endpoint' => [
         'media' => esc_url_raw( rest_url( '/wp/v2/media/' ) ),
       ],
     ],
+    'fields'    => $fields->enqueued_fields,
+    'dynamics'  => $fields->get_dynamic_contexts($fields->enqueued_fields),
     'mimetypes' => get_allowed_mime_types()
   ];
 
