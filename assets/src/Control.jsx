@@ -24,7 +24,7 @@ const Control = props => {
   delete childProps.onChange
 
   return(
-    <ControlComponent value={ value } onChange={ setValue } { ...props }  />
+    <ControlComponent value={ value } onChange={ setValue } { ...childProps }  />
   )
 }
 
