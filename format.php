@@ -29,7 +29,11 @@ $fields->format_args = function(
 
     case 'combo-box':
     case 'text-suggestion':
-    case 'select':
+      $args = $fields->format_value($args, 'is_async', 'isAsync');
+      $args = $fields->format_value($args, 'async_args', 'asyncArgs');
+      $args = $fields->format_value($args, 'search_url', 'searchUrl');
+      // Fall through
+    case 'select': 
       $args = $fields->format_value($args, 'options', 'items');
       break;
     

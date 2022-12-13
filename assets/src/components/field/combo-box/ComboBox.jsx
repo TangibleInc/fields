@@ -49,12 +49,12 @@ const ComboBox = props => {
     labelProps,
     descriptionProps
   } = useComboBox({
-      ...props,
-      inputRef,
-      buttonRef: triggerRef,
-      listBoxRef,
-      popoverRef,
-      menuTrigger: 'input'
+    ...props,
+    inputRef,
+    buttonRef: triggerRef,
+    listBoxRef,
+    popoverRef,
+    menuTrigger: 'input'
   }, state)
 
   /**

@@ -19,23 +19,42 @@ const applyDynamicValues = (
 
   if( context.length === 0 ) return controls;
 
-  controls.map(control => {
-    
-    if( ! context[ control.name ?? '' ] ) {
-      return control 
-    }
-
-    const dynamicKeys = Object.keys(context[control.name])
-    
-    dynamicKeys.forEach(key => {
-      const valueKey = context[control.name][key]
-      control[key] = values[ valueKey ]
-    })
-
-    return control
-  })
+  controls = controls.map(
+    control => replaceDynamicValues(control, values, context)
+  )
 
   return controls
+}
+
+const replaceDynamicValues = (
+  control,
+  values,
+  context
+) => {
+
+  if( ! context[ control.name ?? '' ] ) {
+    return control 
+  }
+
+  const dynamicKeys = Object.keys(context[control.name])
+  dynamicKeys.forEach(key => {
+    
+    const valueKey = context[control.name][key]
+    
+    if( valueKey instanceof Object ) {
+      const dynamicSubkeys = Object.keys(valueKey)
+      
+      dynamicSubkeys.forEach(subkey => {
+        const valueSubkey = context[control.name][key][subkey]
+        control[key][subkey] = values[ valueSubkey ] ?? ''
+      })
+      
+    } else {
+      control[key] = values[ valueKey ]
+    }
+  })
+
+  return control
 }
 
 export { applyDynamicValues }

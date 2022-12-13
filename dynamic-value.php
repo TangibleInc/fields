@@ -62,10 +62,24 @@ $fields->get_dynamic_config = function(array $field) use($fields) : array {
   $dynamic_keys = [
     'description',
     'label',
-    'placeholder'
+    'placeholder',
+    'asyncArgs'
   ];
   
   foreach( $dynamic_keys as $key ) {
+
+    if( is_array($field[ $key ] ?? '') ) {
+      foreach( $field[ $key ] as $subkey => $value ) {
+
+        $trigger_field = $fields->get_dynamic_name($value);
+
+        if( ! isset($config[ $name ]) ) $config[ $name ] = [];
+        if( ! isset($config[ $name ][ $key ]) ) $config[ $name ][ $key ] = [];
+
+        $config[ $name ][ $key ][ $subkey ] = $trigger_field; 
+      }
+      continue;
+    }
     
     if( ! $fields->is_dynamic_value($field[ $key ] ?? '') ) {
       continue;
@@ -86,8 +100,8 @@ $fields->is_dynamic_value = function(string $value) : bool {
           
   if( ! is_string($value) ) return false;
 
-  $is_dynamic = substr($value, 0, 2 ) === '[['; 
-  $is_dynamic = $is_dynamic && substr($value, strlen($value) - 2, strlen($value)) === ']]'; 
+  $is_dynamic = strpos($value, '{{') !== false; 
+  $is_dynamic = $is_dynamic && strpos($value, '}}') !== false; 
 
   return $is_dynamic;
 };
