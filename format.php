@@ -32,6 +32,7 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'is_async', 'isAsync');
       $args = $fields->format_value($args, 'async_args', 'asyncArgs');
       $args = $fields->format_value($args, 'search_url', 'searchUrl');
+      $args = $fields->format_value($args, 'ajax_action', 'ajaxAction');
       // Fall through
     case 'select': 
       $args = $fields->format_value($args, 'options', 'items');

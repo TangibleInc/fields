@@ -34,10 +34,21 @@ export default props => {
      ? useAsyncList({
         async load({ filterText }) {
         
-          const results = await get(props.searchUrl ?? '', {
+          const data = {
             ...(props.asyncArgs ?? {}),
             search: filterText
-          })
+          }
+
+          /**
+           * We support 2 ways to get async result, either by fetching an given url or by
+           * using our internal ajax module. If props.ajaxAction is defined, it means we rely 
+           * on our internal module
+           * 
+           * @see https://docs.tangible.one/modules/plugin-framework/ajax/
+           */
+          const results = props.ajaxAction
+            ? await Tangible?.ajax(props.ajaxAction, data)
+            : await get(props.searchUrl ?? '', data) 
         
           return {
             items: (results ?? []).map(item => ({id: item.id, name: item.title }))
