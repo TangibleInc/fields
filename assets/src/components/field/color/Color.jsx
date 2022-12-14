@@ -5,7 +5,11 @@ import {
 } from 'react'
 
 import { useColorField } from '@react-aria/color'
-import { useColorFieldState } from '@react-stately/color'
+
+import { 
+  useColorFieldState,
+  parseColor 
+} from '@react-stately/color'
 
 import { 
   Description,
@@ -42,7 +46,9 @@ const Color = props =>{
   /**
    * Use the right format on initial render
    */
-  useEffect(() => state.setInputValue(state.colorValue.toString(format)), [])
+  useEffect(() => state.setInputValue(
+    state.colorValue?.toString(format)   
+  ), [])
   
   return(
     <div class="tf-color">
@@ -58,7 +64,7 @@ const Color = props =>{
         { open && 
           <Popover ref={ popover }>
             <ColorPicker 
-              value={ props.value ?? false }
+              value={ state.colorValue?.toString(format) }
               onChange={ onChange } 
               hasAlpha={ props.hasAlpha ?? true } 
               onFocusChange={ isFocus => isOpen(isFocus) }

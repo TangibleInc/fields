@@ -15,7 +15,7 @@ $fields->format_args = function(
 ) use($fields) : array {
 
   $type = $args['type'] ?? '';
-  
+
   if( $element ) {  
     $args['element'] = uniqid( 'tangible-field-' . $name .'-' );
   }

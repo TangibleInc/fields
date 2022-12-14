@@ -16,7 +16,11 @@ import ColorSlider from './ColorSlider'
 const ColorPicker = props => {
 
   const [color, setColor] = useState(
-    parseColor(props.value ?? 'rgb(255, 255, 255)').toHSB()
+    parseColor(
+      props.value && props.value !== '' 
+        ? props.value
+        : 'rgba(255, 255, 255, 1)'
+    ).toHSB()
   )
 
   const [
