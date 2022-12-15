@@ -24,7 +24,7 @@ export default props => {
   if( props.onChange ) {
     useEffect( () => props.onChange(value), [value])
   }
-  console.log(props.isAsync)
+
   /**
    * Async search
    * 
