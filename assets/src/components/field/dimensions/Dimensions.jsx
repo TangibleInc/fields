@@ -1,4 +1,8 @@
-import { useState } from 'react'
+import { 
+  useState,
+  useEffect 
+} from 'react'
+
 import { Item } from 'react-stately'
 import { useField } from 'react-aria'
 
@@ -10,10 +14,7 @@ import {
 import Number from '../number/Number'
 import Select from '../select/Select'
 
-/**
- * TODO:
- * - Support onChange props 
- */
+import { initJSON } from '../../../utils'
 
 const Dimensions = props => {
 
@@ -25,16 +26,23 @@ const Dimensions = props => {
     fieldProps, // Not sure where to use this one
     descriptionProps
   }= useField(props)
-
-  const [value, setValue] = useState(props.value 
-    ? JSON.parse(props.value)
-    : {
-      top    : 0,
-      left   : 0,
-      right  : 0,
-      bottom : 0,
-      unit   : units[0]
-    })
+  
+  const [value, setValue] = useState( 
+    initJSON(
+      props.value ?? '',
+      {
+        top    : 0,
+        left   : 0,
+        right  : 0,
+        bottom : 0,
+        unit   : units[0]
+      }
+    )
+  )
+  
+  if( props.onChange ) {
+    useEffect(() => props.onChange(value), [value])
+  }
 
   const setAttribute = (number, position) => {
     setValue({

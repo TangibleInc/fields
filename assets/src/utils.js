@@ -3,4 +3,18 @@ const uniqid = () => {
   return sec.toString(16).replace(/\./g, '').padEnd(14, '0')
 }
 
-export { uniqid }
+const initJSON = (value, empty = false) => {
+
+  if( Array.isArray(value) || typeof value === 'object' ) {
+    return value;
+  }
+
+  if( value === '' && empty ) return empty;
+  
+  return JSON.parse(value)
+}
+
+export { 
+  uniqid,
+  initJSON 
+}

@@ -23,8 +23,12 @@ $fields->get_dynamic_contexts = function(array $contexts) use($fields) : array {
 
   foreach( $contexts as $context ) {
 
-    // Currenly, we only support dynamic value inside a repeater
-    if(  ! in_array($context['type'], ['repeater-list', 'repeater-table']) ) {
+    // Currenly, we only support dynamic value inside repeaters and field-groups
+    if(  ! in_array($context['type'], [
+      'repeater-list', 
+      'repeater-table', 
+      'field-group'
+    ]) ) {
       continue;
     }
 
@@ -70,6 +74,8 @@ $fields->get_dynamic_config = function(array $field) use($fields) : array {
 
     if( is_array($field[ $key ] ?? '') ) {
       foreach( $field[ $key ] as $subkey => $value ) {
+
+        if( ! $fields->is_dynamic_value($value) ) continue;
 
         $trigger_field = $fields->get_dynamic_name($value);
 

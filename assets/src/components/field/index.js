@@ -4,6 +4,7 @@ import ComboBox from './combo-box/'
 import DatePicker from './date/'
 import Dimensions from './dimensions/Dimensions'
 import DynamicText from './dynamic-text/DynamicText'
+import FieldGroup from './field-group/FieldGroup'
 import FileUpload from './file-upload/FileUpload'
 import Gradient from './gradient/Gradient'
 import Number from './number/Number'
@@ -19,6 +20,7 @@ export {
   DatePicker,
   Dimensions,
   DynamicText,
+  FieldGroup,
   FileUpload,
   Gradient,
   Number,

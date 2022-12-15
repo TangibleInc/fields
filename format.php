@@ -45,8 +45,9 @@ $fields->format_args = function(
       
     case 'repeater-list':
     case 'repeater-table':
-
       if( empty($args['value']) ) $args['value'] = '[]';
+      // Fall through
+    case 'field-group':
 
       $args['fields'] = array_map(function($args) use($fields) {
         return $fields->format_args( 
