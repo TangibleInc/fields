@@ -11,6 +11,7 @@ import {
   FileUpload,
   Gradient,
   Number,
+  Radio,
   Select,
   Switch,
   Text
@@ -27,6 +28,7 @@ export default {
   'number'          : Number,
   'repeater-list'   : RepeaterList,
   'repeater-table'  : RepeaterTable,
+  'radio'           : Radio,
   'select'          : Select,
   'switch'          : Switch,
   'text'            : Text,
