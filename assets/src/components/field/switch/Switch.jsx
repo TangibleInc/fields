@@ -1,5 +1,8 @@
-import { useEffect, useState, useRef } from 'react'
-import { useToggleState } from 'react-stately'
+import { 
+  useEffect, 
+  useState, 
+  useRef 
+} from 'react'
 
 import {
   useFocusRing, 
@@ -7,6 +10,8 @@ import {
   VisuallyHidden,
   useField
 } from 'react-aria'
+
+import { useToggleState } from 'react-stately'
 
 import { 
   Description,

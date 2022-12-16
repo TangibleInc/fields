@@ -1,4 +1,5 @@
 import ButtonGroup from './button-group/ButtonGroup'
+import Checkbox from './checkbox/Checkbox'
 import Color from './color/Color'
 import ComboBox from './combo-box/'
 import DatePicker from './date/'
@@ -15,6 +16,7 @@ import Text from './text/Text'
 
 export {
   ButtonGroup,
+  Checkbox,
   Color,
   ComboBox,
   DatePicker,
