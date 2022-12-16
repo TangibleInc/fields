@@ -6,7 +6,7 @@ import DatePicker from './date/'
 import Dimensions from './dimensions/Dimensions'
 import DynamicText from './dynamic-text/DynamicText'
 import FieldGroup from './field-group/FieldGroup'
-import FileUpload from './file-upload/FileUpload'
+import File from './file/File'
 import Gradient from './gradient/Gradient'
 import Number from './number/Number'
 import Radio from './radio/'
@@ -23,7 +23,7 @@ export {
   Dimensions,
   DynamicText,
   FieldGroup,
-  FileUpload,
+  File,
   Gradient,
   Number,
   Radio,

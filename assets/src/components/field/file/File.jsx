@@ -83,13 +83,13 @@ const FileUpload = props => {
   }
 
   const getAllowedTypes = () => (
-    props.allowedTypes
-      ? props.allowedTypes
+    props.mimeTypes
+      ? props.mimeTypes
       : Object.values(mimetypes)
   )
 
   return(
-    <div class="tf-file-upload">
+    <div class="tf-file">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
@@ -103,9 +103,9 @@ const FileUpload = props => {
           { ...fieldProps }
         />
       </VisuallyHidden>
-      <div class="tf-file-upload-container">
+      <div class="tf-file-container">
         <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(uploads) } />
-        <ul class="tf-file-upload-list">
+        <ul class="tf-file-list">
           { uploads.map((upload, i) => (
             <FilePreview 
               key={ upload } 
@@ -114,7 +114,7 @@ const FileUpload = props => {
             />
           )) }
         </ul>
-        <div class="tf-file-upload-field">
+        <div class="tf-file-field">
           <Button 
             type='action' 
             onPress={ () => ref.current.click() } 
@@ -123,7 +123,7 @@ const FileUpload = props => {
           >
             { props.buttonText ?? 'Choose' }
           </Button>
-          <div class="tf-file-upload-text" aria-hidden="true">
+          <div class="tf-file-text" aria-hidden="true">
             { file.length > 0 
               ? file[0].name
               : placeholder }

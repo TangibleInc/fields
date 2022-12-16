@@ -22,14 +22,14 @@ const FilePreview = props => {
 
   if( ! loaded || ! data ) {
     return(
-      <li class="tf-file-upload-item">
+      <li class="tf-file-item">
         Loading...
       </li>
     )
   }
 
   return(
-    <li class="tf-file-upload-item">
+    <li class="tf-file-item">
       <span>{ data.title.rendered }</span>
       <Button type="upload-list" onPress={ () => props.remove() }>
         Remove

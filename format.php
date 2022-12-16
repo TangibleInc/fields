@@ -38,8 +38,8 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'options', 'items');
       break;
     
-    case 'file-upload':
-      $args = $fields->format_value($args, 'allowed_types', 'allowedTypes');
+    case 'file':
+      $args = $fields->format_value($args, 'mime_types', 'mimeTypes');
       $args = $fields->format_value($args, 'max_upload', 'maxUpload');
       break;
       

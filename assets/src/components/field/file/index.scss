@@ -1,21 +1,21 @@
-.tf-file-upload-field {
+.tf-file-field {
   display: flex;
   align-items: center;
   width: fit-content;
 }
 
-.tf-file-upload-text {
+.tf-file-text {
   width: $field-width;
   padding: $field-padding;
   text-overflow: ellipsis;
   overflow: hidden;
 }
 
-.tf-file-upload-list {
+.tf-file-list {
   width: 300px;
 }
 
-.tf-file-upload-item {
+.tf-file-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
