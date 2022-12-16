@@ -14,7 +14,18 @@ const initJSON = (value, empty = false) => {
   return JSON.parse(value)
 }
 
+/**
+ * Convert object of choice to array of object  
+ */
+const getOptions = choices => (
+  Object.keys(choices).map(key => ({ 
+    value: key,
+    label: choices[key],
+  }))
+)
+
 export { 
   uniqid,
+  getOptions,
   initJSON 
 }
