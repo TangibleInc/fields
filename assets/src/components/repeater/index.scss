@@ -1,5 +1,5 @@
-@import './list';
-@import './table';
+@import './layout/block/index.scss';
+@import './layout/table/index.scss';
 
 .tf-repeater-actions {
   display: flex;

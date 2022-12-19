@@ -1,5 +1,4 @@
-import RepeaterList from './components/repeater/list/RepeaterList'
-import RepeaterTable from './components/repeater/table/RepeaterTable'
+import Repeater from './components/repeater/Repeater'
 
 import {
   ButtonGroup,
@@ -30,8 +29,7 @@ export default {
   'file'            : File,
   'gradient'        : Gradient,
   'number'          : Number,
-  'repeater-list'   : RepeaterList,
-  'repeater-table'  : RepeaterTable,
+  'repeater'        : Repeater,
   'radio'           : Radio,
   'select'          : Select,
   'switch'          : Switch,

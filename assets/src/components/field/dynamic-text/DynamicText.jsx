@@ -33,7 +33,7 @@ const DynamicText = props => {
   
   const [value, setValue] = useState(props.value ?? '')
   const [id, setID] = useState(uniqid())
-  
+
   const input = useRef(null)
   const triggerRef = useRef(null)
   const overlayRef = useRef(null)

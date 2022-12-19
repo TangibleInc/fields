@@ -43,10 +43,17 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'max_upload', 'maxUpload');
       break;
       
+    /**
+     * Legacy: Only one repeater control with different layout now  
+     */
     case 'repeater-list':
     case 'repeater-table':
-      if( empty($args['value']) ) $args['value'] = '[]';
+      $args['type'] = 'repeater';
+      $args['layout'] = $type === 'repeater-list' ? 'block' : 'table';
       // Fall through
+    case 'repeater':
+      if( empty($args['value']) ) $args['value'] = '[]';
+      $args = $fields->format_value($args, 'sub_fields', 'fields');
     case 'field-group':
 
       $args['fields'] = array_map(function($args) use($fields) {

@@ -1,4 +1,4 @@
-.tf-repeater-list-item {
+.tf-repeater-block-item {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -8,12 +8,12 @@
   border-radius: $field-border-radius;
   background: $field-background;
 
-  &[data-status=open] .tf-repeater-list-item-actions {
+  &[data-status=open] .tf-repeater-block-item-actions {
     border-top: $field-border;
   }
 }
 
-.tf-repeater-list-item-header{
+.tf-repeater-block-item-header{
   display: flex;
   align-items: center;
   width: 100%;
@@ -27,14 +27,14 @@
   }
 }
 
-.tf-repeater-list-item-actions,
-.tf-repeater-list-item-field {
+.tf-repeater-block-item-actions,
+.tf-repeater-block-item-field {
   padding: $field-padding;
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-.tf-repeater-list-item-actions {
+.tf-repeater-block-item-actions {
   display: flex;
   justify-content: flex-end;
 }

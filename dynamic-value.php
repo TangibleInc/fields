@@ -24,9 +24,8 @@ $fields->get_dynamic_contexts = function(array $contexts) use($fields) : array {
   foreach( $contexts as $context ) {
 
     // Currenly, we only support dynamic value inside repeaters and field-groups
-    if(  ! in_array($context['type'], [
-      'repeater-list', 
-      'repeater-table', 
+    if( ! in_array($context['type'], [
+      'repeater', 
       'field-group'
     ]) ) {
       continue;
