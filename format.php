@@ -19,23 +19,35 @@ $fields->format_args = function(
   if( $element ) {  
     $args['element'] = uniqid( 'tangible-field-' . $name .'-' );
   }
+
+  // To be compatible with ACF, instructions can be used as an alias of description
+  if( ! empty($args['instructions']) ) {
+    $args['description'] = $args['instructions'];
+  }
   
   switch($type) {
+
+    // We use kebab-case for control types in js
+    case 'button_group':
+      $args['type'] = 'button-group';
+      break;
 
     case 'number':
       $args = $fields->format_value($args, 'min', 'minValue');
       $args = $fields->format_value($args, 'max', 'maxValue');
       break;
 
-    case 'combo-box':
-    case 'text-suggestion':
+    case 'combo_box':
+    case 'text_suggestion':
+      // We use kebab-case for control types in js
+      $args['type'] = $type === 'combo_box' ? 'combo-box' : 'text-suggestion';
       $args = $fields->format_value($args, 'is_async', 'isAsync');
       $args = $fields->format_value($args, 'async_args', 'asyncArgs');
       $args = $fields->format_value($args, 'search_url', 'searchUrl');
       $args = $fields->format_value($args, 'ajax_action', 'ajaxAction');
       // Fall through
-    case 'select': 
-      $args = $fields->format_value($args, 'options', 'items');
+    case 'select':  
+      $args = $fields->convert_legacy_options($args);
       break;
     
     case 'file':
@@ -43,9 +55,7 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'max_upload', 'maxUpload');
       break;
       
-    /**
-     * Legacy: Only one repeater control with different layout now  
-     */
+    // Legacy: Only one repeater control with different layout now  
     case 'repeater-list':
     case 'repeater-table':
       $args['type'] = 'repeater';
@@ -54,8 +64,14 @@ $fields->format_args = function(
     case 'repeater':
       if( empty($args['value']) ) $args['value'] = '[]';
       $args = $fields->format_value($args, 'sub_fields', 'fields');
-    case 'field-group':
+    case 'field_group':
 
+      // We use kebab-case for control types in js
+      $args['type'] = $type === 'field_group' ? 'field-group' : $args['type'];
+      
+      // Title can be an alias of label (to be compatible with ACF)
+      if( ! empty($args['title']) ) $args['label'] = $args['title'];
+      
       $args['fields'] = array_map(function($args) use($fields) {
         return $fields->format_args( 
           $args['name'] ?? '',
@@ -85,6 +101,55 @@ $fields->format_value = function(
   $args[$new_name] = $args[$old_name];
    
   unset($args[$old_name]);
+
+  return $args;
+};
+
+/**
+ * Legacy: Structure and naming has changes to be compatible with ACF, this function
+ * convert the old structure into the new one (Temporary functions, will disapear soon)
+ */
+$fields->convert_legacy_options = function(array $args) use($fields): array {
+
+  $has_legacy_options = isset($args['options']) || isset($args['items']);
+
+  if( ! $has_legacy_options || ! empty($args['choices']) ) {
+    return $args;
+  }
+  
+  $choices = $args['options'] ?? $args['items'];
+  
+  unset($args['options']);
+  unset($args['items']);
+  
+  $has_categories = array_reduce(
+    $choices ?? [],
+    function($has_categories, $choice) {
+      return $has_categories || isset($choice['children']);
+    },
+    false
+  );
+  
+  if( $has_categories ) {
+    $args['choices'] = array_map(
+      function($category) {
+
+        foreach( $category['children'] as $choice ) {
+          $category['choices'][ $choice['id'] ] = $choice['name'];
+        }
+
+        unset($category['children']);
+
+        return $category;
+      },
+      $choices
+    );
+  }
+  else {
+    foreach( $choices as $choice ) {
+      $args['choices'][ $choice['id'] ] = $choice['name'];
+    }
+  }
 
   return $args;
 };

@@ -5,6 +5,7 @@ import {
 
 import { useRadioGroup } from 'react-aria'
 import { useRadioGroupState } from 'react-stately'
+import { getOptions } from '../../../utils'
 
 import ButtonOption from './ButtonOption'
 import {
@@ -21,6 +22,7 @@ const ButtonGroupContext = createContext(null)
 const ButtonGroup = props => {
 
   const state = useRadioGroupState(props)
+  const options = getOptions(props.choices ?? {})
 
   const {
     radioGroupProps,
@@ -40,10 +42,10 @@ const ButtonGroup = props => {
         </Label> }
       <div class="tf-button-group-container" { ...radioGroupProps }>
         <ButtonGroupContext.Provider value={ state }>
-          { props.options?.map(option => (
+          { options.map(option => (
             <ButtonOption context={ ButtonGroupContext } { ...option } >
-              { option.dashicon
-                ? <span class={ `dashicons dashicons-${option.dashicon}`}></span>
+              { props.use_dashicon
+                ? <span class={ `dashicons dashicons-${option.label}`}></span>
                 : option.label }
             </ButtonOption>
           )) }

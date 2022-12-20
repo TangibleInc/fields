@@ -1,4 +1,5 @@
 import { Item } from 'react-stately'
+import { getOptions } from '../../../utils'
 
 import Select from './Select'
 
@@ -11,8 +12,9 @@ import Select from './Select'
   <Select 
     selectedKey={ props.value } 
     onSelectionChange={ props.onChange } 
+    items={ getOptions(props.choices ?? {}) } 
     { ...props }
   >
-    { item => <Item key={ item.id }>{ item.name }</Item> }
+    { item => <Item key={ item.value }>{ item.label }</Item> }
   </Select>
 )

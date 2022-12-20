@@ -12,7 +12,11 @@ import {
 } from 'react-aria'
 
 import { useOverlayTriggerState } from 'react-stately'
-import { uniqid } from '../../../utils'
+
+import { 
+  uniqid, 
+  getOptions 
+} from '../../../utils'
 
 import { 
   Button,
@@ -49,7 +53,7 @@ const DynamicText = props => {
       input.current, 
       value, 
       setValue,
-      props.items ?? []
+      props.choices
     )
   }, [])
 
@@ -97,7 +101,7 @@ const DynamicText = props => {
         { state.isOpen && (
           <div class="tf-dynamic-text-popover" ref={ overlayRef } { ...overlayProps }>
             <ComboBox 
-              items={ props.items }
+              choices={ props.choices ?? {} }
               autoFocus={ true }
               onChange={ value => {
                 if( value === null ) return;

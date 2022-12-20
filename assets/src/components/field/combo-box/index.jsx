@@ -10,6 +10,8 @@ import {
 } from 'react-stately'
 
 import { get } from '../../../requests'
+import { getOptions } from '../../../utils'
+
 import ComboBox from './ComboBox'
 
 /**
@@ -49,9 +51,11 @@ export default props => {
           const results = props.ajaxAction
             ? await Tangible?.ajax(props.ajaxAction, data)
             : await get(props.searchUrl ?? '', data) 
-        
+          
           return {
-            items: (results ?? []).map(item => ({id: item.id, name: item.title }))
+            items: getOptions(
+              (results ?? []).reduce((items, item) => ({ ...items, [item.id]: item.title }), {})
+            )
           }
       }
     })
@@ -75,15 +79,15 @@ export default props => {
               inputValue: list.filterText,
               onInputChange: list.setFilterText
             } : {
-              defaultItems: props.items ?? []
+              defaultItems: getOptions(props.choices ?? {})
             } 
         )}
       >
-        { item => item.children 
-          ? <Section key={ item.name } title={ item.name } items={ item.children }>
-              { item => <Item key={ item.id }>{ item.name }</Item> }
+        { item => item.choices 
+          ? <Section key={ item.value ?? '' } title={ item.label ?? '' } items={ item.choices ?? [] }>
+              { item => <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item> }
             </Section>
-          : <Item key={ item.id }>{ item.name }</Item> }
+          : <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item> }
       </ComboBox>
     </>  
   )

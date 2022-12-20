@@ -76,21 +76,15 @@ const createInput = (
  * associated to each value
  */
 const getItemsObject = sections => {
-  
-  /**
-   * Get all items from each sections (if there is sections) 
-   */
-   const items = sections.reduce(
-    (accumulator, item) => ([ 
-      ...accumulator, 
-      ...(item.children ?? [ item ])
-    ]), []
-  )
 
-  return items.reduce(
+  // If no section, it's already an object of choices
+  if( ! Array.isArray(sections) ) return sections
+
+  // Get all choices from each sections
+  return sections.reduce(
     (accumulator, item) => ({
       ...accumulator, 
-      [item.id]: item.name
+      ...(item.choices ?? {})
     }), {}
   )
 }

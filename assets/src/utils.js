@@ -15,13 +15,26 @@ const initJSON = (value, empty = false) => {
 }
 
 /**
- * Convert object of choice to array of object  
+ * Convert object of choice to array of object (can be ordered by category)
  */
 const getOptions = choices => (
-  Object.keys(choices).map(key => ({ 
-    value: key,
-    label: choices[key],
-  }))
+  Object.keys(choices).map(key => ( 
+    choices[key].choices
+    ? {
+      ...choices[key], 
+      key: choices[key].name,
+      label: choices[key].name,
+      choices: Object.keys(choices[key].choices).map(
+        value => ({ 
+          value: value,
+          label: choices[key].choices[value],
+        })
+      ) 
+    } : { 
+      value: key,
+      label: choices[key],
+    }
+  ))
 )
 
 export { 
