@@ -26,9 +26,6 @@ const ListBox = props => {
 
   return(
     <>
-      <div { ...labelProps }>
-        { props.label }
-      </div>
       <ul
         { ...listBoxProps }
         ref={ listBoxRef }

@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 
 import { 
-  useSelectState, 
+  useSelectState,
   Item 
 } from 'react-stately'
 
@@ -24,14 +24,18 @@ import {
  *   <Item>Orange</Item>
  *   <Item>Yellow</Item>
  * </Select>
- * 
- * @see https://react-spectrum.adobe.com/react-aria/useSelect.html
  */
 
 const Select = props => {
-    
-  const state = useSelectState(props)
 
+  /**
+   * @see https://react-spectrum.adobe.com/react-stately/useSelectState.html
+   */
+  const state = useSelectState(props)
+    
+  /**
+   * @see https://react-spectrum.adobe.com/react-aria/useSelect.html
+   */
   const ref = useRef()
   const {
     labelProps,
