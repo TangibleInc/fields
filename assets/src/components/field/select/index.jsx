@@ -1,4 +1,8 @@
-import { Item } from 'react-stately'
+import { 
+  Item, 
+  Section 
+} from 'react-stately'
+
 import { getOptions } from '../../../utils'
 
 import Select from './Select'
@@ -15,7 +19,11 @@ import MultipleSelect from './MultipleSelect'
         items={ getOptions(props.choices ?? {}) } 
         { ...props }
       >
-        { item => <Item key={ item.value }>{ item.label }</Item> }
+        { item => item.choices 
+          ? <Section key={ item.value ?? '' } title={ item.label ?? '' } items={ item.choices ?? [] }>
+              { item => <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item> }
+            </Section>
+          : <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item> }
       </MultipleSelect>
     : <Select 
         selectedKey={ props.value } 
@@ -23,6 +31,10 @@ import MultipleSelect from './MultipleSelect'
         items={ getOptions(props.choices ?? {}) } 
         { ...props }
       >
-        { item => <Item key={ item.value }>{ item.label }</Item> }
+        { item => item.choices 
+          ? <Section key={ item.value ?? '' } title={ item.label ?? '' } items={ item.choices ?? [] }>
+              { item => <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item> }
+            </Section>
+          : <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item> }
       </Select>
 )

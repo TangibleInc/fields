@@ -1,5 +1,9 @@
 import { useRef } from 'react'
-import { useListBox } from 'react-aria'
+
+import { 
+  useListBox,
+  DismissButton
+} from 'react-aria'
 
 import Option from './Option'
 import Section from './Section'
@@ -19,10 +23,14 @@ const ListBox = props => {
   const ref = useRef()
   const { listBoxRef = ref, state } = props
 
-  const { 
-    listBoxProps, 
-    labelProps 
-  } = useListBox(props, state, listBoxRef)
+  const { listBoxProps } = useListBox(props, state, listBoxRef)
+
+  /**
+   * Hidden <DismissButton> component at the end to allow screen reader 
+   * users to dismiss the popup easily
+   * 
+   * @see https://react-spectrum.adobe.com/react-aria/DismissButton.html
+   */
 
   return(
     <>
@@ -32,11 +40,12 @@ const ListBox = props => {
         class='tf-list-box'
       >
         { [...state.collection].map(item => (
-          item.children
-            ? <Section key={ item.key } section={ item } state={ state } />
-            : <Option key={ item.key } item={ item } state={ state } />
+          item.type === 'section'
+            ? <Section key={ item.key } section={ item } state={ state } shouldUseVirtualFocus />
+            : <Option key={ item.id ?? item.name } item={ item } state={ state } shouldUseVirtualFocus />
         )) }
       </ul>
+      <DismissButton onDismiss={ state.close } />
     </>
   );
 }

@@ -17,27 +17,12 @@
     @include button;
   }
 
-  .tf-combo-box-popover {
-    position: absolute;
-    z-index: $popover-index;
-    top: calc(100% + 5px);
-    left: 0;
+  .tf-popover {
+    top: 100%;
   }
 
   .tf-button-action span {
     padding: 0 2px;
   }
   
-}
-
-.tf-combo-box-list {
-  width: $field-width;
-  background-color: $field-background;
-  border: $field-border; 
-  border-radius: $field-border-radius;
-  list-style: none;
-  overflow: hidden;
-  overflow-y: scroll;
-  max-height: 200px;
-  margin: 0;
 }

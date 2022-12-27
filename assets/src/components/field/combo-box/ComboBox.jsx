@@ -1,5 +1,9 @@
 import { useRef } from 'react'
-import { useComboBoxState } from 'react-stately'
+
+import { 
+  useComboBoxState, 
+  Item 
+} from 'react-stately'
 
 import {  
   useFilter,
@@ -11,10 +15,9 @@ import {
 import { 
   Button,
   Label,
-  Description
+  Description,
+  ListBox
  } from '../../base'
-
-import ListBoxPopup from './ListBoxPopup'
 
 /**
  * <ComboBox label='Favorite Color'>
@@ -80,16 +83,20 @@ const ComboBox = props => {
               ▼
             </span>
           </Button>
-          { state.isOpen && (
-            <ListBoxPopup
-              { ...listBoxProps }
-              listBoxRef={ listBoxRef }
-              popoverRef={ popoverRef }
-              state={ state }
-              focusWithinProps
-              shouldUseVirtualFocus
-            />
-          ) }
+          { state.isOpen && 
+            // Can't use popover component because it causes conflicts with focus events
+            <div class="tf-popover"> 
+              <ListBox
+                listBoxRef={ listBoxRef }
+                state={ state }
+                items={ props.items }
+                focusWithinProps
+                shouldUseVirtualFocus
+                { ...listBoxProps }
+              >
+                { item => <Item key={ item.id }>{ item.name }</Item> }
+              </ListBox>
+            </div> }
         </div>
       </FocusScope>
       { props.description &&
