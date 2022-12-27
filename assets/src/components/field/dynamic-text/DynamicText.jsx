@@ -13,10 +13,7 @@ import {
 
 import { useOverlayTriggerState } from 'react-stately'
 
-import { 
-  uniqid, 
-  getOptions 
-} from '../../../utils'
+import { uniqid, } from '../../../utils'
 
 import { 
   Button,

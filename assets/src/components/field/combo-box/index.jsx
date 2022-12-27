@@ -5,17 +5,23 @@ import {
 
 import {
   Item, 
-  Section,
-  useAsyncList
+  Section
 } from 'react-stately'
 
-import { get } from '../../../requests'
-import { getOptions } from '../../../utils'
-
 import ComboBox from './ComboBox'
+import AsyncComboBox from './AsyncComboBox'
+import MultipleComboBox from './MultipleComboxBox'
+
+import { getOptions } from '../../../utils'
 
 /**
  * Export used when initialized from a php functions, or inside a repeater
+ * 
+ * There is 2 kind of ComboBox component (async and regular). We use separate components
+ * for both because the returned value is different
+ * 
+ * A regular combox box return just the value (or a comma separated list a value if multiple)
+ * but the async combox return an object with the value and the label for each element
  * 
  * @see control-list.js
  */
@@ -24,71 +30,49 @@ export default props => {
   const [value, setValue] = useState(props.value ?? null)
 
   if( props.onChange ) {
-    useEffect( () => props.onChange(value), [value])
+    useEffect(() => props.onChange(value), [value])
   }
 
-  /**
-   * Async search
-   * 
-   * @see https://react-spectrum.adobe.com/react-aria/useComboBox.html#asynchronous-loading
-   */
-   const list = props.isAsync
-     ? useAsyncList({
-        async load({ filterText }) {
-        
-          const data = {
-            ...(props.asyncArgs ?? {}),
-            search: filterText
-          }
+  const children = item => item.choices 
+    ? <Section key={ item.value ?? '' } title={ item.label ?? '' } items={ item.choices ?? [] }>
+        { item => <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item> }
+      </Section>
+    : <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item>
 
-          /**
-           * We support 2 ways to get async result, either by fetching an given url or by
-           * using our internal ajax module. If props.ajaxAction is defined, it means we rely 
-           * on our internal module
-           * 
-           * @see https://docs.tangible.one/modules/plugin-framework/ajax/
-           */
-          const results = props.ajaxAction
-            ? await Tangible?.ajax(props.ajaxAction, data)
-            : await get(props.searchUrl ?? '', data) 
-          
-          return {
-            items: getOptions(
-              (results ?? []).reduce((items, item) => ({ ...items, [item.id]: item.title }), {})
-            )
-          }
-      }
-    })
-    : false
+  if( props.multiple ) {
+    return(
+      <>
+        <input type="hidden" name={ props.name ?? '' } value={ value } />
+        <MultipleComboBox 
+          { ...props }
+          onChange={ values => setValue(values.join(',')) }
+          value={ value }
+        >
+          { children }
+        </MultipleComboBox>
+      </>
+    )
+  }
 
   return(
     <>
       <input type="hidden" name={ props.name ?? '' } value={ value } />
-      <ComboBox 
-        focusStrategy={ 'first' }
-        label={ props.label ?? null }
-        description={ props.description ?? false }
-        selectedKey={ value } 
-        onSelectionChange={ setValue }
-        onFocusChange={ props.onFocusChange ?? false }
-        autoFocus={ props.autoFocus ?? false }
-        { ...(
-          props.isAsync 
-            ? {
-              items: list.items,
-              inputValue: list.filterText,
-              onInputChange: list.setFilterText
-            } : {
-              defaultItems: getOptions(props.choices ?? {})
-            } 
-        )}
-      >
-        { item => item.choices 
-          ? <Section key={ item.value ?? '' } title={ item.label ?? '' } items={ item.choices ?? [] }>
-              { item => <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item> }
-            </Section>
-          : <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item> }
-      </ComboBox>
+      { props.isAsync
+        ? <AsyncComboBox { ...props }>
+            { children }
+          </AsyncComboBox>
+        : <ComboBox 
+            focusStrategy={ 'first' }
+            label={ props.label ?? null }
+            description={ props.description ?? false }
+            selectedKey={ value } 
+            onSelectionChange={ setValue }
+            onFocusChange={ props.onFocusChange ?? false }
+            autoFocus={ props.autoFocus ?? false }
+            defaultItems={ getOptions(props.choices ?? {}) }
+          >
+            { children }
+          </ComboBox> }
     </>  
   )
 }

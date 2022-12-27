@@ -24,5 +24,40 @@
   .tf-button-action span {
     padding: 0 2px;
   }
-  
+}
+
+.tf-combo-box-values {
+  display: flex;
+  align-items: center;
+  padding: $field-padding;
+  height: $field-height;
+  width: $field-width;
+  border: $field-border;
+  border-radius: $field-border-radius;
+}
+
+.tf-combo-box-item {
+  height: fit-content;
+  border: 1px grey solid; 
+  padding: 2px 5px;
+  margin: 0 2px;
+  background: $field-background;
+
+  span:first-child {
+    padding-right: 5px;
+  }
+
+  span:last-child {
+    cursor: pointer;
+  }
+}
+
+.tf-combo-box-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.tf-multiple-combobox > .tf-popover {
+  width: fit-content;
 }
