@@ -36,11 +36,9 @@ export default props => {
     )
   }, [])
 
-  if( props.onChange ) {
-    useEffect(() => {
-      props.onChange( getStringValue() )
-    }, [value])
-  }
+  useEffect(() => {
+    props.onChange && props.onChange( getStringValue() )
+  }, [value])
 
   const getStringValue = () => (
     value && value.toString ? value.toString() : ''

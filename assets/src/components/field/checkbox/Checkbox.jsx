@@ -35,10 +35,7 @@ const Checkbox = props => {
 
   useEffect(() => state.setSelected(value === '1'), [])
   useEffect(() => setValue(state.isSelected ? '1' : '0'), [state.isSelected])
-
-  if( props.onChange ) {
-    useEffect(() => props.onChange(value), [value])
-  }
+  useEffect(() => props.onChange && props.onChange(value), [value])
 
   return(
     <div class="tf-checkbox">

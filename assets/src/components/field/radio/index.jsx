@@ -13,9 +13,7 @@ export default props => {
   const [value, setValue] = useState(props.value ?? '')
   const options = getOptions(props.choices ?? {})
 
-  if( props.onChange ) {
-    useEffect(props.onChange, [value])
-  }
+  useEffect(() => props.onChange && props.onChange(value), [value])
 
   return(
     <RadioGroup { ...props } onChange={ setValue }>

@@ -29,9 +29,7 @@ const ColorPicker = props => {
     zChannel
   ] = color.getColorChannels()
   
-  if( props.onChange ) {
-    useEffect(() => props.onChange(color),[color])
-  }
+  useEffect(() => props.onChange && props.onChange(color),[color])
 
   /**
    * @see https://react-spectrum.adobe.com/react-aria/useFocusWithin.html

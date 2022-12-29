@@ -1,20 +1,8 @@
-import { 
-  useState, 
-  useEffect 
-} from 'react'
-
 import { useAsyncList } from 'react-stately'
 import { get } from '../../../requests'
+import { getOptions } from '../../../utils'
 
-import ComboBox from './ComboBox'
-
-const AsyncComboBox = props => {
-  
-  const [value, setValue] = useState(props.value ?? null)
-
-  if( props.onChange ) {
-    useEffect( () => props.onChange(value), [value])
-  }
+const getAsyncProps = props => {
 
   /**
    * Async search
@@ -30,7 +18,7 @@ const AsyncComboBox = props => {
       }
 
       /**
-       * We support 2 ways to get async result, either by fetching an given url or by
+       * We support 2 ways to get async result, either by fetching a given url or by
        * using our internal ajax module. If props.ajaxAction is defined, it means we rely 
        * on our internal module
        * 
@@ -48,22 +36,13 @@ const AsyncComboBox = props => {
     }
   })
 
-  return(
-    <ComboBox 
-      focusStrategy={ 'first' }
-      label={ props.label ?? null }
-      description={ props.description ?? false }
-      selectedKey={ props.value ?? '' } 
-      onSelectionChange={ props.onChange ?? false }
-      onFocusChange={ props.onFocusChange ?? false }
-      autoFocus={ props.autoFocus ?? false }
-      items={ list.items }
-      inputValue={ list.filterText }
-      onInputChange={ list.setFilterText }
-    >
-      { props.children }
-    </ComboBox>
-  )
+  return {
+    items: list.items,
+    inputValue: list.filterText,
+    onInputChange: list.setFilterText,
+  }
 }
 
-export default AsyncComboBox
+export {
+  getAsyncProps
+}

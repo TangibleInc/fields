@@ -43,9 +43,7 @@ const FileUpload = props => {
     descriptionProps
   } = useField(props)
   
-  if( props.onChange ) {
-    useEffect(() => props.onChange(uploads), [uploads])
-  }
+  useEffect(() => props.onChange && props.onChange(uploads), [uploads])
   
   const placeholder = props.placeholder ?? 'No file selected'
   const maxUpload = props.maxUpload ?? false

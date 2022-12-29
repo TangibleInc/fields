@@ -9,13 +9,17 @@ const initJSON = (value, empty = false) => {
     return value;
   }
 
-  if( value === '' && empty ) return empty;
-  
-  return JSON.parse(value)
+  if( value === '' && empty ) return empty
+
+  try {
+    return JSON.parse(value)
+  } catch { 
+    return {}
+  }
 }
 
 /**
- * Convert object of choice to array of object (can be ordered by category)
+ * Convert object of choice to array of object (can contain categories)
  */
 const getOptions = choices => (
   Object.keys(choices).map(key => ( 
@@ -37,8 +41,16 @@ const getOptions = choices => (
   ))
 )
 
+/**
+ * Return option by value
+ */
+const getOption =(value, options) => (
+  options.filter(option => option.value === value)[0] ?? false
+)
+
 export { 
   uniqid,
   getOptions,
+  getOption,
   initJSON 
 }

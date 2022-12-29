@@ -3,22 +3,22 @@ import {
   useEffect
 } from 'react'
 
-import {
-  Item, 
-  Section
-} from 'react-stately'
+import { 
+  getOptions, 
+  initJSON 
+} from '../../../utils'
+
+import { getAsyncProps } from './async'
+import { RenderChoices } from '../../base'
 
 import ComboBox from './ComboBox'
-import AsyncComboBox from './AsyncComboBox'
 import MultipleComboBox from './MultipleComboxBox'
 
-import { getOptions } from '../../../utils'
 
 /**
  * Export used when initialized from a php functions, or inside a repeater
  * 
- * There is 2 kind of ComboBox component (async and regular). We use separate components
- * for both because the returned value is different
+ * The data returned by the ComboBox component is different according to the type of list (async or not)
  * 
  * A regular combox box return just the value (or a comma separated list a value if multiple)
  * but the async combox return an object with the value and the label for each element
@@ -27,28 +27,39 @@ import { getOptions } from '../../../utils'
  */
 export default props => {
   
-  const [value, setValue] = useState(props.value ?? null)
+  const [value, setValue] = useState(
+    props.isAsync
+      ? initJSON(props.value ?? '')
+      : props.value ?? false
+  )
 
-  if( props.onChange ) {
-    useEffect(() => props.onChange(value), [value])
-  }
+  useEffect(() => props.onChange && props.onChange(value), [value])
 
-  const children = item => item.choices 
-    ? <Section key={ item.value ?? '' } title={ item.label ?? '' } items={ item.choices ?? [] }>
-        { item => <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item> }
-      </Section>
-    : <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item>
-
+  /**
+   * getAsyncProps init the useAsyncList() hook
+   * 
+   * It's OK to use it inside a condition because the value of props.isAsync will never change  
+   */
+  const itemProps = props.isAsync
+    ? getAsyncProps(props)
+    : {
+      defaultItems: getOptions(props.choices ?? {})
+    }
+  
   if( props.multiple ) {
     return(
       <>
-        <input type="hidden" name={ props.name ?? '' } value={ value } />
+        <input 
+          type="hidden" 
+          name={ props.name ?? '' } 
+          value={ props.isAsync ? JSON.stringify(value) : value } 
+        />
         <MultipleComboBox 
           { ...props }
-          onChange={ values => setValue(values.join(',')) }
+          onChange={ values => setValue(props.isAsync ? values : values.join(',')) }
           value={ value }
         >
-          { children }
+          { RenderChoices }
         </MultipleComboBox>
       </>
     )
@@ -56,23 +67,24 @@ export default props => {
 
   return(
     <>
-      <input type="hidden" name={ props.name ?? '' } value={ value } />
-      { props.isAsync
-        ? <AsyncComboBox { ...props }>
-            { children }
-          </AsyncComboBox>
-        : <ComboBox 
-            focusStrategy={ 'first' }
-            label={ props.label ?? null }
-            description={ props.description ?? false }
-            selectedKey={ value } 
-            onSelectionChange={ setValue }
-            onFocusChange={ props.onFocusChange ?? false }
-            autoFocus={ props.autoFocus ?? false }
-            defaultItems={ getOptions(props.choices ?? {}) }
-          >
-            { children }
-          </ComboBox> }
+      <input 
+        type="hidden" 
+        name={ props.name ?? '' } 
+        value={ props.isAsync ? JSON.stringify(value) : value } 
+      />
+      <ComboBox 
+        focusStrategy={ 'first' }
+        label={ props.label ?? null }
+        description={ props.description ?? false }
+        selectedKey={ value } 
+        onSelectionChange={ setValue }
+        onFocusChange={ props.onFocusChange ?? false }
+        autoFocus={ props.autoFocus ?? false }
+        isAsync={ props.isAsync ?? false }
+        { ...itemProps }          
+      >
+        { RenderChoices }
+      </ComboBox>
     </>  
   )
 }

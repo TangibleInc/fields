@@ -1,9 +1,5 @@
-import { 
-  Item, 
-  Section 
-} from 'react-stately'
-
 import { getOptions } from '../../../utils'
+import { RenderChoices } from '../../base'
 
 import Select from './Select'
 import MultipleSelect from './MultipleSelect'
@@ -13,17 +9,13 @@ import MultipleSelect from './MultipleSelect'
  * 
  * @see control-list.js
  */
- export default props => (
+export default props => (
   props.multiple
     ? <MultipleSelect 
         items={ getOptions(props.choices ?? {}) } 
         { ...props }
       >
-        { item => item.choices 
-          ? <Section key={ item.value ?? '' } title={ item.label ?? '' } items={ item.choices ?? [] }>
-              { item => <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item> }
-            </Section>
-          : <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item> }
+        { RenderChoices }
       </MultipleSelect>
     : <Select 
         selectedKey={ props.value } 
@@ -31,10 +23,6 @@ import MultipleSelect from './MultipleSelect'
         items={ getOptions(props.choices ?? {}) } 
         { ...props }
       >
-        { item => item.choices 
-          ? <Section key={ item.value ?? '' } title={ item.label ?? '' } items={ item.choices ?? [] }>
-              { item => <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item> }
-            </Section>
-          : <Item key={ item.value ?? '' }>{ item.label ?? '' }</Item> }
+        { RenderChoices }
       </Select>
 )

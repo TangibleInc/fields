@@ -5,11 +5,7 @@ import {
 } from 'react'
 
 import { useColorField } from '@react-aria/color'
-
-import { 
-  useColorFieldState,
-  parseColor 
-} from '@react-stately/color'
+import { useColorFieldState } from '@react-stately/color'
 
 import { 
   Description,

@@ -48,9 +48,7 @@ const MultipleSelect = props => {
     descriptionProps 
   } = useListBox(props, state, listBoxRef)
   
-  if( props.onChange ) {
-    useEffect(() => props.onChange(selected), [selected])
-  }
+  useEffect(() => props.onChange && props.onChange(selected), [selected])
 
   const ListBoxComponent =
     <ListBox

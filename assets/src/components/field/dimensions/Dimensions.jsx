@@ -40,9 +40,7 @@ const Dimensions = props => {
     )
   )
   
-  if( props.onChange ) {
-    useEffect(() => props.onChange(value), [value])
-  }
+  useEffect(() => props.onChange && props.onChange(value), [value])
 
   const setAttribute = (number, position) => {
     setValue({

@@ -48,10 +48,7 @@ const Switch = props => {
    */
   useEffect(() => state.setSelected(value === activated), [])
   useEffect(() => setValue(state.isSelected ? activated : desactivated), [state.isSelected])
-  
-  if( props.onChange ) {
-    useEffect(() => props.onChange(value), [value])
-  }
+  useEffect(() => props.onChange && props.onChange(value), [value])
 
   return(
     <div class="tf-switch">

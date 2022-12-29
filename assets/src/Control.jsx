@@ -9,9 +9,7 @@ const Control = props => {
 
   const [value, setValue] = useState(props.value ?? '')
 
-  if( props.onChange ) {
-    useEffect(() => props.onChange(value), [value])
-  }
+  useEffect(() => props.onChange && props.onChange(value), [value])
   
   const type = props.type ?? 'text'
   const ControlComponent = controls[ type ] ?? false

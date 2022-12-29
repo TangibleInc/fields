@@ -30,9 +30,9 @@ const ButtonGroup = props => {
     descriptionProps
   } = useRadioGroup(props, state)
 
-  if( props.onChange ) {
-    useEffect(() => props.onChange(state.selectedValue), [state.selectedValue])
-  }
+  useEffect(() => { 
+    props.onChange && props.onChange(state.selectedValue)
+  }, [state.selectedValue])
 
   return(
     <div class="tf-button-group">

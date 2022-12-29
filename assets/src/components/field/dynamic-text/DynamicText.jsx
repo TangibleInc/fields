@@ -54,9 +54,7 @@ const DynamicText = props => {
     )
   }, [])
 
-  if( props.onChange ) {
-    useEffect(() => props.onChange(value), [value])
-  }
+  useEffect(() => props.onChange && props.onChange(value), [value])
 
   const state = useOverlayTriggerState({})
   const { triggerProps, overlayProps } = useOverlayTrigger(
@@ -76,7 +74,7 @@ const DynamicText = props => {
       }
     })
   }
-
+  
   return(
     <div class="tf-dynamic-text">
       { props.label &&
@@ -101,7 +99,7 @@ const DynamicText = props => {
               choices={ props.choices ?? {} }
               autoFocus={ true }
               onChange={ value => {
-                if( value === null ) return;
+                if( ! value ) return;
                 addDynamicElement(value)
                 state.close()
               }}

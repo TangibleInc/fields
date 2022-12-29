@@ -4,6 +4,7 @@ import Dialog from './dialog/Dialog'
 import Label from './field/Label'
 import ListBox from './list-box/ListBox'
 import Option from './list-box/Option'
+import RenderChoices from './list-box/RenderChoices'
 import Section from './list-box/Section'
 import Popover from './popover/Popover'
 
@@ -14,6 +15,7 @@ export {
   Label,
   ListBox,
   Option,
+  RenderChoices,
   Section,
   Popover
 }

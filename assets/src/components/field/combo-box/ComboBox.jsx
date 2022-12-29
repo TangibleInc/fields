@@ -1,4 +1,7 @@
-import { useRef } from 'react'
+import { 
+  useRef, 
+  useEffect 
+} from 'react'
 
 import { 
   useComboBoxState, 
@@ -19,6 +22,8 @@ import {
   ListBox
  } from '../../base'
 
+ import { getOption } from '../../../utils'
+
 /**
  * <ComboBox label='Favorite Color'>
  *   <Item>Red</Item>
@@ -33,20 +38,55 @@ import {
 const ComboBox = props => {
 
   /**
+   * The returned value is diffent accoding to if the current combobox get item
+   * in async mode or not
+   * 
+   * If true, return an object with value + label, otherwise return just the value
+   */
+  const onSelectionChange = value => {
+    
+    if( ! props.isAsync ) {
+      props.onSelectionChange(value)
+      return;
+    }  
+
+    const option = getOption(value, props.items)
+
+    props.onSelectionChange(option)
+    if( ! props.multiple ) state.setInputValue(option.label)
+  }
+
+  /**
+   * For some reason the inputValue is not correctly initialized in async mode
+   */
+  useEffect(() => {
+    props.isAsync && props.selectedKey 
+      ? state.setInputValue(props.selectedKey.label ?? '')
+      : null
+  }, [])
+
+  /**
    * Needed to filter item results according to input value
    * 
    * @see https://react-spectrum.adobe.com/react-aria/useFilter.html
    */
   const { contains } = useFilter({ sensitivity: 'base' })
-  const state = useComboBoxState({ ...props, defaultFilter: contains })
-  
+  const state = useComboBoxState({ 
+    ...props, 
+    onSelectionChange: onSelectionChange,
+    selectedKey: props.isAsync && props.selectedKey?.value 
+      ? props.selectedKey.value 
+      : (props.selectedKey ?? ''),
+    defaultFilter: contains 
+  })
+
   const triggerRef = useRef()
   const inputRef   = useRef()
   const listBoxRef = useRef()
   const popoverRef = useRef()
 
   const {
-    buttonProps: triggerProps,
+    buttonProps,
     inputProps,
     listBoxProps,
     labelProps,
@@ -78,7 +118,7 @@ const ComboBox = props => {
       <FocusScope autoFocus={ props.autoFocus } restoreFocus>
         <div class="tf-combo-box-text">
           <input { ...inputProps } ref={ inputRef } />
-          <Button type="action" ref={ triggerRef } preventFocusOnPress={ true } { ...triggerProps }>
+          <Button type="action" ref={ triggerRef } preventFocusOnPress={ true } { ...buttonProps }>
             <span aria-hidden="true">
               ▼
             </span>

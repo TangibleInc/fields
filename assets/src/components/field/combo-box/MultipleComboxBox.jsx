@@ -12,6 +12,7 @@ import {
 
 import { useOverlayTriggerState } from 'react-stately'
 import { getOptions } from '../../../utils'
+import { getAsyncProps } from './async'
 
 import { 
   Button,
@@ -26,11 +27,26 @@ import ComboBox from './ComboBox'
  */
 const MultipleComboBox = props => {
 
+  /**
+   * The value is different according to if we get the item list in async mode or not
+   * 
+   * If it's the case, the initial value will be an array of object, that contains the
+   * value and the label for each item selected
+   * 
+   * Otherwise, it's a comma separated string with each value
+   */
   const [values, setValues] = useState(
     props.value && Array.isArray(props.value)
       ? props.value
-      : (props.value ? props.value.split(',') : [])
+      : (props.value && ! props.isAsync ? props.value.split(',') : [])
   )
+
+  const itemProps = { ...(props.isAsync
+    ? getAsyncProps(props)
+    : {
+      defaultItems: getOptions(props.choices ?? {})
+    })
+  }
 
   const input = useRef(null)
   const triggerRef = useRef(null)
@@ -49,9 +65,7 @@ const MultipleComboBox = props => {
     triggerRef
   )
 
-  if( props.onChange ) {
-    useEffect(() => props.onChange(values), [values.length])
-  }
+  useEffect(() => props.onChange && props.onChange(values), [values.length])
 
   const add = value => {
     setValues([
@@ -66,6 +80,12 @@ const MultipleComboBox = props => {
       ...values.slice(i + 1)
     ])
   }
+
+  const getDisabledKeys = () => (
+    props.isAsync
+      ? values.map(item => (item.value))
+      : values
+  )
   
   return(
     <div class="tf-multiple-combobox">
@@ -80,7 +100,7 @@ const MultipleComboBox = props => {
             : values.map(
               (value, i) => (
                 <span class="tf-combo-box-item">
-                  <span>{ props.choices[value] ?? '' }</span>
+                  <span>{ props.isAsync ? value.label : props.choices[value] ?? '' }</span>
                   <Button onPress={ () => remove(i) }>x</Button>
                 </span>
               )
@@ -96,10 +116,11 @@ const MultipleComboBox = props => {
             focusStrategy={ 'first' }
             label={ false }
             description={ false }
-            disabledKeys={ values }
+            disabledKeys={ getDisabledKeys() }
             autoFocus={ true }
-            defaultItems={ getOptions(props.choices ?? {}) }
+            multiple={ true }
             onSelectionChange={ value => {
+              if( ! value ) return;
               add(value)
               state.close()
             }}
@@ -107,6 +128,8 @@ const MultipleComboBox = props => {
               ? (! state.isOpen && state.open())
               : state.close() 
             }
+            isAsync={ props.isAsync ?? false }
+            { ...itemProps }
           >
             { props.children }
           </ComboBox>

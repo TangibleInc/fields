@@ -45,7 +45,7 @@ const Section = ({ section, state }) => {
         </ul>
       </li>
     </>
-  );
+  )
 }
 
 export default Section
