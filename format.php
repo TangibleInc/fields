@@ -37,6 +37,10 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'max', 'maxValue');
       break;
 
+    case 'wysiwyg':
+      wp_enqueue_editor();
+      break;
+
     case 'combo_box':
     case 'text_suggestion':
       // We use kebab-case for control types in js

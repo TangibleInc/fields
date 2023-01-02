@@ -1,5 +1,5 @@
 /**
- * Allow the use of dynmics props for a <Control /> component, where the value of a props
+ * Allow the use of dynamics props for a <Control /> component, where the value of a props
  * will depends of the value of another fields
  * 
  * This has to be used in a context where a group of control is defined (a repeater row, a 

@@ -8,6 +8,7 @@ import {
   DatePicker,
   Dimensions,
   DynamicText,
+  Editor,
   FieldGroup,
   File,
   Gradient,
@@ -34,5 +35,6 @@ export default {
   'select'          : Select,
   'switch'          : Switch,
   'text'            : Text,
-  'text-suggestion' : DynamicText
+  'text-suggestion' : DynamicText,
+  'wysiwyg'         : Editor
 }
