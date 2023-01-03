@@ -13,6 +13,10 @@ import {
 
 import ImagePreview from './ImagePreview'
 
+/**
+ * TODO: Find a way to only allows images  
+ */
+
 const Gallery = props => {
 
   const [value, setValue] = useState(
@@ -40,15 +44,19 @@ const Gallery = props => {
       button: {
         text: 'Use this media'
       },
+      // @see https://wordpress.stackexchange.com/a/268597/190549 but dosen't seems to work anymore
+      library: {
+        type: [ 'image' ] 
+      },
       state: value.length < 1 ? 'gallery' : 'gallery-edit',
       selection: getSelection()
     })
 
     // Set state with selection when closing the modal
     media.on({
-			update: selection => {
+      update: selection => {
         setValue(selection.models.map(image => (image.id)))
-      }
+      },
 		}, this)
     
     media.open()
@@ -77,7 +85,7 @@ const Gallery = props => {
           { props.label }
         </Label> }
       <div class="tf-gallery-preview">
-        { value.map(image => <ImagePreview id={ image }/>) }
+        { value.map(image => <ImagePreview key={ image } id={ image }/>) }
       </div>
       <Button type="action" onPress={ open }>
         { value.length < 1 ? 'Create gallery' : 'Edit gallery' } 
