@@ -12,8 +12,7 @@ import {
 } from 'react-aria'
 
 import { useOverlayTriggerState } from 'react-stately'
-
-import { uniqid, } from '../../../utils'
+import { uniqid } from '../../../utils'
 
 import { 
   Button,

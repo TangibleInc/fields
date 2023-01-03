@@ -9,6 +9,7 @@ import Editor from './editor/Editor'
 import FieldGroup from './field-group/FieldGroup'
 import File from './file/File'
 import Gradient from './gradient/Gradient'
+import Gallery from './gallery/Gallery'
 import Number from './number/Number'
 import Radio from './radio/'
 import Select from './select/'
@@ -27,6 +28,7 @@ export {
   FieldGroup,
   File,
   Gradient,
+  Gallery,
   Number,
   Radio,
   Select,

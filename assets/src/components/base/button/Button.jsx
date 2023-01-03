@@ -10,7 +10,7 @@ const Button = props => {
   const ref = useRef()
   const { buttonProps } = useButton(props, ref)
   const { children } = props
-
+  
   return (
     <span class={ props.type ? `tf-button-${props.type}` : ''} { ...buttonProps } ref={ ref }>
       { children }

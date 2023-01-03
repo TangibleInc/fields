@@ -28,7 +28,7 @@ const Checkbox = props => {
   /**
    * useCheckbox does not return label and description props directly
    */
-   const { 
+  const { 
     labelProps, 
     descriptionProps 
   } = useField(props)

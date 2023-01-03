@@ -14,9 +14,8 @@ import { RenderChoices } from '../../base'
 import ComboBox from './ComboBox'
 import MultipleComboBox from './MultipleComboxBox'
 
-
 /**
- * Export used when initialized from a php functions, or inside a repeater
+ * Export used when initialized from a php function, or inside a repeater
  * 
  * The data returned by the ComboBox component is different according to the type of list (async or not)
  * 

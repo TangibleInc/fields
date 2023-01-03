@@ -40,7 +40,11 @@ $fields->format_args = function(
     case 'wysiwyg':
       wp_enqueue_editor();
       break;
-
+    
+    case 'gallery':
+      wp_enqueue_media();
+      break;
+      
     case 'combo_box':
     case 'text_suggestion':
       // We use kebab-case for control types in js
