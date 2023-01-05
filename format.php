@@ -28,8 +28,18 @@ $fields->format_args = function(
   switch($type) {
 
     // We use kebab-case for control types in js
+    
     case 'button_group':
       $args['type'] = 'button-group';
+      break;
+
+    case 'color_picker':
+      $args['type'] = 'color-picker';
+      $args = $fields->format_value($args, 'enable_opacity', 'hasAlpha');
+      break;
+    
+    case 'date_picker':
+      $args['type'] = 'date-picker';
       break;
 
     case 'number':

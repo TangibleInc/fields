@@ -23,9 +23,9 @@ import {
 export default {
   'button-group'    : ButtonGroup,
   'checkbox'        : Checkbox,
-  'color'           : Color,
+  'color-picker'    : Color,
   'combo-box'       : ComboBox,
-  'date'            : DatePicker,
+  'date-picker'     : DatePicker,
   'dimensions'      : Dimensions,
   'field-group'     : FieldGroup,
   'file'            : File,

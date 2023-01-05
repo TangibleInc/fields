@@ -11,7 +11,7 @@ $fields->render_field = function(
 
   $fields->enqueue_field( $name, $args );
 
-  return '<span id="' . $args['element'] . '" ></span>';
+  return '<div id="' . $args['element'] . '" ></div>';
 };
 
 /**
