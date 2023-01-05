@@ -1,6 +1,9 @@
 {
   "name": "tangible-fields",
   "description": "",
+  "tangible": {
+    "deployType": "module"
+  },
   "scripts": {
     "dev": "roll dev",
     "build": "roll build",

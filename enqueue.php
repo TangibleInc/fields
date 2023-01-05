@@ -20,7 +20,7 @@ $fields->enqueue_field = function(
     'tangible-fields', 
     plugins_url( '/assets', __FILE__ ) . '/build/index.min.css', 
     [], 
-    $fields->module->version 
+    $fields->version 
   );
 
 };
@@ -33,7 +33,7 @@ $fields->maybe_enqueue_scripts = function() use($fields) : void {
     'tangible-fields', 
     plugins_url( '/assets', __FILE__ ) . '/build/index.min.js', 
     [ 'wp-element' ], 
-    $fields->module->version, 
+    $fields->version, 
     true 
   );
 
