@@ -6,9 +6,9 @@ import {
 import { Item } from 'react-stately'
 import { useField } from 'react-aria'
 
-import { 
+import {
   Label,
-  Description
+  Description, Button
 } from '../../base'
 
 import Number from '../number/Number'
@@ -39,6 +39,8 @@ const Dimensions = props => {
       }
     )
   )
+
+  const [ isLinked, setIsLinked ] = useState(linked)
   
   useEffect(() => props.onChange && props.onChange(value), [value])
 
@@ -60,7 +62,8 @@ const Dimensions = props => {
   }
 
   let groupClasses = 'tf-dimensions-number-groups'
-  if( linked ) groupClasses += ' tf-dimensions-number-groups-linked'
+  if( isLinked ) groupClasses += ' tf-dimensions-number-groups-linked'
+  console.log(groupClasses)
 
   return(
     <div class="tf-dimensions">
@@ -77,7 +80,7 @@ const Dimensions = props => {
               name={ position }
               label={ false }
               description={ false }
-              onChange={ number => linked 
+              onChange={ number => isLinked
                 ? setLinkedPosition(number)
                 : setAttribute(number, position) }
             />
@@ -94,6 +97,9 @@ const Dimensions = props => {
             <Item key={ unit }>{ unit }</Item>
           )) }
         </Select>
+        <Button type={"action"} onPress={ () => setIsLinked(!isLinked) }>
+          <span className="dashicons dashicons-admin-links"></span>
+        </Button>
       </div>
       { props.description &&
         <Description { ...descriptionProps }>
