@@ -19,8 +19,9 @@ import { initJSON } from '../../../utils'
 const Dimensions = props => {
 
   const units = props.units ?? ['px']
-  const linked = props.linked ?? false
-  
+  const showToggle = props.linked === 'toggle' || props.linked === undefined
+  const linked = showToggle ? false : props.linked
+
   const {
     labelProps, 
     fieldProps, // Not sure where to use this one
@@ -63,7 +64,6 @@ const Dimensions = props => {
 
   let groupClasses = 'tf-dimensions-number-groups'
   if( isLinked ) groupClasses += ' tf-dimensions-number-groups-linked'
-  console.log(groupClasses)
 
   return(
     <div class="tf-dimensions">
@@ -97,9 +97,11 @@ const Dimensions = props => {
             <Item key={ unit }>{ unit }</Item>
           )) }
         </Select>
-        <Button type={"action"} onPress={ () => setIsLinked(!isLinked) }>
-          <span className="dashicons dashicons-admin-links"></span>
-        </Button>
+        { showToggle &&
+          <Button type={"action"} onPress={ () => setIsLinked(!isLinked) }>
+            <span className="dashicons dashicons-admin-links"></span>
+          </Button>
+        }
       </div>
       { props.description &&
         <Description { ...descriptionProps }>
