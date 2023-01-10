@@ -20,6 +20,7 @@ const Dimensions = props => {
 
   const units = props.units ?? ['px']
   const showToggle = props.linked === 'toggle' || props.linked === undefined
+  console.log(props.value)
   const linked = showToggle ? false : props.linked
 
   const {
@@ -36,34 +37,40 @@ const Dimensions = props => {
         left   : 0,
         right  : 0,
         bottom : 0,
-        unit   : units[0]
+        unit   : units[0],
+        isLinked : linked
       }
     )
   )
 
-  const [ isLinked, setIsLinked ] = useState(linked)
-  
   useEffect(() => props.onChange && props.onChange(value), [value])
 
   const setAttribute = (number, position) => {
     setValue({
       ...value,
-      [position]: number
+      [position]: number,
     })
   }
 
   const setLinkedPosition = number => {
     setValue({
+      ...value,
       top    : number,
       left   : number,
       right  : number,
       bottom : number,
-      unit   : value.unit
+    })
+  }
+
+  const setIsLinked = state => {
+    setValue({
+      ...value,
+      isLinked: state,
     })
   }
 
   let groupClasses = 'tf-dimensions-number-groups'
-  if( isLinked ) groupClasses += ' tf-dimensions-number-groups-linked'
+  if( value.isLinked ) groupClasses += ' tf-dimensions-number-groups-linked'
 
   return(
     <div class="tf-dimensions">
@@ -80,7 +87,7 @@ const Dimensions = props => {
               name={ position }
               label={ false }
               description={ false }
-              onChange={ number => isLinked
+              onChange={ number => value.isLinked
                 ? setLinkedPosition(number)
                 : setAttribute(number, position) }
             />
@@ -98,7 +105,7 @@ const Dimensions = props => {
           )) }
         </Select>
         { showToggle &&
-          <Button type={"action"} onPress={ () => setIsLinked(!isLinked) }>
+          <Button type={"action"} onPress={ () => setIsLinked(!value.isLinked) }>
             <span className="dashicons dashicons-admin-links"></span>
           </Button>
         }
