@@ -1,5 +1,10 @@
-import { useState } from 'react'
+import { 
+  useState,
+  useEffect
+} from 'react'
+
 import { applyDynamicValues } from '../../../dynamic' 
+import { initJSON } from '../../../utils'
 
 import Control from '../../../Control'
 
@@ -9,9 +14,8 @@ import Control from '../../../Control'
 
 const FieldGroup = props => {
 
-  const [value, setValue] = useState(props.value 
-    ? JSON.parse(props.value)
-    : {}
+  const [value, setValue] = useState(
+    initJSON(props.value)
   )
 
   const setAttribute = (name, attributeValue) => {
@@ -20,6 +24,8 @@ const FieldGroup = props => {
       [name]: attributeValue
     })
   }
+
+  useEffect(() => props.onChange && props.onChange(value), [value])
 
   const fields = props.fields ?? []
 

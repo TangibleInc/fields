@@ -31,7 +31,7 @@ const Gallery = props => {
     descriptionProps, 
   } = useField(props)
 
-  useEffect(() => props.onChange && props.onChange(), [value])
+  useEffect(() => props.onChange && props.onChange(value), [value])
 
   /**
    * Init and open media library modal

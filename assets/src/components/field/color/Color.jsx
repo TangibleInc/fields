@@ -36,7 +36,11 @@ const Color = props =>{
   const format = props.format ?? 'hexa'
   
   const onChange = value => {
-    state.setInputValue(value.toString ? value.toString(format) : '')
+    
+    const stringValue = value.toString ? value.toString(format) : ''
+    state.setInputValue(stringValue)
+    
+    if( props.onChange ) props.onChange(stringValue) 
   }
 
   /**
