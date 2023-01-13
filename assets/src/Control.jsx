@@ -13,7 +13,7 @@ const Control = props => {
   
   const type = props.type ?? 'text'
   const ControlComponent = controls[ type ] ?? false
-
+  
   if( ! ControlComponent ) return <></>;
 
   const childProps = Object.assign({}, props)

@@ -3,6 +3,15 @@ import { OverlayProvider } from 'react-aria'
 
 import Control from './Control'
 
+const tangibleFields = props => (
+  <OverlayProvider>
+    <Control { ...props } />
+  </OverlayProvider> 
+)
+
+/**
+ * Render fields registered from PHP
+ */
 window.addEventListener('load', () => {
 
   const { fields } = TangibleFields
@@ -15,11 +24,16 @@ window.addEventListener('load', () => {
     if( ! element ) continue;
 
     render(
-      <OverlayProvider>
-        <Control name={ field } { ...props } />
-      </OverlayProvider>
+      tangibleFields({ 
+        name: field, 
+        ...props 
+      })
     , element)
   }
 
 })
 
+/**
+ * Make tangibleFields accessible from other scripts
+ */
+window.tangibleFields = tangibleFields

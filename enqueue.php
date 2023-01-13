@@ -16,18 +16,17 @@ $fields->enqueue_field = function(
 
   $fields->enqueued_fields[ $name ] = $args;
 
+  $fields->$fields->enqueue_style();
+};
+
+$fields->enqueue = function() use($fields) {
+
   wp_enqueue_style( 
     'tangible-fields', 
     plugins_url( '/assets', __FILE__ ) . '/build/index.min.css', 
     [], 
     $fields->version 
   );
-
-};
-
-$fields->maybe_enqueue_scripts = function() use($fields) : void {
-
-  if( empty($fields->enqueued_fields) ) return;
 
   wp_enqueue_script( 
     'tangible-fields', 
@@ -36,7 +35,7 @@ $fields->maybe_enqueue_scripts = function() use($fields) : void {
     $fields->version, 
     true 
   );
-
+  
   $data = [
     'api' => [
       'nonce' => wp_create_nonce( 'wp_rest' ),
@@ -50,7 +49,17 @@ $fields->maybe_enqueue_scripts = function() use($fields) : void {
   ];
 
   wp_localize_script( 'tangible-fields', 'TangibleFields', $data );
-  
+
+  $fields->is_enqueued = true;
+};
+
+$fields->maybe_enqueue_scripts = function() use($fields) : void {
+
+  if( empty($fields->enqueued_fields) || $fields->is_enqueued ) {
+    return;
+  } 
+
+  $fields->enqueue();
 };
 
 add_action( 'wp_footer', $fields->maybe_enqueue_scripts );
