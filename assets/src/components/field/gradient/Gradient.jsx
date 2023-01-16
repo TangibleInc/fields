@@ -52,7 +52,12 @@ const Gradient = props => {
     descriptionProps 
   } = useField(props)
 
-  useEffect(() => props.onChange && props.onChange(value), [value])
+  useEffect(() => {
+    props.onChange && props.onChange({
+      ...value,
+      stringValue: generateGradient()
+    })
+  }, [value])
 
   /**
    * Support only 2 colors for now, but a gradient can have more
