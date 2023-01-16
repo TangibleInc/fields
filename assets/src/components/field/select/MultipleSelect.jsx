@@ -22,14 +22,14 @@ import {
   Description
 } from '../../base'
 
+import { initSet } from '../../../utils'
+
 const MultipleSelect = props => {
   
-  const [selected, setSelected] = useState(
-    props.value && props.value instanceof Set 
-      ? props.value
-      : new Set( props.value ? props.value.split(',') : [] )
+  const [selected, setSelected] = useState( 
+    props.value ? initSet(props.value) : new Set() 
   )
-
+  
   const [open, isOpen] = useState(false)
 
   const state = useListState({
@@ -48,7 +48,12 @@ const MultipleSelect = props => {
     descriptionProps 
   } = useListBox(props, state, listBoxRef)
   
-  useEffect(() => props.onChange && props.onChange(selected), [selected])
+  /**
+   * We return an array instead of a Set because it works better with JSON.stringify
+   */
+  useEffect(() => {
+    props.onChange && props.onChange([ ...selected ])
+  }, [selected])
 
   const ListBoxComponent =
     <ListBox

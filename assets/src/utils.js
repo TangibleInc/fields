@@ -19,6 +19,24 @@ const initJSON = (value, empty = false) => {
 }
 
 /**
+ * Create a Set from different types of values:
+ * - JSON array
+ * - Array
+ * - String values separated by quotes
+ */
+const initSet = value => {
+  
+  if( value instanceof Set ) return value
+  if( Array.isArray(value) ) return new Set(value)
+
+  if( value.startsWith('[') && value.endsWith(']') ) {
+    return initJSON(value, new Set())
+  }
+
+  return new Set( value.split(',') )
+}
+
+/**
  * Convert object of choice to array of object (can contain categories)
  */
 const getOptions = choices => (
@@ -52,5 +70,6 @@ export {
   uniqid,
   getOptions,
   getOption,
-  initJSON 
+  initJSON,
+  initSet
 }

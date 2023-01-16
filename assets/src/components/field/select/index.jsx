@@ -14,6 +14,7 @@ export default props => (
     ? <MultipleSelect 
         items={ getOptions(props.choices ?? {}) } 
         { ...props }
+        onChange={ props.onChange }
       >
         { RenderChoices }
       </MultipleSelect>
