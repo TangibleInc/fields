@@ -15,8 +15,7 @@ $fields->enqueue_field = function(
 ) use($fields) : void {
 
   $fields->enqueued_fields[ $name ] = $args;
-
-  $fields->$fields->enqueue_style();
+  
 };
 
 $fields->enqueue = function() use($fields) {
