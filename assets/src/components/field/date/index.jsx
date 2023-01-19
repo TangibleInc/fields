@@ -42,7 +42,7 @@ export default props => {
 
   const getStringValue = () => (
     value && value.toString ? value.toString() : ''
-  ) 
+  )
 
   return(
     <>
@@ -53,6 +53,7 @@ export default props => {
         minValue={ minValue }
         value={ value }
         onChange={ setValue }
+        onFocusChange={ props.onFocusChange ?? false }
       />
     </>
   )
