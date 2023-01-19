@@ -20,7 +20,6 @@ const Dimensions = props => {
 
   const units = props.units ?? ['px']
   const showToggle = props.linked === 'toggle' || props.linked === undefined
-  console.log(props.value)
   const linked = showToggle ? false : props.linked
 
   const {
