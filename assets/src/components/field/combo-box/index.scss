@@ -26,19 +26,9 @@
   }
 }
 
-.tf-combo-box-values {
-  display: flex;
-  align-items: center;
-  padding: $field-padding;
-  height: $field-height;
-  width: $field-width;
-  border: $field-border;
-  border-radius: $field-border-radius;
-}
-
 .tf-combo-box-item {
   height: fit-content;
-  border: 1px grey solid; 
+  border: 1px grey solid;
   padding: 2px 5px;
   margin: 0 2px;
   background: $field-background;
@@ -52,12 +42,28 @@
   }
 }
 
-.tf-combo-box-container {
+// Multiple variant
+
+
+.tf-multiple-combobox-container {
   display: flex;
-  align-items: center;
+  gap: 6px; // Should be a variable?
   position: relative;
 }
 
 .tf-multiple-combobox > .tf-popover {
   width: fit-content;
 }
+
+.tf-multiple-combobox-values {
+  display: flex;
+  align-items: center;
+  padding: $field-padding;
+  min-width: $field-width;
+  min-height: $field-height;
+  border: $field-border;
+  border-radius: $field-border-radius;
+  flex-wrap: wrap;
+  gap: .5em; // Should be a variable?
+}
+

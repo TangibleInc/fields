@@ -93,8 +93,8 @@ const MultipleComboBox = props => {
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <div class="tf-combo-box-container">
-        <div ref={ input } class="tf-combo-box-values" { ...inputProps }>
+      <div class="tf-multiple-combobox-container">
+        <div ref={ input } class="tf-multiple-combobox-values" { ...inputProps }>
           { values.length === 0
             ? props.placeholder ?? 'No item selected'
             : values.map(
