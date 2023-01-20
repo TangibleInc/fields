@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { useDatePickerState } from 'react-stately'
 import { useDatePicker } from 'react-aria'
 
@@ -31,6 +31,30 @@ const DatePicker = props => {
     calendarProps
   } = useDatePicker(props, state, ref)
 
+  /**
+   * We can't use useFocusWithin because it's not working well when nested (the ColorPicker
+   * component already implment it)
+   *
+   * @see https://react-spectrum.adobe.com/react-aria/useFocusWithin.html
+   * @see https://stackoverflow.com/a/42234988/10491705
+   */
+  useEffect(() => {
+    document.addEventListener('mousedown', onClickOutside)
+    return () => document.removeEventListener('mousedown', onClickOutside)
+  }, [ref])
+
+  const onClickOutside = event => {
+    const tempRef = ref.current ?? false
+
+    if ( ! tempRef ) return;
+    if ( tempRef.contains(event.target) ) {
+      return;
+    }
+
+    state.setOpen( false )
+  }
+  buttonProps.onPress = () => state.setOpen( !state.isOpen )
+
   return(
     <div class="tf-date">
       { props.label &&
@@ -39,8 +63,8 @@ const DatePicker = props => {
         </Label> }
       <div class="tf-date-field-container">
         <div class="tf-date-group" { ...groupProps } ref={ ref }>
-          <DateField { ...fieldProps } /> 
-          <Button type="action" { ...buttonProps } isPressed={ state.isOpen }>
+          <DateField { ...fieldProps } />
+          <Button type="action" { ...buttonProps }>
             🗓
           </Button>
         </div>

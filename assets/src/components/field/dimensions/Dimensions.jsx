@@ -6,9 +6,10 @@ import {
 import { Item } from 'react-stately'
 import { useField } from 'react-aria'
 
-import { 
+import {
   Label,
-  Description
+  Description, 
+  Button
 } from '../../base'
 
 import Number from '../number/Number'
@@ -19,8 +20,8 @@ import { initJSON } from '../../../utils'
 const Dimensions = props => {
 
   const units = props.units ?? ['px']
-  const linked = props.linked ?? false
-  
+  const showToggle = props.linked === 'toggle' || props.linked === undefined
+
   const {
     labelProps, 
     fieldProps, // Not sure where to use this one
@@ -31,36 +32,61 @@ const Dimensions = props => {
     initJSON(
       props.value ?? '',
       {
-        top    : 0,
-        left   : 0,
-        right  : 0,
-        bottom : 0,
-        unit   : units[0]
+        top      : 0,
+        left     : 0,
+        right    : 0,
+        bottom   : 0,
+        unit     : units[0],
+        isLinked : false
       }
     )
   )
-  
+
   useEffect(() => props.onChange && props.onChange(value), [value])
+
+  /**
+   * Sync all values with top when isLinked change to true
+   */
+  useEffect(() => {
+    value.isLinked && setLinkedPosition(value.top)
+  }, [value.isLinked]);
 
   const setAttribute = (number, position) => {
     setValue({
       ...value,
-      [position]: number
+      [position]: number,
     })
   }
 
   const setLinkedPosition = number => {
     setValue({
+      ...value,
       top    : number,
       left   : number,
       right  : number,
       bottom : number,
-      unit   : value.unit
     })
   }
 
+  const setIsLinked = state => {
+    setValue({
+      ...value,
+      isLinked: state,
+    })
+  }
+
+  /**
+   * We only rely on saved value when toggle is enabled, in other cases props change
+   * won't be taken into account if we change between true and false
+   */
+  const isLinked = () => (
+    showToggle 
+      ? (value.isLinked ?? false)
+      : props.linked
+  )
+
   let groupClasses = 'tf-dimensions-number-groups'
-  if( linked ) groupClasses += ' tf-dimensions-number-groups-linked'
+  if( isLinked() ) groupClasses += ' tf-dimensions-number-groups-linked'
 
   return(
     <div class="tf-dimensions">
@@ -77,7 +103,7 @@ const Dimensions = props => {
               name={ position }
               label={ false }
               description={ false }
-              onChange={ number => linked 
+              onChange={ number => isLinked()
                 ? setLinkedPosition(number)
                 : setAttribute(number, position) }
             />
@@ -94,6 +120,11 @@ const Dimensions = props => {
             <Item key={ unit }>{ unit }</Item>
           )) }
         </Select>
+        { showToggle &&
+          <Button type={"action"} onPress={ () => setIsLinked(!value.isLinked) }>
+            <span className="dashicons dashicons-admin-links"></span>
+          </Button>
+        }
       </div>
       { props.description &&
         <Description { ...descriptionProps }>
