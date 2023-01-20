@@ -9,6 +9,8 @@ defined('ABSPATH') or die();
  */
 $fields->enqueued_fields = [];
 
+$fields->is_enqueued = false;
+
 $fields->enqueue_field = function(
   string $name, 
   array $args

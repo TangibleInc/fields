@@ -1,5 +1,7 @@
 <?php
 
+defined('ABSPATH') or die();
+
 if ( ! function_exists( 'tangible_fields' ) ) :
   function tangible_fields( $arg = false ) {
     static $o;
