@@ -4,6 +4,7 @@ import {
 } from 'react'
 
 import controls from './controls-list.js'
+import { dispatchEvent } from './events'
 
 const Control = props => {
 
@@ -20,9 +21,20 @@ const Control = props => {
   
   delete childProps.value
   delete childProps.onChange
+  
+  const onChange = newValue => {
+
+    dispatchEvent('valueChange', {
+      name      : props.name ?? false, 
+      props     : props,
+      value     : newValue,
+    })
+
+    setValue(newValue)
+  }
 
   return(
-    <ControlComponent value={ value } onChange={ setValue } { ...childProps }  />
+    <ControlComponent value={ value } onChange={ onChange } { ...childProps }  />
   )
 }
 

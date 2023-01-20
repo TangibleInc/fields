@@ -1,9 +1,14 @@
 import { render } from 'react-dom'
 import { OverlayProvider } from 'react-aria'
 
+import { 
+  dispatchEvent,
+  addEventListener 
+} from './events'
+
 import Control from './Control'
 
-const tangibleFields = props => (
+const renderField = props => (
   <OverlayProvider>
     <Control { ...props } />
   </OverlayProvider> 
@@ -12,7 +17,7 @@ const tangibleFields = props => (
 /**
  * Render fields registered from PHP
  */
-window.addEventListener('load', () => {
+const init = () => {
 
   const { fields } = TangibleFields
 
@@ -24,16 +29,26 @@ window.addEventListener('load', () => {
     if( ! element ) continue;
 
     render(
-      tangibleFields({ 
+      renderField({ 
         name: field, 
         ...props 
       })
     , element)
+
+    dispatchEvent('initField', {
+      name  : field, 
+      props : props
+    })
   }
 
-})
+}
 
 /**
  * Make tangibleFields accessible from other scripts
  */
-window.tangibleFields = tangibleFields
+window.tangibleFields = {
+  render : renderField,
+  event  : addEventListener
+}
+
+window.addEventListener('load', init)
