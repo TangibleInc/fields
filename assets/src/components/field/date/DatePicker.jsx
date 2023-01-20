@@ -1,10 +1,6 @@
 import { useRef, useEffect } from 'react'
 import { useDatePickerState } from 'react-stately'
-import {
-  useDatePicker,
-  useFocus,
-  useFocusWithin
-} from 'react-aria'
+import { useDatePicker } from 'react-aria'
 
 import { 
   Button, 

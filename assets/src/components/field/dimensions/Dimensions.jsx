@@ -8,7 +8,8 @@ import { useField } from 'react-aria'
 
 import {
   Label,
-  Description, Button
+  Description, 
+  Button
 } from '../../base'
 
 import Number from '../number/Number'
@@ -20,7 +21,6 @@ const Dimensions = props => {
 
   const units = props.units ?? ['px']
   const showToggle = props.linked === 'toggle' || props.linked === undefined
-  const linked = showToggle ? false : props.linked
 
   const {
     labelProps, 
@@ -32,17 +32,24 @@ const Dimensions = props => {
     initJSON(
       props.value ?? '',
       {
-        top    : 0,
-        left   : 0,
-        right  : 0,
-        bottom : 0,
-        unit   : units[0],
-        isLinked : linked
+        top      : 0,
+        left     : 0,
+        right    : 0,
+        bottom   : 0,
+        unit     : units[0],
+        isLinked : false
       }
     )
   )
 
   useEffect(() => props.onChange && props.onChange(value), [value])
+
+  /**
+   * Sync all values with top when isLinked change to true
+   */
+  useEffect(() => {
+    value.isLinked && setLinkedPosition(value.top)
+  }, [value.isLinked]);
 
   const setAttribute = (number, position) => {
     setValue({
@@ -68,8 +75,18 @@ const Dimensions = props => {
     })
   }
 
+  /**
+   * We only rely on saved value when toggle is enabled, in other cases props change
+   * won't be taken into account if we change between true and false
+   */
+  const isLinked = () => (
+    showToggle 
+      ? (value.isLinked ?? false)
+      : props.linked
+  )
+
   let groupClasses = 'tf-dimensions-number-groups'
-  if( value.isLinked ) groupClasses += ' tf-dimensions-number-groups-linked'
+  if( isLinked() ) groupClasses += ' tf-dimensions-number-groups-linked'
 
   return(
     <div class="tf-dimensions">
@@ -86,7 +103,7 @@ const Dimensions = props => {
               name={ position }
               label={ false }
               description={ false }
-              onChange={ number => value.isLinked
+              onChange={ number => isLinked()
                 ? setLinkedPosition(number)
                 : setAttribute(number, position) }
             />

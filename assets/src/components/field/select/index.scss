@@ -19,7 +19,7 @@
 
   .tf-button-select {
     cursor: pointer;
-    height: 30;
-    font-size: 14; 
+    height: calc(#{$button-height} - #{$button-border-size * 2});
+    font-size: $field-font-size;
   }
 }
