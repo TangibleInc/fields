@@ -89,7 +89,11 @@ $fields->format_args = function(
           false
         );
       }, $args['fields'] ?? []);
+      break;
 
+      case 'switch':
+        $args = $fields->format_value($args, 'value_on', 'valueOn');
+        $args = $fields->format_value($args, 'value_off', 'valueOff');        
       break;
   }
 

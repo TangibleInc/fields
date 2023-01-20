@@ -26,8 +26,8 @@ const Switch = props => {
 
   const [value, setValue] = useState(props.value ?? false)
   
-  const activated = props.activated ?? 'on' 
-  const desactivated = props.desactivated ?? 'off'
+  const valueOn = props.valueOn ?? 'on' 
+  const valueOff = props.valueOff ?? 'off'
 
   const state = useToggleState(props)
   const ref = useRef()
@@ -46,8 +46,8 @@ const Switch = props => {
   /**
    * We don't return a boolean like in the useToggleState value, but a custom string
    */
-  useEffect(() => state.setSelected(value === activated), [])
-  useEffect(() => setValue(state.isSelected ? activated : desactivated), [state.isSelected])
+  useEffect(() => state.setSelected(value === valueOn), [])
+  useEffect(() => setValue(state.isSelected ? valueOn : valueOff), [state.isSelected])
   useEffect(() => props.onChange && props.onChange(value), [value])
 
   return(
