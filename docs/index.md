@@ -148,7 +148,15 @@ $fields->render_field('dimensions_name', [
   'label'       => 'Dimensions field', // Optional
   'description' => 'Description',  // Optional
   'units'       => [ 'px','vw' ],  // Optional, default ['px']
-  'linked'      => false,  // Optional, default false
+  'linked'      => 'toggle', // Optional, default toggle (use true or false to force value)
+]);
+
+$fields->render_field('simple_dimension_name', [
+  'type'        => 'simple_dimension', // Support for single-valued dimensions
+  'label'       => 'Simple Dimension field', // Optional
+  'description' => 'Description', // Optional
+  'units'       => [ 'px','vh','%','vw' ], // Optional, default px
+  'value'       => '',
 ]);
 
 $fields->render_field('date_name', [
