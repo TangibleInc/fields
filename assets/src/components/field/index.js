@@ -13,6 +13,7 @@ import Gallery from './gallery/Gallery'
 import Number from './number/Number'
 import Radio from './radio/'
 import Select from './select/'
+import SimpleDimension from "./simple-dimension/SimpleDimension";
 import Switch from './switch/Switch'
 import Text from './text/Text'
 
@@ -32,6 +33,7 @@ export {
   Number,
   Radio,
   Select,
+  SimpleDimension,
   Switch,
   Text
 }

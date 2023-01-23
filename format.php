@@ -47,6 +47,10 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'max', 'maxValue');
       break;
 
+    case 'simple_dimension':
+      $args['type'] = 'simple-dimension';
+      break;
+
     case 'wysiwyg':
       wp_enqueue_editor();
       break;
