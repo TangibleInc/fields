@@ -16,6 +16,7 @@ import {
   Number,
   Radio,
   Select,
+  SimpleDimension,
   Switch,
   Text
 } from './components/field/'
@@ -35,6 +36,7 @@ export default {
   'repeater'        : Repeater,
   'radio'           : Radio,
   'select'          : Select,
+  'simple-dimension': SimpleDimension,
   'switch'          : Switch,
   'text'            : Text,
   'text-suggestion' : DynamicText,

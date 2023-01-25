@@ -1,0 +1,15 @@
+.tf-simple-dimensions {
+  display: flex;
+  flex-direction: column;
+
+  .tf-select,
+  .tf-select .tf-button-select {
+    width: auto;
+  }
+}
+
+.tf-simple-dimensions-container {
+  display: flex;
+  width: fit-content;
+  position: relative;
+}
