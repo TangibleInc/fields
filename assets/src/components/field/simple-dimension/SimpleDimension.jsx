@@ -8,7 +8,7 @@ import { useField } from 'react-aria'
 
 import {
   Label,
-  Description, Button
+  Description
 } from '../../base'
 
 import Number from '../number/Number'
@@ -45,13 +45,13 @@ const Dimensions = props => {
   }
 
   return(
-    <div class="tf-dimensions">
+    <div class="tf-simple-dimensions">
       { props.label &&
       <Label { ...labelProps }>
         { props.label }
       </Label> }
       <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(value) } { ...fieldProps } />
-      <div class="tf-dimensions-container">
+      <div class="tf-simple-dimensions-container">
         <div>
           <Number
             value={ value['value'] ?? 0 }
