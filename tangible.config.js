@@ -7,6 +7,9 @@ module.exports = {
     },{
       src: 'assets/src/index.scss',
       dest: 'assets/build/index.min.css'
+    },{
+      src: 'assets/src/wp-index.scss',
+      dest: 'assets/build/wp-index.min.css'
     }
   ]
 }

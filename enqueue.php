@@ -28,6 +28,12 @@ $fields->enqueue = function() use($fields) {
     [], 
     $fields->version 
   );
+  wp_enqueue_style( 
+    'tangible-fields-wp', 
+    plugins_url( '/assets', __FILE__ ) . '/build/wp-index.min.css', 
+    [], 
+    $fields->version 
+  );
 
   wp_enqueue_script( 
     'tangible-fields', 
