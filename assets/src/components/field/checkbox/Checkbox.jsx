@@ -38,11 +38,13 @@ const Checkbox = props => {
   useEffect(() => props.onChange && props.onChange(value), [value])
 
   return(
-    <div class="tf-checkbox">
+		<div class="tf-checkbox">
       <Label { ...labelProps }>
+			<label>
         <input { ...inputProps } ref={ ref } />
-        <input type="hidden" name={ props.name ?? '' } value={ value } />
         { props.label ?? '' }
+			</label>
+        <input type="hidden" name={ props.name ?? '' } value={ value } />
       </Label> 
       { props.description &&
         <Description { ...descriptionProps }>

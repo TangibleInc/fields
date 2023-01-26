@@ -24,9 +24,11 @@ const TextField = props => {
     <div class='tf-text'>
       { props.label &&
         <Label { ...labelProps }>
-          { props.label }
+				  <label>
+						{ props.label }
+						<input { ...inputProps } ref={ ref } />
+					</label>
         </Label> }
-      <input { ...inputProps } ref={ ref } />
       { props.description &&
         <Description { ...descriptionProps }>
           { props.description }

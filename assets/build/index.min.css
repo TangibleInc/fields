@@ -25,6 +25,8 @@
   font-size: inherit;
   font-style: inherit;
   font-weight: inherit;
+  text-transform: inherit;
+  margin-bottom: revert;
 }
 
 .tf-description {
@@ -32,6 +34,8 @@
   font-size: inherit;
   font-style: inherit;
   font-weight: inherit;
+  margin-top: revert;
+  margin-bottom: revert;
 }
 
 .tf-list-box {
@@ -115,6 +119,40 @@
   border-color: #4b84ce;
 }
 
+.tf-checkbox .tf-label {
+  font-size: 13px;
+  font-weight: normal;
+  text-transform: initial;
+  margin-bottom: revert;
+}
+.tf-checkbox input[type=checkbox] {
+  box-shadow: 0 0 0 transparent;
+  border: 1px solid inherit;
+  margin-right: revert;
+  border-radius: 4px;
+}
+.tf-checkbox input[type=checkbox]:focus {
+  border-color: #4b84ce;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #4b84ce;
+  outline: 2px solid transparent;
+}
+.tf-checkbox input[type=checkbox]:checked {
+  background: #4b84ce;
+  border-color: #4b84ce;
+  color: #fff;
+}
+.tf-checkbox input[type=checkbox]:checked::before {
+  content: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGFyaWEtaGlkZGVuPSJ0cnVlIiBjbGFzcz0iY29tcG9uZW50cy1jaGVja2JveC1jb250cm9sX19jaGVja2VkIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Im0xNi43IDcuMS02LjMgOC41LTMuMy0yLjUtLjkgMS4yIDQuNSAzLjRMMTcuOSA4eiIvPjwvc3ZnPg==");
+}
+.tf-checkbox input[type=checkbox]:indeterminate {
+  background: #4b84ce;
+  border-color: #4b84ce;
+  color: #fff;
+}
+.tf-checkbox input[type=checkbox]:indeterminate::before {
+  content: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGFyaWEtaGlkZGVuPSJ0cnVlIiBjbGFzcz0iY29tcG9uZW50cy1jaGVja2JveC1jb250cm9sX19pbmRldGVybWluYXRlIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik03IDExLjVoMTBWMTNIN3oiLz48L3N2Zz4=");
+}
+
 .tf-color-area-gradient,
 .tf-color-area {
   width: 100%;
@@ -141,7 +179,7 @@
   width: 100%;
   z-index: 900;
   background: white;
-  border: solid 1px #d3d3d3;
+  border: 1px solid #d3d3d3;
 }
 .tf-color-picker .tf-color-area {
   display: flex;
@@ -178,7 +216,7 @@
   height: 20px;
   border-radius: 10px;
   width: 100%;
-  border: solid 1px #d3d3d3;
+  border: 1px solid #d3d3d3;
 }
 
 .tf-combo-box {
@@ -196,7 +234,7 @@
   padding: 0 12px;
   height: 32px;
   width: 192px;
-  border: solid 1px #d3d3d3;
+  border: 1px solid #d3d3d3;
   border-radius: 4px;
   background: white;
   color: inherit;
@@ -264,7 +302,7 @@
   padding: 0 12px;
   min-width: 192px;
   min-height: 32px;
-  border: solid 1px #d3d3d3;
+  border: 1px solid #d3d3d3;
   border-radius: 4px;
   flex-wrap: wrap;
   gap: 0.5em;
@@ -329,7 +367,7 @@
   padding: 0 12px;
   height: 32px;
   width: 192px;
-  border: solid 1px #d3d3d3;
+  border: 1px solid #d3d3d3;
   border-radius: 4px;
   background: white;
   color: inherit;
@@ -434,7 +472,7 @@
   padding: 0 12px;
   height: 32px;
   width: 192px;
-  border: solid 1px #d3d3d3;
+  border: 1px solid #d3d3d3;
   border-radius: 4px;
   background: white;
   color: inherit;
@@ -533,14 +571,14 @@
   width: fit-content;
 }
 .tf-gradient-container .tf-popover {
-  border: solid 1px #d3d3d3;
+  border: 1px solid #d3d3d3;
 }
 
 .tf-gradient-input {
   padding: 0 12px;
   height: 32px;
   width: 192px;
-  border: solid 1px #d3d3d3;
+  border: 1px solid #d3d3d3;
   border-radius: 4px;
   background: white;
   color: inherit;
@@ -590,7 +628,7 @@
   padding: 0 12px;
   height: 32px;
   width: 192px;
-  border: solid 1px #d3d3d3;
+  border: 1px solid #d3d3d3;
   border-radius: 4px;
   background: white;
   color: inherit;
@@ -657,7 +695,7 @@
   padding: 0 12px;
   height: 32px;
   width: 192px;
-  border: solid 1px #d3d3d3;
+  border: 1px solid #d3d3d3;
   border-radius: 4px;
   background: white;
   color: inherit;
@@ -762,7 +800,7 @@
   padding: 0 12px;
   height: 32px;
   width: 192px;
-  border: solid 1px #d3d3d3;
+  border: 1px solid #d3d3d3;
   border-radius: 4px;
   background: white;
   color: inherit;
@@ -788,12 +826,12 @@
   flex-direction: column;
   width: 100%;
   margin-bottom: 4px;
-  border: solid 1px #d3d3d3;
+  border: 1px solid #d3d3d3;
   border-radius: 4px;
   background: white;
 }
 .tf-repeater-block-item[data-status=open] .tf-repeater-block-item-actions {
-  border-top: solid 1px #d3d3d3;
+  border-top: 1px solid #d3d3d3;
 }
 
 .tf-repeater-block-item-header {
@@ -802,7 +840,7 @@
   width: 100%;
   cursor: pointer;
   height: 32px;
-  border-bottom: solid 1px #d3d3d3;
+  border-bottom: 1px solid #d3d3d3;
 }
 .tf-repeater-block-item-header strong {
   padding: 0 12px;
@@ -826,7 +864,7 @@
   width: -moz-fit-content;
   width: fit-content;
   padding: 4px;
-  border: solid 1px #d3d3d3;
+  border: 1px solid #d3d3d3;
   border-radius: 4px;
   background: white;
 }

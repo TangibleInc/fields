@@ -1,7 +1,10 @@
 $field-padding: 0 12px;
 $field-height: 32px;
 $field-width: 192px;
-$field-border: solid 1px #d3d3d3;
+$field-border-width: 1px;
+$field-border-style: solid;
+$field-border-color: #d3d3d3;
+$field-border: $field-border-width $field-border-style $field-border-color;
 $field-border-radius: 4px;
 $field-background: white;
 $field-focus-color: #4b84ce;
@@ -15,11 +18,15 @@ $label-font-size: inherit;
 $label-font-style: inherit;
 $label-font-weight: inherit;
 $label-font-color: inherit;
+$label-text-transform: inherit;
+$label-spacer: revert;
 
 $description-font-size: inherit;
 $description-font-style: inherit;
 $description-font-weight: inherit;
 $description-font-color: inherit;
+$description-margin-top: revert;
+$description-margin-bottom: revert;
 
 $button-background: white;
 $button-border-color: #d3d3d3;
@@ -59,6 +66,8 @@ $popover-index: 900;
   font-size: $label-font-size;
   font-style: $label-font-style;
   font-weight: $label-font-weight;
+  text-transform: $label-text-transform;
+  margin-bottom: $label-spacer;
 }
 
 @mixin description {
@@ -66,6 +75,8 @@ $popover-index: 900;
   font-size: $description-font-size;
   font-style: $description-font-style;
   font-weight: $description-font-weight;
+  margin-top: $description-margin-top;
+  margin-bottom: $description-margin-bottom;
 }
 
 @mixin button {
