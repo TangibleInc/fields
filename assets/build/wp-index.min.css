@@ -5,12 +5,13 @@
   cursor: pointer;
   width: -moz-fit-content;
   width: fit-content;
+  box-sizing: border-box;
   background: white;
   border: 1px solid transparent;
   border-radius: 2px;
   color: var(--wp-components-color-foreground, #1e1e1e);
   padding: 6px 12px;
-  height: calc(36px - 2px);
+  height: 36px;
   cursor: pointer;
 }
 
@@ -93,21 +94,27 @@
 }
 
 .tf-button-group-option {
+  box-sizing: border-box;
   background: white;
   border: 1px solid transparent;
   border-radius: 2px;
   color: var(--wp-components-color-foreground, #1e1e1e);
   padding: 6px 12px;
-  height: calc(36px - 2px);
+  height: 36px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   cursor: pointer;
   border-radius: 0;
+  border-color: var(--wp-admin-theme-color, #007cba);
+  color: var(--wp-admin-theme-color, #007cba);
 }
 .tf-button-group-option:first-child {
   border-top-left-radius: 2px;
   border-bottom-left-radius: 2px;
+}
+.tf-button-group-option:not(:first-child) {
+  margin-left: -1px;
 }
 .tf-button-group-option:last-child {
   border-top-right-radius: 2px;
@@ -117,6 +124,11 @@
   color: #fff;
   background: var(--wp-admin-theme-color, #007cba);
   border-color: var(--wp-admin-theme-color, #007cba);
+}
+.tf-button-group-option:focus-within {
+  box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px var(--wp-admin-theme-color, #007cba);
+  position: relative;
+  z-index: 1;
 }
 
 .tf-checkbox .tf-label {
@@ -255,12 +267,13 @@
   font-weight: inherit;
 }
 .tf-combo-box-text button {
+  box-sizing: border-box;
   background: white;
   border: 1px solid transparent;
   border-radius: 2px;
   color: var(--wp-components-color-foreground, #1e1e1e);
   padding: 6px 12px;
-  height: calc(36px - 2px);
+  height: 36px;
   cursor: pointer;
 }
 .tf-combo-box-text .tf-popover {
@@ -656,12 +669,13 @@
 }
 
 .tf-number-button-group {
+  box-sizing: border-box;
   background: white;
   border: 1px solid transparent;
   border-radius: 2px;
   color: var(--wp-components-color-foreground, #1e1e1e);
   padding: 6px 12px;
-  height: calc(36px - 2px);
+  height: 36px;
   cursor: pointer;
   display: flex;
   flex-direction: column;

@@ -80,12 +80,13 @@ $popover-index: 900;
 }
 
 @mixin button {
+  box-sizing: border-box;
   background: $button-background;
   border: $button-border;
   border-radius: $button-border-radius;
   color: $button-color;
   padding: $button-padding;
-  height: calc(#{$button-height} - #{$button-border-size *  2}); // Remove border
+  height: $button-height;
   cursor: pointer;
 }
 
