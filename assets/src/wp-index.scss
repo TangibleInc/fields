@@ -1,42 +1,59 @@
+// spacers
+$global-spacer-xs: 4px;
+$global-spacer-sm: 8px;
+
+// colors
+$global-theme-color: var(--wp-admin-theme-color, #3858E9);
+$global-theme-color-darker-10: var(--wp-components-color-accent-darker-10, var(--wp-admin-theme-color-darker-10, #006ba1));
+$global-theme-color-lighter-05: #E2E7FF;
+
+$global-theme-gray-30: #8c8f94;
+$global-theme-gray-40: #787c82;
+$global-theme-gray-100: #101517;
+
 $field-padding: 6px 8px;
 $field-height: 35px;
 $field-width: 100%;
 $field-border-width: 1px;
 $field-border-style: solid;
-$field-border-color: #949494;
+$field-border-color: $global-theme-gray-30;
 $field-border: $field-border-width $field-border-style $field-border-color;
 $field-border-radius: 2px;
 $field-background: #fff;
-$field-focus-color: var(--wp-admin-theme-color, #007cba);
+$field-focus-color: $global-theme-color;
 $field-font-size: 16px;
 $field-font-style: inherit;
 $field-font-weight: inherit;
-$field-font-color: #1e1e1e;
-$field-placeholder-color: inherit;
+$field-font-color: $global-theme-gray-100;
+$field-placeholder-color: $global-theme-gray-40;
 
 $label-font-size: 11px;
 $label-font-style: inherit;
 $label-font-weight: 500;
-$label-font-color: #1e1e1e;
+$label-font-color: $global-theme-gray-100;
 $label-text-transform: uppercase;
-$label-spacer: 8px;
+$label-spacer: $global-spacer-sm;
 
 $description-font-size: 12px;
 $description-font-style: inherit;
 $description-font-weight: inherit;
-$description-font-color: #757575;
-$description-margin-top: 8px;
+$description-font-color: $global-theme-gray-40;
+$description-margin-top: $global-spacer-sm;
 $description-margin-bottom: revert;
 
 $button-background: white;
-$button-border-color: transparent;
+$button-border-color: $global-theme-color;
 $button-border-type: solid;
 $button-border-size: 1px;
 $button-border: $button-border-size $button-border-type $button-border-color;
 $button-border-radius: 2px;
-$button-color: var(--wp-components-color-foreground, #1e1e1e);
+$button-color: $global-theme-color;
 $button-padding: 6px 12px;
 $button-height: 36px;
+
+$button-background--hover: white;
+$button-border-color--hover: $global-theme-color-darker-10;
+$button-color--hover: $global-theme-color-darker-10;
 
 $popover-index: 900;
 
@@ -44,10 +61,10 @@ $popover-index: 900;
   padding: $field-padding;
   height: $field-height;
   width: $field-width;
+  box-sizing: border-box;
   border: $field-border;
   border-radius: $field-border-radius;
   background: $field-background;
-
   color: $field-font-color;
   font-size: $field-font-size;
   font-style: $field-font-style;
@@ -59,6 +76,12 @@ $popover-index: 900;
     font-style: $field-font-style;
     font-weight: $field-font-weight;      
   }
+}
+
+@mixin field-focus {
+  border-color: $field-focus-color;
+  box-shadow: 0 0 0 1px $field-focus-color;
+  outline: 2px solid transparent;
 }
 
 @mixin label {
@@ -88,6 +111,15 @@ $popover-index: 900;
   padding: $button-padding;
   height: $button-height;
   cursor: pointer;
+  transition-property: color, background-color, border-color;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+  
+  &:hover {
+    background: $button-background--hover;
+    border-color: $button-border-color--hover;
+    color: $button-color--hover;
+  }
 }
 
 @mixin button-disabled {

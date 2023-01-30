@@ -19,6 +19,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  gap: $global-spacer-sm;
 
   .tf-button-action {
     height: $field-height;

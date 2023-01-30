@@ -15,8 +15,10 @@ const Block = ({
     <div class='tf-repeater-block-items'>
       { items && items.map((item, i) => (
         <div key={ item.key } class="tf-repeater-block-item" data-status={ activeItem === i ? 'open' : 'closed' }>
-          <div class="tf-repeater-block-item-header" onClick={ () => toggleItem(i) }>
-            <strong>Item { i + 1 }</strong>
+          <div class="tf-repeater-block-item-header">
+            <Button type="action" onPress={ () => toggleItem(i) }>
+            Item { i + 1 }
+            </Button>
           </div>
           { activeItem === i && 
             <div class="tf-repeater-block-item-content">{ 

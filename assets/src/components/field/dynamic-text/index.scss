@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   position: relative;
+  gap: $global-spacer-sm;
 
   .tf-dynamic-text-popover {
     position: absolute;
@@ -12,17 +13,47 @@
 }
 
 .tf-dynamic-text-item {
-  border: 1px grey solid; 
-  padding: 2px 5px;
-  margin: 0 2px; // Make it easier to see cursor before and after item
+  border: 1px solid transparent; 
+	background-color: $global-theme-color-lighter-05;
+	color: $field-focus-color;
+	border-radius: $field-border-radius;
+	font-size: 13px;
+	font-weight: bold;
+	line-height: 1.4;
+  padding: 0.25em 0.5em;
+  display: inline-flex;
+  gap: 0.35em;
+  align-items: center;
+  margin: 0 0.15em; // Make it easier to see cursor before and after item
+  
+  &::before {
+    content: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTEiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxMSAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzE1MjRfODQzOCkiPgo8cGF0aCBkPSJNNi44ODkyNiA3LjA2MjQ5SDEwLjA4MzNDMTAuNDY0MyA3LjA2MjQ5IDEwLjgwOCA3LjMwNTY1IDEwLjkxNjkgNy42Njg5NEMxMS4wNzQ0IDguMDM1MTUgMTAuOTc0MiA4LjQ0ODIzIDEwLjY4NzcgOC43MDYwNEwzLjM1NDM2IDE1LjI2ODVDMy4wMzA2NyAxNS41NTU3IDIuNTU3MTUgMTUuNTc5MSAyLjIxMTExIDE1LjMyMTNDMS44NjQ3OCAxNS4wNjM1IDEuNzM4NzQgMTQuNTk0NyAxLjkwNzQ2IDE0LjE5MzNMNC4xMTA2MSA4LjkzNzQ5SDAuODkwODIxQzAuNTM0NzU0IDguOTM3NDkgMC4xOTI4MDggOC42OTQzMyAwLjA1ODQ4ODEgOC4zMzEwNEMtMC4wNzU4MzIyIDcuOTY0ODMgMC4wMjU1NTY5IDcuNTUxNzUgMC4zMTMwMzUgNy4yOTM5NEw3LjY0NTUxIDAuNzMxOTYzQzcuOTY5MjEgMC40NDM3NCA4LjQ0MTg2IDAuNDIxNzk3IDguNzg4NDggMC42NzkxMTFDOS4xMzUwOSAwLjkzNjUxNCA5LjI2MTEzIDEuNDA0MzggOS4wOTIxMiAxLjgwNjkyTDYuODg5MjYgNy4wNjI0OVoiIGZpbGw9IiMzODU4RTkiLz4KPC9nPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8xNTI0Xzg0MzgiPgo8cmVjdCB3aWR0aD0iMTEiIGhlaWdodD0iMTUiIGZpbGw9IndoaXRlIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDAuNSkiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K");
+    line-height: 1;
+  }
 }
 
 .tf-dynamic-text-input {
   @include field;
+	padding: 0;
+	
+	&:focus-within {
+		@include field-focus;
+	}
 
   & > .cm-editor {
     width: 100%;
     height: 100%;
+    padding: $field-padding;
+    padding-top: 0;
+    padding-bottom: 0;
+		
+		&.cm-focused {
+			outline: none;
+		}
+		
+		.cm-scroller {
+			font-family: inherit;
+		}
 
     .cm-line,
     .cm-content {
@@ -33,6 +64,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      height: 100%;
     }
   }
 }

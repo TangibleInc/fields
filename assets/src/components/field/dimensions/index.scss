@@ -20,12 +20,11 @@
   width: $field-width;
 
   .tf-number {
-    width: calc($field-width / 4);
+    flex: 1 1 calc($field-width / 4);
     
     input {
       width: 100%;
-      padding: 0%;
-      text-align: center;
+      text-align: left;
     }
   }
   
@@ -37,4 +36,5 @@
 .tf-dimensions-number-groups-linked .tf-number:not(:first-child) {
   opacity: 0.5;
   pointer-events: none;
+	display: none;
 }

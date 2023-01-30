@@ -12,9 +12,7 @@
 		border-radius: $field-border-radius;
 		
 		&:focus {
-			border-color: $field-focus-color;
-			box-shadow: 0 0 0 2px #fff,0 0 0 4px $field-focus-color;
-			outline: 2px solid transparent;
+			@include field-focus;
 		}
 		
 		&:checked {
