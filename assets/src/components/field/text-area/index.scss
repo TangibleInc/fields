@@ -1,0 +1,5 @@
+.tf-text-area {
+  textarea {
+    @include field;
+  }
+}
