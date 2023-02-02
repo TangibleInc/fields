@@ -31,15 +31,9 @@ const initDispatcher = value => {
       
   const initialItems = JSON.parse(value)
 
-  const isObject = typeof initialItems === 'object'
-  const isValid = Array.isArray(initialItems) || initialItems.length !== 0
-
-  return isValid 
+  return Array.isArray(initialItems) 
     ? initialItems
-    : (isObject 
-      ? [ initialItems ] 
-      : [ emptyItem ]
-    )
+    : [ {} ] 
 }
 
 export {
