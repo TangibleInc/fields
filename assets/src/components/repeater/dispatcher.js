@@ -28,8 +28,8 @@ const repeaterDispatcher = emptyItem => (
 )
 
 const initDispatcher = value => {
-      
-  const initialItems = JSON.parse(value)
+
+  const initialItems = value !== '' ? JSON.parse(value) : false
 
   return Array.isArray(initialItems) 
     ? initialItems
