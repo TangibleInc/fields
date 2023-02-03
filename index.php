@@ -52,6 +52,7 @@ new class {
     require_once __DIR__ . '/dynamic-value.php';
     require_once __DIR__ . '/fields.php';
     require_once __DIR__ . '/enqueue.php';
+    require_once __DIR__ . '/context.php';
   }
 
 };

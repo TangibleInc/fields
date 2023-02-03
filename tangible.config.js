@@ -1,12 +1,21 @@
 module.exports = {
   build: [
+
+    /**
+     * Script: Common for all contexts
+     */
     {
       src: 'assets/src/index.jsx',
       dest: 'assets/build/index.min.js',
       react: 'wp'
-    },{
-      src: 'assets/src/index.scss',
-      dest: 'assets/build/index.min.css'
+    },
+    
+    /**
+     * Style: One stylesheet per context
+     */
+    {
+      src: 'assets/src/contexts/default/index.scss',
+      dest: 'assets/build/default/index.min.css'
     }
   ]
 }

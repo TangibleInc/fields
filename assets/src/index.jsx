@@ -9,7 +9,7 @@ import {
 import Control from './Control'
 
 const renderField = props => (
-  <OverlayProvider>
+  <OverlayProvider class="tf-context-default">
     <Control { ...props } />
   </OverlayProvider> 
 )
