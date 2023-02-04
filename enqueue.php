@@ -15,25 +15,28 @@ $fields->enqueue_field = function(
   string $name, 
   array $args
 ) use($fields) : void {
-
-  $fields->enqueued_fields[ $name ] = $args;
   
+  $args['context'] = $fields->current_context;
+  
+  $fields->enqueued_fields[ $name ] = $args;
 };
 
 $fields->enqueue = function() use($fields) {
 
-  wp_enqueue_style( 
-    'tangible-fields', 
-    plugins_url( '/assets', __FILE__ ) . '/build/index.min.css', 
-    [], 
-    $fields->version 
-  );
-  wp_enqueue_style( 
-    'tangible-fields-wp', 
-    plugins_url( '/assets', __FILE__ ) . '/build/wp-index.min.css', 
-    [], 
-    $fields->version 
-  );
+  $contexts = ! empty($fields->enqueued_contexts) 
+    ? $fields->enqueued_contexts 
+    : ['default'];
+  
+  foreach( $contexts as $context ) {
+
+    wp_enqueue_style( 
+      'tangible-fields-' . $context, 
+      plugins_url( '/assets', __FILE__ ) . '/build/' . $context . '/index.min.css', 
+      [], 
+      $fields->version 
+    );
+
+  }
 
   wp_enqueue_script( 
     'tangible-fields', 
@@ -42,7 +45,7 @@ $fields->enqueue = function() use($fields) {
     $fields->version, 
     true 
   );
-  
+
   $data = [
     'api' => [
       'nonce' => wp_create_nonce( 'wp_rest' ),

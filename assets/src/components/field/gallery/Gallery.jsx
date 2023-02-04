@@ -46,7 +46,7 @@ const Gallery = props => {
       },
       // @see https://wordpress.stackexchange.com/a/268597/190549 but dosen't seems to work anymore
       library: {
-        type: [ 'image' ] 
+        type: [ 'image' ]
       },
       state: value.length < 1 ? 'gallery' : 'gallery-edit',
       selection: getSelection()
@@ -57,6 +57,10 @@ const Gallery = props => {
       update: selection => {
         setValue(selection.models.map(image => (image.id)))
       },
+      open: () => {
+        media.menuView.unset('playlist')
+        media.menuView.unset('video-playlist')
+      }
 		}, this)
     
     media.open()

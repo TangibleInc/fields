@@ -128,6 +128,8 @@ $popover-index: 900;
   opacity: 0.5;
 }
 
-@import './components/base/index.scss';
-@import './components/field/index.scss';
-@import './components/repeater/index.scss';
+.tf-context-wp {
+  @import '../../components/base/index.scss';
+  @import '../../components/field/index.scss';
+  @import '../../components/repeater/index.scss';
+}
