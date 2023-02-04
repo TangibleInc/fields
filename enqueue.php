@@ -17,7 +17,7 @@ $fields->enqueue_field = function(
 ) use($fields) : void {
   
   $args['context'] = $fields->current_context;
-
+  
   $fields->enqueued_fields[ $name ] = $args;
 };
 

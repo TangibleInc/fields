@@ -14,7 +14,7 @@ new class {
   public $name = 'tangible_fields';
 
   // Remember to update the version - Expected format: YYYYMMDD
-  public $version = '20230201';
+  public $version = '20230203';
 
   function __construct() {
 
