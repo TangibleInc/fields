@@ -31,7 +31,7 @@ const initDispatcher = value => {
 
   const initialItems = value !== '' ? JSON.parse(value) : false
 
-  return Array.isArray(initialItems) 
+  return Array.isArray(initialItems) && initialItems.length !== 0
     ? initialItems
     : [ {} ] 
 }

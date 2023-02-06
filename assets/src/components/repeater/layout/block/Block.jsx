@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '../../../base'
 
 const Block = ({
@@ -8,7 +8,7 @@ const Block = ({
   getControl
 }) => {
 
-  const [activeItem, setActiveItem] = useState(false)
+  const [activeItem, setActiveItem] = useState(0)
   const toggleItem = i => setActiveItem( i !== activeItem ? i : false )
 
   return(
