@@ -11,7 +11,8 @@ const Table = ({
   fields,
   dispatch,
   getRow,
-  getControl
+  getControl,
+  maxLength
 }) => (
   <table>
     <thead>
@@ -19,11 +20,11 @@ const Table = ({
         { fields.map(field => (
           <th>{ field.label ?? '' }</th>
         )) }
-        <th align='end'></th>
+        { maxLength > 1 && <th align='end'></th>}
       </tr>
     </thead>
     <tbody>
-      { items && items.map((item, i) => (
+      { items && items.slice(0, maxLength).map((item, i) => (
         <tr key={ item.key }>{ 
           getRow(item).map(
             control => (
@@ -31,9 +32,11 @@ const Table = ({
             )
           )}
           <td>
-            <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
-              Remove
-            </Button>
+            { maxLength > 1 && (
+                <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
+                  Remove
+                </Button>
+            )}
           </td>
         </tr>
       )) }

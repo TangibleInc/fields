@@ -1,15 +1,17 @@
 import { uniqid } from "../../utils";
 
-const repeaterDispatcher = (emptyItem) => (items, action) => {
+const repeaterDispatcher = (emptyItem, maxLength) => (items, action) => {
   switch (action.type) {
     case "add":
-      return [
-        ...items,
-        {
-          key: uniqid(),
-          ...(action.data ?? emptyItem),
-        },
-      ];
+      return items.length >= maxLength
+        ? items
+        : [
+            ...items,
+            {
+              key: uniqid(),
+              ...(action.data ?? emptyItem),
+            },
+          ];
     case "remove":
       return [...items.slice(0, action.item), ...items.slice(action.item + 1)];
     case "update":
