@@ -99,7 +99,7 @@ $fields->format_args = function(
         $args = $fields->format_value($args, 'value_on', 'valueOn');
         $args = $fields->format_value($args, 'value_off', 'valueOff');        
       break;
-      case 'text_area':
+      case 'textarea':
         $args['type'] = 'text-area';
         break;
   }
