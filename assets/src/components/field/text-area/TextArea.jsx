@@ -19,7 +19,7 @@ const TextArea = props => {
     return (
       <div className="tf-text-area">
         {props.label && <Label { ...labelProps }>{ props.label }</Label>}
-        <textarea { ...inputProps } { ...props.attributes } ref={ ref }></textarea>
+        <textarea { ...inputProps } ref={ ref }></textarea>
         {props.description && <Description { ...descriptionProps }>{ props.description }</Description>}
       </div>
     )
