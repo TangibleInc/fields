@@ -16,6 +16,7 @@ import Select from './select/'
 import SimpleDimension from "./simple-dimension/SimpleDimension";
 import Switch from './switch/Switch'
 import Text from './text/Text'
+import InputHidden from './hidden/InputHidden'
 
 export {
   ButtonGroup,
@@ -35,5 +36,6 @@ export {
   Select,
   SimpleDimension,
   Switch,
-  Text
+  Text,
+  InputHidden
 }

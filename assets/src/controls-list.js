@@ -18,7 +18,8 @@ import {
   Select,
   SimpleDimension,
   Switch,
-  Text
+  Text,
+  InputHidden
 } from './components/field/'
 
 export default {
@@ -40,5 +41,6 @@ export default {
   'switch'          : Switch,
   'text'            : Text,
   'text-suggestion' : DynamicText,
-  'wysiwyg'         : Editor
+  'wysiwyg'         : Editor,
+  'hidden'          : InputHidden
 }
