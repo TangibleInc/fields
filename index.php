@@ -14,7 +14,7 @@ new class {
   public $name = 'tangible_fields';
 
   // Remember to update the version - Expected format: YYYYMMDD
-  public $version = '20230124';
+  public $version = '20230203';
 
   function __construct() {
 
@@ -52,6 +52,7 @@ new class {
     require_once __DIR__ . '/dynamic-value.php';
     require_once __DIR__ . '/fields.php';
     require_once __DIR__ . '/enqueue.php';
+    require_once __DIR__ . '/context.php';
   }
 
 };
