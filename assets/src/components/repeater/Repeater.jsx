@@ -21,6 +21,7 @@ const Repeater = props => {
   const layout = props.layout ?? 'table'
   const Layout = Layouts[ layout ]
 
+  const repeatable = props.repeatable ?? true
   const maxLength = props.maxlength ?? Infinity
 
   const rowFields = fields.map(field => {
@@ -68,6 +69,7 @@ const Repeater = props => {
     />
   )
 
+  useEffect(() => console.log(props.repeatable), [])
   useEffect(() => props.onChange(items), [items])
 
   return(
@@ -79,9 +81,9 @@ const Repeater = props => {
         dispatch={ dispatch }
         getRow={ getRow }
         getControl={ getControl }
-        maxLength = { maxLength }
+        maxLength = { repeatable ? maxLength : undefined }
       />
-      { maxLength > 1 && (
+      { repeatable && (
         <div class="tf-repeater-actions">
           <Button type="action" onPress={ () => dispatch({ type: 'add' }) }>
             Add item

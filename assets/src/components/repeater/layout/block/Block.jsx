@@ -33,7 +33,7 @@ const Block = ({
               <Button type="action" onPress={ () => toggleItem(i) }>
                 { activeItem !== i ? 'Edit' : 'Close' }
               </Button>
-            { maxLength > 1 && (
+            { maxLength !== undefined && (
               <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
                 Remove
               </Button>

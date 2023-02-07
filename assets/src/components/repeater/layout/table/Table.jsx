@@ -32,7 +32,7 @@ const Table = ({
             )
           )}
           <td>
-            { maxLength > 1 && (
+            { maxLength !== undefined && (
                 <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
                   Remove
                 </Button>
