@@ -29,16 +29,16 @@ const Block = ({
                 )
               )}
             </div> }
-            <div class="tf-repeater-block-item-actions">
-              <Button type="action" onPress={ () => toggleItem(i) }>
-                { activeItem !== i ? 'Edit' : 'Close' }
-              </Button>
+          <div class="tf-repeater-block-item-actions">
+            <Button type="action" onPress={ () => toggleItem(i) }>
+              { activeItem !== i ? 'Edit' : 'Close' }
+            </Button>
             { maxLength !== undefined && (
               <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
                 Remove
               </Button>
             )}
-            </div>
+          </div>
         </div>
       )) }
     </div>
