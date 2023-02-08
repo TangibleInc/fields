@@ -1,22 +1,22 @@
-import { useRef } from "react";
-import { useTextField } from "react-aria";
+import { useRef } from 'react'
+import { useTextField } from 'react-aria'
 
-import { Description, Label } from "../../base";
+import { Description, Label } from '../../base'
 
 /**
  * @see https://react-spectrum.adobe.com/react-aria/useTextField.html
  */
 
 const TextArea = (props) => {
-  const ref = useRef();
+  const ref = useRef()
 
   const { labelProps, inputProps, descriptionProps } = useTextField(
-    { ...props, inputElementType: "textarea" },
+    { ...props, inputElementType: 'textarea' },
     ref
-  );
+  )
 
   return (
-    <div className="tf-text-area">
+    <div className='tf-text-area'>
       {props.label && <Label {...labelProps}>{props.label}</Label>}
       <textarea
         {...inputProps}
@@ -29,7 +29,7 @@ const TextArea = (props) => {
         <Description {...descriptionProps}>{props.description}</Description>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default TextArea;
+export default TextArea
