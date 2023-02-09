@@ -1,0 +1,9 @@
+.tf-text-area {
+  textarea {
+    @include field;
+
+    width: 100%;
+    height: auto;
+    padding: 0.6em;
+  }
+}
