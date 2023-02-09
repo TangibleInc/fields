@@ -13,13 +13,14 @@ import {
   File,
   Gradient,
   Gallery,
+  InputHidden,
   Number,
   Radio,
   Select,
   SimpleDimension,
   Switch,
   Text,
-  InputHidden
+  TextArea
 } from './components/field/'
 
 export default {
@@ -33,6 +34,7 @@ export default {
   'file'            : File,
   'gradient'        : Gradient,
   'gallery'         : Gallery,
+  'hidden'          : InputHidden,
   'number'          : Number,
   'repeater'        : Repeater,
   'radio'           : Radio,
@@ -42,5 +44,5 @@ export default {
   'text'            : Text,
   'text-suggestion' : DynamicText,
   'wysiwyg'         : Editor,
-  'hidden'          : InputHidden
+  'textarea'        : TextArea
 }
