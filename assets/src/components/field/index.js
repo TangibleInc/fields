@@ -16,7 +16,7 @@ import Select from './select/'
 import SimpleDimension from "./simple-dimension/SimpleDimension";
 import Switch from './switch/Switch'
 import Text from './text/Text'
-import TextArea from './text-area/TextArea';
+import TextArea from './textarea/TextArea';
 
 export {
   ButtonGroup,

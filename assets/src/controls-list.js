@@ -42,5 +42,5 @@ export default {
   'text'            : Text,
   'text-suggestion' : DynamicText,
   'wysiwyg'         : Editor,
-  'text-area'       : TextArea
+  'textarea'        : TextArea
 }
