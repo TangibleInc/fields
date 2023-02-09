@@ -69,7 +69,6 @@ const Repeater = props => {
     />
   )
 
-  useEffect(() => console.log(props.repeatable), [])
   useEffect(() => props.onChange(items), [items])
 
   return(
@@ -85,10 +84,18 @@ const Repeater = props => {
       />
       { repeatable && (
         <div class="tf-repeater-actions">
-          <Button type="action" onPress={ () => dispatch({ type: 'add' }) }>
+          <Button 
+            type="action" 
+            onPress={ () => dispatch({ type: 'add' }) } 
+            isDisabled={ maxLength <= items.length }
+          >
             Add item
           </Button>
-          <Button type="action" onPress={ () => dispatch({ type: 'clear' }) }>
+          <Button 
+            type="action" 
+            onPress={ () => dispatch({ type: 'clear' }) }
+            isDisabled={ items.length <= 0 }
+          >
             Clear item
           </Button>
         </div>
