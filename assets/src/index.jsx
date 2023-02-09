@@ -8,11 +8,19 @@ import {
 
 import Control from './Control'
 
-const renderField = props => (
-  <OverlayProvider className={ `tf-context-${props.context ?? 'default'}` }>
-    <Control { ...props } />
-  </OverlayProvider> 
-)
+const renderField = props => {
+  const wrapper = props.wrapper ?? {}
+  const wrapperClass = wrapper.class ?? ''
+
+  delete props.wrapper
+  delete wrapper.class
+
+  return (
+    <OverlayProvider { ...wrapper } className={ `tf-context-${props.context ?? 'default'} ${wrapperClass}` }>
+      <Control { ...props } />
+    </OverlayProvider> 
+  )
+}
 
 /**
  * Render fields registered from PHP
