@@ -21,6 +21,9 @@ const Repeater = props => {
   const layout = props.layout ?? 'table'
   const Layout = Layouts[ layout ]
 
+  const repeatable = props.repeatable ?? true
+  const maxLength = props.maxlength ?? Infinity
+
   const rowFields = fields.map(field => {
 
     const rowField = Object.assign({}, field)
@@ -40,7 +43,7 @@ const Repeater = props => {
   fields.forEach(field => emptyItem[ field.name ] = '')
 
   const [items, dispatch] = useReducer(
-    repeaterDispatcher(emptyItem), 
+    repeaterDispatcher(emptyItem, maxLength), 
     props.value ?? [],
     initDispatcher
   )
@@ -77,15 +80,26 @@ const Repeater = props => {
         dispatch={ dispatch }
         getRow={ getRow }
         getControl={ getControl }
+        maxLength = { repeatable ? maxLength : undefined }
       />
-      <div class="tf-repeater-actions">
-        <Button type="action" onPress={ () => dispatch({ type: 'add' }) }>
-          Add item
-        </Button>
-        <Button type="action" onPress={ () => dispatch({ type: 'clear' }) }>
-          Clear item
-        </Button>
-      </div>
+      { repeatable && (
+        <div class="tf-repeater-actions">
+          <Button 
+            type="action" 
+            onPress={ () => dispatch({ type: 'add' }) } 
+            isDisabled={ maxLength <= items.length }
+          >
+            Add item
+          </Button>
+          <Button 
+            type="action" 
+            onPress={ () => dispatch({ type: 'clear' }) }
+            isDisabled={ items.length <= 0 }
+          >
+            Clear item
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

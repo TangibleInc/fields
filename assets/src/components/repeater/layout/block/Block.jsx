@@ -5,15 +5,16 @@ const Block = ({
   items,
   dispatch,
   getRow,
-  getControl
+  getControl,
+  maxLength
 }) => {
 
-  const [activeItem, setActiveItem] = useState(false)
+  const [activeItem, setActiveItem] = useState(0)
   const toggleItem = i => setActiveItem( i !== activeItem ? i : false )
 
   return(
     <div class='tf-repeater-block-items'>
-      { items && items.map((item, i) => (
+      { items && items.slice(0, maxLength).map((item, i) => (
         <div key={ item.key } class="tf-repeater-block-item" data-status={ activeItem === i ? 'open' : 'closed' }>
           <div class="tf-repeater-block-item-header" onClick={ () => toggleItem(i) }>
             <strong>Item { i + 1 }</strong>
@@ -32,9 +33,11 @@ const Block = ({
             <Button type="action" onPress={ () => toggleItem(i) }>
               { activeItem !== i ? 'Edit' : 'Close' }
             </Button>
-            <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
-              Remove
-            </Button>
+            { maxLength !== undefined && (
+              <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
+                Remove
+              </Button>
+            )}
           </div>
         </div>
       )) }
