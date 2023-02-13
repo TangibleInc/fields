@@ -8,7 +8,7 @@ import {
   initDispatcher 
 } from './dispatcher.js'
 
-import { Button } from '../base'
+import { Button, Title } from '../base'
 import { applyDynamicValues } from '../../dynamic' 
 
 import Layouts from './layout' 
@@ -74,6 +74,7 @@ const Repeater = props => {
   return(
     <div class={ `tf-repeater tf-repeater-${layout}`}>
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(items) } />
+      {props.label && <Title level={2} className='tf-repeater-title'>{ props.label }</Title>}
       <Layout
         items={ items }
         fields={ fields }
