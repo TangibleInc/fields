@@ -25,12 +25,12 @@ const repeaterDispatcher = (emptyItem, maxLength) => (items, action) => {
 }
 
 const initDispatcher = value => {
-  const initialItems = value !== '' ? JSON.parse(value) : false
-
-  const isNonEmptyArray =
-    Array.isArray(initialItems) && initialItems.length !== 0
-
-  return isNonEmptyArray ? initialItems : [{}]
+  try {
+    const initialItems = JSON.parse(value)
+    return Array.isArray(initialItems) ? initialItems : [{}]
+  } catch (err) {
+    return [{}]
+  }
 }
 
 export { repeaterDispatcher, initDispatcher }

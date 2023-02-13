@@ -75,7 +75,7 @@ $fields->format_args = function(
       break;
     
     case 'repeater':
-      if( empty($args['value']) ) $args['value'] = '[]';
+      if( empty($args['value']) ) $args['value'] = '';
       $args = $fields->format_value($args, 'sub_fields', 'fields');
       // Fall through
     case 'field_group':

@@ -44,7 +44,7 @@ const Repeater = props => {
 
   const [items, dispatch] = useReducer(
     repeaterDispatcher(emptyItem, maxLength), 
-    props.value ?? [],
+    props.value ?? '',
     initDispatcher
   )
 
