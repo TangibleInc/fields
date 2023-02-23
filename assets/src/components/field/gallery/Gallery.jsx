@@ -21,8 +21,10 @@ const Gallery = props => {
 
   const [value, setValue] = useState(
     props.value && Array.isArray(props.value)
-    ? props.value
-    : (props.value ? props.value.split(',') : [])
+      ? props.value
+      : (props.value 
+          ? props.value.split(',') 
+          : [])
   )
 
   const { 
