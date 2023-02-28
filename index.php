@@ -9,7 +9,7 @@ if ( ! function_exists( 'tangible_fields' ) ) :
   }
 endif;
 
-new class {
+new class extends stdClass {
 
   public $name = 'tangible_fields';
 
