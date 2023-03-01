@@ -14,6 +14,6 @@ Unit and integration tests are mixed together (as is usual in WordPress) and can
 
 The `DOING_TANGIBLE_TESTS` constant is defined during tests and can be used to modify core behavior as needed.
 
-Coverage can be had using `vendor/bin/phpunit --coverage-text` (requires the XDebug extension to be available and enabled).
+Coverage can be had using `vendor/bin/phpunit --coverage-text` (requires the XDebug extension to be available and enabled) or `vendor/bin/phpunit --coverage-html=coverage` for an HTML version.
 
 https://docs.phpunit.de/en/9.6/

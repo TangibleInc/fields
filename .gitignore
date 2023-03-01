@@ -12,5 +12,7 @@ composer.lock
 package-lock.json
 yarn.lock
 
-.phpunit.cache
-wordpress-develop
+# Testing
+/.phpunit.cache
+/wordpress-develop
+/coverage
