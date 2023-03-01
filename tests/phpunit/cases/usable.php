@@ -17,6 +17,9 @@ class Usable_TestCase extends WP_UnitTestCase {
 		do_action('tangible_fields');
 
 		$this->assertEquals($_previous_tangible_fields->name, tangible_fields()->name);
+
+		// The plugin cannot actually be reinizialized due to require_once calls.
+		tangible_fields($_previous_tangible_fields);
 	}
 
 	public function test_dynamic_methods_does_not_exist() {
