@@ -1,5 +1,9 @@
 <?php
 class Context_TestCase extends WP_UnitTestCase {
+	public function setUp(): void {
+		tangible_fields()->enqueued_contexts = [];
+	}
+
 	public function test_fields_context() {
 		$this->assertEquals(['default'], tangible_fields()->contexts);
 		$this->assertEquals('default', tangible_fields()->current_context);
