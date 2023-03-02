@@ -29,6 +29,7 @@
         </include>
 		<exclude>
 			<directory>tests</directory>
+			<directory>node_modules</directory>
 			<directory>vendor</directory>
 			<directory>wordpress-develop</directory>
 		</exclude>
