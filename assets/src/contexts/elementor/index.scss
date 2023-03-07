@@ -1,0 +1,16 @@
+.tf-elementor-theme-light .tf-context-elementor {
+  @import './light.scss';
+
+  @import '../../components/base/index.scss';
+  @import '../../components/field/index.scss';
+  @import '../../components/repeater/index.scss';
+}
+
+.tf-elementor-theme-dark .tf-context-elementor {
+  @import './dark.scss';
+
+  @import '../../components/base/index.scss';
+  @import '../../components/field/index.scss';
+  @import '../../components/repeater/index.scss';
+}
+
