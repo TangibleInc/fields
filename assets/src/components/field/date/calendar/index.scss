@@ -4,16 +4,16 @@
 }
 
 .tf-calendar-month {
-  display: flex;
-  justify-content: center;
+  text-align: center;
 }
 
 .tf-calendar-buttons {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   span {
-    cursor: pointer;
+		@include button;
   }
 }
 
@@ -28,6 +28,10 @@
 
 .tf-calendar-cell {
   cursor: pointer;
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
+  border-radius: 100%;
 
   &.tf-calendar-cell-disabled,
   &.tf-calendar-cell-unavailable {
@@ -35,8 +39,13 @@
     cursor: not-allowed;
   }
 
-  &.tf-calendar-cell-selected {
+  &:not(.tf-calendar-cell-disabled, .tf-calendar-cell-unavailable, .tf-calendar-cell-selected):hover {
     color: $field-focus-color;
+  }
+
+  &.tf-calendar-cell-selected {
+    background-color: $field-focus-color;
+    color: #fff;
   }
 }
 
