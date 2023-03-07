@@ -4,6 +4,8 @@
   @import '../../components/base/index.scss';
   @import '../../components/field/index.scss';
   @import '../../components/repeater/index.scss';
+
+  @import './components/calendar.scss';
 }
 
 .fl-builder-ui-skin--dark .tf-context-beaver-builder {
@@ -12,4 +14,6 @@
   @import '../../components/base/index.scss';
   @import '../../components/field/index.scss';
   @import '../../components/repeater/index.scss';
+
+  @import './components/calendar.scss';
 }

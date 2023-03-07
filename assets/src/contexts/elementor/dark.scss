@@ -1,9 +1,9 @@
 $field-padding: 0 12px;
 $field-height: 32px;
 $field-width: 192px;
-$field-border: solid 1px #d3d3d3;
+$field-border: solid 1px #64666a;
 $field-border-radius: 4px;
-$field-background: white;
+$field-background: #34383c;
 $field-focus-color: #4b84ce;
 $field-font-size: inherit;
 $field-font-style: inherit;
@@ -21,13 +21,13 @@ $description-font-style: inherit;
 $description-font-weight: inherit;
 $description-font-color: inherit;
 
-$button-background: white;
-$button-border-color: #d3d3d3;
+$button-background: #34383c;
+$button-border-color: #64666a;
 $button-border-type: solid;
 $button-border-size: 1px;
 $button-border: $button-border-type $button-border-size $button-border-color;
 $button-border-radius: 4px;
-$button-color: #505050;
+$button-color: white;
 $button-padding: 0 12px;
 $button-height: 32px;
 
@@ -83,3 +83,4 @@ $popover-index: 900;
   pointer-events: none;
   opacity: 0.5;
 }
+
