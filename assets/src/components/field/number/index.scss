@@ -22,8 +22,18 @@
     line-height: 0;
     padding: $button-padding;
     height: 50%;
+    background: #fff;
+    border: solid 1px #d3d3d3;
+    color: #505050;
 
+    &:first-child {
+      border-top-left-radius: $button-border-radius;
+      border-top-right-radius: $button-border-radius;
+    }
+  
     &:last-child {
+      border-bottom-right-radius: $button-border-radius;
+      border-bottom-left-radius: $button-border-radius;
       border-top: $button-border;
     }
 

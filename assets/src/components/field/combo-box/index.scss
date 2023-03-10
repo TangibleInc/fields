@@ -37,8 +37,15 @@
     padding-right: 5px;
   }
 
-  span:last-child {
+  button:last-child {
     cursor: pointer;
+    background-color: white;
+    border: none;
+
+    &:focus{
+      outline: none;
+    }
+
   }
 }
 
