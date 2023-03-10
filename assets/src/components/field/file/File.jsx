@@ -73,7 +73,6 @@ const FileUpload = (props) => {
     setUploads([...uploads.slice(0, i), ...uploads.slice(i + 1)])
   }
 
-
   const getAllowedTypes = () => {
     const { mimeTypes } = props;
     const mimeValues = Object.values(mimetypes);
