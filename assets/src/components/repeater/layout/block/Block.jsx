@@ -30,6 +30,15 @@ const Block = ({
               )}
             </div> }
           <div class="tf-repeater-block-item-actions">
+            <Button
+              type="action"
+              onPress={() => dispatch({ 
+                type    : 'clone',
+                item    : item
+              })}
+            >
+              Clone
+            </Button>
             <Button type="action" onPress={ () => toggleItem(i) }>
               { activeItem !== i ? 'Edit' : 'Close' }
             </Button>

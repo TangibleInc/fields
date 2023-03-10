@@ -4,7 +4,6 @@ import Color from './color/Color'
 import ComboBox from './combo-box/'
 import DatePicker from './date/'
 import Dimensions from './dimensions/Dimensions'
-import DuplicateButton from './duplicate-button/DuplicateButton'
 import DynamicText from './dynamic-text/DynamicText'
 import Editor from './editor/Editor'
 import FieldGroup from './field-group/FieldGroup'
@@ -27,7 +26,6 @@ export {
   ComboBox,
   DatePicker,
   Dimensions,
-  DuplicateButton,
   DynamicText,
   Editor,
   FieldGroup,
