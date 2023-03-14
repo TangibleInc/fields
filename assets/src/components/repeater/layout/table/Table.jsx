@@ -32,6 +32,19 @@ const Table = ({
             )
           )}
           <td>
+            { maxLength !== undefined &&
+              <Button
+                type="action"
+                isDisabled={ maxLength <= items.length }
+                onPress={() => dispatch({ 
+                  type    : 'clone',
+                  item    : item
+                })}
+              >
+                Clone
+              </Button> }
+          </td>
+          <td>
             { maxLength !== undefined && (
               <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
                 Remove

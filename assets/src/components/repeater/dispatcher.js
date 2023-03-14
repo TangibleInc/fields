@@ -17,6 +17,16 @@ const repeaterDispatcher = (emptyItem, maxLength) => (items, action) => {
     case 'update':
       items[action.item][action.control] = action.value
       return [...items]
+    case 'clone':
+      return items.length >= maxLength
+      ? items
+      : [
+          ...items,
+          {
+            key: uniqid(),
+            ...(action.item),
+          },
+        ]
     case 'clear':
       return []
     default:
