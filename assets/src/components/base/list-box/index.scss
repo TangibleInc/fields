@@ -6,6 +6,7 @@
   max-width: 250;
   max-height: 300;
   overflow: auto;
+  background: $field-background;
 }
 
 .tf-list-box-option {
@@ -17,7 +18,7 @@
 
 .tf-list-box-option-selected {
   background: $field-focus-color;
-  color: white;
+  color: $field-font-color;
 }
 
 .tf-list-box-option-disabled {

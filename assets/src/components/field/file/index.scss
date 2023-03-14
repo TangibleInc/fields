@@ -2,10 +2,11 @@
   display: flex;
   align-items: center;
   width: fit-content;
+  flex-wrap: wrap;
 }
 
 .tf-file-text {
-  width: $field-width;
+  max-width: $field-width;
   padding: $field-padding;
   text-overflow: ellipsis;
   overflow: hidden;

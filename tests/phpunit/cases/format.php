@@ -138,6 +138,19 @@ class Format_TestCase extends WP_UnitTestCase {
 		$this->assertGreaterThan(0, did_action('wp_enqueue_media'), 'wp_enqueue_media was not called');
 	}
 
+  public function test_format_args_file_ensure_wp_enqueue_media() {
+    $args = tangible_fields()->format_args('test', [
+			'type' => 'file',
+		]);
+    $this->assertEquals(0, did_action('wp_enqueue_media'), 'wp_enqueue_media was called');
+
+    $args = tangible_fields()->format_args('test', [
+			'type' => 'file',
+      'wp_media' => true
+		]);
+    $this->assertGreaterThan(0, did_action('wp_enqueue_media'), 'wp_enqueue_media was not called');
+  }
+
 	public function test_format_args_repeater_empty_value() {
 		$args = tangible_fields()->format_args('test', [
 			'type' => 'repeater',

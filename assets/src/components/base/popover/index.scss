@@ -1,8 +1,7 @@
 .tf-popover {
-  background: white;
-  color: black;
+  background: $field-background;
+  color: $field-font-color;
   position: absolute;
   z-index: $popover-index;
   width: 100%;
 }
-
