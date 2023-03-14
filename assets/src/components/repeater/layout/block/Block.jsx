@@ -30,6 +30,17 @@ const Block = ({
               )}
             </div> }
           <div class="tf-repeater-block-item-actions">
+            { maxLength !== undefined &&
+              <Button
+                type="action"
+                isDisabled={ maxLength <= items.length }
+                onPress={() => dispatch({ 
+                  type    : 'clone',
+                  item    : item
+                })}
+              >
+                Clone
+              </Button> }
             <Button type="action" onPress={ () => toggleItem(i) }>
               { activeItem !== i ? 'Edit' : 'Close' }
             </Button>
