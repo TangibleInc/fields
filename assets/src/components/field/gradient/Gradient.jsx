@@ -163,7 +163,7 @@ const Gradient = props => {
                     >
                       <Item key="linear">Linear</Item>
                       <Item key="radial">Radial</Item>
-                      <Item key="conic">Conic</Item>
+                      <Item key="conic">Conical</Item>
                     </Select>
                   </div>
                   <div>
@@ -183,7 +183,7 @@ const Gradient = props => {
                           onSelectionChange={ shape => updateValue('shape', shape) }
                         >
                           <Item key="circle">Circle</Item>
-                          <Item key="ellipse">Ellispe</Item>
+                          <Item key="ellipse">Ellipse</Item>
                         </Select> 
                       </div> }
                   </div> 
