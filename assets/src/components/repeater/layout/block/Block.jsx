@@ -16,11 +16,11 @@ const Block = ({
     <div class='tf-repeater-block-items'>
       { items && items.slice(0, maxLength).map((item, i) => (
         <div key={ item.key } class="tf-repeater-block-item" data-status={ activeItem === i ? 'open' : 'closed' }>
-          <div class="tf-repeater-block-item-header" onClick={ () => toggleItem(i) }>
+          <div class="tf-repeater-block-item-header" onClick={ () => toggleItem(i) }  aria-controls={`itemId-${i}`} aria-expanded={activeItem === i} >
             <strong>Item { i + 1 }</strong>
           </div>
           { activeItem === i && 
-            <div class="tf-repeater-block-item-content">{ 
+            <div class="tf-repeater-block-item-content" id={`itemId-${i}`} aria-label={`Item ${i+1} details`} >{ 
               getRow(item).map(
                 control => ( 
                   <div class="tf-repeater-block-item-field">

@@ -1,5 +1,6 @@
 import { render } from 'react-dom'
 import { OverlayProvider } from 'react-aria'
+import { initContexts } from './contexts/'
 
 import { 
   dispatchEvent,
@@ -49,6 +50,7 @@ const init = () => {
     })
   }
 
+  initContexts()
 }
 
 /**
