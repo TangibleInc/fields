@@ -1,18 +1,20 @@
 import { useState, useEffect, useRef } from "react";
 
 import { useField } from "react-aria";
-import { useColorFieldState } from "@react-stately/color";
 
-import { Label, Description, Popover } from "../../base";
+import { Label, Description } from "../../base";
+import { initJSON } from "../../../utils";
+
 import Dimensions from "../dimensions/Dimensions";
 import Color from "../color/Color";
-import { initJSON } from "../../../utils";
 
 const Border = (props) => {
   const units = props.units ?? ["px"];
   const format = props.format ?? "hex";
 
-  const { labelProps, descriptionProps } = useField(props);
+  const {
+    labelProps,
+    descriptionProps } = useField(props);
 
   const [value, setValue] = useState(
     initJSON(props.value ?? "", {
@@ -24,19 +26,44 @@ const Border = (props) => {
         unit: units[0],
         isLinked: false,
       },
-      colorValue: useColorFieldState(props)
+      colorValue: "rgba(0,0,0,1)",
     })
   );
+
+  useEffect(() => props.onChange && props.onChange(value), [value])
+
+  const setDimensions = dimensions => {
+    setValue((prevState) => ({
+      ...prevState,
+      dimensions: {
+        ...prevState.dimensions,
+        ...dimensions,
+      }
+    }));
+  }
+
+  const setColorValue = colorValue => {
+    setValue((prevState) => ({
+      ...prevState,
+      colorValue: colorValue,
+    }));
+  }
 
   return (
     <div>
       {props.label && <Label {...labelProps}>{props.label}</Label>}
       <div className="dimension-container">
-        <Dimensions linked={props.linked} value={value.dimensions} units={units}/>
+        <Dimensions
+          onChange={setDimensions}
+          linked={props.linked}
+          units={units}
+          value={value.dimensions}
+        />
       </div>
       <div className="color-container">
         <Color
-          value={value.colorValue.colorValue ?? 'rgba(0,0,0,1)'}
+          onChange={setColorValue}
+          value={value.colorValue}
           format={format}
           hasAlpha={props.hasAlpha ?? true}
         />
