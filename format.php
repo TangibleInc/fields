@@ -78,6 +78,8 @@ $fields->format_args = function(
       if( empty($args['value']) ) $args['value'] = '';
       $args = $fields->format_value($args, 'sub_fields', 'fields');
       // Fall through
+    
+    case 'accordion':
     case 'field_group':
 
       // We use kebab-case for control types in js
