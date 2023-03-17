@@ -93,9 +93,20 @@ const Gallery = props => {
       <div class="tf-gallery-preview">
         { value.map(image => <ImagePreview key={ image } id={ image }/>) }
       </div>
-      <Button type="action" onPress={ open }>
-        { value.length < 1 ? 'Create gallery' : 'Edit gallery' } 
-      </Button>
+      <div class="tf-gallery-buttons">
+        <Button type="action" onPress={ open }>
+          { value.length < 1 ? 'Create gallery' : 'Edit gallery' } 
+        </Button>
+        {
+          value.length > 0 && (
+            <Button type="action" onPress={ () => setValue([]) }>
+              Clear gallery
+            </Button>
+          )
+        }
+      </div>
+
+     
       <input type="hidden" name={ props.name ?? '' } value={ value.join(',') } { ...inputProps } />
       { props.description &&
         <Description { ...descriptionProps }>
