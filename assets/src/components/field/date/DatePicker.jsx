@@ -70,7 +70,7 @@ const DatePicker = props => {
         </div>
         { state.isOpen &&
           <Popover { ...dialogProps } ref={ ref } state={ state } placement="bottom start">
-            <Calendar { ...calendarProps } />
+            <Calendar { ...calendarProps } focusedValue={props.value} />
           </Popover> }
       </div>
       { props.description &&
