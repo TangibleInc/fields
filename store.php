@@ -13,8 +13,10 @@ $fields->fetch_value = function (
     return null;
   }
 
-  if ( ! ($field['permission_callback'] ?? '__return_false')($name, 'fetch') ) {
-    return null;
+  if ( ! ($field['permission_callback_fetch'] ?? '__return_false')($name) ) {
+    if ( ! ($field['permission_callback'] ?? '__return_false')($name) ) {
+      return null;
+    }
   }
 
   return $field['fetch_callback']($name);
@@ -22,7 +24,7 @@ $fields->fetch_value = function (
 
 $fields->store_value = function (
   string $name,
-  string $value,
+  mixed $value,
 ) use ($fields) : bool {
   if ( ! $field = $fields->get_field( $name ) ) {
     return false;
@@ -32,8 +34,10 @@ $fields->store_value = function (
     return false;
   }
 
-  if ( ! ($field['permission_callback'] ?? '__return_false')($name, 'store') ) {
-    return null;
+  if ( ! ($field['permission_callback_store'] ?? '__return_false')($name) ) {
+    if ( ! ($field['permission_callback'] ?? '__return_false')($name) ) {
+      return false;
+    }
   }
 
   return (bool)$field['store_callback']($name, $value);
@@ -45,8 +49,7 @@ $fields->store_value = function (
  * @usage tangible_fields()->register_field('name', [
  *  'type' => 'text',
  *  ...tangible_fields()->_store_callbacks['memory']()
- *  ...tangible_fields()->_permission_callback['user_can']('manage_options'),
- * ];
+ * ]);
  *
  * Available callbacks and their parameters:
  *
@@ -68,9 +71,12 @@ $fields->_store_callbacks = [
       }
     ];
   },
-  'options' => function ($prefix = 'tanbile_fields_') {
+  'options' => function ($prefix = 'tangible_fields_') {
     return [
       'store_callback' => function ($name, $value) use ($prefix) {
+        if ( is_null( $value ) ) {
+          return delete_option( "{$prefix}{$name}" );
+        }
         return update_option( "{$prefix}{$name}", $value );
       },
       'fetch_callback' => function ($name) use ($prefix) {
@@ -85,20 +91,66 @@ $fields->_store_callbacks = [
  *
  * @usage tangible_fields()->register_field('name', [
  *  'type' => 'text',
- *  ...tangible_fields()->_store_callbacks['memory'](),
- *  ...tangible_fields()->_permission_callback['user_can']('manage_options'),
- * ];
+ *  ...tangible_fields()->_permission_callbacks([
+ *    'store' => ['user_can', 'manage_options'],
+ *    'fetch' => ['always_allow'],
+ *  ]),
+ * ]);
  *
  * Available callbacks and their parameters:
  *
+ *  - always_allow: akin to `__return_true`
  *  - user_can: uses the `current_user_can` WordPress function
  *    to verify current user permissions. Parameters:
  *    - $permission - the permission name
  *    - $args - arguments to pass to the function
  *      (if callable will be called and spread instead)
  */
-$fields->_permission_callbacks = [
-  'user_can' => function ($permission, $args = null) {
-    return current_user_can( $permission, ...(is_callable( $args ) ? $args() : ($args ?? [])) );
+$fields->_permission_callbacks = function ($callbacks) {
+  $_return = [
+    // Don't allow by default.
+    'permission_callback_store' => '__return_false',
+    'permission_callback_fetch' => '__return_false',
+  ];
+
+  foreach (['store', 'fetch'] as $action) {
+    if ( empty( $callbacks[$action] ) ) {
+      continue;
+    }
+    if ( ! is_array( $callbacks[$action] ) ) {
+      $callback = $callbacks[$action];
+      $args = [];
+    } else {
+      $callback = array_shift( $callbacks[$action] );
+      $args = $callbacks[$action];
+    }
+
+    switch ( $callback ):
+      case 'always_allow':
+        $_return["permission_callback_$action"] = '__return_true';
+        break;
+      case 'user_can':
+        $_return["permission_callback_$action"] = function() use ($args) {
+          $args = array_map( function( $arg ) {
+            return is_callable( $arg ) ? $arg() : $arg;
+          }, $args );
+          return current_user_can(...$args);
+        };
+        break;
+      default:
+        $backtrace = debug_backtrace();
+        $caller = array_shift( $backtrace );
+        $caller = array_shift( $backtrace );
+        trigger_error("Unknown {$callback} permission callback, called from <b>{$caller['file']}</b> in <b>{$caller['line']}</b>.", E_USER_WARNING);
+    endswitch;
   }
-];
+
+  return $_return;
+};
+
+/*
+'user_can' => function ($permission, $args = null) {
+  'permission_callback_fetch' => function () use ($permission)
+    return current_user_can( $permission, ...(is_callable( $args ) ? $args() : ($args ?? [])) );
+}
+ */

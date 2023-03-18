@@ -14,7 +14,9 @@ $fields->register_field = function(
   array $args
 ) use ($fields) : void {
   if ( !empty( $fields->registered_fields[ $name ] ) ) {
-    $caller = current( debug_backtrace() );
+    $backtrace = debug_backtrace();
+    $caller = array_shift( $backtrace );
+    $caller = array_shift( $backtrace );
     trigger_error("Field {$name} is already registered, called from <b>{$caller['file']}</b> in <b>{$caller['line']}</b>.", E_USER_WARNING);
   }
   $fields->registered_fields[ $name ] = $args;
