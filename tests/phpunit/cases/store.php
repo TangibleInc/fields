@@ -41,7 +41,54 @@ class Store_TestCase extends WP_UnitTestCase {
 		]);
 
 		$this->assertTrue(tangible_fields()->store_value('default', 'store'));
-		$this->assertEquals('store', get_option('tangible_fields_default'));
+		$this->assertEquals('store', get_option('tf_default'));
+
+		tangible_fields()->store_value('default', null); // Cleanup.
+		$this->assertFalse(get_option('tf_default'));
+	}
+
+	public function test_fields_store_store_callbacks_meta_post() {
+		$id = wp_insert_post(['post_title' => 'A Tangible Post']);
+
+		tangible_fields()->register_field('test', [
+			...tangible_fields()->_store_callbacks['meta']('post', $id, 'test_'),
+			'permission_callback' => '__return_true',
+		]);
+
+		$this->assertEmpty(get_post_meta($id, 'test_test', true));
+
+		$this->assertTrue(tangible_fields()->store_value('test', 'store'));
+		$this->assertEquals('store', get_post_meta($id, 'test_test', true));
+		$this->assertEquals('store', tangible_fields()->fetch_value('test'));
+
+		$this->assertTrue(tangible_fields()->store_value('test', null)); // Cleanup.
+		$this->assertEmpty(get_post_meta($id, 'test_test'));
+	}
+
+	public function test_fields_store_store_callbacks_meta_user() {
+		$users = get_users();
+		$id = current($users)->ID;
+
+		$the_user_id = function() use (&$id) {
+			return $id;
+		};
+
+		tangible_fields()->register_field('test', [
+			...tangible_fields()->_store_callbacks['meta']('user', $the_user_id),
+			'permission_callback' => '__return_true',
+		]);
+
+		$this->assertEmpty(get_user_meta($id, 'tf_test', true));
+
+		$this->assertTrue(tangible_fields()->store_value('test', 'store'));
+		$this->assertEquals('store', get_user_meta($id, 'tf_test', true));
+		$this->assertEquals('store', tangible_fields()->fetch_value('test'));
+
+		$this->assertTrue(tangible_fields()->store_value('test', null)); // Cleanup.
+		$this->assertEmpty(get_user_meta($id, 'tf_test'));
+
+		$id = 0;
+		$this->assertFalse(tangible_fields()->store_value('test', 'store'));
 	}
 
 	public function test_fields_store_permission_custom_permissions() {
@@ -182,5 +229,6 @@ class Store_TestCase extends WP_UnitTestCase {
 		$this->assertEquals('store', tangible_fields()->fetch_value('test'));
 
 		tangible_fields()->store_value('test', null); // Cleanup.
+		remove_filter('map_meta_cap', $map_meta_cap_filter, 10);
 	}
 }

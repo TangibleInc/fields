@@ -57,6 +57,10 @@ $fields->store_value = function (
  *    mostly used for testing. Parameters: none.
  *  - options: use the wp_options table. Parameters:
  *    - $prefix - the option name prefix
+ *  - meta: use wp_TYPE_meta table. Parameters:
+ *    - $object_type - one of post, term, user, comment
+ *    - $object_id - object ID or callback
+ *    - $prefix - the meta key prefix
  */
 $fields->_store_callbacks = [
   'memory' => function () {
@@ -71,7 +75,7 @@ $fields->_store_callbacks = [
       }
     ];
   },
-  'options' => function ($prefix = 'tangible_fields_') {
+  'options' => function ($prefix = 'tf_') {
     return [
       'store_callback' => function ($name, $value) use ($prefix) {
         if ( is_null( $value ) ) {
@@ -84,6 +88,25 @@ $fields->_store_callbacks = [
       },
     ];
   },
+  'meta' => function ($object_type, $object_id, $prefix = 'tf_') {
+    return [
+      'store_callback' => function ($name, $value) use ($object_type, $object_id, $prefix) {
+        if ( is_callable( $object_id ) ) {
+          $object_id = $object_id();
+        }
+        if ( is_null( $value ) ) {
+          return delete_metadata( $object_type, $object_id, "{$prefix}{$name}", null, true );
+        }
+        return (bool)update_metadata( $object_type, $object_id, "{$prefix}{$name}", $value );
+      },
+      'fetch_callback' => function ($name) use ($object_type, $object_id, $prefix) {
+        if ( is_callable( $object_id ) ) {
+          $object_id = $object_id();
+        }
+        return get_metadata( $object_type, $object_id, "{$prefix}{$name}", true );
+      },
+    ];
+  }
 ];
 
 /**
