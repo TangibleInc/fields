@@ -1,23 +1,23 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from 'react'
+import { useField } from 'react-aria'
 
-import { useField } from "react-aria";
+import { Label, Description } from '../../base'
+import { initJSON } from '../../../utils'
 
-import { Label, Description } from "../../base";
-import { initJSON } from "../../../utils";
-
-import Dimensions from "../dimensions/Dimensions";
-import Color from "../color/Color";
+import Dimensions from '../dimensions/Dimensions'
+import { Color } from '../'
 
 const Border = (props) => {
-  const units = props.units ?? ["px"];
-  const format = props.format ?? "hex";
+  const units = props.units ?? ['px']
+  const format = props.format ?? 'hex'
 
   const {
     labelProps,
-    descriptionProps } = useField(props);
+    fieldProps,
+    descriptionProps } = useField(props)
 
   const [value, setValue] = useState(
-    initJSON(props.value ?? "", {
+    initJSON(props.value ?? '', {
       dimensions: {
         top: 0,
         left: 0,
@@ -26,9 +26,9 @@ const Border = (props) => {
         unit: units[0],
         isLinked: false,
       },
-      colorValue: "rgba(0,0,0,1)",
+      colorValue: 'rgba(0,0,0,1)'
     })
-  );
+  )
 
   useEffect(() => props.onChange && props.onChange(value), [value])
 
@@ -39,20 +39,24 @@ const Border = (props) => {
         ...prevState.dimensions,
         ...dimensions,
       }
-    }));
+    }))
   }
 
   const setColorValue = colorValue => {
     setValue((prevState) => ({
       ...prevState,
       colorValue: colorValue,
-    }));
+    }))
   }
 
   return (
     <div>
-      {props.label && <Label {...labelProps}>{props.label}</Label>}
-      <div className="dimension-container">
+      {props.label && 
+      <Label {...labelProps}>
+        {props.label}
+        </Label>}
+      <input type="hidden" name={props.name ?? ''} value={JSON.stringify(value)} {...fieldProps} />
+      <div className='dimension-container'>
         <Dimensions
           onChange={setDimensions}
           linked={props.linked}
@@ -60,7 +64,7 @@ const Border = (props) => {
           value={value.dimensions}
         />
       </div>
-      <div className="color-container">
+      <div className='color-container'>
         <Color
           onChange={setColorValue}
           value={value.colorValue}
@@ -69,10 +73,12 @@ const Border = (props) => {
         />
       </div>
       {props.description && (
-        <Description {...descriptionProps}>{props.description}</Description>
+        <Description {...descriptionProps}>
+          {props.description}
+          </Description>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Border;
+export default Border
