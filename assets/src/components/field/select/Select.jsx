@@ -37,30 +37,24 @@ const Select = props => {
    * @see https://react-spectrum.adobe.com/react-aria/useSelect.html
    */
   const ref = useRef()
+  const listRef = useRef()
   const {
     labelProps,
     descriptionProps,
-    triggerProps,
     valueProps,
     menuProps
   } = useSelect(props, state, ref)
   
   return(
     <div class="tf-select">
+        <input type="hidden" name={ props.name ?? '' } value={ [...state.selectedKey].join(',') } />
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <HiddenSelect
-        state={ state }
-        triggerRef={ ref }
-        label={ props.label }
-        name={ props.name }
-      />
       <Button
-        ref={ ref }
         type={ 'select' }
-        { ...triggerProps }
+        onPress={()=> state.open()}
       >
         <span { ...valueProps }>
           { state.selectedItem
@@ -79,6 +73,7 @@ const Select = props => {
         >
           <ListBox
             { ...menuProps }
+            listBoxRef={ listRef }
             state={ state }
             items={ props.items }
           >
