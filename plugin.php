@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: Tangible Module: Fields
  * Description: React-based custom fields library
