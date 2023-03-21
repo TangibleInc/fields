@@ -268,10 +268,148 @@ class Store_TestCase extends TF_UnitTestCase {
 		$this->assertEquals('You MUST fill this in!', $error->get_error_message());
 	}
 
-	public function test_fields_store_ajax_should_not_exit() {
+	public function test_fields_store_ajax_should_not_exit_in_testmode() {
 		$result = tangible_fields()->__send_ajax([
 			'test' => 'me',
 		]);
 		$this->assertEquals(['test' => 'me'], $result);
+	}
+
+	public function test_fields_store_ajax_registered() {
+		$this->assertEquals(10, has_action('wp_ajax_tangible_fields_store', [tangible_fields(), '_ajax_store_callback']), 'AJAX is not registered');
+		$this->assertEquals(10, has_action('wp_ajax_nopriv_tangible_fields_store', [tangible_fields(), '_ajax_store_callback']), 'AJAX is not registered');
+
+		$this->assertEquals(10, has_action('wp_ajax_tangible_fields_fetch', [tangible_fields(), '_ajax_fetch_callback']), 'AJAX is not registered');
+		$this->assertEquals(10, has_action('wp_ajax_nopriv_tangible_fields_fetch', [tangible_fields(), '_ajax_fetch_callback']), 'AJAX is not registered');
+	}
+
+	public function test_fields_store_ajax_store_errors() {
+		$response = tangible_fields()->_ajax_store_callback();
+
+		$this->assertEquals([
+			'success' => false,
+			'error' => 'Unknown field ',
+		], $response);
+
+		$_GET['name'] = 'test';
+		$response = tangible_fields()->_ajax_store_callback();
+
+		$this->assertEquals([
+			'success' => false,
+			'error' => 'Unknown field test',
+		], $response);
+
+		tangible_fields()->register_field('test', [
+			'type' => 'text',
+		]);
+
+		$response = tangible_fields()->_ajax_store_callback();
+
+		$this->assertEquals([
+			'success' => false,
+			'error' => 'Unknown store callback for test',
+		], $response);
+
+		unset($_GET['name']);
+	}
+
+	public function test_fields_store_ajax_store() {
+		tangible_fields()->register_field('test', [
+			...tangible_fields()->_store_callbacks['memory'](),
+			...tangible_fields()->_permission_callbacks([
+				'store' => 'always_allow',
+				'fetch' => 'always_allow',
+			]),
+			'validation_callbacks' => [
+				tangible_fields()->_validation_callback('required', 'You MUST fill this in!'),
+			],
+		]);
+
+		$_GET['name'] = 'test';
+		$response = tangible_fields()->_ajax_store_callback();
+
+		$this->assertEquals([
+			'success' => false,
+			'error' => 'You MUST fill this in!',
+		], $response);
+
+		$_REQUEST['value'] = 42;
+		$response = tangible_fields()->_ajax_store_callback();
+
+		$this->assertEquals([
+			'success' => true,
+			'error' => null
+		], $response);
+
+		$this->assertEquals(42, tangible_fields()->fetch_value('test'));
+
+		unset($_REQUEST['value']);
+
+		tangible_fields()->registered_fields = [];
+		tangible_fields()->register_field('test', [
+			...tangible_fields()->_store_callbacks['memory'](),
+			...tangible_fields()->_permission_callbacks([
+				'store' => 'always_allow',
+				'fetch' => 'always_allow',
+			]),
+		]);
+
+		$response = tangible_fields()->_ajax_store_callback();
+		$this->assertNull(tangible_fields()->fetch_value('test'));
+
+		unset($_GET['name']);
+	}
+
+	public function test_fields_store_ajax_fetch_errors() {
+		$response = tangible_fields()->_ajax_fetch_callback();
+
+		$this->assertEquals([
+			'success' => false,
+			'error' => 'Unknown field ',
+		], $response);
+
+		$_GET['name'] = 'test';
+
+		$response = tangible_fields()->_ajax_fetch_callback();
+
+		$this->assertEquals([
+			'success' => false,
+			'error' => 'Unknown field test',
+		], $response);
+
+		tangible_fields()->register_field('test', [
+			'type' => 'text',
+		]);
+
+		$response = tangible_fields()->_ajax_fetch_callback();
+
+		$this->assertEquals([
+			'success' => false,
+			'error' => 'Unknown fetch callback for test',
+		], $response);
+
+		unset($_GET['name']);
+	}
+
+	public function test_fields_store_ajax_fetch() {
+		tangible_fields()->register_field('test', [
+			...tangible_fields()->_store_callbacks['memory'](),
+			...tangible_fields()->_permission_callbacks([
+				'store' => 'always_allow',
+				'fetch' => 'always_allow',
+			]),
+		]);
+
+		$_GET['name'] = 'test';
+
+		$response = tangible_fields()->_ajax_fetch_callback();
+
+		$this->assertEquals([
+			'success' => true,
+			'error' => null,
+			'value' => null,
+		], $response);
+
+		unset($_GET['name']);
 	}
 }

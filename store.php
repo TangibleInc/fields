@@ -61,17 +61,19 @@ $fields->store_value = function (
  * {"success": true, "error": null}
  */
 add_action( 'wp_ajax_tangible_fields_store', [ $fields, '_ajax_store_callback' ] );
-add_action( 'wp_ajax_nopriv_fields_store', [ $fields, '_ajax_store_callback' ] );
+add_action( 'wp_ajax_nopriv_tangible_fields_store', [ $fields, '_ajax_store_callback' ] );
 $fields->_ajax_store_callback = function (
 ) use ($fields) {
   $name = $_GET['name'] ?? '';
+
   if ( ! $field = $fields->get_field( $name ) ) {
     return $fields->__send_ajax( [
       'success' => false,
       'error' => sprintf( __( 'Unknown field %1$s' ), $name ),
     ] );
   }
-  $value = $_POST['value'] ?? null;
+
+  $value = $_REQUEST['value'] ?? null;
 
   if ( is_wp_error( $error = $fields->store_value( $name, $value ) ) ) {
     return $fields->__send_ajax( [
@@ -90,10 +92,11 @@ $fields->_ajax_store_callback = function (
  * {"success": true, "error": null, "value": 42}
  */
 add_action( 'wp_ajax_tangible_fields_fetch', [ $fields, '_ajax_fetch_callback' ] );
-add_action( 'wp_ajax_nopriv_fields_fetch', [ $fields, '_ajax_fetch_callback' ] );
+add_action( 'wp_ajax_nopriv_tangible_fields_fetch', [ $fields, '_ajax_fetch_callback' ] );
 $fields->_ajax_fetch_callback = function (
 ) use ($fields) {
   $name = $_GET['name'] ?? '';
+
   if ( ! $field = $fields->get_field( $name ) ) {
     return $fields->__send_ajax( [
       'success' => false,
@@ -101,7 +104,12 @@ $fields->_ajax_fetch_callback = function (
     ] );
   }
 
-  $value = $fields->fetch_value( $name );
+  if ( is_wp_error( $error = $value = $fields->fetch_value( $name ) ) ) {
+    return $fields->__send_ajax( [
+      'success' => false,
+      'error' => $error->get_error_message(),
+    ] );
+  }
 
   return $fields->__send_ajax( [
     'success' => true,

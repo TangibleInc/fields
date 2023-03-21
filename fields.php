@@ -13,7 +13,7 @@ $fields->register_field = function(
   string $name,
   array $args
 ) use ($fields) : void {
-  if ( !empty( $fields->registered_fields[ $name ] ) ) {
+  if ( ! empty( $fields->registered_fields[ $name ] ) ) {
     $backtrace = debug_backtrace();
     $caller = array_shift( $backtrace );
     $caller = array_shift( $backtrace );
