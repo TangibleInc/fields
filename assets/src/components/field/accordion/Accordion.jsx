@@ -1,18 +1,24 @@
 import { useState } from 'react'
 import FieldGroup from '../field-group/FieldGroup'
+import { ExpandablePanel } from '../../base'
 
 const Accordion = props => {
 
+    console.log(props)
+
     const [showItem, setShowItem] = useState(true)
-    const toggleShow = () => setShowItem( !showItem )
+    
+    const title = 'test'
 
     return (
         <div class='tf-accordion-items' >
-            <div class='tf-accordion-header' onClick={ () => toggleShow() } >
-              <div class='tf-accordion-group-buttons' >
-                <span class={showItem ? 'tf-accordion-arrow tf-accordion-arrow-up' : 'tf-accordion-arrow tf-accordion-arrow-down'} />
-              </div>
-            </div>
+          <ExpandablePanel 
+            title={ title } 
+            showItem={ showItem } 
+            toggleShow={ () => setShowItem(!showItem) } 
+            accordion_switch={ props.accordion_switch } 
+            accordion_checkbox={ props.accordion_checkbox } 
+          >
             {
               showItem ?
                 <div class="tf-accordion-item">
@@ -22,6 +28,7 @@ const Accordion = props => {
                 </div> 
               : ''
             }
+          </ExpandablePanel>
         </div>
     )
 }
