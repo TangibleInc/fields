@@ -50,32 +50,34 @@ const Border = (props) => {
   }
 
   return (
-    <div>
-      {props.label && 
-      <Label {...labelProps}>
-        {props.label}
+    <div className='tf-border'>
+      {props.label &&
+        <Label {...labelProps}>
+          {props.label}
         </Label>}
       <input type="hidden" name={props.name ?? ''} value={JSON.stringify(value)} {...fieldProps} />
-      <div className='dimension-container'>
-        <Dimensions
-          onChange={setDimensions}
-          linked={props.linked}
-          units={units}
-          value={value.dimensions}
-        />
-      </div>
-      <div className='color-container'>
-        <Color
-          onChange={setColorValue}
-          value={value.colorValue}
-          format={format}
-          hasAlpha={props.hasAlpha ?? true}
-        />
+      <div className='tf-border-container'>
+        <div className='tf-dimensions-container'>
+          <Dimensions
+            onChange={setDimensions}
+            linked={props.linked}
+            units={units}
+            value={value.dimensions}
+          />
+        </div>
+        <div className='tf-color-picker-container'>
+          <Color
+            onChange={setColorValue}
+            value={value.colorValue}
+            format={format}
+            hasAlpha={props.hasAlpha ?? true}
+          />
+        </div>
       </div>
       {props.description && (
         <Description {...descriptionProps}>
           {props.description}
-          </Description>
+        </Description>
       )}
     </div>
   )
