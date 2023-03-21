@@ -16,7 +16,11 @@ const Block = ({
     <div class='tf-repeater-block-items'>
       { items && items.slice(0, maxLength).map((item, i) => (
           <div key={ item.key } class="tf-repeater-block-item" data-status={ activeItem === i ? 'open' : 'closed' }>          
-            <ExpandablePanel title={ 'Item' + (i + 1) } showItem={ activeItem } toggleShow={ () => toggleItem(i) } >
+            <ExpandablePanel 
+              title={ 'Item' + (i + 1) } 
+              showItem={ activeItem === i } 
+              toggleShow={ () => toggleItem(i) } 
+            >
                 { activeItem === i && 
                   <div class="tf-repeater-block-item-content">{ 
                     getRow(item).map(

@@ -4,8 +4,6 @@ import { ExpandablePanel } from '../../base'
 
 const Accordion = props => {
 
-    console.log(props)
-
     const [showItem, setShowItem] = useState(true)
     
     const title = 'test'

@@ -6,11 +6,7 @@ const ExpandablePanel = props => {
     const [showItem, setShowItem] = useState(true)
 
     useEffect(() => {
-        if( typeof(props.showItem) !== 'number' ) {
-            setShowItem(props.showItem)
-        } else {
-            setShowItem(true)
-        } 
+        setShowItem( props.showItem ) 
     }, [props.showItem])
 
     return ( 
