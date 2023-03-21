@@ -1,5 +1,5 @@
 <?php
-class Store_TestCase extends WP_UnitTestCase {
+class Store_TestCase extends TF_UnitTestCase {
 	public function setUp(): void {
 		tangible_fields()->registered_fields = [];
 	}
@@ -88,7 +88,7 @@ class Store_TestCase extends WP_UnitTestCase {
 		$this->assertEmpty(get_user_meta($id, 'tf_test'));
 
 		$id = 0;
-		$this->assertFalse(tangible_fields()->store_value('test', 'store'));
+		$this->assertWPErrorCode('tf-error', tangible_fields()->store_value('test', 'store'));
 	}
 
 	public function test_fields_store_permission_custom_permissions() {
@@ -104,14 +104,15 @@ class Store_TestCase extends WP_UnitTestCase {
 			},
 		]);
 
-		$this->assertFalse(tangible_fields()->store_value('test', 'store'));
+		$this->assertWPErrorCode('tf-no-permission', tangible_fields()->store_value('test', 'store'));
+		$this->assertWPErrorCode('tf-no-permission', tangible_fields()->fetch_value('test'));
 
 		$allowed = true;
 		$this->assertTrue(tangible_fields()->store_value('test', 'store'));
 		$this->assertEquals('store', tangible_fields()->fetch_value('test'));
 
 		$allowed = false;
-		$this->assertNull(tangible_fields()->fetch_value('test'));
+		$this->assertWPErrorCode('tf-no-permission', tangible_fields()->fetch_value('test'));
 
 		$allowed = true;
 		tangible_fields()->store_value('test', null); // Cleanup.
@@ -127,14 +128,15 @@ class Store_TestCase extends WP_UnitTestCase {
 			},
 		]);
 
-		$this->assertFalse(tangible_fields()->store_value('test', 'store'));
+		$this->assertWPErrorCode('tf-no-permission', tangible_fields()->store_value('test', 'store'));
+		$this->assertWPErrorCode('tf-no-permission', tangible_fields()->fetch_value('test'));
 
 		$allowed = true;
 		$this->assertTrue(tangible_fields()->store_value('test', 'store'));
 		$this->assertEquals('store', tangible_fields()->fetch_value('test'));
 
 		$allowed = false;
-		$this->assertNull(tangible_fields()->fetch_value('test'));
+		$this->assertWPErrorCode('tf-no-permission', tangible_fields()->fetch_value('test'));
 
 		$allowed = true;
 		tangible_fields()->store_value('test', null); // Cleanup.
@@ -145,8 +147,8 @@ class Store_TestCase extends WP_UnitTestCase {
 			...tangible_fields()->_store_callbacks['memory'](),
 		]);
 
-		$this->assertFalse(tangible_fields()->store_value('test', 'store'));
-		$this->assertNull(tangible_fields()->fetch_value('test'));
+		$this->assertWPErrorCode('tf-no-permission', tangible_fields()->store_value('test', 'store'));
+		$this->assertWPErrorCode('tf-no-permission', tangible_fields()->fetch_value('test'));
 	}
 
 	public function test_fields_store_permission_callback_empty() {
@@ -155,8 +157,8 @@ class Store_TestCase extends WP_UnitTestCase {
 			...tangible_fields()->_permission_callbacks([]),
 		]);
 
-		$this->assertFalse(tangible_fields()->store_value('test', 'store'));
-		$this->assertNull(tangible_fields()->fetch_value('test'));
+		$this->assertWPErrorCode('tf-no-permission', tangible_fields()->store_value('test', 'store'));
+		$this->assertWPErrorCode('tf-no-permission', tangible_fields()->fetch_value('test'));
 	}
 
 	public function test_fields_store_permission_callback_unknown() {
@@ -182,8 +184,8 @@ class Store_TestCase extends WP_UnitTestCase {
 
 		$this->assertEquals(E_USER_WARNING, $errno, 'unknown permission callback did not trigger an E_USER_WARNING');
 
-		$this->assertFalse(tangible_fields()->store_value('test', 'store'));
-		$this->assertNull(tangible_fields()->fetch_value('test'));
+		$this->assertWPErrorCode('tf-no-permission', tangible_fields()->store_value('test', 'store'));
+		$this->assertWPErrorCode('tf-no-permission', tangible_fields()->fetch_value('test'));
 	}
 
 	public function test_fields_store_permission_callbacks_always_allow() {
@@ -220,7 +222,7 @@ class Store_TestCase extends WP_UnitTestCase {
 			return $expected === $actual ? ['exist'] : ['do_not_allow'];
 		}, 10, 4);
 
-		$this->assertFalse(tangible_fields()->store_value('test', 'store'));
+		$this->assertWPErrorCode('tf-no-permission', tangible_fields()->store_value('test', 'store'));
 		$this->assertNull(tangible_fields()->fetch_value('test'));
 
 		$password = 'hunter2';

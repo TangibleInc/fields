@@ -6,16 +6,16 @@ $fields->fetch_value = function (
   string $name
 ) use ($fields) : mixed {
   if ( ! $field = $fields->get_field( $name ) ) {
-    return WP_Error( 'tf-unknown-field', sprintf( __( 'Unknown field %1$s' ), $name ) );
+    return new WP_Error( 'tf-unknown-field', sprintf( __( 'Unknown field %1$s' ), $name ) );
   }
 
   if ( empty( $field['fetch_callback'] ) ) {
-    return WP_Error( 'tf-unknown-callback', sprintf( __( 'Unknown fetch callback for %1$s' ), $name ) );
+    return new WP_Error( 'tf-unknown-callback', sprintf( __( 'Unknown fetch callback for %1$s' ), $name ) );
   }
 
   if ( ! ($field['permission_callback_fetch'] ?? '__return_false')($name) ) {
     if ( ! ($field['permission_callback'] ?? '__return_false')($name) ) {
-      return WP_Error( 'tf-no-permission', sprintf( __( 'Access denied to fetch value for %1$s' ), $name ) );
+      return new WP_Error( 'tf-no-permission', sprintf( __( 'Access denied to fetch value for %1$s' ), $name ) );
     }
   }
 
@@ -27,16 +27,16 @@ $fields->store_value = function (
   mixed $value,
 ) use ($fields) : mixed {
   if ( ! $field = $fields->get_field( $name ) ) {
-    return WP_Error( 'tf-unknown-field', sprintf( __( 'Unknown field %1$s' ), $name ) );
+    return new WP_Error( 'tf-unknown-field', sprintf( __( 'Unknown field %1$s' ), $name ) );
   }
 
   if ( empty( $field['store_callback'] ) ) {
-    return WP_Error( 'tf-unknown-callback', sprintf( __( 'Unknown store callback for %1$s' ), $name ) );
+    return new WP_Error( 'tf-unknown-callback', sprintf( __( 'Unknown store callback for %1$s' ), $name ) );
   }
 
   if ( ! ($field['permission_callback_store'] ?? '__return_false')($name) ) {
     if ( ! ($field['permission_callback'] ?? '__return_false')($name) ) {
-      return WP_Error( 'tf-no-permission', sprintf( __( 'Access denied to store value for %1$s' ), $name ) );
+      return new WP_Error( 'tf-no-permission', sprintf( __( 'Access denied to store value for %1$s' ), $name ) );
     }
   }
 
@@ -49,7 +49,7 @@ $fields->store_value = function (
   }
 
   if ( ! $field['store_callback']($name, $value) ) {
-    return WP_Error( 'tf-error', sprintf( __( 'Could not save value for %1$s' ), $name ) );
+    return new WP_Error( 'tf-error', sprintf( __( 'Could not save value for %1$s' ), $name ) );
   }
 
   return true;
@@ -63,7 +63,7 @@ $fields->store_value = function (
 add_action( 'wp_ajax_tangible_fields_store', [ $fields, '_ajax_store_callback' ] );
 add_action( 'wp_ajax_nopriv_fields_store', [ $fields, '_ajax_store_callback' ] );
 $fields->_ajax_store_callback = function (
-) use ($fields) : void {
+) use ($fields) {
   $name = $_GET['name'] ?? '';
   if ( ! $field = $fields->get_field( $name ) ) {
     return $fields->__send_ajax( [
@@ -84,7 +84,7 @@ $fields->_ajax_store_callback = function (
     'success' => true,
     'error' => null,
   ] );
-}
+};
 
 /**
  * {"success": true, "error": null, "value": 42}
@@ -92,7 +92,7 @@ $fields->_ajax_store_callback = function (
 add_action( 'wp_ajax_tangible_fields_fetch', [ $fields, '_ajax_fetch_callback' ] );
 add_action( 'wp_ajax_nopriv_fields_fetch', [ $fields, '_ajax_fetch_callback' ] );
 $fields->_ajax_fetch_callback = function (
-) use ($fields) : void {
+) use ($fields) {
   $name = $_GET['name'] ?? '';
   if ( ! $field = $fields->get_field( $name ) ) {
     return $fields->__send_ajax( [
@@ -108,7 +108,7 @@ $fields->_ajax_fetch_callback = function (
     'error' => null,
     'value' => $value,
   ] );
-}
+};
 
 /**
  * Internal AJAX exit or return during tests.
