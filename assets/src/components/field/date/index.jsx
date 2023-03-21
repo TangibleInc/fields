@@ -31,7 +31,7 @@ export default props => {
   }
 
   /* 'future_only' => true, Add this to render field (date picker) to enable the future date only */
-  const hasFutureOnly = props.future_only && props.future_only === true
+  const hasFutureOnly = props.futureOnly && props.futureOnly === true
   const minValue = hasFutureOnly ? dateToday : props.value ? noDateLimit() : dateToday
   const [value, setValue] = useState()
 
@@ -58,15 +58,9 @@ export default props => {
 
     if( hasFutureOnly && value && dateToday && props.value ){
 
-      let yearRule = value.year < dateToday.year,
-          monthRule = value.year <= dateToday.year && value.month < dateToday.month,
-          dayRule = value.year <= dateToday.year && value.month <= dateToday.month && value.day < dateToday.day
-      
-      if( yearRule || monthRule || dayRule ) 
-        setValue(new CalendarDate('AD',
-        yearRule ? dateToday.year : value.year,
-        monthRule ? dateToday.month : value.month,
-        dayRule ? dateToday.day : value.day))
+      const inputValue = new CalendarDate( 'AD', value.year, value.month, value.day )
+      const today = new CalendarDate( 'AD', dateToday.year, dateToday.month, dateToday.day )
+      if( inputValue.compare( today ) < 0 ) setValue(today)
 
     }
 
