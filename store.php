@@ -6,16 +6,16 @@ $fields->fetch_value = function (
   string $name
 ) use ($fields) : mixed {
   if ( ! $field = $fields->get_field( $name ) ) {
-    return null;
+    return WP_Error( 'tf-unknown-field', sprintf( __( 'Unknown field %1$s' ), $name ) );
   }
 
   if ( empty( $field['fetch_callback'] ) ) {
-    return null;
+    return WP_Error( 'tf-unknown-callback', sprintf( __( 'Unknown fetch callback for %1$s' ), $name ) );
   }
 
   if ( ! ($field['permission_callback_fetch'] ?? '__return_false')($name) ) {
     if ( ! ($field['permission_callback'] ?? '__return_false')($name) ) {
-      return null;
+      return WP_Error( 'tf-no-permission', sprintf( __( 'Access denied to fetch value for %1$s' ), $name ) );
     }
   }
 
@@ -25,22 +25,107 @@ $fields->fetch_value = function (
 $fields->store_value = function (
   string $name,
   mixed $value,
-) use ($fields) : bool {
+) use ($fields) : mixed {
   if ( ! $field = $fields->get_field( $name ) ) {
-    return false;
+    return WP_Error( 'tf-unknown-field', sprintf( __( 'Unknown field %1$s' ), $name ) );
   }
 
   if ( empty( $field['store_callback'] ) ) {
-    return false;
+    return WP_Error( 'tf-unknown-callback', sprintf( __( 'Unknown store callback for %1$s' ), $name ) );
   }
 
   if ( ! ($field['permission_callback_store'] ?? '__return_false')($name) ) {
     if ( ! ($field['permission_callback'] ?? '__return_false')($name) ) {
-      return false;
+      return WP_Error( 'tf-no-permission', sprintf( __( 'Access denied to store value for %1$s' ), $name ) );
     }
   }
 
-  return (bool)$field['store_callback']($name, $value);
+  if ( ! empty( $field['validation_callbacks'] ) ) {
+    foreach ( $field['validation_callbacks'] as $callback ) {
+      if ( is_wp_error( $error = $callback( $name, $value ) ) ) {
+        return $error; // Validation failed.
+      }
+    }
+  }
+
+  if ( ! $field['store_callback']($name, $value) ) {
+    return WP_Error( 'tf-error', sprintf( __( 'Could not save value for %1$s' ), $name ) );
+  }
+
+  return true;
+};
+
+/**
+ * AJAX handling.
+ *
+ * {"success": true, "error": null}
+ */
+add_action( 'wp_ajax_tangible_fields_store', [ $fields, '_ajax_store_callback' ] );
+add_action( 'wp_ajax_nopriv_fields_store', [ $fields, '_ajax_store_callback' ] );
+$fields->_ajax_store_callback = function (
+) use ($fields) : void {
+  $name = $_GET['name'] ?? '';
+  if ( ! $field = $fields->get_field( $name ) ) {
+    return $fields->__send_ajax( [
+      'success' => false,
+      'error' => sprintf( __( 'Unknown field %1$s' ), $name ),
+    ] );
+  }
+  $value = $_POST['value'] ?? null;
+
+  if ( is_wp_error( $error = $fields->store_value( $name, $value ) ) ) {
+    return $fields->__send_ajax( [
+      'success' => false,
+      'error' => $error->get_error_message(),
+    ] );
+  }
+
+  return $fields->__send_ajax( [
+    'success' => true,
+    'error' => null,
+  ] );
+}
+
+/**
+ * {"success": true, "error": null, "value": 42}
+ */
+add_action( 'wp_ajax_tangible_fields_fetch', [ $fields, '_ajax_fetch_callback' ] );
+add_action( 'wp_ajax_nopriv_fields_fetch', [ $fields, '_ajax_fetch_callback' ] );
+$fields->_ajax_fetch_callback = function (
+) use ($fields) : void {
+  $name = $_GET['name'] ?? '';
+  if ( ! $field = $fields->get_field( $name ) ) {
+    return $fields->__send_ajax( [
+      'success' => false,
+      'error' => sprintf( __( 'Unknown field %1$s' ), $name ),
+    ] );
+  }
+
+  $value = $fields->fetch_value( $name );
+
+  return $fields->__send_ajax( [
+    'success' => true,
+    'error' => null,
+    'value' => $value,
+  ] );
+}
+
+/**
+ * Internal AJAX exit or return during tests.
+ *
+ * @internal
+ */
+$fields->__send_ajax = function ( $data, $return = null ) {
+  if ( is_null( $return ) ) {
+    $return = defined( 'DOING_TESTS' ) && DOING_TESTS;
+  }
+
+  if ( $return ) {
+    return $return;
+  }
+
+  echo json_encode( $data );
+  exit;
 };
 
 /**
@@ -171,9 +256,31 @@ $fields->_permission_callbacks = function ($callbacks) {
   return $_return;
 };
 
-/*
-'user_can' => function ($permission, $args = null) {
-  'permission_callback_fetch' => function () use ($permission)
-    return current_user_can( $permission, ...(is_callable( $args ) ? $args() : ($args ?? [])) );
-}
+/**
+ * A collection of reusable validation callbacks.
+ *
+ * @usage tangible_fields()->register_field('name', [
+ *  'type' => 'text',
+ *  'validation_callbacks' => [
+ *    tangible_fields()->_validation_callback('required'),
+ *    tangible_fields()->_validation_callback('is_numeric', __('The name field must be a number')),
+ *    tangible_fields()->_validation_callback('compares', '!= 42', __('Name can't be 42')),
+ *    'custom_validation_callback',
+ *  ],
+ * ]);
+ *
+ * Available callbacks:
+ *
+ *  - required - whether the field is required or not. Parameters: none.
  */
+$fields->_validation_callbacks = function ($callback, $message = '') {
+  switch ($callback):
+    case 'required':
+      return function ($name, $value) use ($message) {
+        if ( empty( $value ) ) {
+          return new WP_Error( 'tf-validation', $message ?? sprintf( __( '%1$s is required', 'tangible-fields', $name ) ) );
+        }
+        return true;
+      };
+  endswitch;
+};
