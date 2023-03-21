@@ -119,11 +119,15 @@ const ComboBox = props => {
         <div class="tf-combo-box-text">
           <input { ...inputProps } ref={ inputRef } />
           {/* add changeTag="span" to change the button to span element */}
+
+          { ! props.multiple && 
           <Button type="action" ref={ triggerRef } preventFocusOnPress={ true } { ...buttonProps }>
             <span aria-hidden="true">
               ▼
             </span>
           </Button>
+          }
+
           { state.isOpen && 
             // Can't use popover component because it causes conflicts with focus events
             <div class="tf-popover"> 
