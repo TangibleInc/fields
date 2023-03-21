@@ -117,11 +117,11 @@ $fields->_ajax_fetch_callback = function (
  */
 $fields->__send_ajax = function ( $data, $return = null ) {
   if ( is_null( $return ) ) {
-    $return = defined( 'DOING_TESTS' ) && DOING_TESTS;
+    $return = defined( 'DOING_TANGIBLE_TESTS' ) && DOING_TANGIBLE_TESTS;
   }
 
   if ( $return ) {
-    return $return;
+    return $data;
   }
 
   echo json_encode( $data );
@@ -273,7 +273,7 @@ $fields->_permission_callbacks = function ($callbacks) {
  *
  *  - required - whether the field is required or not. Parameters: none.
  */
-$fields->_validation_callbacks = function ($callback, $message = '') {
+$fields->_validation_callback = function ($callback, $message = '') {
   switch ($callback):
     case 'required':
       return function ($name, $value) use ($message) {

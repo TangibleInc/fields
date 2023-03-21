@@ -233,4 +233,45 @@ class Store_TestCase extends TF_UnitTestCase {
 		tangible_fields()->store_value('test', null); // Cleanup.
 		remove_filter('map_meta_cap', $map_meta_cap_filter, 10);
 	}
+
+	public function test_fields_store_validation_callbacks_required() {
+		tangible_fields()->register_field('test', [
+			...tangible_fields()->_store_callbacks['memory'](),
+			...tangible_fields()->_permission_callbacks([
+				'store' => 'always_allow',
+				'fetch' => 'always_allow',
+			]),
+			'validation_callbacks' => [
+				tangible_fields()->_validation_callback('required'),
+			],
+		]);
+
+		$this->assertWPErrorCode('tf-validation', tangible_fields()->store_value('test', ''));
+		$this->assertTrue(tangible_fields()->store_value('test', 'store'));
+
+		tangible_fields()->store_value('test', null); // Cleanup.
+	}
+
+	public function test_fields_store_validation_callbacks_required_custom_message() {
+		tangible_fields()->register_field('test', [
+			...tangible_fields()->_store_callbacks['memory'](),
+			...tangible_fields()->_permission_callbacks([
+				'store' => 'always_allow',
+				'fetch' => 'always_allow',
+			]),
+			'validation_callbacks' => [
+				tangible_fields()->_validation_callback('required', 'You MUST fill this in!'),
+			],
+		]);
+
+		$this->assertWPErrorCode('tf-validation', $error = tangible_fields()->store_value('test', ''));
+		$this->assertEquals('You MUST fill this in!', $error->get_error_message());
+	}
+
+	public function test_fields_store_ajax_should_not_exit() {
+		$result = tangible_fields()->__send_ajax([
+			'test' => 'me',
+		]);
+		$this->assertEquals(['test' => 'me'], $result);
+	}
 }
