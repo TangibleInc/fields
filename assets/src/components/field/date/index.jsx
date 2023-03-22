@@ -55,13 +55,8 @@ export default props => {
   useEffect(() => {
 
     props.onChange && props.onChange( getStringValue() )
-
     if( hasFutureOnly && value && dateToday && props.value ){
-
-      const inputValue = new CalendarDate( 'AD', value.year, value.month, value.day )
-      const today = new CalendarDate( 'AD', dateToday.year, dateToday.month, dateToday.day )
-      if( inputValue.compare( today ) < 0 ) setValue(today)
-
+      if( value.compare( dateToday ) < 0 ) setValue( dateToday )
     }
 
   }, [value])
