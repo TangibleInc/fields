@@ -29,15 +29,25 @@ const FieldGroup = props => {
 
   const fields = props.fields ?? []
 
+  const rowFields = fields.map(field => {
+
+    const rowField = Object.assign({}, field)
+
+    delete rowField.value
+    delete rowField.onChange
+    
+    return rowField
+  })
+
   return(
     <div class="tf-field-group">
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
       { applyDynamicValues(
           props.element ?? false,
-          fields,
+          rowFields,
           value
         ).map(
-          control => ( 
+          control => (
             <div class="tf-field-group-item">
               <Control 
                 value={ value[control.name] ?? '' }
