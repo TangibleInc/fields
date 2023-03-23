@@ -97,7 +97,7 @@ const DynamicText = props => {
             <ComboBox 
               choices={ props.choices ?? {} }
               autoFocus={ true }
-              showButton={ true }
+              showButton={ false }
               onChange={ value => {
                 if( ! value ) return;
                 addDynamicElement(value)
