@@ -1,4 +1,9 @@
-import { useRef, useEffect } from 'react'
+import { 
+  useRef, 
+  useEffect, 
+  useState 
+} from 'react'
+
 import { useDatePickerState } from 'react-stately'
 import { useDatePicker } from 'react-aria'
 
@@ -19,8 +24,9 @@ import DateField from './DateField'
 const DatePicker = props => {
   
   const state = useDatePickerState(props)
+  const [focusedDate, setFocusedDate] = useState(props.value)
   const ref = useRef()
-
+  
   const {
     groupProps,
     labelProps,
@@ -30,6 +36,15 @@ const DatePicker = props => {
     dialogProps,
     calendarProps
   } = useDatePicker(props, state, ref)
+
+  /**
+   * Make sure focused date is updated when value from input changes
+   * 
+   * @see https://react-spectrum.adobe.com/react-aria/useCalendar.html#controlling-the-focused-date
+   */
+  useEffect(() => {
+    if( props.value !== focusedDate ) setFocusedDate(props.value)
+  }, [props.value])
 
   /**
    * We can't use useFocusWithin because it's not working well when nested (the ColorPicker
@@ -70,7 +85,7 @@ const DatePicker = props => {
         </div>
         { state.isOpen &&
           <Popover { ...dialogProps } ref={ ref } state={ state } placement="bottom start">
-            <Calendar { ...calendarProps } focusedValue={ props.value } />
+            <Calendar { ...calendarProps } focusedValue={ focusedDate } onFocusChange={ setFocusedDate } />
           </Popover> }
       </div>
       { props.description &&
