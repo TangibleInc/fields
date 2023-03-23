@@ -9,21 +9,27 @@
 }
 
 .tf-number-button-group {
-  @include button;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   padding: 0;
+  height: $button-height;
 
   .tf-button-number {
-    display: flex;
+    @include button;
+    border-radius: 0;
     align-items: center;
-    justify-content: center;
     line-height: 0;
-    padding: $button-padding;
     height: 50%;
 
+    &:first-child {
+      border-top-left-radius: $button-border-radius;
+      border-top-right-radius: $button-border-radius;
+    }
+  
     &:last-child {
+      border-bottom-right-radius: $button-border-radius;
+      border-bottom-left-radius: $button-border-radius;
       border-top: $button-border;
     }
 

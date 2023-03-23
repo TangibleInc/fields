@@ -6,6 +6,8 @@ $fields->current_context = 'default';
 $fields->enqueued_contexts = [];
 $fields->contexts = [
   'default',
+  'elementor',
+  'beaver-builder'
 ];
 
 $fields->set_context = function(string $context) use($fields) {

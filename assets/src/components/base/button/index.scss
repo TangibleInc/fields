@@ -12,3 +12,6 @@
   @include button-disabled;
 }
 
+.tf-button-action:focus {
+  outline: none;
+}
