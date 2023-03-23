@@ -120,7 +120,7 @@ const ComboBox = props => {
           <input { ...inputProps } ref={ inputRef } />
           {/* add changeTag="span" to change the button to span element */}
 
-          { ! props.multiple && 
+          { props.showButton &&  
           <Button type="action" ref={ triggerRef } preventFocusOnPress={ true } { ...buttonProps }>
             <span aria-hidden="true">
               ▼

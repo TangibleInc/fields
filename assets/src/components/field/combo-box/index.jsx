@@ -80,6 +80,7 @@ export default props => {
         onFocusChange={ props.onFocusChange ?? false }
         autoFocus={ props.autoFocus ?? false }
         isAsync={ props.isAsync ?? false }
+        showButton={ props.showButton ?? true }
         menuTrigger="focus"
         { ...itemProps }          
       >
