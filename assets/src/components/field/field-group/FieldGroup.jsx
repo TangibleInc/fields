@@ -37,12 +37,12 @@ const FieldGroup = props => {
           fields,
           value
         ).map(
-          control => ( 
+          control => (
             <div class="tf-field-group-item">
-              <Control 
+              <Control
+                { ...control } 
                 value={ value[control.name] ?? '' }
                 onChange={ value => setAttribute(control.name, value) }
-                { ...control }
               />
             </div>  
           )
