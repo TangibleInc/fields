@@ -9,7 +9,8 @@ const Accordion = props => {
     const title = 'test'
 
     return (
-        <div class='tf-accordion-items' >
+        <div class='tf-repeater-block-items' >
+          <div class="tf-repeater-block-item">
           <ExpandablePanel 
             title={ title } 
             showItem={ showItem } 
@@ -19,7 +20,7 @@ const Accordion = props => {
           >
             {
               showItem ?
-                <div class="tf-accordion-item">
+                <div class="tf-repeater-block-item-field">
                   <FieldGroup 
                     { ...props }
                   />
@@ -27,6 +28,7 @@ const Accordion = props => {
               : ''
             }
           </ExpandablePanel>
+          </div>
         </div>
     )
 }

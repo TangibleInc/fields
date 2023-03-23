@@ -35,7 +35,6 @@ const repeaterDispatcher = (emptyItem, maxLength) => (items, action) => {
 }
 
 const initDispatcher = value => {
-  console.log('iniDispatcher - value : ', value)
   try {
     const initialItems = Array.isArray(value) ? value : JSON.parse(value)
     return Array.isArray(initialItems) ? initialItems : [{}]

@@ -12,7 +12,7 @@ const ExpandablePanel = props => {
     return ( 
 
         <div>
-            <div class='tf-accordion-header' >
+            <div class='tf-repeater-block-item-header' >
                 {
                     props.accordion_checkbox && <Checkbox value={ props.accordion_checkbox } />
                 }
@@ -23,8 +23,8 @@ const ExpandablePanel = props => {
                     <div class="tf-repeater-block-item-header">
                         <strong>{ props.title }</strong>
                     </div>
-                    <div class='tf-accordion-group-buttons' >
-                        <span class={showItem ? 'tf-accordion-arrow tf-accordion-arrow-up' : 'tf-accordion-arrow tf-accordion-arrow-down'} />
+                    <div class='tf-repeater-group-buttons' >
+                        <span class={showItem ? 'tf-repeater-arrow tf-repeater-arrow-up' : 'tf-repeater-arrow tf-repeater-arrow-down'} />
                     </div>
                 </div>
             </div>

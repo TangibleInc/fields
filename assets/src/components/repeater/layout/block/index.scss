@@ -38,3 +38,28 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.tf-repeater-arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.tf-repeater-arrow-up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+.tf-repeater-arrow-down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+
+.tf-repeater-group-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin-right: 1%;
+}
