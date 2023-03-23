@@ -6,11 +6,11 @@ const Accordion = props => {
 
     const [showItem, setShowItem] = useState(true)
     
-    const title = 'test'
+    const title = props.title ?? ''
 
     return (
         <div class='tf-repeater-block-items' >
-          <div class="tf-repeater-block-item">
+          <div class='tf-repeater-block-item'>
           <ExpandablePanel 
             title={ title } 
             showItem={ showItem } 
@@ -20,7 +20,7 @@ const Accordion = props => {
           >
             {
               showItem ?
-                <div class="tf-repeater-block-item-field">
+                <div class='tf-repeater-block-item-field'>
                   <FieldGroup 
                     { ...props }
                   />
