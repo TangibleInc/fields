@@ -1,32 +1,32 @@
 /**
- * Allow the use of dynamics props for a <Control /> component, where the value of a props
+ * Allow the use of dependent props for a <Control /> component, where the value of a props
  * will depends of the value of another fields
  * 
  * This has to be used in a context where a group of control is defined (a repeater row, a 
  * popup, a form ...etc)
  * 
- * @see ./dynamic-values.php
+ * @see ./dependent-values.php
  */
-const applyDynamicValues = (
+const applyDependentValues = (
   element  = false,
   controls = [],
   values   = []
 ) => {
 
-  const { dynamics } = TangibleFields
+  const { dependents } = TangibleFields
   
-  const context = dynamics[ element ] ?? []
+  const context = dependents[ element ] ?? []
 
   if( context.length === 0 ) return controls;
 
   controls = controls.map(
-    control => replaceDynamicValues(control, values, context)
+    control => replaceDependentValues(control, values, context)
   )
 
   return controls
 }
 
-const replaceDynamicValues = (
+const replaceDependentValues = (
   control,
   values,
   context
@@ -36,15 +36,15 @@ const replaceDynamicValues = (
     return control 
   }
 
-  const dynamicKeys = Object.keys(context[control.name])
-  dynamicKeys.forEach(key => {
+  const dependentKeys = Object.keys(context[control.name])
+  dependentKeys.forEach(key => {
     
     const valueKey = context[control.name][key]
     
     if( valueKey instanceof Object ) {
-      const dynamicSubkeys = Object.keys(valueKey)
+      const dependentSubkeys = Object.keys(valueKey)
       
-      dynamicSubkeys.forEach(subkey => {
+      dependentSubkeys.forEach(subkey => {
         const valueSubkey = context[control.name][key][subkey]
         control[key][subkey] = values[ valueSubkey ] ?? ''
       })
@@ -57,4 +57,4 @@ const replaceDynamicValues = (
   return control
 }
 
-export { applyDynamicValues }
+export { applyDependentValues }
