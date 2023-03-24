@@ -4,13 +4,17 @@ import {
 } from 'react'
 
 import controls from './controls-list.js'
+
 import { dispatchEvent } from './events'
+import { format } from './format'
 
 const Control = props => {
 
-  const [value, setValue] = useState(props.value ?? '')
+  const [data, setData] = useState(
+    format(props.value ?? '')
+  )
 
-  useEffect(() => props.onChange && props.onChange(value), [value])
+  useEffect(() => props.onChange && props.onChange(data), [data.value])
   
   const type = props.type ?? 'text'
   const ControlComponent = controls[ type ] ?? false
@@ -21,6 +25,7 @@ const Control = props => {
   
   delete childProps.value
   delete childProps.onChange
+  delete childProps.name
   
   const onChange = newValue => {
 
@@ -30,11 +35,36 @@ const Control = props => {
       value     : newValue,
     })
 
-    setValue(newValue)
+    setData({
+      ...data,
+      value: newValue
+    })
   }
 
+  const getDynamicConfig = () => ({
+    types: props.dynamic,
+    get: () => (data.dynamicValues ?? {}),
+    add: (id, settings) => (
+      setData({
+        ...data,
+        dynamicValues: {
+          ...data.dynamicValues,
+          [id]: settings
+        }
+      })
+    )
+  })
+
   return(
-    <ControlComponent value={ value } onChange={ onChange } { ...childProps }  />
+    <>
+      <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(data) } />
+      <ControlComponent
+        { ...childProps }
+        value={ data.value }
+        onChange={ onChange } 
+        dynamic={ props.dynamic ? getDynamicConfig() : false } 
+      />
+    </>
   )
 }
 

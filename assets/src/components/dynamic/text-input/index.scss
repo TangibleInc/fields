@@ -1,0 +1,19 @@
+.tf-dynamic-text-input {
+  @include field;
+
+  & > .cm-editor {
+    width: 100%;
+    height: 100%;
+
+    .cm-line,
+    .cm-content {
+      padding: 0;
+    }
+
+    .cm-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+}

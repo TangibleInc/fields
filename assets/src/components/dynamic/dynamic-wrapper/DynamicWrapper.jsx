@@ -1,0 +1,140 @@
+import { 
+  useState,
+  useEffect,
+  useRef
+} from 'react'
+
+import { 
+  DismissButton,
+  useOverlayTrigger,
+} from 'react-aria'
+
+import Control from '../../../Control'
+
+import { uniqid } from '../../../utils'
+import { useOverlayTriggerState } from 'react-stately'
+import { Button } from '../../base'
+import { ComboBox } from '../../field'
+
+/**
+ * Accepted props:
+ * - value
+ * - onValueSelection
+ * - isOpen
+ */
+const DynamicValues = props => {
+
+  /**
+   * It's OK to return early even if hooks after because if props.config is false
+   * it won't change during the component lifetime
+   */
+  if( props.config === false ) {
+    return props.children
+  }
+
+  const { dynamics } = TangibleFields
+
+  const triggerRef = useRef()
+  const overlayRef = useRef()
+
+  const [value, setValue] = useState(false)
+  const [settingsForm, setSettingsForm] = useState(false)
+  const [settings, setSettings] = useState({})
+
+  const state = useOverlayTriggerState({})
+  const { triggerProps, overlayProps } = useOverlayTrigger(
+    { type: 'dialog' },
+    state,
+    triggerRef
+  )
+
+  useEffect(() => {
+    props.isOpen ? state.open() : state.close()
+  }, [props.isOpen])
+
+  const saveDynamicValue = valueName => {
+
+    if( ! valueName ) return;
+
+    const settings = dynamics[ valueName ]?.settings
+    setValue(valueName)
+
+    if( ! Array.isArray(settings) || settings.length === 0 ) {
+      return selectAndClose() 
+    }
+    
+    setSettingsForm(settings) 
+  }
+
+  const selectAndClose = () => {
+    
+    const id = uniqid()
+    
+    /**
+     * @see ./Control.jsx
+     */
+    props?.onValueSelection(id)
+    props.config.add(id, {
+      name: value,
+      settings: settings 
+    })
+
+    setValue(false)
+    setSettingsForm(false)
+    setSettings(false)
+
+    state.close()
+  } 
+
+  const choices = Object.keys(dynamics).reduce(
+    (choices, key) => ({
+      ...choices,
+      [key]: dynamics[key].label ?? key
+    }),
+    {}
+  )
+
+  return(
+    <div class="tf-dynamic-wrapper">
+      { props.children }
+      <Button type="action" ref={ triggerRef } { ...triggerProps }>
+        Add
+      </Button>
+      { state.isOpen && (
+        <div class="tf-dynamic-wrapper-popover" ref={ overlayRef } { ...overlayProps }>
+          { settingsForm
+            ? <div class="tf-dynamic-wrapper-popover-form">
+                { settingsForm.map(field => (
+                  <div class="tf-dynamic-wrapper-popover-field">
+                    <Control
+                      { ...field } 
+                      value={ settings[field.name] ?? '' }
+                      onChange={ data => setSettings({
+                        ...settings,
+                        [field.name]: data.value
+                      }) }
+                    />
+                  </div>
+                )) }
+                <Button type="action" onPress={ selectAndClose }>
+                  Save
+                </Button>
+              </div>
+            : <ComboBox 
+                choices={ choices }
+                autoFocus={ true }
+                onChange={ saveDynamicValue }
+                onFocusChange={ isFocus =>
+                isFocus 
+                  ? (! state.isOpen && state.open())
+                  : state.close() 
+              }
+            /> }
+          <DismissButton onDismiss={ state.close } />
+        </div>
+      ) }
+    </div>
+  )
+}
+
+export default DynamicValues

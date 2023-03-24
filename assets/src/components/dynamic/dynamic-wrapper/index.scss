@@ -1,0 +1,20 @@
+.tf-dynamic-wrapper {
+  position: relative;
+  width: fit-content;
+  display: flex;
+
+  .tf-dynamic-wrapper-popover {
+    position: absolute;
+    top: 100%;
+    z-index: $popover-index;
+  }
+
+  .tf-dynamic-wrapper-popover-form {
+    background: $field-background;
+    z-index: $popover-index;
+    width: 100%;
+    padding: $field-padding;
+    border: $field-border;
+  }
+
+}

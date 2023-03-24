@@ -110,5 +110,5 @@ class DynamicString extends WidgetType {
 
 }
 
-export default createInput
+export { createInput }
 

@@ -25,7 +25,7 @@ import {
   ComboBox
 } from '../'
 
-import createInput from './codemirror'
+import { createInput } from '../../../codemirror/'
 
 const editors = {} // CodeMirror instance (useRef instead?)
 
