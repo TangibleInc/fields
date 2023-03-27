@@ -57,7 +57,7 @@ const Border = (props) => {
         </Label>}
       <input type="hidden" name={props.name ?? ''} value={JSON.stringify(value)} {...fieldProps} />
       <div className='tf-border-container'>
-        <div className='tf-dimensions-container'>
+        <div className='tf-border-dimensions-container'>
           <Dimensions
             onChange={handleData}
             linked={props.linked}
@@ -65,7 +65,7 @@ const Border = (props) => {
             value={value.dimensions}
           />
         </div>
-        <div className='tf-color-picker-container'>
+        <div className='tf-border-color-picker-container'>
           <Color
             onChange={handleData}
             value={value.color}
