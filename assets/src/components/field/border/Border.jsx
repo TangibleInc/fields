@@ -26,27 +26,27 @@ const Border = (props) => {
         unit: units[0],
         isLinked: false,
       },
-      colorValue: 'rgba(0,0,0,1)'
+      color: 'rgba(0,0,0,1)'
     })
   )
 
   useEffect(() => props.onChange && props.onChange(value), [value])
 
-  const setDimensions = dimensions => {
-    setValue((prevState) => ({
-      ...prevState,
-      dimensions: {
-        ...prevState.dimensions,
-        ...dimensions,
-      }
-    }))
-  }
-
-  const setColorValue = colorValue => {
-    setValue((prevState) => ({
-      ...prevState,
-      colorValue: colorValue,
-    }))
+  const setData = value => {
+    if (typeof value === 'string') {
+      setValue((prevState) => ({
+        ...prevState,
+        color: value,
+      }))
+    } else {
+      setValue((prevState) => ({
+        ...prevState,
+        dimensions: {
+          ...prevState.dimensions,
+          ...value,
+        }
+      }))
+    }
   }
 
   return (
@@ -59,7 +59,7 @@ const Border = (props) => {
       <div className='tf-border-container'>
         <div className='tf-dimensions-container'>
           <Dimensions
-            onChange={setDimensions}
+            onChange={setData}
             linked={props.linked}
             units={units}
             value={value.dimensions}
@@ -67,8 +67,8 @@ const Border = (props) => {
         </div>
         <div className='tf-color-picker-container'>
           <Color
-            onChange={setColorValue}
-            value={value.colorValue}
+            onChange={setData}
+            value={value.color}
             format={format}
             hasAlpha={props.hasAlpha ?? true}
           />

@@ -29,6 +29,10 @@ $fields->format_args = function(
 
     // We use kebab-case for control types in js
     
+    case 'border': 
+      $args = $fields->format_value($args, 'enable_opacity', 'hasAlpha');
+      break;
+      
     case 'button_group':
       $args['type'] = 'button-group';
       break;
