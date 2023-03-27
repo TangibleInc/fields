@@ -32,7 +32,7 @@ const Border = (props) => {
 
   useEffect(() => props.onChange && props.onChange(value), [value])
 
-  const setData = value => {
+  const handleData = value => {
     if (typeof value === 'string') {
       setValue((prevState) => ({
         ...prevState,
@@ -59,7 +59,7 @@ const Border = (props) => {
       <div className='tf-border-container'>
         <div className='tf-dimensions-container'>
           <Dimensions
-            onChange={setData}
+            onChange={handleData}
             linked={props.linked}
             units={units}
             value={value.dimensions}
@@ -67,7 +67,7 @@ const Border = (props) => {
         </div>
         <div className='tf-color-picker-container'>
           <Color
-            onChange={setData}
+            onChange={handleData}
             value={value.color}
             format={format}
             hasAlpha={props.hasAlpha ?? true}
