@@ -1,6 +1,7 @@
 import Repeater from './components/repeater/Repeater'
 
 import {
+  Border,
   ButtonGroup,
   Checkbox,
   Color,
@@ -24,6 +25,7 @@ import {
 } from './components/field/'
 
 export default {
+  'border'          : Border,
   'button-group'    : ButtonGroup,
   'checkbox'        : Checkbox,
   'color-picker'    : Color,
