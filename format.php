@@ -44,6 +44,7 @@ $fields->format_args = function(
     
     case 'date_picker':
       $args['type'] = 'date-picker';
+      $args = $fields->format_value($args, 'future_only', 'futureOnly');
       break;
 
     case 'number':
