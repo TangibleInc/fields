@@ -1,6 +1,7 @@
 import Repeater from './components/repeater/Repeater'
 
 import {
+  AlignmentMatrix,
   Border,
   ButtonGroup,
   Checkbox,
@@ -25,6 +26,7 @@ import {
 } from './components/field/'
 
 export default {
+  'alignment-matrix': AlignmentMatrix,
   'border'          : Border,
   'button-group'    : ButtonGroup,
   'checkbox'        : Checkbox,
