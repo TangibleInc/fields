@@ -40,6 +40,7 @@ const DynamicValues = props => {
   const [value, setValue] = useState(false)
   const [settingsForm, setSettingsForm] = useState(false)
   const [settings, setSettings] = useState({})
+  const [valueChange, setValueChange] = useState(false)
 
   const state = useOverlayTriggerState({})
   const { triggerProps, overlayProps } = useOverlayTrigger(
@@ -52,37 +53,48 @@ const DynamicValues = props => {
     props.isOpen ? state.open() : state.close()
   }, [props.isOpen])
 
+  /**
+   * Workaround to not trigger props.onValueSelection too early
+   */
+  useEffect(() => {
+    if( valueChange !== false ) {
+      props?.onValueSelection(valueChange)
+      setValueChange(false)
+    }    
+  }, [valueChange])
+
   const saveDynamicValue = valueName => {
 
     if( ! valueName ) return;
 
-    const settings = dynamics[ valueName ]?.settings
+    const args = dynamics[ valueName ]?.settings
     setValue(valueName)
 
-    if( ! Array.isArray(settings) || settings.length === 0 ) {
-      return selectAndClose() 
+    if( ! Array.isArray(args) || args.length === 0 ) {
+      return selectAndClose(valueName)
     }
     
-    setSettingsForm(settings) 
+    setSettingsForm(args) 
   }
 
-  const selectAndClose = () => {
+  const selectAndClose = name => {
     
     const id = uniqid()
     
     /**
      * @see ./Control.jsx
      */
-    props?.onValueSelection(id)
     props.config.add(id, {
-      name: value,
-      settings: settings 
+      name: name,
+      settings: settings ?? {}
     })
 
+    setValueChange(id)
+    
     setValue(false)
     setSettingsForm(false)
     setSettings(false)
-
+    
     state.close()
   } 
 
@@ -98,7 +110,7 @@ const DynamicValues = props => {
     <div class="tf-dynamic-wrapper">
       { props.children }
       <Button type="action" ref={ triggerRef } { ...triggerProps }>
-        Add
+        Insert
       </Button>
       { state.isOpen && (
         <div class="tf-dynamic-wrapper-popover" ref={ overlayRef } { ...overlayProps }>
@@ -116,7 +128,7 @@ const DynamicValues = props => {
                     />
                   </div>
                 )) }
-                <Button type="action" onPress={ selectAndClose }>
+                <Button type="action" onPress={ () => selectAndClose(value) }>
                   Save
                 </Button>
               </div>

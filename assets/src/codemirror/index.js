@@ -7,13 +7,26 @@ import {
 } from '@codemirror/view'
 
 /**
+ * Detect dynamic values token from in a string like this one:
+ * 
+ * This is a text with a [[dynmaic-value]] 
+ */
+const getDynamicTokens = string => (
+  Array.from(
+    string.matchAll(/\[\[([A-Za-zÀ-ú0-9_\- ]+(?!\[)[^\[\]]*)\]\]/g), 
+    match => match[1]
+  )
+)
+
+/**
  * Create code mirror example 
  */
 const createInput = (
   element, 
   initialText = '', 
   onChange = false,
-  sections = []
+  sections = [],
+  getLabel = (match, items) => (items[ match ] ?? match)
 ) => (
   new EditorView({
     doc: initialText,
@@ -33,7 +46,7 @@ const createInput = (
           this.placeholders = this.matchResults(this.items).createDeco(view)
         }
       
-        update(update){
+        update(update) {
           this.placeholders = this.matchResults(this.items).updateDeco(update, this.placeholders)
         }
 
@@ -43,7 +56,7 @@ const createInput = (
             decoration: match => Decoration.replace({
               widget: new DynamicString(
                 match[1],
-                items[ match[1] ] ?? match[1]
+                getLabel(match[1], items)
               ),
             })
           })
@@ -65,7 +78,7 @@ const createInput = (
         if( view.docChanged && onChange ) {
           onChange(view.state.doc.toString())
         } 
-      })
+      }), 
       
     ]
   })
@@ -110,5 +123,8 @@ class DynamicString extends WidgetType {
 
 }
 
-export { createInput }
+export { 
+  createInput,
+  getDynamicTokens 
+}
 

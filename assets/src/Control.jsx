@@ -44,6 +44,7 @@ const Control = props => {
   const getDynamicConfig = () => ({
     types: props.dynamic,
     get: () => (data.dynamicValues ?? {}),
+    delete: key => delete data.dynamicValues[ key ],
     add: (id, settings) => (
       setData({
         ...data,
