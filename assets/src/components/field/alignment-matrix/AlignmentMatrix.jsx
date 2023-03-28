@@ -4,7 +4,7 @@ import { RadioGroup } from '../radio/RadioGroup'
 import { useState, useEffect } from 'react'
 
 const AlignmentMatrix = (props) => {
-  const [value, setValue] = useState(props.value ?? 'center center')
+  const [value, setValue] = useState(props.value ?? '')
 
   const options = [
     'top left',
