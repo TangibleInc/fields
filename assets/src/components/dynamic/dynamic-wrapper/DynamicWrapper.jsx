@@ -22,7 +22,7 @@ import { ComboBox } from '../../field'
  * - onValueSelection
  * - isOpen
  */
-const DynamicValues = props => {
+const DynamicWrapper = props => {
 
   /**
    * It's OK to return early even if hooks after because if props.config is false
@@ -112,6 +112,10 @@ const DynamicValues = props => {
       <Button type="action" ref={ triggerRef } { ...triggerProps }>
         Insert
       </Button>
+      { props.remove && 
+        <Button type="action" { ...props.remove }>
+          Remove
+        </Button> }
       { state.isOpen && (
         <div class="tf-dynamic-wrapper-popover" ref={ overlayRef } { ...overlayProps }>
           { settingsForm
@@ -140,8 +144,8 @@ const DynamicValues = props => {
                 isFocus 
                   ? (! state.isOpen && state.open())
                   : state.close() 
-              }
-            /> }
+                }
+              /> }
           <DismissButton onDismiss={ state.close } />
         </div>
       ) }
@@ -149,4 +153,4 @@ const DynamicValues = props => {
   )
 }
 
-export default DynamicValues
+export default DynamicWrapper

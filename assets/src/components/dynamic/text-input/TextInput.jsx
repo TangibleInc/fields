@@ -77,6 +77,7 @@ const TextInput = props => {
     <DynamicWrapper 
       config={ props.dynamic ?? false } 
       onValueSelection={ addDynamicValue }
+      actions={ ['insert'] }
     >
       <input { ...props } type="hidden" value={ value } />
       <div ref={ input } class="tf-dynamic-text-input"></div>

@@ -41,10 +41,17 @@ const Control = props => {
     })
   }
 
+  /**
+   * TODO: dispatcher
+   */
   const getDynamicConfig = () => ({
     types: props.dynamic,
+    hasDynamicValues: () => (Object.keys(data.dynamicValues).length !== 0),
     get: () => (data.dynamicValues ?? {}),
     delete: key => delete data.dynamicValues[ key ],
+    clear: () => {
+      setData({ ...data, dynamicValues: {}})
+    },
     add: (id, settings) => (
       setData({
         ...data,

@@ -6,6 +6,7 @@ import {
 
 import { useColorField } from '@react-aria/color'
 import { useColorFieldState } from '@react-stately/color'
+import { DynamicWrapper } from '../../dynamic/'
 
 import { 
   Description,
@@ -26,6 +27,9 @@ const Color = props =>{
 
   const state = useColorFieldState(props)
   const [open, isOpen] = useState(false)
+  const [isDynamic, setIsDynamic] = useState(
+    props.dynamic ? props.dynamic.hasDynamicValues() : false
+  )
 
   const {
     labelProps,
@@ -47,9 +51,9 @@ const Color = props =>{
    * Use the right format on initial render
    */
   useEffect(() => state.setInputValue(
-    state.colorValue?.toString(format)   
+    state.colorValue?.toString(format)
   ), [])
-  
+
   return(
     <div class="tf-color">
       { props.label &&
@@ -57,10 +61,32 @@ const Color = props =>{
           { props.label }
         </Label> }
       <div class="tf-color-container">
-        <input ref={ ref } { ...inputProps } onFocus={ e => {
-          isOpen(true)
-          inputProps.onFocus(e)  
-        } }/>
+        <DynamicWrapper 
+          config={ props.dynamic ?? false } 
+          onValueSelection={() => {
+            state.setInputValue('[[#FF00FF]]')
+            props.onChange('[[#FF00FF]]')
+            setIsDynamic(true)
+          }}
+          remove={{
+            isDisabled: isDynamic === false,
+            onPress: () => {
+              onChange('')
+              setIsDynamic(false)
+              props.dynamic.clear()
+            }
+          }}
+        >
+          <input
+            ref={ ref } 
+            { ...inputProps } 
+            onFocus={ e => {
+              isOpen(true)
+              inputProps.onFocus(e)  
+            }}
+            disabled={ isDynamic } 
+          />
+        </DynamicWrapper>
         { open && 
           <Popover ref={ popover }>
             <ColorPicker 

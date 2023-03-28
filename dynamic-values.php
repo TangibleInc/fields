@@ -18,8 +18,9 @@ $fields->register_dynamic_value = function(array $dynamic_value) use($fields) {
 };
 
 $fields->register_dynamic_value([
-  'name' => 'post_parent',
-  'label' => 'Post parent',
+  'name'     => 'post_parent',
+  'label'    => 'Post parent',
+  'type'     => 'text',
   'callback' => null,
   'settings' => [
     [
@@ -40,6 +41,15 @@ $fields->register_dynamic_value([
 $fields->register_dynamic_value([
   'name'       => 'post_id',
   'label'      => 'Post ID',
+  'type'       => 'text',
+  'callback'   => null,
+  'settings'   => [],
+  'conditions' => [],
+]);
+
+$fields->register_dynamic_value([
+  'name'       => 'post_color',
+  'label'      => 'Post color',
   'callback'   => null,
   'settings'   => [],
   'conditions' => [],
