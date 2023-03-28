@@ -28,12 +28,18 @@ const TextInput = props => {
     )
   }, [])
 
-  const getDynamicValueLabel = slug => (props.dynamic.get()[ slug ]?.name ?? slug) 
+  const getDynamicValueLabel = slug => (
+    props.dynamic 
+      ? (props.dynamic.get()[ slug ]?.name ?? slug)
+      : slug 
+  )
 
   const updateValue = value => {
      
     setValue(value)
     
+    if( ! props.dynamic ) return;
+
     /**
      * We check if saved dynamic values still exists, and if not we delete them
      * 
@@ -66,10 +72,10 @@ const TextInput = props => {
       }
     })
   }
-
+  
   return(
     <DynamicWrapper 
-      config={ props.dynamic } 
+      config={ props.dynamic ?? false } 
       onValueSelection={ addDynamicValue }
     >
       <input { ...props } type="hidden" value={ value } />

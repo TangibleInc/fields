@@ -52,7 +52,7 @@ const createInput = (
 
         matchResults(items) {  
           return new MatchDecorator({
-            regexp: /\[\[([A-zÀ-ú0-9_\- ][^\[\]]+)\]\]/g,
+            regexp: /\[\[([A-Za-zÀ-ú0-9_\- ]+(?!\[)[^\[\]]*)\]\]/g,
             decoration: match => Decoration.replace({
               widget: new DynamicString(
                 match[1],

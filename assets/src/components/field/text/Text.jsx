@@ -27,8 +27,9 @@ const TextField = props => {
     descriptionProps, 
   } = useTextField(props, ref)
   
-  
-  useEffect(() => props?.onChange(value), [value])
+  useEffect(() => {
+    if( props.onChange ) props.onChange(value)
+  }, [value])
   
   return(
     <div class='tf-text'>
