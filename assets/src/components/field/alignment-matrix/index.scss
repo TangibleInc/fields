@@ -1,7 +1,8 @@
 .tf-alignment-matrix-container{
+    margin: 5px;
     height: 50px;
     width: 50px;
     display: grid;
-    gap: 1px;
+    // gap: 1px;
     grid-template-columns: repeat(3, 1fr);
 }
