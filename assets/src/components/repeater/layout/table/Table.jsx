@@ -1,4 +1,4 @@
-import { Button } from '../../../base'
+import { Button, ModalTrigger } from '../../../base'
 
 /**
  * TODO: Implement useTable hook
@@ -46,9 +46,13 @@ const Table = ({
           </td>
           <td>
             { maxLength !== undefined && (
-              <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
-                Remove
-              </Button>
+              <ModalTrigger 
+                btnLabel="Remove"
+                message={ `Are you sure you want to remove item ${ i + 1 }?` }
+                dispatch={ dispatch }
+                dispatchItem= {{ type : 'remove', item : i }}
+                >
+              </ModalTrigger>
             )}
           </td>
         </tr>

@@ -8,7 +8,7 @@ import {
   initDispatcher 
 } from './dispatcher.js'
 
-import { Button, Title } from '../base'
+import { Button, Title, ModalTrigger } from '../base'
 import { applyDependentValues } from '../../dependent' 
 
 import Layouts from './layout' 
@@ -92,13 +92,14 @@ const Repeater = props => {
           >
             Add item
           </Button>
-          <Button 
-            type="action" 
-            onPress={ () => dispatch({ type: 'clear' }) }
+          <ModalTrigger 
+            btnLabel="Clear item"
+            message={ `Are you sure you want to clear all item(s)?` }
             isDisabled={ items.length <= 0 }
-          >
-            Clear item
-          </Button>
+            dispatch={ dispatch }
+            dispatchItem= {{ type: 'clear' }}
+            >
+          </ModalTrigger>
         </div>
       )}
     </div>
