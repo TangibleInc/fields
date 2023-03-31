@@ -15,8 +15,8 @@ const Accordion = props => {
             title={ title } 
             showItem={ showItem } 
             toggleShow={ () => setShowItem(!showItem) } 
-            accordion_switch={ props.accordion_switch } 
-            accordion_checkbox={ props.accordion_checkbox } 
+            accordion_switch={ true } 
+            accordion_checkbox={ true } 
           >
             {
               showItem ?
