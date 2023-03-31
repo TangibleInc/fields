@@ -28,7 +28,7 @@ const Popover = forwardRef(({
   const { dialogProps } = useDialog({}, ref)
 
   return (
-    <FocusScope restoreFocus>
+    <FocusScope restoreFocus autoFocus>
       <div
         { ...mergeProps(
           overlayProps, 
