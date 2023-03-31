@@ -49,7 +49,7 @@ new class extends stdClass {
     tangible_fields( $fields );
 
     require_once __DIR__ . '/format.php';
-    require_once __DIR__ . '/dynamic-value.php';
+    require_once __DIR__ . '/dependent-values.php';
     require_once __DIR__ . '/fields.php';
     require_once __DIR__ . '/enqueue.php';
     require_once __DIR__ . '/context.php';

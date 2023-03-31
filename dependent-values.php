@@ -17,13 +17,13 @@ defined('ABSPATH') or die();
  * ]
  */
 
-$fields->get_dynamic_contexts = function(array $contexts) use($fields) : array {
+$fields->get_dependent_contexts = function(array $contexts) use($fields) : array {
 
-  $dynamic_fields = [];
+  $dependent_fields = [];
 
   foreach( $contexts as $context ) {
 
-    // Currenly, we only support dynamic value inside repeaters and field-groups
+    // Currenly, we only support dependent value inside repeaters and field-groups
     if( ! in_array($context['type'], [
       'repeater', 
       'field-group'
@@ -31,23 +31,23 @@ $fields->get_dynamic_contexts = function(array $contexts) use($fields) : array {
       continue;
     }
 
-    $dynamic_fields[ $context['element'] ] = $fields->get_repeater_dynamic_values($context);    
+    $dependent_fields[ $context['element'] ] = $fields->get_repeater_dependent_values($context);    
   }
 
-  return $dynamic_fields;
+  return $dependent_fields;
 };
 
-$fields->get_repeater_dynamic_values = function(array $repeater) use($fields) : array {
+$fields->get_repeater_dependent_values = function(array $repeater) use($fields) : array {
   
   $config = [];
 
   if( empty($repeater['fields']) ) return $config;
 
-  // For every repeater field check check if dynamic
+  // For every repeater field check check if dependent
   
   foreach( $repeater['fields'] as $field ) {
     $config = array_merge(
-      $fields->get_dynamic_config($field),
+      $fields->get_dependent_config($field),
       $config
     );
   }
@@ -55,28 +55,28 @@ $fields->get_repeater_dynamic_values = function(array $repeater) use($fields) : 
   return $config;
 };
 
-$fields->get_dynamic_config = function(array $field) use($fields) : array {
+$fields->get_dependent_config = function(array $field) use($fields) : array {
 
   $config = [];
   $name = $field['name'] ?? false;
   
   if( ! $name ) return $config;
 
-  $dynamic_keys = [
+  $dependent_keys = [
     'description',
     'label',
     'placeholder',
     'asyncArgs'
   ];
   
-  foreach( $dynamic_keys as $key ) {
+  foreach( $dependent_keys as $key ) {
 
     if( is_array($field[ $key ] ?? '') ) {
       foreach( $field[ $key ] as $subkey => $value ) {
 
-        if( ! $fields->is_dynamic_value($value) ) continue;
+        if( ! $fields->is_dependent_value($value) ) continue;
 
-        $trigger_field = $fields->get_dynamic_name($value);
+        $trigger_field = $fields->get_dependent_name($value);
 
         if( ! isset($config[ $name ]) ) $config[ $name ] = [];
         if( ! isset($config[ $name ][ $key ]) ) $config[ $name ][ $key ] = [];
@@ -86,12 +86,12 @@ $fields->get_dynamic_config = function(array $field) use($fields) : array {
       continue;
     }
     
-    if( ! $fields->is_dynamic_value($field[ $key ] ?? '') ) {
+    if( ! $fields->is_dependent_value($field[ $key ] ?? '') ) {
       continue;
     }
 
     $value = $field[ $key ];
-    $trigger_field = $fields->get_dynamic_name($value);
+    $trigger_field = $fields->get_dependent_name($value);
 
     if( ! isset($config[ $name ]) ) $config[ $name ] = [];
     
@@ -101,16 +101,14 @@ $fields->get_dynamic_config = function(array $field) use($fields) : array {
   return $config;
 };
 
-$fields->is_dynamic_value = function(string $value) : bool {
+$fields->is_dependent_value = function(string $value) : bool {
           
-  if( ! is_string($value) ) return false;
+  $is_dependent = strpos($value, '{{') !== false; 
+  $is_dependent = $is_dependent && strpos($value, '}}') !== false; 
 
-  $is_dynamic = strpos($value, '{{') !== false; 
-  $is_dynamic = $is_dynamic && strpos($value, '}}') !== false; 
-
-  return $is_dynamic;
+  return $is_dependent;
 };
 
-$fields->get_dynamic_name = function(string $name) : string {
+$fields->get_dependent_name = function(string $name) : string {
   return substr($name, 2, strlen($name) - 4);
 };

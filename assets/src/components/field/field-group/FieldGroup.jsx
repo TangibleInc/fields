@@ -3,7 +3,7 @@ import {
   useEffect
 } from 'react'
 
-import { applyDynamicValues } from '../../../dynamic' 
+import { applyDependentValues } from '../../../dependent' 
 import { initJSON } from '../../../utils'
 
 import Control from '../../../Control'
@@ -32,17 +32,17 @@ const FieldGroup = props => {
   return(
     <div class="tf-field-group">
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
-      { applyDynamicValues(
+      { applyDependentValues(
           props.element ?? false,
           fields,
           value
         ).map(
-          control => ( 
+          control => (
             <div class="tf-field-group-item">
-              <Control 
+              <Control
+                { ...control } 
                 value={ value[control.name] ?? '' }
                 onChange={ value => setAttribute(control.name, value) }
-                { ...control }
               />
             </div>  
           )

@@ -9,7 +9,7 @@ import {
 } from './dispatcher.js'
 
 import { Button, Title } from '../base'
-import { applyDynamicValues } from '../../dynamic' 
+import { applyDependentValues } from '../../dependent' 
 
 import Layouts from './layout' 
 import Control from '../../Control'
@@ -49,7 +49,7 @@ const Repeater = props => {
   )
 
   const getRow = item => (
-    applyDynamicValues(
+    applyDependentValues(
       props.element ?? false,
       rowFields,
       item
