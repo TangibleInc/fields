@@ -41,20 +41,30 @@ const Select = props => {
   const {
     labelProps,
     descriptionProps,
+    triggerProps,
     valueProps,
     menuProps
   } = useSelect(props, state, ref)
   
   return(
     <div class="tf-select">
-        <input type="hidden" name={ props.name ?? '' } value={ [...state.selectedKey].join(',') } />
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
+      <HiddenSelect
+        state={ state }
+        triggerRef={ ref }
+        label={ props.label }
+        name={ props.name }
+      />
       <Button
         type={ 'select' }
-        onPress={()=> state.open()}
+        { ...triggerProps }
+        onKeyDown={ e => e.code === 'Space' 
+          ? state.toggle() 
+          : triggerProps.onKeyDown(e)
+        }
       >
         <span { ...valueProps }>
           { state.selectedItem
