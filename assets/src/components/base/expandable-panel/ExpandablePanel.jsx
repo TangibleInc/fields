@@ -1,37 +1,61 @@
-import { useState, useEffect } from 'react'
-import { Checkbox, Switch } from '../../field'
+import { 
+  useState, 
+  useEffect 
+} from 'react'
 
 const ExpandablePanel = props => {
 
-    const [showItem, setShowItem] = useState(true)
+  const [showItem, setShowItem] = useState(true)
 
-    useEffect(() => {
-        setShowItem( props.showItem ) 
-    }, [props.showItem])
+  useEffect(() => {
+    if( props.isOpen !== showItem ) {
+      setShowItem( props.isOpen )
+    } 
+  }, [props.isOpen])
 
-    return ( 
+  const toggle = () => setShowItem( ! showItem )
 
-        <div>
-            <div class='tf-repeater-block-item-header' >
-                {
-                    props.accordion_checkbox && <Checkbox value={ props.accordion_checkbox } />
-                }
-                {
-                    props.accordion_switch && <Switch value={ props.accordion_switch } />
-                }
-                <div class='tf-repeater-header-clickable' onClick={ () => props.toggleShow() } >
-                    <div class="tf-repeater-block-item-header">
-                        <strong>{ props.title }</strong>
-                    </div>
-                    <div class='tf-repeater-group-buttons' >
-                        <span class={showItem ? 'tf-repeater-arrow tf-repeater-arrow-up' : 'tf-repeater-arrow tf-repeater-arrow-down'} />
-                    </div>
-                </div>
-            </div>
-            { props.children }
+  let classes = 'tf-panel'
+  classes += ` tf-panel-${ showItem ? 'open' : 'closed' }`
+  classes += props.className ? ` ${props.className}` : ''
+  classes += props.class ? ` ${props.class}` : ''
+  
+  return ( 
+    <div class={ classes } data-status={ showItem ? 'open' : 'closed' }>
+      <div class="tf-panel-header" onClick={ toggle }>
+        <div class="tf-panel-header-left">
+          { props.headerLeft 
+            ? <div class="tf-panel-header-before-title">
+                { props.headerLeft }
+              </div>
+            : null }
+          { props.title 
+            ? <div class="tf-panel-header-title">
+                <strong>{ props.title }</strong>
+              </div>
+            : null }
         </div>
-
-    )
+        <div class="tf-panel-header-right">
+          { props.headerRight 
+            ? <div class="tf-panel-header-before-title">
+                { props.headerRight }
+              </div>
+            : null }
+          <span class="tf-panel-arrow" />
+        </div>
+      </div>
+      { showItem 
+        ? <div class='tf-panel-content'>
+            { props.children }
+          </div> 
+        : null }
+      { props.footer 
+        ? <div class='tf-panel-footer'>
+            { props.footer }
+          </div> 
+        : null }
+    </div>
+  )
 }
 
 export default ExpandablePanel

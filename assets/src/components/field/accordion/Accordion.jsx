@@ -1,36 +1,29 @@
-import { useState } from 'react'
-import FieldGroup from '../field-group/FieldGroup'
+import { FieldGroup } from '..'
 import { ExpandablePanel } from '../../base'
+
+import { 
+  Checkbox, 
+  Switch 
+} from '../../field'
 
 const Accordion = props => {
 
-    const [showItem, setShowItem] = useState(true)
+  const headerLeft = 
+    <>
+      { true && <Checkbox value={ props.accordion_checkbox ?? true } /> }
+      { true && <Switch value={ props.accordion_switch ?? true } /> }
+    </>
     
-    const title = props.title ?? ''
-
-    return (
-        <div class='tf-repeater-block-items' >
-          <div class='tf-repeater-block-item'>
-          <ExpandablePanel 
-            title={ title } 
-            showItem={ showItem } 
-            toggleShow={ () => setShowItem(!showItem) } 
-            accordion_switch={ true } 
-            accordion_checkbox={ true } 
-          >
-            {
-              showItem ?
-                <div class='tf-repeater-block-item-field'>
-                  <FieldGroup 
-                    { ...props }
-                  />
-                </div> 
-              : ''
-            }
-          </ExpandablePanel>
-          </div>
-        </div>
-    )
+  return (
+    <div class='tf-accordions'>
+      <ExpandablePanel 
+        title={ props.title ?? false }  
+        headerLeft={ headerLeft }
+      >
+        <FieldGroup { ...props } />  
+      </ExpandablePanel>
+    </div>
+  )
 }
 
 export default Accordion
