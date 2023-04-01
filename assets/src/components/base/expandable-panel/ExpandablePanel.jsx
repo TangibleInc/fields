@@ -13,7 +13,11 @@ const ExpandablePanel = props => {
     } 
   }, [props.isOpen])
 
-  const toggle = () => setShowItem( ! showItem )
+
+  const toggle = () => {
+    setShowItem( ! showItem )
+    props.onChange && props.onChange( ! showItem )
+  }
 
   let classes = 'tf-panel'
   classes += ` tf-panel-${ showItem ? 'open' : 'closed' }`

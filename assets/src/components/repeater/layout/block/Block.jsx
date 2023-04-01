@@ -12,8 +12,19 @@ const Block = ({
   const [activeItem, setActiveItem] = useState(0)
   const toggleItem = i => setActiveItem( i !== activeItem ? i : false )
 
-  const actions = i => (
+  const actions = (i, item) => (
      <> 
+      { maxLength !== undefined &&
+        <Button
+          type="action"
+          isDisabled={ maxLength <= items.length }
+          onPress={() => dispatch({ 
+            type : 'clone',
+            item : item
+          })}
+        >
+          Clone
+        </Button> }
       <Button type="action" onPress={ () => toggleItem(i) }>
         { activeItem !== i ? 'Edit' : 'Close' }
       </Button>
@@ -30,9 +41,12 @@ const Block = ({
         <ExpandablePanel
           key={ item.key } 
           title={ 'Item ' + (i + 1) }
-          footer={ actions(i) }
+          footer={ actions(i, item) }
           isOpen={ activeItem === i }
           class="tf-repeater-block-item"
+          onChange={ visible => visible 
+            ? (activeItem !== i ? setActiveItem(i) : null) 
+            : (activeItem === i ? setActiveItem(false) : null) }
         > 
           { getRow(item).map(
             control => ( 
