@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button } from '../../../base'
+import { Button, ExpandablePanel } from '../../../base'
 
 const Block = ({
   items,
@@ -12,45 +12,50 @@ const Block = ({
   const [activeItem, setActiveItem] = useState(0)
   const toggleItem = i => setActiveItem( i !== activeItem ? i : false )
 
+  const actions = (i, item) => (
+     <> 
+      { maxLength !== undefined &&
+        <Button
+          type="action"
+          isDisabled={ maxLength <= items.length }
+          onPress={() => dispatch({ 
+            type : 'clone',
+            item : item
+          })}
+        >
+          Clone
+        </Button> }
+      <Button type="action" onPress={ () => toggleItem(i) }>
+        { activeItem !== i ? 'Edit' : 'Close' }
+      </Button>
+      { maxLength !== undefined && 
+        <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
+          Remove
+        </Button> }
+    </>
+  )
+
   return(
     <div class='tf-repeater-block-items'>
       { items && items.slice(0, maxLength).map((item, i) => (
-        <div key={ item.key } class="tf-repeater-block-item" data-status={ activeItem === i ? 'open' : 'closed' }>
-          <div class="tf-repeater-block-item-header" onClick={ () => toggleItem(i) }  aria-controls={`itemId-${i}`} aria-expanded={activeItem === i} >
-            <strong>Item { i + 1 }</strong>
-          </div>
-          { activeItem === i && 
-            <div class="tf-repeater-block-item-content" id={`itemId-${i}`} aria-label={`Item ${i+1} details`} >{ 
-              getRow(item).map(
-                control => ( 
-                  <div class="tf-repeater-block-item-field">
-                    { getControl(control, item, i) }
-                  </div>  
-                )
-              )}
-            </div> }
-          <div class="tf-repeater-block-item-actions">
-            { maxLength !== undefined &&
-              <Button
-                type="action"
-                isDisabled={ maxLength <= items.length }
-                onPress={() => dispatch({ 
-                  type    : 'clone',
-                  item    : item
-                })}
-              >
-                Clone
-              </Button> }
-            <Button type="action" onPress={ () => toggleItem(i) }>
-              { activeItem !== i ? 'Edit' : 'Close' }
-            </Button>
-            { maxLength !== undefined && (
-              <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
-                Remove
-              </Button>
-            )}
-          </div>
-        </div>
+        <ExpandablePanel
+          key={ item.key } 
+          title={ 'Item ' + (i + 1) }
+          footer={ actions(i, item) }
+          isOpen={ activeItem === i }
+          class="tf-repeater-block-item"
+          onChange={ visible => visible 
+            ? (activeItem !== i ? setActiveItem(i) : null) 
+            : (activeItem === i ? setActiveItem(false) : null) }
+        > 
+          { getRow(item).map(
+            control => ( 
+              <div class="tf-repeater-block-item-field">
+                { getControl(control, item, i) }
+              </div>  
+            ) 
+          ) } 
+        </ExpandablePanel>
       )) }
     </div>
   )
