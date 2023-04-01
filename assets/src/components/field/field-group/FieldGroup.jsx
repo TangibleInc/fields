@@ -8,7 +8,7 @@ import {
   areSameObjects 
 } from '../../../utils'
 
-import { applyDynamicValues } from '../../../dynamic' 
+import { applyDependentValues } from '../../../dependent' 
 import Control from '../../../Control'
 
 /**
@@ -46,15 +46,15 @@ const FieldGroup = props => {
   return(
     <div class="tf-field-group">
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
-      { applyDynamicValues(
+      { applyDependentValues(
           props.element ?? false,
           fields,
           value
         ).map(
           control => (
             <div class="tf-field-group-item">
-              <Control 
-                { ...control }
+              <Control
+                { ...control } 
                 value={ value[control.name] ?? '' }
                 onChange={ value => setAttribute(control.name, value) }
               />

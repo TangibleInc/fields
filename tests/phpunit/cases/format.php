@@ -103,6 +103,9 @@ class Format_TestCase extends WP_UnitTestCase {
 			'color_picker' => ['color_picker', [
 				'enable_opacity' => 'hasAlpha',
 			]],
+      'date_picker' => ['date_picker', [
+        'future_only' => 'futureOnly'
+      ]],
 			'number' => ['number', [
 				'min' => 'minValue',
 				'max' => 'maxValue',
