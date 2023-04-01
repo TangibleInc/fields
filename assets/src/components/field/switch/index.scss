@@ -1,3 +1,9 @@
+.tf-switch label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .tf-switch-element,
 .tf-switch-element-selected {
   position: relative;

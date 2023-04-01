@@ -87,8 +87,7 @@ $fields->format_args = function(
 
     case 'accordion':
       $args = $fields->format_groups($type, $args);
-      $args = $fields->format_value($args, 'mime_types', 'mimeTypes');
-      $args = $fields->format_value($args, 'mime_types', 'mimeTypes');
+      $args = $fields->format_value($args, 'use_switch', 'useSwitch');
       break;
 
     case 'switch':

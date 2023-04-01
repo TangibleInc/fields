@@ -44,7 +44,7 @@ const ExpandablePanel = props => {
           <span class="tf-panel-arrow" />
         </div>
       </div>
-      { showItem 
+      { showItem || props?.behavior === 'hide'
         ? <div class='tf-panel-content'>
             { props.children }
           </div> 

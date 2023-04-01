@@ -43,6 +43,11 @@
   padding-bottom: 4px;
 }
 
+// Needed when behavior is hide
+.tf-panel-closed .tf-panel-content {
+  display: none;
+}
+
 .tf-panel-open .tf-panel-footer {
   border-top: $field-border;
 }

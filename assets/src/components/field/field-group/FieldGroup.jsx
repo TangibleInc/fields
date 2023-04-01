@@ -3,9 +3,12 @@ import {
   useEffect
 } from 'react'
 
-import { applyDynamicValues } from '../../../dynamic' 
-import { initJSON } from '../../../utils'
+import { 
+  initJSON, 
+  areSameObjects 
+} from '../../../utils'
 
+import { applyDynamicValues } from '../../../dynamic' 
 import Control from '../../../Control'
 
 /**
@@ -26,6 +29,17 @@ const FieldGroup = props => {
   }
 
   useEffect(() => props.onChange && props.onChange(value), [value])
+  
+  useEffect(() => {
+
+    const haveSameSize = Object.keys(props.value).length === Object.keys(value).length
+    const haveSameValues = areSameObjects(props.value, value)
+
+    // Avoid inifinte loops, but should find a more sane way
+    if( ! haveSameSize || haveSameValues ) return; 
+      
+    setValue(props.value)
+  }, [props.value])
 
   const fields = props.fields ?? []
 

@@ -1,26 +1,52 @@
+import { 
+  useState,
+  useEffect 
+} from 'react'
+
+import { Switch } from '../../field'
 import { FieldGroup } from '..'
 import { ExpandablePanel } from '../../base'
-
-import { 
-  Checkbox, 
-  Switch 
-} from '../../field'
+import { initJSON } from '../../../utils'
 
 const Accordion = props => {
 
-  const headerLeft = 
-    <>
-      { true && <Checkbox value={ props.accordion_checkbox ?? true } /> }
-      { true && <Switch value={ props.accordion_switch ?? true } /> }
-    </>
-    
-  return (
-    <div class='tf-accordions'>
+  const [value, setValue] = useState(initJSON(props.value))
+
+  useEffect(() => props.onChange && props.onChange(value), [value])
+  
+  const isEnabled = isEnabled => {
+    setValue({
+      ...value, 
+      enabled: isEnabled === true || isEnabled === 'on' 
+        ? 'on' : 'off'
+    })
+  }
+  
+  const headerLeft = props.useSwitch
+    ? <div onClick={ e => e.stopPropagation() }>
+        <Switch value={ value.enabled ?? 'off' } onChange={ isEnabled }  />
+      </div>  
+    : null
+  
+  return(
+    <div class='tf-accordion'>
       <ExpandablePanel 
         title={ props.title ?? false }  
         headerLeft={ headerLeft }
+        behavior={ 'hide' }
       >
-        <FieldGroup { ...props } />  
+        <FieldGroup 
+          { ...props } 
+          fields={[
+            ...props.fields,
+            {
+              type: 'hidden',
+              name: 'enabled' 
+            }
+          ]} 
+          value={ value }
+          onChange={ setValue }
+        />  
       </ExpandablePanel>
     </div>
   )
