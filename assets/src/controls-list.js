@@ -1,6 +1,7 @@
 import Repeater from './components/repeater/Repeater'
 
 import {
+  Accordion,
   AlignmentMatrix,
   Border,
   ButtonGroup,
@@ -26,6 +27,7 @@ import {
 } from './components/field/'
 
 export default {
+  'accordion'       : Accordion,
   'alignment-matrix': AlignmentMatrix,
   'border'          : Border,
   'button-group'    : ButtonGroup,

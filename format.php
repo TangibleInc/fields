@@ -82,34 +82,50 @@ $fields->format_args = function(
     
     case 'repeater':
       if( empty($args['value']) ) $args['value'] = '';
-      $args = $fields->format_value($args, 'sub_fields', 'fields');
-      // Fall through
+      $args = $fields->format_groups($type, $args);
+      break;
+    
     case 'field_group':
-
-      // We use kebab-case for control types in js
-      $args['type'] = $type === 'field_group' ? 'field-group' : $args['type'];
-      
-      // Title can be an alias of label (to be compatible with ACF)
-      if( ! empty($args['title']) ) $args['label'] = $args['title'];
-      
-      $args['fields'] = array_map(function($args) use($fields) {
-        return $fields->format_args( 
-          $args['name'] ?? '',
-          $args,
-          false
-        );
-      }, $args['fields'] ?? []);
+      $args['type'] = 'field-group';
+      $args = $fields->format_groups($type, $args);
       break;
 
-      case 'switch':
-        $args = $fields->format_value($args, 'value_on', 'valueOn');
-        $args = $fields->format_value($args, 'value_off', 'valueOff');        
+    case 'accordion':
+      $args = $fields->format_groups($type, $args);
+      $args = $fields->format_value($args, 'use_switch', 'useSwitch');
+      break;
+
+    case 'switch':
+      $args = $fields->format_value($args, 'value_on', 'valueOn');
+      $args = $fields->format_value($args, 'value_off', 'valueOff');        
       break;
   }
 
   if( isset($args['value']) && $args['value'] === false ) {
     $args['value'] = '';
   }
+
+  return $args;
+};
+
+/**
+ * Common format for fields that implement subfields
+ */
+$fields->format_groups = function(string $type, array $args) use($fields) : array {
+
+  // Title can be an alias of label (to be compatible with ACF)
+  if( ! empty($args['title']) ) $args['label'] = $args['title']; 
+  
+  // Alias to be compatible with ACF
+  $args = $fields->format_value($args, 'sub_fields', 'fields'); 
+
+  $args['fields'] = array_map(function($args) use($fields) {
+    return $fields->format_args( 
+      $args['name'] ?? '',
+      $args,
+      false
+    );
+  }, $args['fields'] ?? []);
 
   return $args;
 };

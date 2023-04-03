@@ -119,6 +119,8 @@ const MultipleComboBox = props => {
             disabledKeys={ getDisabledKeys() }
             autoFocus={ true }
             multiple={ true }
+            showButton={ false }
+            menuTrigger="focus"
             onSelectionChange={ value => {
               if( ! value ) return;
               add(value)

@@ -1,3 +1,4 @@
+import Accordion from './accordion/Accordion'
 import AlignmentMatrix from './alignment-matrix/AlignmentMatrix'
 import Border from './border/Border'
 import ButtonGroup from './button-group/ButtonGroup'
@@ -22,6 +23,7 @@ import Text from './text/Text'
 import TextArea from './textarea/TextArea'
 
 export {
+  Accordion,
   AlignmentMatrix,
   Border,
   ButtonGroup,
