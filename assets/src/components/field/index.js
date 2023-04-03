@@ -1,3 +1,5 @@
+import Accordion from './accordion/Accordion'
+import Border from './border/Border'
 import ButtonGroup from './button-group/ButtonGroup'
 import Checkbox from './checkbox/Checkbox'
 import Color from './color/Color'
@@ -20,6 +22,8 @@ import Text from './text/Text'
 import TextArea from './textarea/TextArea'
 
 export {
+  Accordion,
+  Border,
   ButtonGroup,
   Checkbox,
   Color,

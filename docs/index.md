@@ -41,7 +41,7 @@ $fields = tangible_fields();
 Install depedencies:
 
 ```sh
-composer install & npm install
+composer install & npm ci
 ```
 
 Build for development - watch files for changes and rebuild

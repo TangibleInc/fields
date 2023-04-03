@@ -31,6 +31,6 @@ class Enqueue_TestCase extends WP_UnitTestCase {
 		$this->assertGreaterThan(0, preg_match('#^var TangibleFields = (.+?);$#', $data, $matches), 'wp_localize_scripts does not have TangibleFields');
 		$data = json_decode($matches[1], true);
 
-		$this->assertEquals(['api', 'fields', 'dynamics', 'mimetypes'], array_keys($data));
+		$this->assertEquals(['api', 'fields', 'dependents', 'mimetypes'], array_keys($data));
 	}
 }
