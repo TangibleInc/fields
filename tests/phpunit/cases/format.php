@@ -66,6 +66,7 @@ class Format_TestCase extends WP_UnitTestCase {
 	private function _test_format_args_types_data() {
 		return [
 			'unknown' => ['unknown', 'unknown'],
+			'button_group' => ['alignment_matrix', 'alignment-matrix'],
 			'button_group' => ['button_group', 'button-group'],
 			'color_picker' => ['color_picker', 'color-picker'],
 			'date_picker' => ['date_picker', 'date-picker'],

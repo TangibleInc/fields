@@ -29,6 +29,10 @@ $fields->format_args = function(
 
     // We use kebab-case for control types in js
     
+    case 'alignment_matrix': 
+      $args['type'] = 'alignment-matrix';
+      break;
+
     case 'border': 
       $args = $fields->format_value($args, 'enable_opacity', 'hasAlpha');
       break;
