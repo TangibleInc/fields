@@ -37,6 +37,7 @@ const Select = props => {
    * @see https://react-spectrum.adobe.com/react-aria/useSelect.html
    */
   const ref = useRef()
+  const listRef = useRef()
   const {
     labelProps,
     descriptionProps,
@@ -58,9 +59,12 @@ const Select = props => {
         name={ props.name }
       />
       <Button
-        ref={ ref }
         type={ 'select' }
         { ...triggerProps }
+        onKeyDown={ e => e.code === 'Space' 
+          ? state.toggle() 
+          : triggerProps.onKeyDown(e)
+        }
       >
         <span { ...valueProps }>
           { state.selectedItem
@@ -79,6 +83,7 @@ const Select = props => {
         >
           <ListBox
             { ...menuProps }
+            listBoxRef={ listRef }
             state={ state }
             items={ props.items }
           >
