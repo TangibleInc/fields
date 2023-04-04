@@ -13,7 +13,7 @@ const renderField = props => {
   const wrapper = props.wrapper ?? {}
 
   return (
-      <Control  { ...props } {...wrapper}/>
+    <Control  { ...props } { ...wrapper }/>
   )
 }
 

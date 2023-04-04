@@ -11,9 +11,7 @@ const Control = props => {
   
   const wrapper = props.wrapper ?? {}
   const wrapperClass = wrapper.class ?? ''
-  
-  delete props.wrapper
-  
+    
   const [value, setValue] = useState(props.value ?? '')
 
   useEffect(() => props.onChange && props.onChange(value), [value])
@@ -28,6 +26,8 @@ const Control = props => {
   delete childProps.value
   delete childProps.onChange
 
+  delete childProps.class
+  delete childProps.wrapper
 
   const onChange = newValue => {
 
@@ -41,8 +41,8 @@ const Control = props => {
   }
 
   return (
-    <OverlayProvider {...wrapper} className={`tf-context-${props.context ?? 'default'} ${wrapperClass}`}>
-      <ControlComponent value={value} onChange={onChange} {...childProps} />
+    <OverlayProvider { ...wrapper } className={`tf-context-${props.context ?? 'default'} ${wrapperClass}`}>
+      <ControlComponent value={value} onChange={onChange} { ...childProps } />
     </OverlayProvider>
   )
 }
