@@ -13,7 +13,7 @@ import Control from '../../../Control'
 
 import { uniqid } from '../../../utils'
 import { useOverlayTriggerState } from 'react-stately'
-import { Button } from '../../base'
+import { Button, Title } from '../../base'
 import { ComboBox } from '../../field'
 
 /**
@@ -22,7 +22,7 @@ import { ComboBox } from '../../field'
  * - onValueSelection
  * - isOpen
  */
-const DynamicWrapper = props => {
+const BaseWrapper = props => {
 
   /**
    * It's OK to return early even if hooks after because if props.config is false
@@ -120,6 +120,9 @@ const DynamicWrapper = props => {
         <div class="tf-dynamic-wrapper-popover" ref={ overlayRef } { ...overlayProps }>
           { settingsForm
             ? <div class="tf-dynamic-wrapper-popover-form">
+                <Title level={4}>
+                  Dynamic value settings
+                </Title>
                 { settingsForm.map(field => (
                   <div class="tf-dynamic-wrapper-popover-field">
                     <Control
@@ -133,17 +136,18 @@ const DynamicWrapper = props => {
                   </div>
                 )) }
                 <Button type="action" onPress={ () => selectAndClose(value) }>
-                  Save
+                  Add
                 </Button>
               </div>
             : <ComboBox 
                 choices={ choices }
                 autoFocus={ true }
+                showButton={ false }
                 onChange={ saveDynamicValue }
                 onFocusChange={ isFocus =>
-                isFocus 
-                  ? (! state.isOpen && state.open())
-                  : state.close() 
+                  isFocus 
+                    ? (! state.isOpen && state.open())
+                    : state.close() 
                 }
               /> }
           <DismissButton onDismiss={ state.close } />
@@ -153,4 +157,4 @@ const DynamicWrapper = props => {
   )
 }
 
-export default DynamicWrapper
+export default BaseWrapper

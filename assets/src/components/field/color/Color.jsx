@@ -6,7 +6,7 @@ import {
 
 import { useColorField } from '@react-aria/color'
 import { useColorFieldState } from '@react-stately/color'
-import { DynamicWrapper } from '../../dynamic/'
+import { FieldWrapper } from '../../dynamic/'
 
 import { 
   Description,
@@ -27,9 +27,6 @@ const Color = props =>{
 
   const state = useColorFieldState(props)
   const [open, isOpen] = useState(false)
-  const [isDynamic, setIsDynamic] = useState(
-    props.dynamic ? props.dynamic.hasDynamicValues() : false
-  )
 
   const {
     labelProps,
@@ -61,22 +58,7 @@ const Color = props =>{
           { props.label }
         </Label> }
       <div class="tf-color-container">
-        <DynamicWrapper 
-          config={ props.dynamic ?? false } 
-          onValueSelection={() => {
-            state.setInputValue('[[#FF00FF]]')
-            props.onChange('[[#FF00FF]]')
-            setIsDynamic(true)
-          }}
-          remove={{
-            isDisabled: isDynamic === false,
-            onPress: () => {
-              onChange('')
-              setIsDynamic(false)
-              props.dynamic.clear()
-            }
-          }}
-        >
+        <FieldWrapper reset={ () => onChange('') } { ...props }>
           <input
             ref={ ref } 
             { ...inputProps } 
@@ -84,9 +66,8 @@ const Color = props =>{
               isOpen(true)
               inputProps.onFocus(e)  
             }}
-            disabled={ isDynamic } 
           />
-        </DynamicWrapper>
+        </FieldWrapper>
         { open && 
           <Popover ref={ popover }>
             <ColorPicker 

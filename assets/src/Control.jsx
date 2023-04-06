@@ -42,7 +42,7 @@ const Control = props => {
   }
 
   /**
-   * TODO: dispatcher
+   * It's confusing having this directly here, we should find another way to handle it
    */
   const getDynamicConfig = () => ({
     types: props.dynamic,

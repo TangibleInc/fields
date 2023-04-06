@@ -9,7 +9,7 @@ import {
   getDynamicTokens 
 } from '../../../codemirror/'
 
-import { DynamicWrapper } from '..'
+import { BaseWrapper } from '..'
 
 const TextInput = props => {
 
@@ -74,14 +74,14 @@ const TextInput = props => {
   }
   
   return(
-    <DynamicWrapper 
+    <BaseWrapper 
       config={ props.dynamic ?? false } 
       onValueSelection={ addDynamicValue }
       actions={ ['insert'] }
     >
       <input { ...props } type="hidden" value={ value } />
       <div ref={ input } class="tf-dynamic-text-input"></div>
-    </DynamicWrapper>
+    </BaseWrapper>
   )
 }
 
