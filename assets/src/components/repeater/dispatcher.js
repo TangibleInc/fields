@@ -23,8 +23,8 @@ const repeaterDispatcher = (emptyItem, maxLength) => (items, action) => {
       : [
           ...items,
           {
-            key: uniqid(),
             ...(action.item),
+            key: uniqid(),
           },
         ]
     case 'clear':
