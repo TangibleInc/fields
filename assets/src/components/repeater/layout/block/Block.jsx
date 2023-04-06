@@ -1,5 +1,10 @@
 import { useState } from 'react'
-import { Button, ExpandablePanel } from '../../../base'
+
+import { 
+  Button, 
+  ModalTrigger,
+  ExpandablePanel 
+} from '../../../base'
 
 const Block = ({
   items,
@@ -29,9 +34,13 @@ const Block = ({
         { activeItem !== i ? 'Edit' : 'Close' }
       </Button>
       { maxLength !== undefined && 
-        <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
-          Remove
-        </Button> }
+        <ModalTrigger 
+          title="Confirmation"
+          label="Remove"
+          onValidate={ () => dispatch({ type : 'remove', item : i })}
+        >
+          Are you sure you want to remove item { i + 1 }?
+        </ModalTrigger> }
     </>
   )
 
