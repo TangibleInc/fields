@@ -93,12 +93,12 @@ const Repeater = props => {
             Add item
           </Button>
           <ModalTrigger 
-            btnLabel="Clear item"
-            message={ `Are you sure you want to clear all item(s)?` }
+            title="Confirmation"
+            label="Clear item"
             isDisabled={ items.length <= 0 }
-            dispatch={ dispatch }
-            dispatchItem= {{ type: 'clear' }}
-            >
+            onValidate={ () => dispatch({ type: 'clear' })}
+          >
+            Are you sure you want to clear all item(s)?
           </ModalTrigger>
         </div>
       )}

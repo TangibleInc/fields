@@ -45,15 +45,14 @@ const Table = ({
               </Button> }
           </td>
           <td>
-            { maxLength !== undefined && (
+            { maxLength !== undefined &&
               <ModalTrigger 
-                btnLabel="Remove"
-                message={ `Are you sure you want to remove item ${ i + 1 }?` }
-                dispatch={ dispatch }
-                dispatchItem= {{ type : 'remove', item : i }}
-                >
-              </ModalTrigger>
-            )}
+                label="Remove"
+                title="Confirmation"
+                onValidate={ () => dispatch({ type : 'remove', item : i })}
+              >
+                Are you sure you want to remove item { i + 1 }?
+              </ModalTrigger> }
           </td>
         </tr>
       )) }

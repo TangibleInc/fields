@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { useDialog } from 'react-aria'
+import { Title } from '../../base'
 
 /**
  * @see https://react-spectrum.adobe.com/react-aria/useDialog.html 
@@ -11,8 +12,14 @@ const Dialog = ({ title, children, ...props }) => {
   const { dialogProps } = useDialog(props, ref)
 
   return(
-    <div { ...dialogProps } ref={ ref }>
-      { children }
+    <div class='tf-dialog' { ...dialogProps } ref={ ref }>
+      { title && 
+        <Title level={4}>
+          { title }
+        </Title> }
+      <div class='tf-dialog-content'>
+        { children }
+      </div>
     </div>
   )
 }

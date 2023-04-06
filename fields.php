@@ -13,4 +13,3 @@ $fields->render_field = function(
 
   return '<div id="' . $args['element'] . '" ></div>';
 };
-

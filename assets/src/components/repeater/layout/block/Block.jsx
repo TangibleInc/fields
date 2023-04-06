@@ -34,16 +34,13 @@ const Block = ({
         { activeItem !== i ? 'Edit' : 'Close' }
       </Button>
       { maxLength !== undefined && 
-        <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
-          Remove
-        </Button> }
-      { maxLength !== undefined && 
         <ModalTrigger 
-          btnLabel="Remove"
-          message={ `Are you sure you want to remove item ${ i + 1 }?` }
-          dispatch={ dispatch }
-          dispatchItem= {{ type : 'remove', item : i }}
-        /> }
+          title="Confirmation"
+          label="Remove"
+          onValidate={ () => dispatch({ type : 'remove', item : i })}
+        >
+          Are you sure you want to remove item { i + 1 }?
+        </ModalTrigger> }
     </>
   )
 
