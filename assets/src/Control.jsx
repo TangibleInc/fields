@@ -1,17 +1,28 @@
 import { 
-  useState, 
+  useReducer, 
   useEffect 
 } from 'react'
 
 import controls from './controls-list.js'
 
-import { dispatchEvent } from './events'
+import { controlDispatcher } from './dispatcher.js'
+import { triggerEvent } from './events'
 import { format } from './format'
 
 const Control = props => {
-
-  const [data, setData] = useState(
-    format(props.value ?? '')
+  
+  /**
+   * Each field value use a JSON structure, handled by this dispatcher
+   * 
+   * @see dispatcher.js
+   * @see format.js
+   */
+  const [data, dispatch] = useReducer(
+    controlDispatcher, 
+    format(
+      props.value ?? '', 
+      props.default ?? ''
+    )
   )
 
   useEffect(() => props.onChange && props.onChange(data), [data.value])
@@ -29,39 +40,17 @@ const Control = props => {
   
   const onChange = newValue => {
 
-    dispatchEvent('valueChange', {
+    triggerEvent('valueChange', {
       name      : props.name ?? false, 
       props     : props,
       value     : newValue,
     })
 
-    setData({
-      ...data,
+    dispatch({
+      type: 'updateValue',
       value: newValue
     })
   }
-
-  /**
-   * It's confusing having this directly here, we should find another way to handle it
-   */
-  const getDynamicConfig = () => ({
-    types: props.dynamic,
-    hasDynamicValues: () => (Object.keys(data.dynamicValues).length !== 0),
-    get: () => (data.dynamicValues ?? {}),
-    delete: key => delete data.dynamicValues[ key ],
-    clear: () => {
-      setData({ ...data, dynamicValues: {}})
-    },
-    add: (id, settings) => (
-      setData({
-        ...data,
-        dynamicValues: {
-          ...data.dynamicValues,
-          [id]: settings
-        }
-      })
-    )
-  })
 
   return(
     <>
@@ -70,7 +59,28 @@ const Control = props => {
         { ...childProps }
         value={ data.value }
         onChange={ onChange } 
-        dynamic={ props.dynamic ? getDynamicConfig() : false } 
+        dynamic={ props.dynamic 
+          ? {
+            hasDynamicValues: () => (
+              Object.keys(data.dynamicValues.values).length !== 0 
+              && data.dynamicValues.mode !== 'none' 
+            ),
+            setMode: mode => dispatch({ type: 'setDynamicValueMode', mode: mode }),
+            getAll: () => (data.dynamicValues.values ?? {}),
+            get: key => (data.dynamicValues.values[ key ] ?? false),
+            delete: key => dispatch({ 
+              type: 'deleteDynamicValue', 
+              key: key 
+            }),
+            clear: () => dispatch({ 
+              type: 'clearDynamicValue' 
+            }),
+            add: (id, settings) => dispatch({ 
+              type: 'addDynamicValue', 
+              id: id, 
+              settings: settings 
+            })
+          } : false } 
       />
     </>
   )

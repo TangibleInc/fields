@@ -15,15 +15,14 @@ const FieldWrapper = props => {
   
   const getLabel = () => {
 
-    const value = props.value ?? ''
+    const dynamicKey = Object.keys(props.dynamic.getAll())[0] ?? false
+    const dynamicValue = props.dynamic.get(dynamicKey)
 
-    return isDynamicValue(value)
-      ? (props.dynamic.get()[ value.slice(2, -2) ]?.name ?? value) 
-      : value 
+    return dynamicValue ? dynamicValue.name : ''
   } 
   
   const removePreviousValues = currentKey => {
-    for( const key in props.dynamic.get() ) {      
+    for( const key in props.dynamic.getAll() ) {      
       if( currentKey !== key ) props.dynamic.delete(key)
     }
   }
@@ -33,15 +32,15 @@ const FieldWrapper = props => {
       config={ props.dynamic ?? false } 
       onValueSelection={dynamicValue => {
         removePreviousValues(dynamicValue)
-        props.onChange(`[[${dynamicValue}]]`)
+        props.dynamic.setMode('replace')
         setIsDynamic(true)
       }}
       remove={{
         isDisabled: isDynamic === false,
         onPress: () => {
-          props.reset('')
-          setIsDynamic(false)
+          props.dynamic.setMode('none')
           props.dynamic.clear()
+          setIsDynamic(false)
         }
       }}
     >

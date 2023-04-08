@@ -1,4 +1,4 @@
-const format = value => {
+const format = (value, defaultValue = '') => {
 
   if( isValidObject(value) ) return value
 
@@ -7,8 +7,18 @@ const format = value => {
   return parsedValue !== false
     ? parsedValue
     : {
-        value: value,
-        dynamicValues: {},
+        value: (value ?? defaultValue), 
+        dynamicValues: {
+
+          /**
+           * 3 possible values:
+           * - false (no dynamic values used)
+           * - 'insert' (1 dynamic value which replace the value)
+           * - 'add' (multiple dynamic values inside the value has to be a string)
+           */
+          mode: false,  
+          values: {}
+        },
       }
 }
 
@@ -18,9 +28,11 @@ const isValidObject = value => {
 
   if( ! isObject ) return false;
 
-  return value.hasOwnProperty('value') && value.hasOwnProperty('dynamicValues')
-    ? true
-    : false
+  if( ! value.hasOwnProperty('value') || ! value.hasOwnProperty('dynamicValues') ) {
+    return false
+  } 
+
+  return value.dynamicValues.hasOwnProperty('mode') && value.dynamicValues.hasOwnProperty('values')
 }
 
 const isValidJSON = value => {

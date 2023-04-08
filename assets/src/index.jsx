@@ -4,7 +4,7 @@ import { OverlayProvider } from 'react-aria'
 import { initContexts } from './contexts/'
 
 import { 
-  dispatchEvent,
+  triggerEvent,
   addEventListener 
 } from './events'
 
@@ -57,7 +57,7 @@ const init = () => {
       })
     , element)
 
-    dispatchEvent('initField', {
+    triggerEvent('initField', {
       name  : field, 
       props : props
     })

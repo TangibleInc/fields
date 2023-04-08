@@ -30,7 +30,7 @@ const TextInput = props => {
 
   const getDynamicValueLabel = slug => (
     props.dynamic 
-      ? (props.dynamic.get()[ slug ]?.name ?? slug)
+      ? (props.dynamic.getAll()[ slug ]?.name ?? slug)
       : slug 
   )
 
@@ -48,7 +48,7 @@ const TextInput = props => {
      * worth looking into it
      */
     const dynamicValues = getDynamicTokens(value) 
-    const savedDynamicValues = props.dynamic.get()
+    const savedDynamicValues = props.dynamic.getAll()
 
     for( const key in savedDynamicValues ) {
       
@@ -56,7 +56,6 @@ const TextInput = props => {
         props.dynamic.delete(key)
       }
     }
- 
   }
 
   useEffect(() => props?.onChange(value), [value])
@@ -65,6 +64,9 @@ const TextInput = props => {
    * @see https://codemirror.net/examples/change/
    */
   const addDynamicValue = (value) => {
+    
+    props.dynamic.setMode('insert')
+
     editor.current.dispatch({
       changes: {
         from: editor.current.state.doc.length, 
@@ -74,7 +76,7 @@ const TextInput = props => {
   }
   
   return(
-    <BaseWrapper 
+    <BaseWrapper
       config={ props.dynamic ?? false } 
       onValueSelection={ addDynamicValue }
       actions={ ['insert'] }
