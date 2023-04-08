@@ -9,7 +9,7 @@ import {
 } from './dispatcher.js'
 
 import { Button, Title, ModalTrigger } from '../base'
-import { applyDependentValues } from '../../dependent' 
+import { applyDependentValues } from '../../dependent-values' 
 
 import Layouts from './layout' 
 import Control from '../../Control'

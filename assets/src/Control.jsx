@@ -8,6 +8,7 @@ import controls from './controls-list.js'
 import { controlDispatcher } from './dispatcher.js'
 import { triggerEvent } from './events'
 import { format } from './format'
+import { dynamicValuesAPI } from './dynamic-values'
 
 const Control = props => {
   
@@ -26,6 +27,7 @@ const Control = props => {
   )
 
   useEffect(() => props.onChange && props.onChange(data), [data.value])
+  useEffect(() => props.onChange && props.onChange(data), [data?.dynamicValues?.values])
   
   const type = props.type ?? 'text'
   const ControlComponent = controls[ type ] ?? false
@@ -60,27 +62,9 @@ const Control = props => {
         value={ data.value }
         onChange={ onChange } 
         dynamic={ props.dynamic 
-          ? {
-            hasDynamicValues: () => (
-              Object.keys(data.dynamicValues.values).length !== 0 
-              && data.dynamicValues.mode !== 'none' 
-            ),
-            setMode: mode => dispatch({ type: 'setDynamicValueMode', mode: mode }),
-            getAll: () => (data.dynamicValues.values ?? {}),
-            get: key => (data.dynamicValues.values[ key ] ?? false),
-            delete: key => dispatch({ 
-              type: 'deleteDynamicValue', 
-              key: key 
-            }),
-            clear: () => dispatch({ 
-              type: 'clearDynamicValue' 
-            }),
-            add: (id, settings) => dispatch({ 
-              type: 'addDynamicValue', 
-              id: id, 
-              settings: settings 
-            })
-          } : false } 
+          ? dynamicValuesAPI(data, dispatch) 
+          : false 
+        } 
       />
     </>
   )

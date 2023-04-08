@@ -57,8 +57,8 @@ const Color = props =>{
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <div class="tf-color-container">
-        <FieldWrapper { ...props }>
+      <FieldWrapper { ...props }>
+        <div class="tf-color-container">
           <input
             ref={ ref } 
             { ...inputProps } 
@@ -67,17 +67,17 @@ const Color = props =>{
               inputProps.onFocus(e)  
             }}
           />
-        </FieldWrapper>
-        { open && 
-          <Popover ref={ popover }>
-            <ColorPicker 
-              value={ state.colorValue?.toString(format) }
-              onChange={ onChange } 
-              hasAlpha={ props.hasAlpha ?? true } 
-              onFocusChange={ isFocus => isOpen(isFocus) }
-            />
-          </Popover> }
-      </div>        
+          { open && 
+            <Popover ref={ popover }>
+              <ColorPicker 
+                value={ state.colorValue?.toString(format) }
+                onChange={ onChange } 
+                hasAlpha={ props.hasAlpha ?? true } 
+                onFocusChange={ isFocus => isOpen(isFocus) }
+              />
+            </Popover> }
+        </div>
+      </FieldWrapper>        
       { props.description &&
         <Description { ...descriptionProps }>
           { props.description }

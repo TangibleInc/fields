@@ -8,7 +8,7 @@ import {
   areSameObjects 
 } from '../../../utils'
 
-import { applyDependentValues } from '../../../dependent' 
+import { applyDependentValues } from '../../../dependent-values' 
 import Control from '../../../Control'
 
 /**
