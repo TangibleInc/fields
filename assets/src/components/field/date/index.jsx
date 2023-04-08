@@ -75,6 +75,7 @@ export default props => {
         value={ value }
         onChange={ setValue }
         onFocusChange={ props.onFocusChange ?? false }
+        dynamic={ props.dynamic ?? false }
       />
     </>
   )

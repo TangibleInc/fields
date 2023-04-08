@@ -1,11 +1,6 @@
-import { 
-  useState, 
-  useEffect 
-} from 'react'
-
+import { useState } from 'react'
 import { VisuallyHidden } from 'react-aria'
 import { BaseWrapper } from '../'
-import { isDynamicValue } from '../utils'
 
 const FieldWrapper = props => {
  
@@ -20,7 +15,7 @@ const FieldWrapper = props => {
 
     return dynamicValue ? dynamicValue.name : ''
   } 
-  
+
   const removePreviousValues = currentKey => {
     for( const key in props.dynamic.getAll() ) {      
       if( currentKey !== key ) props.dynamic.delete(key)
@@ -47,7 +42,7 @@ const FieldWrapper = props => {
       { isDynamic
         ? 
           <>
-            <input type="text" value={ getLabel() } disabled />
+            <input type="text" class="tf-dynamic-value-input" value={ getLabel() } disabled />
             <VisuallyHidden>
               { props.children }
             </VisuallyHidden>

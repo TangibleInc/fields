@@ -6,6 +6,7 @@ import {
 
 import { useDatePickerState } from 'react-stately'
 import { useDatePicker } from 'react-aria'
+import { FieldWrapper } from '../../dynamic'
 
 import { 
   Button, 
@@ -76,18 +77,20 @@ const DatePicker = props => {
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <div class="tf-date-field-container">
-        <div class="tf-date-group" { ...groupProps } ref={ ref }>
-          <DateField { ...fieldProps } />
-          <Button type="action" { ...buttonProps }>
-            🗓
-          </Button>
+      <FieldWrapper { ...props }>
+        <div class="tf-date-field-container">
+          <div class="tf-date-group" { ...groupProps } ref={ ref }>
+            <DateField { ...fieldProps } />
+            <Button type="action" { ...buttonProps }>
+              🗓
+            </Button>
+          </div>
+          { state.isOpen &&
+            <Popover { ...dialogProps } ref={ ref } state={ state } placement="bottom start">
+              <Calendar { ...calendarProps } focusedValue={ focusedDate } onFocusChange={ setFocusedDate } />
+            </Popover> }
         </div>
-        { state.isOpen &&
-          <Popover { ...dialogProps } ref={ ref } state={ state } placement="bottom start">
-            <Calendar { ...calendarProps } focusedValue={ focusedDate } onFocusChange={ setFocusedDate } />
-          </Popover> }
-      </div>
+      </FieldWrapper>
       { props.description &&
         <Description { ...descriptionProps }>
           { props.description }

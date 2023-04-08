@@ -58,7 +58,7 @@ const Color = props =>{
           { props.label }
         </Label> }
       <div class="tf-color-container">
-        <FieldWrapper reset={ () => onChange('') } { ...props }>
+        <FieldWrapper { ...props }>
           <input
             ref={ ref } 
             { ...inputProps } 

@@ -37,7 +37,7 @@ const Number = props => {
           { props.label }
         </Label> }
       <div class='tf-number-field' { ...groupProps }>
-        <FieldWrapper reset={ () => state.setInputValue('') } { ...props }>
+        <FieldWrapper { ...props }>
           <input { ...inputProps} ref={ inputRef } />
           { hasButtons && <div class='tf-number-button-group'>
             <Button type="number" { ...incrementButtonProps }>+</Button>
