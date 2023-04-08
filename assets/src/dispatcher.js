@@ -5,7 +5,7 @@
  */
 const controlDispatcher = (state, action) => {
   
-  switch (action.type) {
+  switch(action.type) {
     
     /**
      * Value

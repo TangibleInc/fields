@@ -4,7 +4,8 @@
  * @see ../Control.jsx 
  * @see ../dispatcher.jx 
  */
-const dynamicValuesAPI = (data, dispatch) => ({
+const dynamicValuesAPI = (data, dispatch, types) => ({
+  getTypes: () => (types),
   setMode: mode => {
     dispatch({ type: 'setDynamicValueMode', mode: mode })
   },

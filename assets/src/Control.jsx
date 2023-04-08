@@ -26,8 +26,8 @@ const Control = props => {
     )
   )
 
-  useEffect(() => props.onChange && props.onChange(data), [data.value])
-  useEffect(() => props.onChange && props.onChange(data), [data?.dynamicValues?.values])
+  useEffect(() => props.onChange && props.onChange(data), [data?.value])
+  useEffect(() => props.onChange && props.onChange(data), [data?.dynamicValues])
   
   const type = props.type ?? 'text'
   const ControlComponent = controls[ type ] ?? false
@@ -62,7 +62,7 @@ const Control = props => {
         value={ data.value }
         onChange={ onChange } 
         dynamic={ props.dynamic 
-          ? dynamicValuesAPI(data, dispatch) 
+          ? dynamicValuesAPI(data, dispatch, props.dynamic) 
           : false 
         } 
       />

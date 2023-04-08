@@ -33,7 +33,7 @@ $fields->register_dynamic_value([
         'title'   => 'Title',
         'content' => 'Content'
       ]
-    ]
+    ],
   ],
   'conditions' => [],
 ]);
@@ -41,6 +41,7 @@ $fields->register_dynamic_value([
 $fields->register_dynamic_value([
   'name'       => 'post_id',
   'label'      => 'Post ID',
+  'type'       => 'text',
   'type'       => 'text',
   'callback'   => null,
   'settings'   => [],
@@ -50,6 +51,16 @@ $fields->register_dynamic_value([
 $fields->register_dynamic_value([
   'name'       => 'post_color',
   'label'      => 'Post color',
+  'type'       => 'color',
+  'callback'   => null,
+  'settings'   => [],
+  'conditions' => [],
+]);
+
+$fields->register_dynamic_value([
+  'name'       => 'post_date',
+  'label'      => 'Post date',
+  'type'       => 'date',
   'callback'   => null,
   'settings'   => [],
   'conditions' => [],

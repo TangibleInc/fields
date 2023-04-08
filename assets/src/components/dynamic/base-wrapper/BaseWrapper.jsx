@@ -99,11 +99,14 @@ const BaseWrapper = props => {
   } 
 
   const choices = Object.keys(dynamics).reduce(
-    (choices, key) => ({
-      ...choices,
-      [key]: dynamics[key].label ?? key
-    }),
-    {}
+    (choices, key) => (
+      props.config.getTypes().includes(dynamics[key]?.type)
+      ? {
+          ...choices,
+          [key]: dynamics[key].label ?? key
+        } 
+      : choices
+    ), {}
   )
 
   return(

@@ -44,16 +44,19 @@ $fields->format_args = function(
     case 'color_picker':
       $args['type'] = 'color-picker';
       $args = $fields->format_value($args, 'enable_opacity', 'hasAlpha');
+      $args = $fields->format_dynamic_types($args, ['color']);
       break;
     
     case 'date_picker':
       $args['type'] = 'date-picker';
       $args = $fields->format_value($args, 'future_only', 'futureOnly');
+      $args = $fields->format_dynamic_types($args, ['date']);
       break;
 
     case 'number':
       $args = $fields->format_value($args, 'min', 'minValue');
       $args = $fields->format_value($args, 'max', 'maxValue');
+      $args = $fields->format_dynamic_types($args, ['number']);
       break;
 
     case 'simple_dimension':
@@ -103,6 +106,10 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'value_on', 'valueOn');
       $args = $fields->format_value($args, 'value_off', 'valueOff');        
       break;
+
+    case 'text':
+      $args = $fields->format_dynamic_types($args);
+      break;
   }
 
   if( isset($args['value']) && $args['value'] === false ) {
@@ -147,4 +154,26 @@ $fields->format_value = function(
   unset($args[$old_name]);
 
   return $args;
+};
+
+$fields->format_dynamic_types = function(
+  array $args, 
+  array $default = [
+    'text', 
+    'date', 
+    'color', 
+    'number'
+  ]
+) {
+
+  if( empty($args['dynamic']) ) {
+    $args['dynamic'] = false;
+    return $args;
+  }
+
+  $args['dynamic'] = is_array($args['dynamic'])
+    ? array_intersect($args['dynamic'], $default)  
+    : $default; 
+  
+  return $args; 
 };
