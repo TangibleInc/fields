@@ -14,6 +14,14 @@ $fields->register_dynamic_value = function(array $dynamic_value) use($fields) {
 
   if( empty($name) ) return;
 
+  $dynamic_value['settings'] = array_map(function($args) use($fields) {
+    return $fields->format_args( 
+      $args['name'] ?? '',
+      $args,
+      false
+    );
+  }, $dynamic_value['settings'] ?? []);
+
   $fields->dynamic_values[ $name ] = $dynamic_value;
 };
 
