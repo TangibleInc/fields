@@ -12,3 +12,5 @@ tests_add_filter('muplugins_loaded', function() use ($_PLUGIN_ENTRYPOINT) {
 });
 
 require $_WORDPRESS_DEVELOP_DIR . '/tests/phpunit/includes/bootstrap.php';
+
+require __DIR__ . '/case.php';
