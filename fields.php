@@ -17,8 +17,17 @@ $fields->register_field = function(
     $backtrace = debug_backtrace();
     $caller = array_shift( $backtrace );
     $caller = array_shift( $backtrace );
-    trigger_error("Field {$name} is already registered, called from <b>{$caller['file']}</b> in <b>{$caller['line']}</b>.", E_USER_WARNING);
+    trigger_error("Field {$name} is already registered, called from <b>{$caller['file']}</b> in <b>{$caller['line']}</b>. Will overwrite.", E_USER_WARNING);
   }
+
+  if ( empty( $args ) ) {
+    $backtrace = debug_backtrace();
+    $caller = array_shift( $backtrace );
+    $caller = array_shift( $backtrace );
+    trigger_error("Field {$name} can't be registered with empty args, called from <b>{$caller['file']}</b> in <b>{$caller['line']}</b>.", E_USER_WARNING);
+    return;
+  }
+
   $fields->registered_fields[ $name ] = $args;
 };
 
