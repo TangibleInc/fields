@@ -7,7 +7,15 @@
   "scripts": {
     "dev": "roll dev",
     "build": "roll build",
-    "format": "roll format"
+    "format": "roll format",
+    "-- Local environment --": "https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env",
+    "env": "wp-env",
+    "env:start": "wp-env start",
+    "env:test": "wp-env run tests-wordpress /var/www/html/wp-content/plugins/tangible-fields-module/vendor/bin/phpunit -c /var/www/html/wp-content/plugins/tangible-fields-module/phpunit.xml --verbose",
+    "env:test:7.4": "WP_ENV_PHP_VERSION=7.4 wp-env start && npm run env:test", 
+    "env:test:8.2": "WP_ENV_PHP_VERSION=8.2 wp-env start && npm run env:test", 
+    "env:stop": "wp-env stop",
+    "env:destroy": "wp-env destroy"
   },
   "dependencies": {
     "@codemirror/view": "^6.4.0",
@@ -16,6 +24,7 @@
     "react-stately": "^3.18.0"
   },
   "devDependencies": {
-    "@tangible/roller": "^1.4.7"
+    "@tangible/roller": "^1.4.7",
+    "@wordpress/env": "^5.15.0"
   }
 }
