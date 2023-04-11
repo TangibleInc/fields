@@ -57,4 +57,18 @@ class Render_TestCase extends WP_UnitTestCase {
 			'context' => 'default',
 		], tangible_fields()->enqueued_fields['test']);
 	}
+
+	public function test_fields_render_callback() {
+		tangible_fields()->register_field('test', [
+			'type' => 'number',
+			'render_callback' => function($args, $field) {
+				return json_encode([$args, $field]);
+			}
+		]);
+
+		$result = json_decode(tangible_fields()->render_field('test'));
+		$this->assertEquals('number', $result[0]->type);
+		$this->assertNotEmpty($result[0]->element);
+		$this->assertEquals('number', $result[1]->type);
+	}
 }
