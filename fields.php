@@ -28,6 +28,13 @@ $fields->register_field = function(
     return;
   }
 
+  // Set the render_callback for conditional fieldsets.
+  if ( 'conditional' === ( $args['type'] ?? '' ) && empty( $args['render_callback'] ) ) {
+    if ( is_callable( $callback = [ $fields, '_render_callback_default_conditional_field' ] ) ) {
+      $args['render_callback'] = $callback;
+    }
+  }
+
   $fields->registered_fields[ $name ] = $args;
 };
 

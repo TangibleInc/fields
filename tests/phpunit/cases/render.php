@@ -71,4 +71,19 @@ class Render_TestCase extends WP_UnitTestCase {
 		$this->assertNotEmpty($result[0]->element);
 		$this->assertEquals('number', $result[1]->type);
 	}
+
+	public function test_fields_render_callback_conditional_fields_default() {
+		tangible_fields()->register_field('test', [
+			'type' => 'conditional',
+		]);
+
+		$this->assertArrayHasKey('render_callback', tangible_fields()->registered_fields['test'], 'default render_callback for conditonal fieldsets is not set');
+		$this->assertEquals(
+			[tangible_fields(), '_render_callback_default_conditional_field'],
+			tangible_fields()->registered_fields['test']['render_callback'],
+			'default render_callback should be _render_callback_default_conditional_field'
+		);
+
+		// @todo ohai, Nicolas! Please call render_field('test') and verify HTML output here :)
+	}
 }
