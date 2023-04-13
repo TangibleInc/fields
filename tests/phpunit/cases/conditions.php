@@ -152,6 +152,62 @@ class Conditions_TestCase extends WP_UnitTestCase {
 					]
 				]
 			],
+			'_in' => [
+				true, [
+					'one' => [
+						'_in' => ['two', 'three', 'four', 'one'],
+					]
+				]
+			],
+			'_nin' => [
+				true, [
+					'four' => [
+						'_in' => ['two', 'three', 'four'],
+					]
+				]
+			],
+			'_contains' => [
+				true, [
+					'four' => [
+						'_contains' => 'fo',
+					]
+				]
+			],
+			'_ncontains' => [
+				false, [
+					'four' => [
+						'_ncontains' => 'f',
+					]
+				]
+			],
+			'_contains utf8' => [
+				true, [
+					'привет' => [
+						'_contains' => 'п',
+					]
+				]
+			],
+			'_ncontains utf8' => [
+				true, [
+					'привет' => [
+						'_ncontains' => 'П',
+					]
+				]
+			],
+			'_re' => [
+				true, [
+					'hello world' => [
+						'_re' => '/hel{2}.?/',
+					]
+				]
+			],
+			'_re utf8' => [
+				true, [
+					'привет мир' => [
+						'_re' => '/\sм[ий]р$/u',
+					]
+				]
+			],
 		];
 	}
 }

@@ -67,6 +67,21 @@ $fields->evaluate_condition = function(
         case '_gte':
           $part_results []= $lho >= $rho;
           break;
+        case '_in':
+          $part_results []= in_array( $lho, $rho );
+          break;
+        case '_nin':
+          $part_results []= !in_array( $lho, $rho );
+          break;
+        case '_contains':
+          $part_results []= mb_strpos( $lho, $rho ) !== false;
+          break;
+        case '_ncontains':
+          $part_results []= mb_strpos( $lho, $rho ) === false;
+          break;
+        case '_re':
+          $part_results []= preg_match( $rho, $lho ) > 0;
+          break;
         default:
           $part_results []= false;
       }
