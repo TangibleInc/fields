@@ -15,7 +15,7 @@ const Button = props => {
   const CustomTag = props.changeTag && props.changeTag == 'span' ? 'span' : 'button'
   
   return (
-    <CustomTag class={`${type} ${context}`} { ...buttonProps } ref={ ref } type='button'>
+    <CustomTag class={`${type} ${context}`} style={ props.style } { ...buttonProps } ref={ ref } type='button'>
       { children }
     </CustomTag>
   )

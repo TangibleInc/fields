@@ -1,4 +1,5 @@
 import { render } from 'react-dom'
+import { createContext } from 'react'
 import { OverlayProvider } from 'react-aria'
 import { initContexts } from './contexts/'
 
@@ -9,11 +10,22 @@ import {
 
 import Control from './Control'
 
+/**
+ * Used to detect the current context from child components
+ */
+const ThemeContext = createContext(null)
+
 const renderField = props => {
+  
   const wrapper = props.wrapper ?? {}
 
   return (
-    <Control  { ...props } { ...wrapper }/>
+    <ThemeContext.Provider value={{
+      name    : props.context ?? 'default',
+      wrapper : themeWrapper
+    }}>
+      <Control  { ...props } { ...wrapper }/>
+    </ThemeContext.Provider>
   )
 }
 
@@ -51,8 +63,9 @@ const init = () => {
  * Make tangibleFields accessible from other scripts
  */
 window.tangibleFields = {
-  render : renderField,
-  event  : addEventListener
+  render       : renderField,
+  event        : addEventListener,
+  ThemeContext : ThemeContext
 }
 
 window.addEventListener('load', init)

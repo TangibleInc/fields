@@ -1,0 +1,8 @@
+.tf-accordion {
+  
+  // Bad, we should rewrite the switch to be able to change the size
+  .tf-switch-element,
+  .tf-switch-element-selected {
+    transform: scale(0.7);
+  }
+}
