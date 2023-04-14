@@ -1,6 +1,7 @@
 import {
   useState,
-  useEffect
+  useEffect,
+  useContext
 } from 'react'
 
 import { OverlayProvider } from 'react-aria'
@@ -9,9 +10,19 @@ import { dispatchEvent } from './events'
 
 const Control = props => {
   
-  const wrapper = props.wrapper ?? {}
-  const wrapperClass = wrapper.class ?? ''
-    
+  /**
+   * It needs to be added again in order to correctly apply style inside the modal
+   * 
+   * @see renderField() in ./src/index.jsx 
+   */
+  const { ThemeContext } = tangibleFields 
+  const theme = useContext(ThemeContext)
+  
+  const wrapper = {
+    ...(props.wrapper ?? {}),
+    class: `${props?.wrapper?.class ?? ''} ${theme.wrapper}`
+  }
+
   const [value, setValue] = useState(props.value ?? '')
 
   useEffect(() => props.onChange && props.onChange(value), [value])
@@ -41,7 +52,7 @@ const Control = props => {
   }
 
   return (
-    <OverlayProvider { ...wrapper } className={`tf-context-${props.context ?? 'default'} ${wrapperClass}`}>
+    <OverlayProvider { ...wrapper }>
       <ControlComponent value={value} onChange={onChange} { ...childProps } />
     </OverlayProvider>
   )

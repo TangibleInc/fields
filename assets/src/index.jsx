@@ -1,6 +1,5 @@
 import { render } from 'react-dom'
 import { createContext } from 'react'
-import { OverlayProvider } from 'react-aria'
 import { initContexts } from './contexts/'
 
 import { 
@@ -15,19 +14,14 @@ import Control from './Control'
  */
 const ThemeContext = createContext(null)
 
-const renderField = props => {
-  
-  const wrapper = props.wrapper ?? {}
-
-  return (
-    <ThemeContext.Provider value={{
-      name    : props.context ?? 'default',
-      wrapper : themeWrapper
-    }}>
-      <Control  { ...props } { ...wrapper }/>
-    </ThemeContext.Provider>
-  )
-}
+const renderField = props => (
+  <ThemeContext.Provider value={{
+    name    : props.context ?? 'default',
+    wrapper : `tf-context-${props.context ?? 'default'}`
+  }}>
+    <Control { ...props } />
+  </ThemeContext.Provider>
+)
 
 /**
  * Render fields registered from PHP
