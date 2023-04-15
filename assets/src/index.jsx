@@ -1,4 +1,8 @@
-import { render } from 'react-dom'
+import { 
+  render, 
+  createRoot 
+} from 'react-dom'
+
 import { createContext } from 'react'
 import { initContexts } from './contexts/'
 
@@ -37,12 +41,17 @@ const init = () => {
 
     if( ! element ) continue;
 
-    render(
-      renderField({ 
-        name: field, 
-        ...props 
-      })
-    , element)
+    const component = renderField({ 
+      name: field, 
+      ...props 
+    })
+
+    /**
+     * React 18 is used since WP 6.2 (createRoot() need to be used instead of render())
+     */
+    createRoot
+      ? createRoot(element).render(component)
+      : render(element, component)
 
     dispatchEvent('initField', {
       name  : field, 
