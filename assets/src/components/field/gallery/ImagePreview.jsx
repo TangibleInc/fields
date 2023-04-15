@@ -14,13 +14,17 @@ const ImagePreview = props => {
   const [loaded, isLoaded] = useState(false)
   const [data, setData] = useState(false)
 
-  useEffect(async () => {
+  useEffect(() => {
     
-    const data = await getMedia(props.id)
-    
-    setData(data)
-    isLoaded(true)
-    
+    const fetch = async () => {
+      
+      const data = await getMedia(props.id)
+      
+      setData(data)
+      isLoaded(true)
+    }
+
+    fetch()
   }, [])
 
   if( ! loaded || ! data ) {
