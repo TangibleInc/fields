@@ -11,13 +11,18 @@ const FilePreview = props => {
   const [loaded, isLoaded] = useState(false)
   const [data, setData] = useState(false)
 
-  useEffect(async () => {
-    
+  useEffect(() => {
+
+    const fetch = async () => {
+  
     const data = await getMedia(props.id)
     
-    setData(data)
-    isLoaded(true)
+      setData(data)
+      isLoaded(true)
     
+    }
+    
+    fetch()
   }, [])
 
   if( ! loaded || ! data ) {
