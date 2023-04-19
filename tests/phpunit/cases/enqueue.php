@@ -33,4 +33,29 @@ class Enqueue_TestCase extends WP_UnitTestCase {
 
 		$this->assertEquals(['api', 'fields', 'dependents', 'mimetypes'], array_keys($data));
 	}
+
+	public function test_fields_enqueue_conditions() {
+		tangible_fields()->enqueue_field('test', [
+			'type' => 'number'
+		]);
+
+		tangible_fields()->enqueue_field('field', [
+			'type' => 'number',
+			'condition' => $condition = [
+				'action' => 'show',
+				'condition' => [
+					'test' => [
+						'_gt' => 0,
+					]
+				],
+			],
+		]);
+
+		tangible_fields()->maybe_enqueue_scripts();
+		preg_match('#^var TangibleFields = (.+?);$#', wp_scripts()->get_data('tangible-fields', 'data'), $matches);
+		$data = json_decode($matches[1], true);
+
+		$this->assertArrayNotHasKey('condition', $data['fields']['test']);
+		$this->assertEquals($condition, $data['fields']['field']['condition']);
+	}
 }
