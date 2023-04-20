@@ -4,6 +4,9 @@ class Enqueue_TestCase extends WP_UnitTestCase {
 		tangible_fields()->enqueued_fields = [];
 		tangible_fields()->is_enqueued = false;
 		tangible_fields()->set_context('default');
+
+		$GLOBALS['wp_styles'] = new WP_Styles();
+		$GLOBALS['wp_scripts'] = new WP_Scripts();
 	}
 
 	public function test_fields_enqueue() {

@@ -55,7 +55,6 @@ $fields->enqueue = function() use($fields) {
     ],
     'fields'    => $fields->enqueued_fields,
     'dependents'=> $fields->get_dependent_contexts($fields->enqueued_fields),
-    'conditions' => $fields->get_condition_contexts($fields->enqueued_fields),
     'mimetypes' => get_allowed_mime_types()
   ];
 
