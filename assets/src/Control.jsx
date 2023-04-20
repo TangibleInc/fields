@@ -33,7 +33,7 @@ const Control = props => {
 
   const [value, setValue] = useState(props.value ?? '')
   const [isVisible, setVisibility] = useState(false) // False until we evaluate conditions
-
+  
   useEffect(() => {
     props.onChange && props.onChange(value)
   }, [value])
@@ -67,28 +67,38 @@ const Control = props => {
     })
   }
 
+  const { 
+    action = 'show', 
+    condition = false 
+  } = props.condition ?? {}
+
   /**
    * Determine for which fields a value change should trigger a re-evaluation of 
    * the visibility conditions
    */
   const triggerFields = useMemo(() => (
-    props.conditions 
-      ? getTriggerFields(props.conditions)
+    condition 
+      ? getTriggerFields(condition)
       : false
   ))
 
   const evaluateVisibility = () => {
-    props.conditions
-      ? setVisibility( evaluateFieldVisibility(props.conditions) )
-      : setVisibility(true)
+
+    if( ! condition ) {
+      setVisibility(true)
+      return;
+    } 
+
+    const visibility = evaluateFieldVisibility(condition)
+    setVisibility( action === 'show' ? visibility : ! visibility ) 
   }
 
   useEffect(() => {
     
     evaluateVisibility() // Initial visibility
     
-    if( ! props.conditions || ! triggerFields ) return;
-
+    if( ! condition || ! triggerFields ) return;
+    
     /**
      * Evaluate visibility conditions on value change
      * 
