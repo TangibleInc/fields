@@ -17,13 +17,14 @@ import Control from './Control'
  * Used to detect the current context from child components
  */
 const ThemeContext = createContext(null)
+const values = {}
 
 const renderField = props => (
   <ThemeContext.Provider value={{
     name    : props.context ?? 'default',
     wrapper : `tf-context-${props.context ?? 'default'}`
   }}>
-    <Control { ...props } />
+    <Control { ...props } onChange={ value => values[props.name] = value } />
   </ThemeContext.Provider>
 )
 
@@ -68,6 +69,7 @@ const init = () => {
 window.tangibleFields = {
   render       : renderField,
   event        : addEventListener,
+  values       : values,
   ThemeContext : ThemeContext
 }
 
