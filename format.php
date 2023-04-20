@@ -87,6 +87,9 @@ $fields->format_args = function(
     case 'repeater':
       if( empty($args['value']) ) $args['value'] = '';
       $args = $fields->format_groups($type, $args);
+      $args = $fields->format_value($args, 'use_switch', 'useSwitch');
+      $args = $fields->format_value($args, 'use_bulk', 'useBulk');
+      $args = $fields->format_value($args, 'section_title', 'sectionTitle');
       break;
     
     case 'field_group':

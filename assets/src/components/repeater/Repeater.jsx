@@ -1,6 +1,7 @@
 import { 
   useEffect, 
-  useReducer 
+  useReducer,
+  useState
 } from 'react'
 
 import { 
@@ -82,6 +83,9 @@ const Repeater = props => {
         getRow={ getRow }
         getControl={ getControl }
         maxLength = { repeatable ? maxLength : undefined }
+        title={ props.sectionTitle ?? '' }
+        useSwitch={ props.useSwitch }
+        useBulk={ props.useBulk }
       />
       { repeatable && (
         <div class="tf-repeater-actions">
