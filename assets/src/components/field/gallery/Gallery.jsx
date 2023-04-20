@@ -4,7 +4,6 @@ import {
 } from 'react'
 
 import { useField } from 'react-aria'
-import { initJSON } from '../../../utils'
 
 import { 
   Button,
@@ -20,14 +19,20 @@ import ImagePreview from './ImagePreview'
 
 const Gallery = props => {
 
-  let propsVal = props.value ? props.value : '';
- 
+  const initValue = initialStringValue => {
+    const ids = initialStringValue !== '[]' ? initialStringValue.split(',') : []
+    return ids.map(id => (id.replaceAll('[', '').replaceAll(']', '').replaceAll('"', '')) )
+  }
+
   const [value, setValue] = useState(
-     Array.isArray(propsVal)
-      ? propsVal
-      : propsVal.split(',')
+    props.value && Array.isArray(props.value)
+    ? props.value
+    :  ( props.value 
+          ? initValue(props.value) 
+          : []
+       )
   )
-  
+
   const { 
     labelProps, 
     inputProps, 
@@ -60,7 +65,7 @@ const Gallery = props => {
     // Set state with selection when closing the modal
     media.on({
       update: selection => {
-        setValue(selection.models.map(image => (image.id.toString())))
+        setValue(selection.models.map(image => (image.id)))
       },
       open: () => {
         media.menuView.unset('playlist')
@@ -94,15 +99,7 @@ const Gallery = props => {
           { props.label }
         </Label> }
       <div class="tf-gallery-preview">
-        { 
-          value.map(( val, index ) => { 
-            value[index] = val.replaceAll('[', '').replaceAll(']', '').replaceAll('"', '')
-            if(value[index] !== ''){
-              return <ImagePreview key={ value[index] } id={ value[index] }/>
-            }
-            return setValue([])
-          })
-        }
+        { value.map(image => <ImagePreview key={ image } id={ image }/>) }
       </div>
       <div class="tf-gallery-buttons">
         <Button type="action" onPress={ open }>
