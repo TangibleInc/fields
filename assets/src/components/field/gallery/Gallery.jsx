@@ -20,19 +20,23 @@ import ImagePreview from './ImagePreview'
 
 const Gallery = props => {
 
+  let propsVal = props.value ? props.value : '';
+ 
   const [value, setValue] = useState(
-    props.value && Array.isArray(props.value)
-      ? props.value
-      : initJSON(props.value ?? '[]') 
+     Array.isArray(propsVal)
+      ? propsVal
+      : propsVal.split(',')
   )
-
+  
   const { 
     labelProps, 
     inputProps, 
     descriptionProps, 
   } = useField(props)
 
-  useEffect(() => props.onChange && props.onChange(value), [value])
+  useEffect(() => {
+    props.onChange && props.onChange(value)
+  }, [value])
 
   /**
    * Init and open media library modal
@@ -56,7 +60,7 @@ const Gallery = props => {
     // Set state with selection when closing the modal
     media.on({
       update: selection => {
-        setValue(selection.models.map(image => (image.id)))
+        setValue(selection.models.map(image => (image.id.toString())))
       },
       open: () => {
         media.menuView.unset('playlist')
@@ -90,7 +94,15 @@ const Gallery = props => {
           { props.label }
         </Label> }
       <div class="tf-gallery-preview">
-        { value.map(image => <ImagePreview key={ image } id={ image }/>) }
+        { 
+          value.map(( val, index ) => { 
+            value[index] = val.replaceAll('[', '').replaceAll(']', '').replaceAll('"', '')
+            if(value[index] !== ''){
+              return <ImagePreview key={ value[index] } id={ value[index] }/>
+            }
+            return setValue([])
+          })
+        }
       </div>
       <div class="tf-gallery-buttons">
         <Button type="action" onPress={ open }>
