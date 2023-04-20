@@ -72,5 +72,16 @@ $fields->maybe_enqueue_scripts = function() use($fields) : void {
   $fields->enqueue();
 };
 
+/**
+ * Enqueue media scripts except on elementor page
+ */
+$fields->enqueue_wp_media = function() : void {
+  $current_screen = get_current_screen();
+  if ( ! empty( $current_screen->id ) && $current_screen->id !== 'elementor' ) {
+    wp_enqueue_media();
+  }
+};
+
+
 add_action( 'wp_footer', $fields->maybe_enqueue_scripts );
 add_action( 'admin_footer', $fields->maybe_enqueue_scripts );

@@ -65,7 +65,7 @@ $fields->format_args = function(
       break;
     
     case 'gallery':
-      wp_enqueue_media();
+      add_action( 'admin_enqueue_scripts', $fields->enqueue_wp_media );
       break;
       
     case 'combo_box':
@@ -79,7 +79,7 @@ $fields->format_args = function(
       break;
     
     case 'file':
-      if( isset( $args['wp_media'] ) && $args['wp_media'] ) wp_enqueue_media();
+      if( isset( $args['wp_media'] ) && $args['wp_media'] )  add_action( 'admin_enqueue_scripts', $fields->enqueue_wp_media );
       $args = $fields->format_value($args, 'mime_types', 'mimeTypes');
       $args = $fields->format_value($args, 'max_upload', 'maxUpload');
       break;
