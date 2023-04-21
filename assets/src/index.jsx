@@ -1,6 +1,9 @@
-import { render } from 'react-dom'
+import { 
+  render, 
+  createRoot 
+} from 'react-dom'
+
 import { createContext } from 'react'
-import { OverlayProvider } from 'react-aria'
 import { initContexts } from './contexts/'
 
 import { 
@@ -15,26 +18,14 @@ import Control from './Control'
  */
 const ThemeContext = createContext(null)
 
-const renderField = props => {
-  
-  const wrapper = props.wrapper ?? {}
-  const wrapperClass = wrapper.class ?? ''
-  const themeWrapper = `tf-context-${props.context ?? 'default'}`
-
-  delete props.wrapper
-  delete wrapper.class
-
-  return (
-    <ThemeContext.Provider value={{
-      name    : props.context ?? 'default',
-      wrapper : themeWrapper
-    }}>
-      <OverlayProvider { ...wrapper } className={ `${themeWrapper} ${wrapperClass}` }>
-        <Control { ...props } />
-      </OverlayProvider>
-    </ThemeContext.Provider>
-  )
-}
+const renderField = props => (
+  <ThemeContext.Provider value={{
+    name    : props.context ?? 'default',
+    wrapper : `tf-context-${props.context ?? 'default'}`
+  }}>
+    <Control { ...props } />
+  </ThemeContext.Provider>
+)
 
 /**
  * Render fields registered from PHP
@@ -50,12 +41,17 @@ const init = () => {
 
     if( ! element ) continue;
 
-    render(
-      renderField({ 
-        name: field, 
-        ...props 
-      })
-    , element)
+    const component = renderField({ 
+      name: field, 
+      ...props 
+    })
+
+    /**
+     * React 18 is used since WP 6.2 (createRoot() need to be used instead of render())
+     */
+    createRoot
+      ? createRoot(element).render(component)
+      : render(element, component)
 
     dispatchEvent('initField', {
       name  : field, 

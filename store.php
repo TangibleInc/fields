@@ -4,7 +4,7 @@ defined('ABSPATH') or die();
 
 $fields->fetch_value = function (
   string $name
-) use ($fields) : mixed {
+) use ($fields) {
   if ( ! $field = $fields->get_field( $name ) ) {
     return new WP_Error( 'tf-unknown-field', sprintf( __( 'Unknown field %1$s' ), $name ) );
   }
@@ -24,8 +24,8 @@ $fields->fetch_value = function (
 
 $fields->store_value = function (
   string $name,
-  mixed $value,
-) use ($fields) : mixed {
+  $value
+) use ($fields) {
   if ( ! $field = $fields->get_field( $name ) ) {
     return new WP_Error( 'tf-unknown-field', sprintf( __( 'Unknown field %1$s' ), $name ) );
   }

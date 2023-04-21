@@ -4,6 +4,7 @@ import {
 } from 'react'
 
 import { useField } from 'react-aria'
+import { initJSON } from '../../../utils'
 
 import { 
   Button,
@@ -22,9 +23,7 @@ const Gallery = props => {
   const [value, setValue] = useState(
     props.value && Array.isArray(props.value)
       ? props.value
-      : (props.value 
-          ? props.value.split(',') 
-          : [])
+      : initJSON(props.value ?? '[]') 
   )
 
   const { 

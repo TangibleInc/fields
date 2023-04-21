@@ -17,8 +17,17 @@ $fields->register_field = function(
     $backtrace = debug_backtrace();
     $caller = array_shift( $backtrace );
     $caller = array_shift( $backtrace );
-    trigger_error("Field {$name} is already registered, called from <b>{$caller['file']}</b> in <b>{$caller['line']}</b>.", E_USER_WARNING);
+    trigger_error("Field {$name} is already registered, called from <b>{$caller['file']}</b> in <b>{$caller['line']}</b>. Will overwrite.", E_USER_WARNING);
   }
+
+  if ( empty( $args ) ) {
+    $backtrace = debug_backtrace();
+    $caller = array_shift( $backtrace );
+    $caller = array_shift( $backtrace );
+    trigger_error("Field {$name} can't be registered with empty args, called from <b>{$caller['file']}</b> in <b>{$caller['line']}</b>.", E_USER_WARNING);
+    return;
+  }
+
   $fields->registered_fields[ $name ] = $args;
 };
 
@@ -27,7 +36,7 @@ $fields->register_field = function(
  */
 $fields->get_field = function(
   string $name
-) use ($fields) : array|null {
+) use ($fields) {
   return $this->registered_fields[ $name ] ?? null;
 };
 
@@ -43,8 +52,10 @@ $fields->render_field = function(
 
   if ( ! $field = $fields->get_field( $name ) ) {
     $caller = current( debug_backtrace() );
-    trigger_error("Field {$name} is not registered, called from <b>{$caller['file']}</b> in <b>{$caller['line']}</b>.", E_USER_WARNING);
-    return '';
+    trigger_error("Field {$name} is not registered, called from <b>{$caller['file']}</b> in <b>{$caller['line']}</b>. Permissions, storage, validation callbacks are inert.", E_USER_WARNING);
+
+    $fields->register_field( $name, $args );
+    return $fields->render_field( $name );
   }
 
   $field = array_merge( $field, $args );
