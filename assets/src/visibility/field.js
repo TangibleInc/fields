@@ -1,12 +1,12 @@
 import { evaluateCondition } from '.'
 
 /**
- * Evaluates a conditional field.
+ * Evaluates a conditional field
  */
-const evaluateFieldVisibility = fieldConditions => {
+const evaluateFieldVisibility = (fieldConditions, getValue) => {
   
   fieldConditions = typeof fieldConditions === 'object'
-    ? replaceFieldValue(fieldConditions)
+    ? replaceFieldValue(fieldConditions, getValue)
     : {}
   
   return evaluateCondition(fieldConditions)
@@ -17,35 +17,24 @@ const evaluateFieldVisibility = fieldConditions => {
  * 
  * @see ./index.js  
  */
-const replaceFieldValue = fields => {
+const replaceFieldValue = (conditions, getValue) => {
   
-  const conditions = {}
+  const formatedConditions = {}
 
-  /**
-   * Values is contains the value of every fields
-   */
-  const { values } = tangibleFields
-
-  for( const name in fields ) {
+  for( const name in conditions ) {
 
     if( ['_and', '_or'].includes(name) ) {
-      conditions[name] = fields[name].map(
-        field => (replaceFieldValue(field))
+      formatedConditions[name] = conditions[name].map(
+        field => replaceFieldValue(field, getValue)
       )
       continue;
     }
 
-    // Field does not exist
-    if( ! values[name] ) {
-      conditions[name] = fields[name]
-      continue;
-    }
-
-    const fieldValue = values[name]
-    conditions[fieldValue] = fields[name]
+    const fieldValue = getValue(name)
+    formatedConditions[fieldValue] = conditions[name]
   }
 
-  return conditions
+  return formatedConditions
 }
 
 /**

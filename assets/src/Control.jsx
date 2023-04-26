@@ -6,19 +6,18 @@ import {
 } from 'react'
 
 import { OverlayProvider } from 'react-aria'
+import { dispatchEvent } from './events'
 import controls from './controls-list.js'
 
 import { 
   evaluateFieldVisibility,
   getTriggerFields
-} from './visibility/field.js'
+} from './visibility/'
 
-import { 
-  dispatchEvent,
-  addEventListener 
-} from './events'
-
-const Control = props => {
+const Control = ({
+  visibility,
+  ...props
+}) => {
   
   /**
    * @see renderField() in ./src/index.jsx 
@@ -47,7 +46,6 @@ const Control = props => {
 
   delete childProps.value
   delete childProps.onChange
-
   delete childProps.class
   delete childProps.wrapper
 
@@ -55,9 +53,7 @@ const Control = props => {
     
     setValue(newValue)
 
-    /**
-     * The timeout make sure the event is dispatched after the value changed
-     */
+    // The timeout make sure the event is dispatched after the state changed
     setTimeout(() => {
       dispatchEvent('valueChange', {
         name: props.name ?? false,
@@ -66,51 +62,47 @@ const Control = props => {
       })
     })
   }
-
-  const { 
-    action = 'show', 
-    condition = false 
-  } = props.condition ?? {}
-
-  /**
-   * Determine for which fields a value change should trigger a re-evaluation of 
-   * the visibility conditions
-   */
-  const triggerFields = useMemo(() => (
-    condition 
-      ? getTriggerFields(condition)
-      : false
-  ))
-
+  
   const evaluateVisibility = () => {
 
-    if( ! condition ) {
+    if( ! visibility.condition ) {
       setVisibility(true)
       return;
     } 
 
-    const visibility = evaluateFieldVisibility(condition)
-    setVisibility( action === 'show' ? visibility : ! visibility ) 
+    const result = evaluateFieldVisibility(visibility.condition, visibility.getValue)
+    setVisibility( visibility.action !== 'hide' ? result : ! result )
   }
 
   useEffect(() => {
     
     evaluateVisibility() // Initial visibility
     
-    if( ! condition || ! triggerFields ) return;
-    
+    if( ! visibility.condition || ! visibility.watcher || ! triggerFields ) {
+      return;
+    } 
+
     /**
-     * Evaluate visibility conditions on value change
+     * This visibility watcher is a callback we need to initialize at the beggining
+     * of the component life
      * 
-     * @see ./visibility/fields.js
+     * It is used to watch other fields change, and trigger a visibility evaluation when
+     * another field value change
      */
-    addEventListener('valueChange', field => {
-      
-      if( ! triggerFields.includes(field.name) ) return;
-      
-      evaluateVisibility()
+    visibility.watcher(fieldName => {
+      // Avoid unnecessary evaluations
+      if( triggerFields.includes(fieldName) ) evaluateVisibility()
     })
-  }, []) 
+    
+  }, [])
+  
+  /**
+   * Determine for which fields a value change should trigger a re-evaluation of 
+   * the visibility conditions (see visibility.watcher)
+   */
+  const triggerFields = useMemo(() => (
+    visibility.condition ? getTriggerFields(visibility.condition) : false
+  ))
 
   if ( ! isVisible ) return <></>;
   

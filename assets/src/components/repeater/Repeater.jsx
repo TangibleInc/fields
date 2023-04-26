@@ -1,6 +1,7 @@
 import { 
   useEffect, 
-  useReducer 
+  useReducer,
+  useState 
 } from 'react'
 
 import { 
@@ -17,7 +18,7 @@ import Control from '../../Control'
 const Repeater = props => {
 
   const fields = props.fields ?? []
-
+  
   const layout = props.layout ?? 'table'
   const Layout = Layouts[ layout ]
 
@@ -42,6 +43,7 @@ const Repeater = props => {
   const emptyItem = {}
   fields.forEach(field => emptyItem[ field.name ] = '')
 
+  const [visibilityCallbacks, setVisibilityCallbacks] = useState([])
   const [items, dispatch] = useReducer(
     repeaterDispatcher(emptyItem, maxLength), 
     props.value ?? '',
@@ -55,16 +57,49 @@ const Repeater = props => {
       item
     )
   )
+  
+  /**
+   * Call all the visibility callback registered for a given repeater row
+   */
+  const evaluateRowVisibility = (rowKey, fieldName) => {
+    visibilityCallbacks.forEach(callback => callback(rowKey, fieldName))
+  }
 
   const getControl = (control, item, i) => (
     <Control 
       value={ item[control.name] ?? '' }
       onChange={ value => dispatch({ 
-        type    : 'update',
-        item    : i,
-        control : control.name,
-        value   : value
+        type     : 'update',
+        item     : i,
+        control  : control.name,
+        value    : value,
+        callback : () => evaluateRowVisibility(item.key, control.name)  
       }) }
+      visibility={{
+        action: control.condition?.action ?? 'show',
+        condition: control.condition?.condition ?? false,
+        /**
+         * Needed to get other field value when evaluatating conditions
+         */
+        getValue: name => item[name] ?? '',
+        /**
+         * The evaluationCallback need to be called each time another value change on the same row
+         * Functional state update needed to be sure to set every callback
+         * TODO: When removing a row remove associated callbacks
+         */
+        watcher: evaluationCallback => {
+          setVisibilityCallbacks(
+            prevValue => [ 
+              ...prevValue,
+              (rowKey, fieldName) => {
+                rowKey === item.key && control.name 
+                  ? evaluationCallback(fieldName) 
+                  : null
+              } 
+            ]
+          )       
+        }
+      }}
       { ...control }
     />
   )

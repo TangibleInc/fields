@@ -24,7 +24,25 @@ const renderField = props => (
     name    : props.context ?? 'default',
     wrapper : `tf-context-${props.context ?? 'default'}`
   }}>
-    <Control { ...props } onChange={ value => values[props.name] = value } />
+    <Control 
+      { ...props } 
+      onChange={ value => values[props.name] = value }
+      visibility={{
+        condition: props.condition?.condition ?? false,
+        action: props.condition?.action ?? 'show',
+        /**
+         * Needed to get other field value when evaluatating conditions
+         */
+        getValue: name => values[name] ?? '',
+        /**
+         * Needed to trigger a re-evaluatation of the visibility conditions according
+         * to another field value change
+         */
+        watcher: evaluationCallback => {
+          addEventListener('valueChange', field => evaluationCallback(field.name))
+        }
+      }}
+    />
   </ThemeContext.Provider>
 )
 
