@@ -4,7 +4,6 @@ import {
 } from 'react'
 
 import { useField } from 'react-aria'
-import { initJSON } from '../../../utils'
 
 import { 
   Button,
@@ -20,10 +19,18 @@ import ImagePreview from './ImagePreview'
 
 const Gallery = props => {
 
+  const initValue = initialStringValue => {
+    const ids = initialStringValue !== '[]' ? initialStringValue.split(',') : []
+    return ids.map(id => (id.replaceAll('[', '').replaceAll(']', '').replaceAll('"', '')) )
+  }
+
   const [value, setValue] = useState(
     props.value && Array.isArray(props.value)
-      ? props.value
-      : initJSON(props.value ?? '[]') 
+    ? props.value
+    :  ( props.value 
+          ? initValue(props.value) 
+          : []
+       )
   )
 
   const { 
@@ -32,7 +39,9 @@ const Gallery = props => {
     descriptionProps, 
   } = useField(props)
 
-  useEffect(() => props.onChange && props.onChange(value), [value])
+  useEffect(() => {
+    props.onChange && props.onChange(value)
+  }, [value])
 
   /**
    * Init and open media library modal
