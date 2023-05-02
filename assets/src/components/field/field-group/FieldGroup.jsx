@@ -1,6 +1,7 @@
 import { 
   useState,
   useEffect,
+  useContext,
   useRef
 } from 'react'
 
@@ -9,6 +10,7 @@ import {
   areSameObjects 
 } from '../../../utils'
 
+import { addEventListener } from '../../../events'
 import { applyDependentValues } from '../../../dependent' 
 import Control from '../../../Control'
 
@@ -25,10 +27,13 @@ const FieldGroup = props => {
   )
 
   /**
-   * Not sure why, but without a ref value state is always empty when used inside getValue()
+   * Not sure why, but without a ref the state value is always empty when used inside getValue()
    */
   const valueRef = useRef()
   valueRef.current = value
+
+  const { ControlContext } = tangibleFields 
+  const context = useContext(ControlContext)
 
   const setAttribute = (name, attributeValue) => { 
     
@@ -73,6 +78,12 @@ const FieldGroup = props => {
 
   const fields = props.fields ?? []
 
+  const hasField = name => (
+    fields.map(
+      field => field.name ?? false
+    ).includes(name)
+  )
+
   return(
     <div class="tf-field-group">
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
@@ -86,17 +97,22 @@ const FieldGroup = props => {
               <Control
                 { ...control }
                 value={ value[control.name] ?? '' }
+                controlType={ 'subfield' }
                 onChange={ value => setAttribute(control.name, value) }
                 visibility={{
                   condition: control.condition?.condition ?? false,
                   action: control.condition?.action ?? 'show',
                   /**
-                   * Needed to get other field value when evaluatating conditions
+                   * The field value can either be from a subvalue or from another field value
                    */
-                  getValue: name => (valueRef.current[name]),
+                  getValue: name => (
+                    hasField(name)
+                      ? (valueRef.current[name] ?? '')
+                      : (context.getValue(name) ?? '')
+                  ),
                   /**
-                   * Needed to trigger a re-evaluatation of the visibility conditions according
-                   * to another field value change
+                   * Needed to trigger a re-evaluatation of the visibility conditions according when a 
+                   * subfield value change
                    */
                   watcher: evaluationCallback => {
                     setVisibilityCallback(() => (name) => evaluationCallback(name) )

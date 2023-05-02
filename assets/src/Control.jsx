@@ -6,7 +6,7 @@ import {
 } from 'react'
 
 import { OverlayProvider } from 'react-aria'
-import { dispatchEvent } from './events'
+import { dispatchEvent, addEventListener } from './events'
 import controls from './controls-list.js'
 
 import { 
@@ -22,12 +22,12 @@ const Control = ({
   /**
    * @see renderField() in ./src/index.jsx 
    */
-  const { ThemeContext } = tangibleFields 
-  const theme = useContext(ThemeContext)
+  const { ControlContext } = tangibleFields 
+  const control = useContext(ControlContext)
   
   const wrapper = {
     ...(props.wrapper ?? {}),
-    class: `${props?.wrapper?.class ?? ''} ${theme.wrapper}`
+    class: `${props?.wrapper?.class ?? ''} ${control.wrapper}`
   }
 
   const [value, setValue] = useState(props.value ?? '')
@@ -70,7 +70,10 @@ const Control = ({
       return;
     } 
 
-    const result = evaluateFieldVisibility(visibility.condition, visibility.getValue)
+    // The default callback looks only for a value in other defined fields, but we can overwrite it if needed
+    const getValue = visibility.getValue ?? control.getValue
+    const result = evaluateFieldVisibility(visibility.condition, getValue)
+    
     setVisibility( visibility.action !== 'hide' ? result : ! result )
   }
 
@@ -78,22 +81,35 @@ const Control = ({
     
     evaluateVisibility() // Initial visibility
     
-    if( ! visibility.condition || ! visibility.watcher || ! triggerFields ) {
+    if( ! visibility.condition || ! triggerFields ) {
       return;
     } 
 
     /**
-     * This visibility watcher is a callback we need to initialize at the beggining
-     * of the component life
-     * 
-     * It is used to watch other fields change, and trigger a visibility evaluation when
-     * another field value change
+     * Trigger visibility re-evaluation on
      */
-    visibility.watcher(fieldName => {
+    addEventListener('valueChange', field => {
+
+      // We rely on visibility.watcher for subfield changes (@see below)
+      if( field.props?.controlType === 'subfield' ) return;
+      
       // Avoid unnecessary evaluations
-      if( triggerFields.includes(fieldName) ) evaluateVisibility()
+      if( ! triggerFields.includes(field.name) ) return;  
+      
+      evaluateVisibility()
     })
-    
+
+    /**
+     * The visibility watcher is an additional callback we can use to evaluate
+     *  
+     * It is currently used to watch changes in subfields (repeaters, field-groups)
+     */
+    if( visibility.watcher ) {
+      visibility.watcher(fieldName => {
+        // Avoid unnecessary evaluations
+        if( triggerFields.includes(fieldName) ) evaluateVisibility()
+      })
+    }
   }, [])
   
   /**

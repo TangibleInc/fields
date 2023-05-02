@@ -1,7 +1,8 @@
 import { 
   useEffect, 
   useReducer,
-  useState 
+  useState,
+  useContext
 } from 'react'
 
 import { 
@@ -24,6 +25,9 @@ const Repeater = props => {
 
   const repeatable = props.repeatable ?? true
   const maxLength = props.maxlength ?? Infinity
+
+  const { ControlContext } = tangibleFields 
+  const context = useContext(ControlContext)
 
   const rowFields = fields.map(field => {
 
@@ -58,6 +62,12 @@ const Repeater = props => {
     )
   )
   
+  const hasField = name => (
+    rowFields.map(
+      field => field.name ?? false
+    ).includes(name)
+  )
+
   /**
    * Call all the visibility callback registered for a given repeater row
    */
@@ -75,16 +85,20 @@ const Repeater = props => {
         value    : value,
         callback : () => evaluateRowVisibility(item.key, control.name)  
       }) }
+      controlType={ 'subfield' }
       visibility={{
         action: control.condition?.action ?? 'show',
         condition: control.condition?.condition ?? false,
         /**
-         * Needed to get other field value when evaluatating conditions
+         * The field value can either be from a subvalue or from another field value
          */
-        getValue: name => item[name] ?? '',
+        getValue: name => (
+          hasField(name)
+            ? (item[name] ?? '') 
+            : (context[name] ?? '')
+        ),
         /**
-         * The evaluationCallback need to be called each time another value change on the same row
-         * Functional state update needed to be sure to set every callback
+         * Needed to trigger a re-evaluatation of the visibility conditions according when a subfield value change
          * TODO: When removing a row remove associated callbacks
          */
         watcher: evaluationCallback => {

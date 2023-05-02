@@ -16,13 +16,14 @@ import Control from './Control'
 /**
  * Used to detect the current context from child components
  */
-const ThemeContext = createContext(null)
+const ControlContext = createContext(null)
 const values = {}
 
 const renderField = props => (
-  <ThemeContext.Provider value={{
-    name    : props.context ?? 'default',
-    wrapper : `tf-context-${props.context ?? 'default'}`
+  <ControlContext.Provider value={{
+    name     : props.context ?? 'default',
+    wrapper  : `tf-context-${props.context ?? 'default'}`,
+    getValue : name => values[name] ?? '' 
   }}>
     <Control 
       { ...props } 
@@ -30,20 +31,9 @@ const renderField = props => (
       visibility={{
         condition: props.condition?.condition ?? false,
         action: props.condition?.action ?? 'show',
-        /**
-         * Needed to get other field value when evaluatating conditions
-         */
-        getValue: name => values[name] ?? '',
-        /**
-         * Needed to trigger a re-evaluatation of the visibility conditions according
-         * to another field value change
-         */
-        watcher: evaluationCallback => {
-          addEventListener('valueChange', field => evaluationCallback(field.name))
-        }
       }}
     />
-  </ThemeContext.Provider>
+  </ControlContext.Provider>
 )
 
 /**
@@ -85,10 +75,10 @@ const init = () => {
  * Make tangibleFields accessible from other scripts
  */
 window.tangibleFields = {
-  render       : renderField,
-  event        : addEventListener,
-  values       : values,
-  ThemeContext : ThemeContext
+  render         : renderField,
+  event          : addEventListener,
+  values         : values,
+  ControlContext : ControlContext
 }
 
 window.addEventListener('load', init)
