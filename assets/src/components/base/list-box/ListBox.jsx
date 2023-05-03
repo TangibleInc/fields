@@ -37,7 +37,7 @@ const ListBox = props => {
       <ul
         { ...listBoxProps }
         ref={ listBoxRef }
-        class='tf-list-box'
+        className='tf-list-box'
       >
         { [...state.collection].map(item => (
           item.type === 'section'

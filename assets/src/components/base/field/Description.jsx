@@ -1,5 +1,5 @@
 const Description = props => (
-  <div class="tf-description" { ...props }>
+  <div className="tf-description" { ...props }>
     { props.children }
   </div>
 )

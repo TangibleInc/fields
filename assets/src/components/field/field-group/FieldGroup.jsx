@@ -44,7 +44,7 @@ const FieldGroup = props => {
   const fields = props.fields ?? []
 
   return(
-    <div class="tf-field-group">
+    <div className="tf-field-group">
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
       { applyDependentValues(
           props.element ?? false,
@@ -52,7 +52,7 @@ const FieldGroup = props => {
           value
         ).map(
           control => (
-            <div class="tf-field-group-item">
+            <div className="tf-field-group-item">
               <Control
                 { ...control } 
                 value={ value[control.name] ?? '' }

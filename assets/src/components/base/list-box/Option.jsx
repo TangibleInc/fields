@@ -28,7 +28,7 @@ const Option = ({ item, state }) => {
     <li
       { ...mergeProps(optionProps, focusProps) }
       ref={ ref }
-      class={ classes }
+      className={ classes }
     >
       { item.rendered }
     </li>

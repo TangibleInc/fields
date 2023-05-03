@@ -12,12 +12,12 @@ const Dialog = ({ title, children, ...props }) => {
   const { dialogProps } = useDialog(props, ref)
 
   return(
-    <div class='tf-dialog' { ...dialogProps } ref={ ref }>
+    <div className='tf-dialog' { ...dialogProps } ref={ ref }>
       { title && 
         <Title level={4}>
           { title }
         </Title> }
-      <div class='tf-dialog-content'>
+      <div className='tf-dialog-content'>
         { children }
       </div>
     </div>

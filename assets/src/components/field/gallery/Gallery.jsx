@@ -93,15 +93,15 @@ const Gallery = props => {
   }
 
   return(
-    <div class="tf-gallery">
+    <div className="tf-gallery">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <div class="tf-gallery-preview">
+      <div className="tf-gallery-preview">
         { value.map(image => <ImagePreview key={ image } id={ image }/>) }
       </div>
-      <div class="tf-gallery-buttons">
+      <div className="tf-gallery-buttons">
         <Button type="action" onPress={ open }>
           { value.length < 1 ? 'Create gallery' : 'Edit gallery' } 
         </Button>
