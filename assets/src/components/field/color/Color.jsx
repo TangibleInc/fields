@@ -36,7 +36,7 @@ const Color = props =>{
   const format = props.format ?? 'hexa'
   
   const onChange = value => {
-    
+
     const stringValue = value.toString ? value.toString(format) : ''
     state.setInputValue(stringValue)
     
@@ -57,10 +57,10 @@ const Color = props =>{
           { props.label }
         </Label> }
       <div class="tf-color-container">
-        <input ref={ ref } { ...inputProps } onFocus={ e => {
-          isOpen(true)
-          inputProps.onFocus(e)  
-        } }/>
+        <input ref={ ref } { ...inputProps } 
+          onFocus={ () => isOpen(true)}
+          value={ state.inputValue }
+        />
         { open && 
           <Popover ref={ popover }>
             <ColorPicker 
