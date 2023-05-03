@@ -166,7 +166,7 @@ class Store_TestCase extends TF_UnitTestCase {
 	public function test_fields_store_permission_callback_unknown() {
 		$errored = [];
 		set_error_handler(function($errno, $errstr, ...$args) use (&$errored) {
-			$errored[] = [$errno, $errstr, $args];
+			$errored[] = [$errno, $errstr];
 		});
 
 		tangible_fields()->register_field('test', array_merge(
@@ -180,9 +180,9 @@ class Store_TestCase extends TF_UnitTestCase {
 		restore_error_handler();
 
 		$this->assertNotNull($errored, 'unknown permission callback did not trigger a warning');
-		$this->assertCount(2, $errored);    
+		$this->assertCount(2, $errored);
     $this->assertEquals($errored[0], $errored[1], 'the two warnings are not the same');
-		[$errno, $errstr, $args] = $errored[0];
+		[$errno, $errstr] = $errored[0];
 
 		$this->assertEquals(E_USER_WARNING, $errno, 'unknown permission callback did not trigger an E_USER_WARNING');
 
