@@ -53,7 +53,7 @@ const ColorPicker = props => {
   const hasAlpha = props.hasAlpha ?? true
 
   return(
-    <div class="tf-color-picker" { ...focusWithinProps }>
+    <div className="tf-color-picker" { ...focusWithinProps }>
       <FocusScope autoFocus restoreFocus>
         <ColorArea
           aria-labelledby="hsb-label-id-1"
@@ -62,7 +62,7 @@ const ColorPicker = props => {
           xChannel={ yChannel }
           yChannel={ zChannel }
         />
-        <div class="tf-color-input">
+        <div className="tf-color-input">
           <label>Color</label>
           <input 
             type="text"
@@ -75,7 +75,7 @@ const ColorPicker = props => {
             }}
             />
         </div>          
-        <div class="tf-color-sliders">
+        <div className="tf-color-sliders">
           <ColorSlider
             channel={ xChannel }
             value={ color }

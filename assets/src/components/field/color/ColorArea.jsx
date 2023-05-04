@@ -32,18 +32,18 @@ const ColorArea = props => {
     
   return(
     <div 
-      class="tf-color-area" 
+      className="tf-color-area"
       ref={ containerRef }
       style={ colorAreaProps.style } 
       { ...colorAreaProps }
     >
       <div 
-        class="tf-color-area-gradient"
+        className="tf-color-area-gradient"
         style={ gradientProps.style } 
         { ...gradientProps } 
       />
       <div
-        class="tf-color-area-thumb"
+        className="tf-color-area-thumb"
         style={{
           ...thumbProps.style,
           background: state.getDisplayColor().toString('css'),

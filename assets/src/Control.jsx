@@ -20,7 +20,7 @@ const Control = props => {
   
   const wrapper = {
     ...(props.wrapper ?? {}),
-    class: `${props?.wrapper?.class ?? ''} ${theme.wrapper}`
+    className: `${props?.wrapper?.class ?? ''} ${theme.wrapper}`
   }
 
   const [value, setValue] = useState(props.value ?? '')

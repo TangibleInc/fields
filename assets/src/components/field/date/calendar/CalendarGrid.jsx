@@ -15,7 +15,7 @@ const CalendarGrid = ({ state, ...props }) => {
   const weeksInMonth = getWeeksInMonth(state.visibleRange.start, locale)
 
   return(
-    <table class="tf-calendar-table" { ...gridProps }>
+    <table className="tf-calendar-table" { ...gridProps }>
       <thead { ...headerProps }>
         <tr>
           { weekDays.map((day, index) => (

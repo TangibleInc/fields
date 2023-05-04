@@ -21,7 +21,7 @@ const ButtonOption = props => {
   } 
   
   return(
-    <label class={ classes }>
+    <label className={ classes }>
       <VisuallyHidden>
         <input { ...inputProps } ref={ ref } />
       </VisuallyHidden>
