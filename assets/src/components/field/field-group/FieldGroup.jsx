@@ -10,7 +10,6 @@ import {
   areSameObjects 
 } from '../../../utils'
 
-import { addEventListener } from '../../../events'
 import { applyDependentValues } from '../../../dependent' 
 import Control from '../../../Control'
 
