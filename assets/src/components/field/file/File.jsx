@@ -73,6 +73,9 @@ const FileUpload = (props) => {
     setUploads([...uploads.slice(0, i), ...uploads.slice(i + 1)])
   }
 
+  const isWpMediaDisabled = () => 
+    props.wp_media === false || props.wp_media === "false"
+
   const getAllowedTypes = () => {
     const { mimeTypes } = props;
     const mimeValues = Object.values(mimetypes);
@@ -108,7 +111,6 @@ const FileUpload = (props) => {
     media.open()
   }
 
-
   return (
     <div className="tf-file">
       {props.label && <Label {...labelProps}>{props.label}</Label>}
@@ -139,7 +141,7 @@ const FileUpload = (props) => {
         <div className="tf-file-field">
           <Button
             type="action"
-            onPress={() => (props.wp_media ? open() : ref.current.click())}
+            onPress={() => ( isWpMediaDisabled() ? ref.current.click() : open())}
             isDisabled={!canChooseFile()}
             aria-hidden="true"
           >
@@ -148,7 +150,7 @@ const FileUpload = (props) => {
           <div className="tf-file-text" aria-hidden="true">
             {file.length > 0 ? file[0].name : placeholder}
           </div>
-          { !props.wp_media && (
+          { isWpMediaDisabled() && (
             <Button type="action" onPress={upload} isDisabled={!canUpload()}>
               {props.uploadText ?? "Upload"}
             </Button>
