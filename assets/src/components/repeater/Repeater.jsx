@@ -121,7 +121,7 @@ const Repeater = props => {
   useEffect(() => props.onChange(items), [items])
 
   return(
-    <div class={ `tf-repeater tf-repeater-${layout}`}>
+    <div className={ `tf-repeater tf-repeater-${layout}`}>
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(items) } />
       {props.label && <Title level={2} className='tf-repeater-title'>{ props.label }</Title>}
       <Layout
@@ -133,7 +133,7 @@ const Repeater = props => {
         maxLength = { repeatable ? maxLength : undefined }
       />
       { repeatable && (
-        <div class="tf-repeater-actions">
+        <div className="tf-repeater-actions">
           <Button 
             type="action" 
             onPress={ () => dispatch({ type: 'add' }) } 

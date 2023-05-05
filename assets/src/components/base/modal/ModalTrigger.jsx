@@ -29,7 +29,7 @@ const ModalTrigger = props => {
           <Modal class="tf-modal" state={state}>
             <Dialog title={ props.title } { ...overlayProps }>
               { props.children }
-              <div class="tf-modal-actions">
+              <div className="tf-modal-actions">
                 <Button
                   type="action"
                   onPress={() => {

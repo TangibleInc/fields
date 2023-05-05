@@ -1,5 +1,5 @@
 const Label = props => (
-  <div class='tf-label' { ...props }>
+  <div className='tf-label' { ...props }>
     { props.children }
   </div>
 )

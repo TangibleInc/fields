@@ -51,12 +51,12 @@ const Color = props =>{
   ), [])
   
   return(
-    <div class="tf-color">
+    <div className="tf-color">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <div class="tf-color-container">
+      <div className="tf-color-container">
         <input ref={ ref } { ...inputProps } 
           onFocus={ () => isOpen(true)}
           value={ state.inputValue }

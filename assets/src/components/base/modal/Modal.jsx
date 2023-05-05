@@ -26,9 +26,9 @@ const Modal = ({ state, children, ...props }) => {
 
   return (
     <Overlay>
-      <div class={ control.wrapper }>
-        <div class='tf-modal' { ...underlayProps }>
-          <div class='tf-modal-container' ref={ref} {...modalProps}>
+      <div className={ control.wrapper }>
+        <div className='tf-modal' { ...underlayProps }>
+          <div className='tf-modal-container' ref={ref} {...modalProps}>
             {children}
           </div>
         </div>

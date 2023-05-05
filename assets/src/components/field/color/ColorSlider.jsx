@@ -39,8 +39,8 @@ const ColorSlider = props => {
   const { focusProps } = useFocusRing()
 
   return(
-    <div class="tf-color-slider">
-      <div class="tf-color-slider-label">
+    <div className="tf-color-slider">
+      <div className="tf-color-slider-label">
         <label { ...labelProps }>
           { label }
         </label>
@@ -49,13 +49,13 @@ const ColorSlider = props => {
         </output>
       </div>
       <div 
-        class="tf-color-slider-container"
+        className="tf-color-slider-container"
         ref={ trackRef }
         style={ trackProps.style }
         { ...trackProps }
       >
         <div
-          class="tf-color-area-thumb"
+          className="tf-color-area-thumb"
           style={{
             ...thumbProps.style,
             background: state.getDisplayColor().toString('css')

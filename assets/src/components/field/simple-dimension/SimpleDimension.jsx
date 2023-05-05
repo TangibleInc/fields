@@ -45,13 +45,13 @@ const Dimensions = props => {
   }
 
   return(
-    <div class="tf-simple-dimensions">
+    <div className="tf-simple-dimensions">
       { props.label &&
       <Label { ...labelProps }>
         { props.label }
       </Label> }
       <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(value) } { ...fieldProps } />
-      <div class="tf-simple-dimensions-container">
+      <div className="tf-simple-dimensions-container">
         <div>
           <Number
             value={ value['value'] ?? 0 }
