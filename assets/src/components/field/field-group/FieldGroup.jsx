@@ -3,9 +3,12 @@ import {
   useEffect
 } from 'react'
 
-import { applyDependentValues } from '../../../dependent' 
-import { initJSON } from '../../../utils'
+import { 
+  initJSON, 
+  areSameObjects 
+} from '../../../utils'
 
+import { applyDependentValues } from '../../../dependent' 
 import Control from '../../../Control'
 
 /**
@@ -26,11 +29,22 @@ const FieldGroup = props => {
   }
 
   useEffect(() => props.onChange && props.onChange(value), [value])
+  
+  useEffect(() => {
+
+    const haveSameSize = Object.keys(props.value).length === Object.keys(value).length
+    const haveSameValues = areSameObjects(props.value, value)
+
+    // Avoid inifinte loops, but should find a more sane way
+    if( ! haveSameSize || haveSameValues ) return; 
+      
+    setValue(props.value)
+  }, [props.value])
 
   const fields = props.fields ?? []
 
   return(
-    <div class="tf-field-group">
+    <div className="tf-field-group">
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
       { applyDependentValues(
           props.element ?? false,
@@ -38,7 +52,7 @@ const FieldGroup = props => {
           value
         ).map(
           control => (
-            <div class="tf-field-group-item">
+            <div className="tf-field-group-item">
               <Control
                 { ...control } 
                 value={ value[control.name] ?? '' }

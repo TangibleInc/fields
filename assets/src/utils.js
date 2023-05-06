@@ -66,7 +66,15 @@ const getOption =(value, options) => (
   options.filter(option => option.value === value)[0] ?? false
 )
 
+/**
+ * Small helper to compare equality between 2 objects 
+ */
+const areSameObjects = (object1, object2) => (
+  JSON.stringify(object1) === JSON.stringify(object2)
+)
+
 export { 
+  areSameObjects,
   uniqid,
   getOptions,
   getOption,

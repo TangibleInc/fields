@@ -75,12 +75,12 @@ const DynamicText = props => {
   }
   
   return(
-    <div class="tf-dynamic-text">
+    <div className="tf-dynamic-text">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <div class="tf-dynamic-text-field">
+      <div className="tf-dynamic-text-field">
         <VisuallyHidden>
           <Text 
             label={ props.label ?? false } 
@@ -88,15 +88,16 @@ const DynamicText = props => {
             value={ value }
           />
         </VisuallyHidden>
-        <div ref={ input } class="tf-dynamic-text-input" { ...inputProps }></div>
+        <div ref={ input } className="tf-dynamic-text-input" { ...inputProps }></div>
         <Button type="action" ref={ triggerRef } { ...triggerProps }>
           Add
         </Button>
         { state.isOpen && (
-          <div class="tf-dynamic-text-popover" ref={ overlayRef } { ...overlayProps }>
+          <div className="tf-dynamic-text-popover" ref={ overlayRef } { ...overlayProps }>
             <ComboBox 
               choices={ props.choices ?? {} }
               autoFocus={ true }
+              showButton={ false }
               onChange={ value => {
                 if( ! value ) return;
                 addDynamicElement(value)

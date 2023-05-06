@@ -68,6 +68,8 @@ This modules comes with a suite of unit and integration tests.
 
 `composer install --dev` will install PHPUnit.
 
+### Method 1: Cloning wordpress-develop.git (Previous)
+
 You will need a copy of https://github.com/WordPress/wordpress-develop.git available. You can run `git clone https://github.com/WordPress/wordpress-develop.git` in this directory as this is where the bootstrap script expects it to be by default (the `WORDPRESS_DEVELOP_DIR` environment variable overrides this path).
 
 Bootstrap the WordPress development environment by running `npm i; npm run dev:build`. Then copy wp-tests-config-sample.php to wp-tests-config.php inside the wordpress-develop directory and set the database credentials as needed. **WARNING!** This database is **dropped** everytime the tests run. Do not use a production database.
@@ -81,6 +83,37 @@ The `DOING_TANGIBLE_TESTS` constant is defined during tests and can be used to m
 Coverage can be had using `vendor/bin/phpunit --coverage-text` (requires the XDebug extension to be available and enabled) or `vendor/bin/phpunit --coverage-html=coverage` for an HTML version.
 
 https://docs.phpunit.de/en/9.6/ for more information.
+
+### Method 2: Using wp-env (Recommended)
+
+Alternatively, you can use the [wp-env](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) tool to quickly spin up a local dev and test environment, optionally switching between multiple PHP versions.
+
+Please note that `wp-env` requires Docker to be installed. There are instructions available for installing Docker on [Windows](https://docs.docker.com/desktop/install/windows-install/), [macOS](https://docs.docker.com/desktop/install/mac-install/), and [Linux](https://docs.docker.com/desktop/install/linux-install/).
+
+This repository includes NPM scripts to run the tests with PHP versions 8.2 and 7.4. 
+
+**Note**: We need to maintain compatibility with PHP 7.4, as WordPress itself only has “beta support” for PHP 8.x. See https://make.wordpress.org/core/handbook/references/php-compatibility-and-wordpress-versions/ for more information.
+
+If you’re on Windows, you might have to use [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install) to run the tests (see [this comment](https://bitbucket.org/tangibleinc/tangible-fields-module/pull-requests/30#comment-389568162)).
+
+To run the tests with Docker installed:
+```
+npm install
+npm run env:test:8.2
+npm run env:test:7.4
+```
+
+The version-specific commands take a while to start, but afterwards you can run npm run env:test to re-run tests in the same environment.
+
+To stop the Docker process:
+```
+npm run env:stop
+```
+
+To “destroy” and remove cache:
+```
+npm run env:destroy
+```
 
 ## Render fields
 
@@ -96,209 +129,13 @@ $fields->render_field(
 The `render_field` method returns an html span, like this one:
 
 ```html
-<span id="field_name-63618923e7118"></span>
+<div id="field_name-63618923e7118"></div>
 ```
 
 It also enqueue our JavaScript dependencies, which will use this span to render the field on the client side.
 
 ## Field types
 
-```php
+For the complete list of field types and the associated syntax, see documentation on [this site](https://develop.tangible.one/sites/fields/wp-admin/admin.php?page=tangible-field-example-settings).
 
-require_once __DIR__ . '/vendor/tangible/fields/index.php';
-
-$fields = tangible_fields();
-
-$fields->render_field('button_group_name', [
-  'type'        => 'button-group',
-  'value'       => 'center', 
-  'label'       => 'Button group field', // Optional
-  'description' => 'Description', // Optional
-  'options'     => [
-    [
-      'value'     => 'left',
-      'dashicon'  => 'editor-alignleft'
-    ],[
-      'value'     => 'center',
-      'dashicon'  => 'editor-aligncenter'
-    ],[
-      'value'     => 'right',
-      'dashicon'  => 'editor-alignright'
-    ]
-  ]
-]);
-
-$fields->render_field('color_name', [
-  'type'        => 'color',
-  'value'       => '#FFFFFF',
-  'label'       => 'Color',
-  'hasAlpha'    => true, // Optional, default true
-  'format'      => 'rgba', // Optional, default hexa
-  'placeholder' => 'Example placeholder', // Optional
-  'description' => 'Example description' // Optional
-]),
-
-$fields->render_field('combo_box_name', [
-  'type'    => 'combo-box',
-  'value'   => '1',
-  'options' => [
-    // Can be used without categories
-    [
-      'name'     => 'Category 1',
-      'children' => [ 
-        [ 'id' => 'placeholder_1', 'name' => 'Label 1' ],
-        [ 'id' => 'placeholder_2', 'name' => 'Label 2' ]
-      ],
-    ],[
-      'name'     => 'Category 2',
-      'children' => [ 
-        [ 'id' => 'placeholder_3', 'name' => 'Label 3' ],
-        [ 'id' => 'placeholder_4', 'name' => 'Label 4' ]
-      ]
-    ]
-  ],
-  'label'       => 'Label', // Optional
-  'placeholder' => 'Example placeholder', // Optional
-  'description' => 'Example description' // Optional
-]);
-
-$fields->render_field('dimensions_name', [
-  'type'        => 'dimensions',
-  'value'       => '',
-  'label'       => 'Dimensions field', // Optional
-  'description' => 'Description',  // Optional
-  'units'       => [ 'px','vw' ],  // Optional, default ['px']
-  'linked'      => 'toggle', // Optional, default toggle (use true or false to force value)
-]);
-
-$fields->render_field('simple_dimension_name', [
-  'type'        => 'simple_dimension', // Support for single-valued dimensions
-  'label'       => 'Simple Dimension field', // Optional
-  'description' => 'Description', // Optional
-  'units'       => [ 'px','vh','%','vw' ], // Optional, default px
-  'value'       => '',
-]);
-
-$fields->render_field('date_name', [
-  'type'        => 'date',
-  'value'       => '2025-01-31',
-  'label'       => 'Date field', // Optional
-  'description' => 'Description', // Optional
-]);
-
-$fields->render_field('file_upload_name', [
-  'label'         => 'Dimensions field',
-  'type'          => 'file-upload',
-  'description'   => 'Description',
-  'value'         => '',
-  'max_upload'    => 5, // Optional, default none
-  'allowed_types' => [ // Optional, Default all allowed types
-    'image/jpeg', 
-    'image/gif', 
-    'image/png', 
-    'image/bmp', 
-    'image/tiff', 
-    'image/webp', 
-    'image/x-icon', 
-    'image/heic'
-  ]
-]);
-
-$fields->render_field('gradient_name', [
-  'type'        => 'gradient',
-  'value'       => '',
-  'label'       => 'Gradient field', // Optional
-  'placeholder' => 'Example placeholder', // Optional
-  'description' => 'Description',  // Optional
-]);
-
-$fields->render_field('number_name', [
-  'type'        => 'number',
-  'value'       => 30,
-  'min'         => 10, // Optional
-  'max'         => 100, // Optional
-  'label'       => 'Label', // Optional
-  'placeholder' => 'Example placeholder', // Optional
-  'description' => 'Example description' // Optional
-  'hasButtons'  => true, // Optional
-]);
-
-$fields->render_field('repeater_list_name', [
-  'type'    => 'repeater-list',
-  'value'   => '',
-  'fields'  => [          
-    [
-      'type'  => 'text',
-      'value' => 'Field value', 
-      'name'  => 'repeater_text_name'
-    ],[
-      // Any existing field
-    ]
-  ]
-]);
-
-$fields->render_field('repeater_table_name', [
-  'type'    => 'repeater-table',
-  'value'   => '',
-  'fields'  => [          
-    [
-      'type'  => 'text',
-      'value' => 'Field value', 
-      'name'  => 'repeater_text_name'
-    ],[
-      // Any existing field
-    ]
-  ]
-]);
-
-$fields->render_field('select_name', [
-  'type'    => 'select',
-  'value'   => '1',
-  'options' => [
-    [ 'id' => '1', 'name' => 'Value 1' ],
-    [ 'id' => '2', 'name' => 'Value 2' ],
-  ],
-  'label'       => 'Label', // Optional
-  'placeholder' => 'Example placeholder', // Optional
-  'description' => 'Example description' // Optional
-]);
-
-$fields->render_field('switch_name', [
-  'type'        => 'switch',
-  'label'       => 'Switch field',
-  'description' => 'Description',
-  'activated'   => 'on', // Optional, default on
-  'desactivated'=> 'off', // Optional, default off
-  'value'       => 'on',
-]);
-
-$fields->render_field('text_field_name', [
-  'type'        => 'text',
-  'value'       => 'Field value', 
-  'label'       => 'Label', // Optional
-  'placeholder' => 'Example placeholder', // Optional
-  'description' => 'Example description' // Optional
-]);
-
-$fields->render_field('text_suggestion_name', [
-  'type'       => 'text-suggestion',
-  'value'      => 'Text with a [[placeholder_1]]',
-  'options'    => [ 
-    // Can be used without categories
-    [
-      'name'     => 'Category 1',
-      'children' => [ 
-        [ 'id' => 'placeholder_1', 'name' => 'Label 1' ],
-        [ 'id' => 'placeholder_2', 'name' => 'Label 2' ]
-      ],
-    ],[
-      'name'     => 'Category 2',
-      'children' => [ 
-        [ 'id' => 'placeholder_3', 'name' => 'Label 3' ],
-        [ 'id' => 'placeholder_4', 'name' => 'Label 4' ]
-      ]
-    ]
-  ]
-]);
-
-```
+This is not ideal and we will try to move back the documentation in the module at some point.

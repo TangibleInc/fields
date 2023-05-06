@@ -1,5 +1,9 @@
-import { render } from 'react-dom'
-import { OverlayProvider } from 'react-aria'
+import { 
+  render, 
+  createRoot 
+} from 'react-dom'
+
+import { createContext } from 'react'
 import { initContexts } from './contexts/'
 
 import { 
@@ -9,19 +13,19 @@ import {
 
 import Control from './Control'
 
-const renderField = props => {
-  const wrapper = props.wrapper ?? {}
-  const wrapperClass = wrapper.class ?? ''
+/**
+ * Used to detect the current context from child components
+ */
+const ThemeContext = createContext(null)
 
-  delete props.wrapper
-  delete wrapper.class
-
-  return (
-    <OverlayProvider { ...wrapper } className={ `tf-context-${props.context ?? 'default'} ${wrapperClass}` }>
-      <Control { ...props } />
-    </OverlayProvider> 
-  )
-}
+const renderField = props => (
+  <ThemeContext.Provider value={{
+    name    : props.context ?? 'default',
+    wrapper : `tf-context-${props.context ?? 'default'}`
+  }}>
+    <Control { ...props } />
+  </ThemeContext.Provider>
+)
 
 /**
  * Render fields registered from PHP
@@ -37,12 +41,17 @@ const init = () => {
 
     if( ! element ) continue;
 
-    render(
-      renderField({ 
-        name: field, 
-        ...props 
-      })
-    , element)
+    const component = renderField({ 
+      name: field, 
+      ...props 
+    })
+
+    /**
+     * React 18 is used since WP 6.2 (createRoot() need to be used instead of render())
+     */
+    createRoot
+      ? createRoot(element).render(component)
+      : render(element, component)
 
     dispatchEvent('initField', {
       name  : field, 
@@ -57,8 +66,9 @@ const init = () => {
  * Make tangibleFields accessible from other scripts
  */
 window.tangibleFields = {
-  render : renderField,
-  event  : addEventListener
+  render       : renderField,
+  event        : addEventListener,
+  ThemeContext : ThemeContext
 }
 
 window.addEventListener('load', init)

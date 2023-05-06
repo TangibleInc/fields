@@ -19,12 +19,18 @@ import ImagePreview from './ImagePreview'
 
 const Gallery = props => {
 
+  const initValue = initialStringValue => {
+    const ids = initialStringValue !== '[]' ? initialStringValue.split(',') : []
+    return ids.map(id => (id.replaceAll('[', '').replaceAll(']', '').replaceAll('"', '')) )
+  }
+
   const [value, setValue] = useState(
     props.value && Array.isArray(props.value)
-      ? props.value
-      : (props.value 
-          ? props.value.split(',') 
-          : [])
+    ? props.value
+    :  ( props.value 
+          ? initValue(props.value) 
+          : []
+       )
   )
 
   const { 
@@ -33,7 +39,9 @@ const Gallery = props => {
     descriptionProps, 
   } = useField(props)
 
-  useEffect(() => props.onChange && props.onChange(value), [value])
+  useEffect(() => {
+    props.onChange && props.onChange(value)
+  }, [value])
 
   /**
    * Init and open media library modal
@@ -85,15 +93,15 @@ const Gallery = props => {
   }
 
   return(
-    <div class="tf-gallery">
+    <div className="tf-gallery">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <div class="tf-gallery-preview">
+      <div className="tf-gallery-preview">
         { value.map(image => <ImagePreview key={ image } id={ image }/>) }
       </div>
-      <div class="tf-gallery-buttons">
+      <div className="tf-gallery-buttons">
         <Button type="action" onPress={ open }>
           { value.length < 1 ? 'Create gallery' : 'Edit gallery' } 
         </Button>

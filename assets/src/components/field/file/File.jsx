@@ -121,7 +121,7 @@ const FileUpload = (props) => {
 
 
   return (
-    <div class="tf-file">
+    <div className="tf-file">
       {props.label && <Label {...labelProps}>{props.label}</Label>}
       <VisuallyHidden>
         <input
@@ -132,13 +132,13 @@ const FileUpload = (props) => {
           {...fieldProps}
         />
       </VisuallyHidden>
-      <div class="tf-file-container">
+      <div className="tf-file-container">
         <input
           type="hidden"
           name={props.name ?? ""}
           value={JSON.stringify(uploads)}
         />
-        <ul class="tf-file-list">
+        <ul className="tf-file-list">
           {uploads.map((upload, i) => (
             <FilePreview
               key={upload}
@@ -147,7 +147,7 @@ const FileUpload = (props) => {
             />
           ))}
         </ul>
-        <div class="tf-file-field">
+        <div className="tf-file-field">
           <Button
             type="action"
             onPress={() => (props.wp_media ? open() : ref.current.click())}
@@ -156,7 +156,7 @@ const FileUpload = (props) => {
           >
             {props.buttonText ?? "Choose"}
           </Button>
-          <div class="tf-file-text" aria-hidden="true">
+          <div className="tf-file-text" aria-hidden="true">
             {file.length > 0 ? file[0].name : placeholder}
           </div>
           { !props.wp_media && (

@@ -1,0 +1,30 @@
+.tf-modal {
+  position: fixed;
+  z-index: 9990;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(black, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tf-modal .tf-modal-container {
+  padding: 2rem;
+  border: $field-border;
+  border-radius: $field-border-radius;
+  background: $field-background;
+}
+
+.tf-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 12px;
+
+  button {
+    margin-left: 12px;
+  }
+}
+

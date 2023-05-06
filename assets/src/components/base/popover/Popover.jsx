@@ -28,7 +28,7 @@ const Popover = forwardRef(({
   const { dialogProps } = useDialog({}, ref)
 
   return (
-    <FocusScope restoreFocus>
+    <FocusScope restoreFocus autoFocus>
       <div
         { ...mergeProps(
           overlayProps, 
@@ -38,7 +38,7 @@ const Popover = forwardRef(({
         ) }
         ref={ ref }
         style={ style }
-        class="tf-popover"
+        className="tf-popover"
       >
         { children }
         <DismissButton onDismiss={ onClose } />

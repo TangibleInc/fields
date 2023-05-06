@@ -63,9 +63,10 @@ class Format_TestCase extends WP_UnitTestCase {
 		$this->assertEquals($expected, $args['type'] ?? null);
 	}
 
-	private function _test_format_args_types_data() {
+	public function _test_format_args_types_data() {
 		return [
 			'unknown' => ['unknown', 'unknown'],
+			'button_group' => ['alignment_matrix', 'alignment-matrix'],
 			'button_group' => ['button_group', 'button-group'],
 			'color_picker' => ['color_picker', 'color-picker'],
 			'date_picker' => ['date_picker', 'date-picker'],
@@ -86,10 +87,10 @@ class Format_TestCase extends WP_UnitTestCase {
 	 * @dataProvider _test_format_args_type_attributes_data
 	 */
 	public function test_format_args_type_attributes(string $type, array $expected) {
-		$args = tangible_fields()->format_args('test', [
-			'type' => $type,
-			...$expected
-		]);
+		$args = tangible_fields()->format_args('test', 
+      [ 'type' => $type ]
+      + $expected
+    );
 
 		foreach ($expected as $name => $attribute) {
 			$this->assertEquals($attribute, $args[$attribute], "$name should have been rewritten as $attribute");
@@ -97,7 +98,7 @@ class Format_TestCase extends WP_UnitTestCase {
 		}
 	}
 
-	private function _test_format_args_type_attributes_data() {
+	public function _test_format_args_type_attributes_data() {
 		return [
 			// type, [from => to, from => to...]
 			'color_picker' => ['color_picker', [
@@ -167,33 +168,58 @@ class Format_TestCase extends WP_UnitTestCase {
 		$this->assertEquals('default', $args['value']);
 	}
 
-	public function test_format_args_field_group_title_alias() {
-		$args = tangible_fields()->format_args('test', [
-			'type' => 'field_group',
-			'title' => $expected = 'This title should overwrite the label and still exist',
-		]);
+  public function _test_format_groups_args_data() {
+    return [
+      ['repeater'],
+      ['accordion'],
+      ['field_group']
+    ]; 
+  }
 
-		$this->assertEquals($expected, $args['title']);
-		$this->assertEquals($expected, $args['label']);
-	}
+  /**
+	 * @dataProvider _test_format_groups_args_data
+	 */
+  public function test_format_groups_args_label_alias(string $type) {
+    $args = tangible_fields()->format_groups($type, [
+      'type'  => $type,
+      'title' => $expected = 'This title should overwrite the label and still exist',
+    ]);
 
-	public function test_format_args_field_group_fields_mapped() {
-		$args = tangible_fields()->format_args('test', [
-			'type' => 'field_group',
+    $this->assertEquals($expected, $args['title']);
+    $this->assertEquals($expected, $args['label']);
+  }
+
+  /**
+	 * @dataProvider _test_format_groups_args_data
+	 */
+  public function test_format_groups_args_fields(string $type) {
+    $args = tangible_fields()->format_groups($type, [
+			'type' => $type,
 		]);
 
 		$this->assertEmpty($args['fields']);
 
-		$args = tangible_fields()->format_args('test', [
-			'type' => 'field_group',
-			'fields' => [
-				['name' => 'one', 'type' => 'color_picker', 'enable_opacity' => true],
-				['name' => 'two', 'type' => 'field_group', 'title' => $_expected = 'This title should overwrite the label and still exist'],
-			],
-		]);
+    $args = tangible_fields()->format_groups($type, [
+      'type'       => $type,
+      'sub_fields' => [
+        [
+          'name' => 'one', 
+          'type' => 'color_picker', 
+          'enable_opacity' => true
+        ],
+        [
+          'name' => 'two', 
+          'type' => 'field_group', 
+          'title' => $_expected = 'This title should overwrite the label and still exist'
+        ],
+      ],
+    ]);
 
-		$this->assertTrue($args['fields'][0]['hasAlpha']);
+    $this->assertArrayHasKey('fields', $args, 'sub_fields should be replaced by fields');
+    $this->assertNotEmpty($args['fields']);
+
+    $this->assertTrue($args['fields'][0]['hasAlpha']);
 		$this->assertEquals('color-picker', $args['fields'][0]['type']);
 		$this->assertEquals($_expected, $args['fields'][1]['label']);
-	}
+  }
 }
