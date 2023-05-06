@@ -15,11 +15,10 @@ const FilePreview = props => {
 
     const fetch = async () => {
   
-    const data = await getMedia(props.id)
+      const data = await getMedia(props.id)
     
       setData(data)
       isLoaded(true)
-    
     }
     
     fetch()

@@ -12,9 +12,7 @@ import {
 import { 
   Button,
   Description, 
-  Dialog, 
-  Label ,
-  Title
+  Label
 } from "../../base"
 
 import { postMedia } from "../../../requests/media"
@@ -40,7 +38,7 @@ const FileUpload = (props) => {
         : JSON.parse(props.value)
       : []
   )
-  const [uploadStatus, setUploadStatus] = useState({file: false, message: ""})
+  const [notice, setNotice] = useState(false)
 
   const { labelProps, fieldProps, descriptionProps } = useField(props)
 
@@ -65,19 +63,15 @@ const FileUpload = (props) => {
    */
   const upload = async () => {
     isLoading(true)
+    setNotice(false)
 
-    const data = await postMedia(file[0])
-
-    setFile(false)
-    isLoading(false)
-
-    if(data.message || data.code || data.status !== "inherit") {
-      setUploadStatus({file: true, message: data.message})
-      return
-    }
-
-    setUploads([...uploads, data.id])
-    setUploadStatus({file: false, message: ""})
+    postMedia(file[0])
+      .then(data => setUploads([...uploads, data.id]))
+      .catch(data => setNotice(data.message))
+      .finally(() => {
+        setFile(false)
+        isLoading(false)
+      })
   }
 
   const removeUpload = (i) => {
@@ -99,7 +93,6 @@ const FileUpload = (props) => {
       : mimeValues
 
     return allowedTypes.join(', ')
-
   }
 
   const open = () => {
@@ -118,7 +111,6 @@ const FileUpload = (props) => {
 
     media.open()
   }
-
 
   return (
     <div className="tf-file">
@@ -166,13 +158,12 @@ const FileUpload = (props) => {
           )}
         </div>
       </div>
-      {uploadStatus.file && (
-        <Notice message={uploadStatus.message} type="error" />
+      {notice && (
+        <Notice message={notice} type="error" onDismiss={() => setNotice(false)} />
       )}
       {props.description && (
         <Description {...descriptionProps}>{props.description}</Description>
       )}
-     
     </div>
   )
 }
