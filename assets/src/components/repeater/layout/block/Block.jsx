@@ -25,6 +25,14 @@ const Block = ({
 
   const [valueSelect, setValueSelect] = useState('')
 
+  let bulkOptions = []
+  bulkOptions['delete'] = 'delete'
+  
+  if ( useSwitch ) {
+    bulkOptions['enabled'] = 'enabled'
+    bulkOptions['disabled'] = 'disabled'
+  }  
+
   const isEnabled = ( item, i, value, controlName ) => (
     dispatch({ 
       type    : 'update',
@@ -35,12 +43,16 @@ const Block = ({
   )
 
   const handleSelectAll = (value) => {
-    if( value !== '0' && value !== false ) setSelectedItems( [...items.map((item) => item)] )
+    if( value !== '0' && value !== false ) {
+      setSelectedItems( [...items.map((item) => item)] )
+    } else {
+      setSelectedItems( [] )
+    }
   };
 
   const handleSelectItem = (value, item) => {
+    // let index = items.indexOf(item)
     if ( value === '0' || value === false ) {
-      let index = selectedItems.indexOf(item)
       setSelectedItems(selectedItems.filter(id => id !== item))
     } else {
       if( ! selectedItems.includes(item) ) setSelectedItems([...selectedItems, item])
@@ -64,7 +76,7 @@ const Block = ({
           ? <div onClick={ e => e.stopPropagation() }>
               <Switch 
                 value={ item['repeater_switch'] ?? 'off' } 
-                isSelected={ item['repeater_switch'] === 'on' ? true : false } 
+                isSelected={ item['repeater_switch'] === 'on' || item['repeater_switch'] === true ? true : false } 
                 onChange={ value => isEnabled( item, i, value, 'repeater_switch' ) }  
               />
             </div>  
@@ -109,35 +121,21 @@ const Block = ({
             <Checkbox value={ '0' } onChange={ (value) => handleSelectAll(value) } />
             <Select
               placeholder="Bulk actions"
-              choices={ {
-                'enabled': 'enabled',
-                'disabled': 'disabled',
-                'delete': 'delete'
-              } }
+              choices={ bulkOptions }
+              value={ valueSelect }
               onChange={(value) => {
                 setValueSelect(value)
               }}
             />
-            <Button 
-              onPress={() => {
-                switch (valueSelect) {
-                  case 'enabled':
-                    selectedItems.map((item) => {
-                      let i = items.indexOf(item)
-                      isEnabled( item, i, 'on', 'repeater_switch' )
+            {
+              valueSelect && valueSelect === 'delete' ?
+                <ModalTrigger 
+                  title="Confirmation"
+                  label="Apply"
+                  onValidate={ () => {
+                    selectedItems.sort((a,b) => {
+                      return items.indexOf(a) < items.indexOf(b) ? true : false
                     })
-                    setSelectedItems([])
-                    break;
-
-                  case 'disabled':
-                    selectedItems.map((item) => {
-                      let i = items.indexOf(item)
-                      isEnabled( item, i, 'off', 'repeater_switch' )
-                    })
-                    setSelectedItems([])
-                    break; 
-
-                  case 'delete':
                     selectedItems.map((item) => {
                       let i = items.indexOf(item)
                       dispatch({ 
@@ -145,15 +143,41 @@ const Block = ({
                         item    : i,
                       })
                     })
+                    setValueSelect('')
                     setSelectedItems([])
-                    break; 
-                
-                  default:
-                    break;
-                }
-
-              }}
-          >Apply</Button>
+                  } }
+                >
+                  Are you sure you want to remove selected items?
+                </ModalTrigger> : 
+                <Button 
+                  type="action"
+                  onPress={() => {
+                    switch (valueSelect) {
+                      case 'enabled':
+                        selectedItems.map((item) => {
+                          let i = items.indexOf(item)
+                          isEnabled( item, i, 'on', 'repeater_switch' )
+                        })
+                        setValueSelect('')
+                        setSelectedItems([])
+                        break;
+    
+                      case 'disabled':
+                        selectedItems.map((item) => {
+                          let i = items.indexOf(item)
+                          isEnabled( item, i, 'off', 'repeater_switch' )
+                        })
+                        setValueSelect('')
+                        setSelectedItems([])
+                        break;  
+                    
+                      default:
+                        break;
+                    }
+    
+                  }}
+                >Apply</Button>
+            }
           </>
         : null
       }
