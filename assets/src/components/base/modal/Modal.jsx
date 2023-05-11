@@ -18,15 +18,15 @@ const Modal = ({ state, children, ...props }) => {
    * 
    * @see renderField() in ./src/index.jsx 
    */
-  const { ThemeContext } = tangibleFields 
-  const theme = useContext(ThemeContext)
+  const { ControlContext } = tangibleFields 
+  const control = useContext(ControlContext)
 
   const ref = useRef(null)
   const { modalProps, underlayProps } = useModalOverlay(props, state, ref)
 
   return (
     <Overlay>
-      <div className={ theme.wrapper }>
+      <div className={ control.wrapper }>
         <div className='tf-modal' { ...underlayProps }>
           <div className='tf-modal-container' ref={ref} {...modalProps}>
             {children}
