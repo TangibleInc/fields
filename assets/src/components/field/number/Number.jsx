@@ -31,15 +31,15 @@ const Number = props => {
   const hasButtons = props.hasButtons ?? true
 
   return(
-    <div class='tf-number'>
+    <div className='tf-number'>
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <div class='tf-number-field' { ...groupProps }>
+      <div className='tf-number-field' { ...groupProps }>
         <FieldWrapper { ...props }>
           <input { ...inputProps} ref={ inputRef } />
-          { hasButtons && <div class='tf-number-button-group'>
+          { hasButtons && <div className='tf-number-button-group'>
             <Button type="number" { ...incrementButtonProps }>+</Button>
             <Button type="number" { ...decrementButtonProps }>-</Button>
           </div> }

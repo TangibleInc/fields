@@ -45,7 +45,7 @@ const Block = ({
   )
 
   return(
-    <div class='tf-repeater-block-items'>
+    <div className='tf-repeater-block-items'>
       { items && items.slice(0, maxLength).map((item, i) => (
         <ExpandablePanel
           key={ item.key } 
@@ -59,7 +59,7 @@ const Block = ({
         > 
           { getRow(item).map(
             control => ( 
-              <div class="tf-repeater-block-item-field">
+              <div className="tf-repeater-block-item-field">
                 { getControl(control, item, i) }
               </div>  
             ) 

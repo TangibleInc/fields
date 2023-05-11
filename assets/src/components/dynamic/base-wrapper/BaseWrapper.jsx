@@ -135,6 +135,12 @@ const BaseWrapper = props => {
                         ...settings,
                         [field.name]: data.value
                       }) }
+                      // Set it to avoid error, but needs to be implemented
+                      visibility={{
+                        condition: false,
+                        action: 'show',
+                        getValue: name => ('')         
+                      }}
                     />
                   </div>
                 )) }

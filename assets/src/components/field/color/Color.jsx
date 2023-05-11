@@ -37,7 +37,7 @@ const Color = props =>{
   const format = props.format ?? 'hexa'
   
   const onChange = value => {
-    
+
     const stringValue = value.toString ? value.toString(format) : ''
     state.setInputValue(stringValue)
     
@@ -52,20 +52,16 @@ const Color = props =>{
   ), [])
 
   return(
-    <div class="tf-color">
+    <div className="tf-color">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
       <FieldWrapper { ...props }>
-        <div class="tf-color-container">
-          <input
-            ref={ ref } 
-            { ...inputProps } 
-            onFocus={ e => {
-              isOpen(true)
-              inputProps.onFocus(e)  
-            }}
+        <div className="tf-color-container">
+          <input ref={ ref } { ...inputProps } 
+            onFocus={ () => isOpen(true)}
+            value={ state.inputValue }
           />
           { open && 
             <Popover ref={ popover }>
@@ -77,7 +73,7 @@ const Color = props =>{
               />
             </Popover> }
         </div>
-      </FieldWrapper>        
+      </FieldWrapper>
       { props.description &&
         <Description { ...descriptionProps }>
           { props.description }

@@ -51,7 +51,7 @@ const Switch = props => {
   useEffect(() => props.onChange && props.onChange(value), [value])
 
   return(
-    <div class="tf-switch">
+    <div className="tf-switch">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
@@ -61,7 +61,7 @@ const Switch = props => {
             <input { ...inputProps } { ...focusProps } ref={ ref } name="" />
             <input type="hidden" name={ props.name ?? '' } value={ value } />
           </VisuallyHidden>
-          <div class={ `tf-switch-element${state.isSelected ? '-selected' : '' }` } aria-hidden="true">
+          <div className={ `tf-switch-element${state.isSelected ? '-selected' : '' }` } aria-hidden="true">
             <span></span>
           </div>
         </label>

@@ -32,7 +32,7 @@ const TextField = props => {
   }, [value])
   
   return(
-    <div class='tf-text'>
+    <div className='tf-text'>
       { props.label &&
         <Label { ...labelProps }>
           { props.label }

@@ -72,14 +72,14 @@ const DatePicker = props => {
   buttonProps.onPress = () => state.setOpen( !state.isOpen )
 
   return(
-    <div class="tf-date">
+    <div className="tf-date">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
       <FieldWrapper { ...props }>
-        <div class="tf-date-field-container">
-          <div class="tf-date-group" { ...groupProps } ref={ ref }>
+        <div className="tf-date-field-container">
+          <div className="tf-date-group" { ...groupProps } ref={ ref }>
             <DateField { ...fieldProps } />
             <Button type="action" { ...buttonProps }>
               🗓

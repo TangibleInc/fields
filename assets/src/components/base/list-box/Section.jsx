@@ -28,8 +28,8 @@ const Section = ({ section, state }) => {
 
   return (
     <>
-      { ! isFirst && <li class="tf-list-box-section-separator" {...separatorProps} /> }
-      <li class="tf-list-box-section" { ...itemProps }>
+      { ! isFirst && <li className="tf-list-box-section-separator" {...separatorProps} /> }
+      <li className="tf-list-box-section" { ...itemProps }>
         { section.rendered &&
           <span { ...headingProps }>
             { section.rendered }
