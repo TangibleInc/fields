@@ -101,7 +101,7 @@ const BaseWrapper = props => {
   )
 
   return(
-    <div class="tf-dynamic-wrapper">
+    <div className="tf-dynamic-wrapper">
       { props.children }
       <Button type="action" ref={ triggerRef } { ...triggerProps }>
         Insert
@@ -111,14 +111,14 @@ const BaseWrapper = props => {
           Remove
         </Button> }
       { state.isOpen && (
-        <div class="tf-dynamic-wrapper-popover" ref={ overlayRef } { ...overlayProps }>
+        <div className="tf-dynamic-wrapper-popover" ref={ overlayRef } { ...overlayProps }>
           { settingsForm
-            ? <div class="tf-dynamic-wrapper-popover-form">
+            ? <div className="tf-dynamic-wrapper-popover-form">
                 <Title level={4}>
                   Dynamic value settings
                 </Title>
                 { settingsForm.map(field => (
-                  <div class="tf-dynamic-wrapper-popover-field">
+                  <div className="tf-dynamic-wrapper-popover-field">
                     <Control
                       { ...field } 
                       value={ settings[field.name] ?? '' }

@@ -1,15 +1,18 @@
 import { useState } from 'react'
-import { VisuallyHidden } from 'react-aria'
 import { BaseWrapper } from '../'
 
-const FieldWrapper = props => {
+const FieldWrapper = ({
+  inputProps = {},
+  inputRef = false,
+  ...props
+}) => {
  
   const [isDynamic, setIsDynamic] = useState(
     props.dynamic ? props.dynamic.hasValues() : false
   )
   
-  const getLabel = () => {
-    const value = props.dynamic.getAll()[0]
+  const getLabel = string => {
+    const value = props.dynamic.parse(string)
     return value && value.type
       ? props.dynamic.getLabel(value.type)
       : ''
@@ -18,7 +21,10 @@ const FieldWrapper = props => {
   return(
     <BaseWrapper
       config={ props.dynamic ?? false } 
-      onValueSelection={ dynamicValue => setIsDynamic(true) }
+      onValueSelection={ dynamicValue => {
+        setIsDynamic(true)
+        props.onValueSelection(dynamicValue)
+      }}
       remove={{
         isDisabled: isDynamic === false,
         onPress: () => setIsDynamic(false)
@@ -27,10 +33,19 @@ const FieldWrapper = props => {
       { isDynamic
         ? 
           <>
-            <input type="text" class="tf-dynamic-value-input" value={ getLabel() } disabled />
-            <VisuallyHidden>
-              { props.children }
-            </VisuallyHidden>
+           <input 
+              type="text" 
+              className="tf-dynamic-value-input" 
+              value={ getLabel(props.value) }
+              disabled
+            />
+            <input 
+              { ...inputProps }
+              type="hidden" 
+              name={ props.name } 
+              value={ props.value }
+              ref={ inputRef }
+            />
           </>
         : props.children }
     </BaseWrapper>

@@ -52,7 +52,7 @@ const Block = ({
           title={ 'Item ' + (i + 1) }
           footer={ actions(i, item) }
           isOpen={ activeItem === i }
-          class="tf-repeater-block-item"
+          className="tf-repeater-block-item"
           onChange={ visible => visible 
             ? (activeItem !== i ? setActiveItem(i) : null) 
             : (activeItem === i ? setActiveItem(false) : null) }

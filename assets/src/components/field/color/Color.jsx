@@ -1,7 +1,7 @@
 import { 
-  useEffect,
   useRef,
-  useState 
+  useState,
+  useEffect 
 } from 'react'
 
 import { useColorField } from '@react-aria/color'
@@ -10,11 +10,10 @@ import { FieldWrapper } from '../../dynamic/'
 
 import { 
   Description,
-  Label,
-  Popover
+  Label
 } from '../../base'
 
-import ColorPicker from './ColorPicker'
+import ColorField from './ColorField'
 
 /**
  * @see https://react-spectrum.adobe.com/react-aria/useColorField.html 
@@ -23,33 +22,15 @@ import ColorPicker from './ColorPicker'
 const Color = props =>{
 
   const ref = useRef()
-  const popover = useRef()
-
   const state = useColorFieldState(props)
-  const [open, isOpen] = useState(false)
-
   const {
     labelProps,
     inputProps,
     descriptionProps
   } = useColorField(props, state, ref)
 
-  const format = props.format ?? 'hexa'
-  
-  const onChange = value => {
-
-    const stringValue = value.toString ? value.toString(format) : ''
-    state.setInputValue(stringValue)
-    
-    if( props.onChange ) props.onChange(stringValue) 
-  }
-
-  /**
-   * Use the right format on initial render
-   */
-  useEffect(() => state.setInputValue(
-    state.colorValue?.toString(format)
-  ), [])
+  const [value, setValue] = useState(props.value ?? '')
+  useEffect(() => props.onChange && props.onChange(value), [value])
 
   return(
     <div className="tf-color">
@@ -57,22 +38,21 @@ const Color = props =>{
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <FieldWrapper { ...props }>
-        <div className="tf-color-container">
-          <input ref={ ref } { ...inputProps } 
-            onFocus={ () => isOpen(true)}
-            value={ state.inputValue }
-          />
-          { open && 
-            <Popover ref={ popover }>
-              <ColorPicker 
-                value={ state.colorValue?.toString(format) }
-                onChange={ onChange } 
-                hasAlpha={ props.hasAlpha ?? true } 
-                onFocusChange={ isFocus => isOpen(isFocus) }
-              />
-            </Popover> }
-        </div>
+      <FieldWrapper 
+        { ...props }
+        value={ value } 
+        onValueSelection={ dynamicValue => setValue(dynamicValue) }
+        inputProps={ inputProps } 
+        inputRef={ ref }
+      >
+        <ColorField 
+          { ...props }
+          value={ value }
+          onChange={ props.onChange }
+          state={ state }
+          inputProps={ inputProps } 
+          colorFieldRef={ ref } 
+        />
       </FieldWrapper>
       { props.description &&
         <Description { ...descriptionProps }>

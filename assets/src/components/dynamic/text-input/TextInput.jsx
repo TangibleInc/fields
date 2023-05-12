@@ -52,7 +52,7 @@ const TextInput = props => {
       actions={ ['insert'] }
     >
       <input { ...props } type="hidden" value={ value } />
-      <div ref={ input } class="tf-dynamic-text-input"></div>
+      <div ref={ input } className="tf-dynamic-text-input"></div>
     </BaseWrapper>
   )
 }
