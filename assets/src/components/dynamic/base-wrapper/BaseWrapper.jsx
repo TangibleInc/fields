@@ -11,7 +11,6 @@ import {
 
 import Control from '../../../Control'
 
-import { uniqid } from '../../../utils'
 import { useOverlayTriggerState } from 'react-stately'
 import { Button, Title } from '../../base'
 import { ComboBox } from '../../field'
@@ -79,18 +78,10 @@ const BaseWrapper = props => {
 
   const selectAndClose = name => {
     
-    const id = uniqid()
-    
-    /**
-     * @see ./Control.jsx
-     */
-    props.config.add(id, {
-      name: name,
-      settings: settings ?? {}
-    })
+    setValueChange(
+      props.config.stringify(name, settings ?? false)
+    )
 
-    setValueChange(id)
-    
     setValue(false)
     setSettingsForm(false)
     setSettings(false)
@@ -131,9 +122,9 @@ const BaseWrapper = props => {
                     <Control
                       { ...field } 
                       value={ settings[field.name] ?? '' }
-                      onChange={ data => setSettings({
+                      onChange={ settingValue => setSettings({
                         ...settings,
-                        [field.name]: data.value
+                        [field.name]: settingValue
                       }) }
                       // Set it to avoid error, but needs to be implemented
                       visibility={{

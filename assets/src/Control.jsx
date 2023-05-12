@@ -1,5 +1,4 @@
 import { 
-  useReducer, 
   useEffect,
   useState,
   useContext,
@@ -17,32 +16,14 @@ import {
 } from './events'
 
 import { OverlayProvider } from 'react-aria'
-import { controlDispatcher } from './dispatcher.js'
+import { dynamicValuesAPI } from './dynamic-values'
 
 import controls from './controls-list.js'
-import { format } from './format'
-import { dynamicValuesAPI } from './dynamic-values'
 
 const Control = ({
   visibility,
   ...props
 }) => {
-  /**
-   * Each field value use a JSON structure, handled by this dispatcher
-   * 
-   * @see dispatcher.js
-   * @see format.js
-   */
-  const [data, dispatch] = useReducer(
-    controlDispatcher, 
-    format(
-      props.value ?? '', 
-      props.default ?? ''
-    )
-  )
-
-  useEffect(() => props.onChange && props.onChange(data), [data?.value])
-  useEffect(() => props.onChange && props.onChange(data), [data?.dynamicValues])
 
   /**
    * @see renderField() in ./src/index.jsx 
@@ -71,16 +52,12 @@ const Control = ({
 
   delete childProps.value
   delete childProps.onChange
-  delete childProps.name
   delete childProps.class
   delete childProps.wrapper
 
   const onChange = newValue => {
-  
-    dispatch({
-      type: 'updateValue',
-      value: newValue
-    })
+
+    setValue(newValue)
 
     // The timeout make sure the event is dispatched after the state changed
     setTimeout(() => {
@@ -153,13 +130,12 @@ const Control = ({
   
   return (
     <OverlayProvider { ...wrapper }>
-      <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(data) } />
       <ControlComponent 
         { ...childProps } 
-        value={ data.value }
+        value={ value }
         onChange={ onChange } 
         dynamic={ props.dynamic 
-          ? dynamicValuesAPI(data, dispatch, props.dynamic) 
+          ? dynamicValuesAPI(value, setValue, props.dynamic) 
           : false 
         }
       />

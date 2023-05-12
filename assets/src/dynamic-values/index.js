@@ -1,38 +1,42 @@
+import {
+  dynamicValueToString,
+  stringToDynamicValue
+} from './format'
+
+const { dynamics } = TangibleFields
+
+/**
+ * Extract dynamic values token from a string like this one:
+ * 
+ * This is a text with a [[dynamic-value]] 
+ */
+const dynamicValueRegex = /\[\[([A-Za-zÀ-ú0-9_\- ]+(?!\[)[^\[\]]*)\]\]/g 
+const getDynamicStrings = string => (
+  Array.from(
+    string.matchAll(dynamicValueRegex), 
+    match => match[1]
+  )
+)
+
 /**
  * Helper to handle dynamic values in a Control component
  * 
  * @see ../Control.jsx 
- * @see ../dispatcher.jx 
+ * @see ../components/dynamics/ 
  */
-const dynamicValuesAPI = (data, dispatch, types) => ({
-  getTypes: () => (types),
-  setMode: mode => {
-    dispatch({ type: 'setDynamicValueMode', mode: mode })
-  },
-  getAll: () => (
-    data.dynamicValues.values ?? {}
-  ),
-  get: key => (
-    data.dynamicValues.values[ key ] ?? false
-  ),
-  delete: key => dispatch({ 
-    type: 'deleteDynamicValue', 
-    key: key 
-  }),
-  clear: () => dispatch({ 
-    type: 'clearDynamicValue' 
-  }),
-  add: (id, settings) => dispatch({ 
-    type: 'addDynamicValue', 
-    id: id, 
-    settings: settings 
-  }),
-  hasDynamicValues: () => (
-    Object.keys(data.dynamicValues.values).length !== 0 
-    && data.dynamicValues.mode !== 'none' 
-  )
+const dynamicValuesAPI = (value, setValue, types) => ({
+  getTypes  : () => types,
+  getList   : () => dynamics,
+  getAll    : () => getDynamicStrings(value).map(stringToDynamicValue),
+  getLabel  : type => dynamics[type] ? dynamics[type].label : type,
+  stringify : dynamicValueToString,
+  parse     : stringToDynamicValue,
+  hasValues : () => getDynamicStrings(value).length !== 0,
+  setValue  : value => setValue(value) 
 }) 
 
 export { 
-  dynamicValuesAPI
+  dynamicValuesAPI,
+  getDynamicStrings,
+  dynamicValueRegex
 }

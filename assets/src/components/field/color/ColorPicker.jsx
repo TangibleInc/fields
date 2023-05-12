@@ -12,7 +12,6 @@ import { parseColor } from '@react-stately/color'
 
 import ColorArea from './ColorArea'
 import ColorSlider from './ColorSlider'
-import Button from '../../base/button/Button'
 
 const ColorPicker = props => {
 
@@ -49,7 +48,6 @@ const ColorPicker = props => {
     }
   })
 
-  
   const hasAlpha = props.hasAlpha ?? true
 
   return(

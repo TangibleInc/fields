@@ -6,17 +6,7 @@ import {
   WidgetType
 } from '@codemirror/view'
 
-/**
- * Detect dynamic values token from in a string like this one:
- * 
- * This is a text with a [[dynmaic-value]] 
- */
-const getDynamicTokens = string => (
-  Array.from(
-    string.matchAll(/\[\[([A-Za-zÀ-ú0-9_\- ]+(?!\[)[^\[\]]*)\]\]/g), 
-    match => match[1]
-  )
-)
+import { dynamicValueRegex } from '../dynamic-values'
 
 /**
  * Create code mirror example 
@@ -52,7 +42,7 @@ const createInput = (
 
         matchResults(items) {  
           return new MatchDecorator({
-            regexp: /\[\[([A-Za-zÀ-ú0-9_\- ]+(?!\[)[^\[\]]*)\]\]/g,
+            regexp: dynamicValueRegex,
             decoration: match => Decoration.replace({
               widget: new DynamicString(
                 match[1],
@@ -120,11 +110,9 @@ class DynamicString extends WidgetType {
     
     return span
   }
-
 }
 
 export { 
-  createInput,
-  getDynamicTokens 
+  createInput
 }
 

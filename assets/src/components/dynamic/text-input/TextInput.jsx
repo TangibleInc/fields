@@ -4,11 +4,7 @@ import {
   useState
 } from 'react'
 
-import { 
-  createInput,
-  getDynamicTokens 
-} from '../../../codemirror/'
-
+import { createInput } from '../../../codemirror/'
 import { BaseWrapper } from '..'
 
 const TextInput = props => {
@@ -22,55 +18,29 @@ const TextInput = props => {
     editor.current = createInput(
       input.current, 
       value, 
-      updateValue,
+      setValue,
       props.choices,
       getDynamicValueLabel
     )
   }, [])
 
-  const getDynamicValueLabel = slug => (
-    props.dynamic 
-      ? (props.dynamic.getAll()[ slug ]?.name ?? slug)
-      : slug 
-  )
-
-  const updateValue = value => {
-     
-    setValue(value)
-    
-    if( ! props.dynamic ) return;
-
-    /**
-     * We check if saved dynamic values still exists, and if not we delete them
-     * 
-     * Note: There might be a better to handle this thought a codemirror event but
-     * didn't find documentation about it and we will switch to prosemirror soon so not 
-     * worth looking into it
-     */
-    const dynamicValues = getDynamicTokens(value) 
-    const savedDynamicValues = props.dynamic.getAll()
-
-    for( const key in savedDynamicValues ) {
-      
-      if( ! dynamicValues.includes(key) ) {
-        props.dynamic.delete(key)
-      }
-    }
+  const getDynamicValueLabel = string => {
+    const value = props.dynamic.parse(string)
+    return value && value.type 
+      ? props.dynamic.getLabel(value.type)
+      : string
   }
 
-  useEffect(() => props?.onChange(value), [value])
+  useEffect(() => props.onChange && props.onChange(value), [value])
 
   /**
    * @see https://codemirror.net/examples/change/
    */
   const addDynamicValue = (value) => {
-    
-    props.dynamic.setMode('insert')
-
     editor.current.dispatch({
       changes: {
         from: editor.current.state.doc.length, 
-        insert: `[[${value}]]`
+        insert: `${value}`
       }
     })
   }
