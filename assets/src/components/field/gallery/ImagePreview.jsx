@@ -29,14 +29,14 @@ const ImagePreview = props => {
 
   if( ! loaded || ! data ) {
     return(
-      <div class="tf-gallery-item">
+      <div className="tf-gallery-item">
         Loading...
       </div>
     )
   }
 
   return(
-    <div class="tf-gallery-item">
+    <div className="tf-gallery-item">
       <img src={ data.source_url } />
     </div>
   )

@@ -1,0 +1,66 @@
+.tf-notice{
+  background: #fff;
+  box-shadow: 0 1px 1px rgba(0,0,0,.04);
+  padding: 1px 12px;
+	color: black;
+	margin-top: 4px;
+}
+
+.tf-notice.tf-is-dismissible {
+  padding-right: 38px;
+  position: relative;
+}
+
+.tf-notice.tf-error {
+	border-left: 4px solid #d63638;
+}
+
+.tf-notice.tf-success {
+	border-left: 4px solid #00a32a;
+}
+
+.tf-notice.tf-warning {
+	border-left-color: #dba617;
+}
+
+.tf-notice.tf-info {
+	border-left-color: #72aee6;
+}
+
+.tf-notice-dismiss {
+	position: absolute;
+	top: 0;
+	right: 1px;
+	border: none;
+	margin: 0;
+	padding: 9px;
+	background: none;
+	color: #787c82;
+	cursor: pointer;
+}
+
+.tf-notice-dismiss:hover:before,
+.tf-notice-dismiss:active:before,
+.tf-notice-dismiss:focus:before {
+	color: #d63638;
+}
+
+.tf-notice-dismiss:focus {
+	outline: none;
+	box-shadow:
+		0 0 0 1px #4f94d4,
+		0 0 2px 1px rgba(79, 148, 212, 0.8);
+}
+
+.tf-notice-dismiss:before {
+	background: none;
+	color: #787c82;
+	content: "\f153";
+	display: block;
+	font: normal 16px/20px dashicons;
+	height: 20px;
+	text-align: center;
+	width: 20px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}

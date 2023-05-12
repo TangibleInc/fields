@@ -35,17 +35,17 @@ const ButtonGroup = props => {
   }, [state.selectedValue])
 
   return(
-    <div class="tf-button-group">
+    <div className="tf-button-group">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <div class="tf-button-group-container" { ...radioGroupProps }>
+      <div className="tf-button-group-container" { ...radioGroupProps }>
         <ButtonGroupContext.Provider value={ state }>
           { options.map(option => (
             <ButtonOption context={ ButtonGroupContext } { ...option } >
               { props.use_dashicon
-                ? <span class={ `dashicons dashicons-${option.label}`}></span>
+                ? <span className={ `dashicons dashicons-${option.label}`}></span>
                 : option.label }
             </ButtonOption>
           )) }

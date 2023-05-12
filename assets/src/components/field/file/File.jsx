@@ -12,11 +12,12 @@ import {
 import { 
   Button,
   Description, 
-  Label 
+  Label
 } from "../../base"
 
 import { postMedia } from "../../../requests/media"
 import FilePreview from "./FilePreview"
+import Notice from '../../base/notice/Notice'
 
 /**
  * TODO:
@@ -37,6 +38,7 @@ const FileUpload = (props) => {
         : JSON.parse(props.value)
       : []
   )
+  const [notice, setNotice] = useState(false)
 
   const { labelProps, fieldProps, descriptionProps } = useField(props)
 
@@ -61,12 +63,15 @@ const FileUpload = (props) => {
    */
   const upload = async () => {
     isLoading(true)
+    setNotice(false)
 
-    const data = await postMedia(file[0])
-
-    setFile(false)
-    setUploads([...uploads, data.id])
-    isLoading(false)
+    postMedia(file[0])
+      .then(data => setUploads([...uploads, data.id]))
+      .catch(data => setNotice(data.message))
+      .finally(() => {
+        setFile(false)
+        isLoading(false)
+      })
   }
 
   const removeUpload = (i) => {
@@ -88,7 +93,6 @@ const FileUpload = (props) => {
       : mimeValues
 
     return allowedTypes.join(', ')
-
   }
 
   const open = () => {
@@ -108,9 +112,8 @@ const FileUpload = (props) => {
     media.open()
   }
 
-
   return (
-    <div class="tf-file">
+    <div className="tf-file">
       {props.label && <Label {...labelProps}>{props.label}</Label>}
       <VisuallyHidden>
         <input
@@ -121,13 +124,13 @@ const FileUpload = (props) => {
           {...fieldProps}
         />
       </VisuallyHidden>
-      <div class="tf-file-container">
+      <div className="tf-file-container">
         <input
           type="hidden"
           name={props.name ?? ""}
           value={JSON.stringify(uploads)}
         />
-        <ul class="tf-file-list">
+        <ul className="tf-file-list">
           {uploads.map((upload, i) => (
             <FilePreview
               key={upload}
@@ -136,7 +139,7 @@ const FileUpload = (props) => {
             />
           ))}
         </ul>
-        <div class="tf-file-field">
+        <div className="tf-file-field">
           <Button
             type="action"
             onPress={() => (props.wp_media ? open() : ref.current.click())}
@@ -145,7 +148,7 @@ const FileUpload = (props) => {
           >
             {props.buttonText ?? "Choose"}
           </Button>
-          <div class="tf-file-text" aria-hidden="true">
+          <div className="tf-file-text" aria-hidden="true">
             {file.length > 0 ? file[0].name : placeholder}
           </div>
           { !props.wp_media && (
@@ -155,6 +158,9 @@ const FileUpload = (props) => {
           )}
         </div>
       </div>
+      {notice && (
+        <Notice message={notice} type="error" onDismiss={() => setNotice(false)} />
+      )}
       {props.description && (
         <Description {...descriptionProps}>{props.description}</Description>
       )}

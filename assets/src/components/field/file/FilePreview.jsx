@@ -15,11 +15,10 @@ const FilePreview = props => {
 
     const fetch = async () => {
   
-    const data = await getMedia(props.id)
+      const data = await getMedia(props.id)
     
       setData(data)
       isLoaded(true)
-    
     }
     
     fetch()
@@ -27,14 +26,14 @@ const FilePreview = props => {
 
   if( ! loaded || ! data ) {
     return(
-      <li class="tf-file-item">
+      <li className="tf-file-item">
         Loading...
       </li>
     )
   }
 
   return(
-    <li class="tf-file-item">
+    <li className="tf-file-item">
       <span>{ data.title.rendered }</span>
       <Button type="upload-list" onPress={ () => props.remove() }>
         Remove

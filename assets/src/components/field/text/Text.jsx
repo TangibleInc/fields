@@ -21,7 +21,7 @@ const TextField = props => {
   } = useTextField(props, ref)
 
   return(
-    <div class='tf-text'>
+    <div className='tf-text'>
       { props.label &&
         <Label { ...labelProps }>
           { props.label }

@@ -44,7 +44,7 @@ const Editor = props => {
   useEffect(() => props.onChange && props.onChange(value), [value])
 
   return(
-    <div class="tf-editor">
+    <div className="tf-editor">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }

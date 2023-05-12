@@ -35,12 +35,21 @@
     }
   }
 
+  .tf-color-input{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+
   .tf-color-sliders {
     padding: $field-padding;
     padding-bottom: 10px;
   }
+  
 }
-
+.tf-color-input > input{
+  width: 100%;
+}
 .tf-color-slider {
   display: flex;
   flex-direction: column;

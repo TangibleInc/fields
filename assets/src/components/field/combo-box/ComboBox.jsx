@@ -110,13 +110,13 @@ const ComboBox = props => {
   })
 
   return(
-    <div class="tf-combo-box" { ...focusWithinProps }>
+    <div className="tf-combo-box" { ...focusWithinProps }>
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
       <FocusScope autoFocus={ props.autoFocus } restoreFocus>
-        <div class="tf-combo-box-text">
+        <div className="tf-combo-box-text">
           <input { ...inputProps } ref={ inputRef } />
           {/* add changeTag="span" to change the button to span element */}
 
@@ -130,7 +130,7 @@ const ComboBox = props => {
 
           { state.isOpen && 
             // Can't use popover component because it causes conflicts with focus events
-            <div class="tf-popover"> 
+            <div className="tf-popover">
               <ListBox
                 listBoxRef={ listBoxRef }
                 state={ state }

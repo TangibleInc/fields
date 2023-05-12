@@ -47,7 +47,7 @@ const Select = props => {
   } = useSelect(props, state, ref)
   
   return(
-    <div class="tf-select">
+    <div className="tf-select">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
@@ -71,7 +71,7 @@ const Select = props => {
             ? state.selectedItem.rendered
             : (props.placeholder ?? 'Select an option') }
         </span>
-        <span aria-hidden="true" class="tf-select-icon">
+        <span aria-hidden="true" className="tf-select-icon">
           ▼
         </span>
       </Button>

@@ -89,14 +89,14 @@ const Dimensions = props => {
   if( isLinked() ) groupClasses += ' tf-dimensions-number-groups-linked'
 
   return(
-    <div class="tf-dimensions">
+    <div className="tf-dimensions">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
       <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(value) } { ...fieldProps } />
-      <div class="tf-dimensions-container">
-        <div class={ groupClasses }>
+      <div className="tf-dimensions-container">
+        <div className={ groupClasses }>
           { ['top', 'left', 'right', 'bottom'].map(position => (
             <Number 
               value={ value[position] ?? 0 } 
