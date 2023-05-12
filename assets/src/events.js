@@ -13,7 +13,6 @@ const addEventListener = (name, callback) => {
     prefix + name, 
     event => callback(event.detail ?? {}, event) 
   )
-
 }
 
 export {

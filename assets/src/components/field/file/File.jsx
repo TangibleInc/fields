@@ -12,11 +12,12 @@ import {
 import { 
   Button,
   Description, 
-  Label 
+  Label
 } from "../../base"
 
 import { postMedia } from "../../../requests/media"
 import FilePreview from "./FilePreview"
+import Notice from '../../base/notice/Notice'
 
 /**
  * TODO:
@@ -37,6 +38,7 @@ const FileUpload = (props) => {
         : JSON.parse(props.value)
       : []
   )
+  const [notice, setNotice] = useState(false)
 
   const { labelProps, fieldProps, descriptionProps } = useField(props)
 
@@ -61,12 +63,15 @@ const FileUpload = (props) => {
    */
   const upload = async () => {
     isLoading(true)
+    setNotice(false)
 
-    const data = await postMedia(file[0])
-
-    setFile(false)
-    setUploads([...uploads, data.id])
-    isLoading(false)
+    postMedia(file[0])
+      .then(data => setUploads([...uploads, data.id]))
+      .catch(data => setNotice(data.message))
+      .finally(() => {
+        setFile(false)
+        isLoading(false)
+      })
   }
 
   const removeUpload = (i) => {
@@ -91,7 +96,6 @@ const FileUpload = (props) => {
       : mimeValues
 
     return allowedTypes.join(', ')
-
   }
 
   const open = () => {
@@ -157,6 +161,9 @@ const FileUpload = (props) => {
           )}
         </div>
       </div>
+      {notice && (
+        <Notice message={notice} type="error" onDismiss={() => setNotice(false)} />
+      )}
       {props.description && (
         <Description {...descriptionProps}>{props.description}</Description>
       )}
