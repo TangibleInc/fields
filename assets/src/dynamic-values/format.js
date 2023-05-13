@@ -13,6 +13,8 @@ const dynamicValueToString = (type, settings = false) => {
 }
 
 const stringToDynamicValue = string => {
+
+  if( typeof string !== 'string' ) return false;
   
   const data = string
     .replace('[[', '')

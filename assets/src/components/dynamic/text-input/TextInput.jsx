@@ -1,22 +1,25 @@
 import { 
   useEffect,
   useRef,
-  useState
+  useState,
+  forwardRef
 } from 'react'
 
 import { createInput } from '../../../codemirror/'
 import { BaseWrapper } from '..'
 
-const TextInput = props => {
+const TextInput = forwardRef(({
+  inputProps,
+  ...props
+}, ref) => {
 
-  const input = useRef()
   const editor = useRef()
 
   const [value, setValue] = useState(props.value ?? '')
   
   useEffect(() => {
     editor.current = createInput(
-      input.current, 
+      ref.current, 
       value, 
       setValue,
       props.choices,
@@ -47,14 +50,13 @@ const TextInput = props => {
   
   return(
     <BaseWrapper
-      config={ props.dynamic ?? false } 
+      config={ props.dynamic ?? 'test' } 
       onValueSelection={ addDynamicValue }
-      actions={ ['insert'] }
     >
-      <input { ...props } type="hidden" value={ value } />
-      <div ref={ input } className="tf-dynamic-text-input"></div>
+      <input { ...inputProps } type="hidden" value={ value }/>
+      <div ref={ ref } className="tf-dynamic-text-input"></div>
     </BaseWrapper>
   )
-}
+})
 
 export default TextInput

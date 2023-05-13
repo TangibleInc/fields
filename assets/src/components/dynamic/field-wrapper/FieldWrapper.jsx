@@ -1,11 +1,14 @@
-import { useState } from 'react'
+import { 
+  useState,
+  forwardRef 
+} from 'react'
+
 import { BaseWrapper } from '../'
 
-const FieldWrapper = ({
+const FieldWrapper = forwardRef(({
   inputProps = {},
-  inputRef = false,
   ...props
-}) => {
+}, ref) => {
  
   const [isDynamic, setIsDynamic] = useState(
     props.dynamic ? props.dynamic.hasValues() : false
@@ -41,15 +44,15 @@ const FieldWrapper = ({
             />
             <input 
               { ...inputProps }
+              name={ props.name ?? '' }
+              value={ props.value ?? '' }
               type="hidden" 
-              name={ props.name } 
-              value={ props.value }
-              ref={ inputRef }
+              ref={ ref }
             />
           </>
         : props.children }
     </BaseWrapper>
   )
-}
+})
 
 export default FieldWrapper

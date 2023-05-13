@@ -12,10 +12,12 @@ const { dynamics } = TangibleFields
  */
 const dynamicValueRegex = /\[\[([A-Za-zÀ-ú0-9_\- ]+(?!\[)[^\[\]]*)\]\]/g 
 const getDynamicStrings = string => (
-  Array.from(
-    string.matchAll(dynamicValueRegex), 
-    match => match[1]
-  )
+  typeof string === 'string'
+    ? Array.from(
+        string.matchAll(dynamicValueRegex), 
+        match => match[1]
+      )
+    : []
 )
 
 /**

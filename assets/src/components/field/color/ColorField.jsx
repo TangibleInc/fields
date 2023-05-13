@@ -1,28 +1,21 @@
 import { 
   useEffect,
   useRef,
-  useState 
+  useState,
+  forwardRef 
 } from 'react'
 
-import { useColorFieldState } from '@react-stately/color'
 import { Popover } from '../../base'
 import ColorPicker from './ColorPicker'
 
-const ColorField = ({
+const ColorField = forwardRef(({
   inputProps,
-  colorFieldRef,
   state,
   ...props
-}) =>{
+}, ref) =>{
 
-  const format = props.format ?? 'hexa'
-  
-  /**
-   * @see https://react-spectrum.adobe.com/react-stately/useColorFieldState.html
-   */
-  // const state = useColorFieldState(props)
   const [open, isOpen] = useState(false)
-
+  const format = props.format ?? 'hexa'
   const popover = useRef()
   
   const onChange = value => {
@@ -42,7 +35,7 @@ const ColorField = ({
 
   return(
     <div className="tf-color-container">
-      <input ref={ colorFieldRef } { ...inputProps } 
+      <input ref={ ref } { ...inputProps } 
         onFocus={ () => isOpen(true)}
         value={ state.inputValue }
       />
@@ -57,6 +50,6 @@ const ColorField = ({
         </Popover> }
     </div>
   )
-}
+})
 
 export default ColorField

@@ -41,9 +41,9 @@ const Color = props =>{
       <FieldWrapper 
         { ...props }
         value={ value } 
-        onValueSelection={ dynamicValue => setValue(dynamicValue) }
+        onValueSelection={ setValue }
         inputProps={ inputProps } 
-        inputRef={ ref }
+        ref={ ref }
       >
         <ColorField 
           { ...props }
@@ -51,7 +51,7 @@ const Color = props =>{
           onChange={ props.onChange }
           state={ state }
           inputProps={ inputProps } 
-          colorFieldRef={ ref } 
+          ref={ ref } 
         />
       </FieldWrapper>
       { props.description &&

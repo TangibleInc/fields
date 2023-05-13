@@ -38,7 +38,8 @@ const TextField = props => {
           { props.label }
         </Label> }
       <TextInput
-        { ...inputProps }
+        { ...props }
+        inputProps={ inputProps }
         onChange={ setValue }
         ref={ ref }
         dynamic={ props.dynamic ?? false } 
