@@ -22,4 +22,12 @@
     margin: 12px 0;
   }
 
+  .tf-dynamic-wrapper-popover-buttons {
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      margin-left: 6px;
+    }
+  }
 }

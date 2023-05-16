@@ -76,18 +76,23 @@ const BaseWrapper = props => {
     setSettingsForm(args) 
   }
 
-  const selectAndClose = name => {
+  const selectAndClose = value => {
     
     setValueChange(
-      props.config.stringify(name, settings ?? false)
+      props.config.stringify(value, settings ?? false)
     )
 
+    resetAndClose()
+  }
+
+  const resetAndClose = () => {
+    
     setValue(false)
     setSettingsForm(false)
     setSettings(false)
     
     state.close()
-  } 
+  }
 
   const choices = Object.keys(dynamics).reduce(
     (choices, key) => (
@@ -144,9 +149,14 @@ const BaseWrapper = props => {
                     />
                   </div>
                 )) }
-                <Button type="action" onPress={ () => selectAndClose(value) }>
-                  Add
-                </Button>
+                <div className="tf-dynamic-wrapper-popover-buttons">
+                  <Button type="action" onPress={ () => selectAndClose(value) }>
+                    Add
+                  </Button>
+                  <Button type="action" onPress={ resetAndClose }>
+                    Close
+                  </Button>
+                </div>
               </div>
             : <ComboBox 
                 choices={ choices }
