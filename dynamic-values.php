@@ -86,3 +86,12 @@ $fields->register_dynamic_value([
   'settings'   => [],
   'conditions' => [],
 ]);
+
+$fields->register_dynamic_value([
+  'name'       => 'post_number',
+  'label'      => 'Post number',
+  'type'       => 'number',
+  'callback'   => null,
+  'settings'   => [],
+  'conditions' => [],
+]);

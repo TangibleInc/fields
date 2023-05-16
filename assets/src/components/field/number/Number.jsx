@@ -1,4 +1,9 @@
-import { useRef } from 'react'
+import { 
+  useRef,
+  useState,
+  useEffect
+} from 'react'
+
 import { useNumberFieldState } from 'react-stately'
 import { FieldWrapper } from '../../dynamic'
 
@@ -16,6 +21,7 @@ import {
 const Number = props => {
 
   const { locale } = useLocale()
+  const [value, setValue] = useState(props.value ?? '')
   const state = useNumberFieldState({ ...props, locale })
   const inputRef = useRef()
 
@@ -28,6 +34,8 @@ const Number = props => {
     decrementButtonProps
   } = useNumberField(props, state, inputRef)
 
+  useEffect(() => props.onChange && props.onChange(value), [value])
+
   const hasButtons = props.hasButtons ?? true
 
   return(
@@ -37,7 +45,13 @@ const Number = props => {
           { props.label }
         </Label> }
       <div className='tf-number-field' { ...groupProps }>
-        <FieldWrapper { ...props }>
+        <FieldWrapper 
+          { ...props } 
+          value={ value }
+          onValueSelection={ setValue }
+          ref={ inputRef } 
+          inputProps={ inputProps } 
+        >
           <input { ...inputProps} ref={ inputRef } />
           { hasButtons && <div className='tf-number-button-group'>
             <Button type="number" { ...incrementButtonProps }>+</Button>
