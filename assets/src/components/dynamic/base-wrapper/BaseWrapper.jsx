@@ -100,6 +100,19 @@ const BaseWrapper = props => {
     ), {}
   )
 
+  /**
+   * Not sure why, but without a ref the state value is always empty when used inside getValue()
+   */
+  const settingsRef = useRef(settings)
+  const updateSettings = (name, settingValue) => {
+    setSettings(
+      settingsRef.current = {
+        ...settings,
+        [name]: settingValue
+      }
+    )
+  }
+
   return(
     <div className="tf-dynamic-wrapper">
       { props.children }
@@ -122,15 +135,11 @@ const BaseWrapper = props => {
                     <Control
                       { ...field } 
                       value={ settings[field.name] ?? '' }
-                      onChange={ settingValue => setSettings({
-                        ...settings,
-                        [field.name]: settingValue
-                      }) }
-                      // Set it to avoid error, but needs to be implemented
+                      onChange={ settingValue => updateSettings(field.name, settingValue) }
                       visibility={{
-                        condition: false,
-                        action: 'show',
-                        getValue: name => ('')         
+                        condition: field.condition?.condition ?? false,
+                        action: field.condition?.action ?? 'show',
+                        getValue: name => settingsRef.current[name] ?? ''
                       }}
                     />
                   </div>

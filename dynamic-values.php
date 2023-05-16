@@ -46,9 +46,17 @@ $fields->register_dynamic_value([
       'type'    => 'dimensions',
       'name'    => 'dimensions',
       'label'   => 'Dimensions',
-    ],
+      'condition' => [
+        'action'    => 'show',
+        'condition' => [
+          '_or' => [
+            [ 'display' => [ '_eq' => 'url' ] ],
+            [ 'display' => [ '_eq' => 'content' ] ]
+          ]
+        ]
+      ]
+    ]
   ],
-  'conditions' => [],
 ]);
 
 $fields->register_dynamic_value([
