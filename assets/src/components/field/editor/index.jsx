@@ -1,7 +1,8 @@
 import ProseMirror from './ProseMirror.jsx';
 import TinyMce from './TinyMce.jsx';
 
-const Editor = (props) => {
+export default props => {
+  
   const { editor } = props;
 
   if (editor === 'tinymce') {
@@ -11,5 +12,3 @@ const Editor = (props) => {
   }
   
 }
-
-export default Editor;
