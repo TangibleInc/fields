@@ -1,6 +1,7 @@
 import { 
   useRef, 
-  useState 
+  useState,
+  useEffect
 } from 'react'
 
 import { 
@@ -24,6 +25,8 @@ const Date = props => {
 
   const [value, setValue] = useState(props.value ?? '')
 
+  useEffect(() => props.onChange && props.onChange(value), [value])
+  
   const hasFutureOnly = props.futureOnly && props.futureOnly === true
   const dateToday = today(getLocalTimeZone())
   const minValue = hasFutureOnly 
