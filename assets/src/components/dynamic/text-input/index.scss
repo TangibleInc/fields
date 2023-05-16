@@ -20,4 +20,12 @@
       justify-content: center;
     }
   }
+
+  .tf-dynamic-text-item-delete {
+    &:before {
+      content: '\2A2F';
+      padding-left: 3px;
+      cursor: pointer;
+    }
+  }
 }

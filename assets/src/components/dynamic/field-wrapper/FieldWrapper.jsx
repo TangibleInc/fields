@@ -23,7 +23,7 @@ const FieldWrapper = forwardRef(({
 
   return(
     <BaseWrapper
-      config={ props.dynamic ?? false } 
+      config={ props.dynamic ?? false }
       onValueSelection={ dynamicValue => {
         setIsDynamic(true)
         props.onValueSelection(dynamicValue)

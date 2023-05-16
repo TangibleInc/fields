@@ -6,7 +6,7 @@ const dynamicValueToString = (type, settings = false) => {
   
   for( const key in settings ) {
     const value = settings[key]
-    settingsString += `:${key}=${value}` 
+    settingsString += `::${key}=${typeof value === 'object' ? JSON.stringify(value) : value}` 
   }
 
   return `[[${type}${settingsString}]]`
@@ -19,7 +19,7 @@ const stringToDynamicValue = string => {
   const data = string
     .replace('[[', '')
     .replace(']]', '')
-    .split(':')
+    .split('::')
   
   if( data.length === 0 ) return false
 

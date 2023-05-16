@@ -40,7 +40,12 @@ $fields->register_dynamic_value([
         'url'     => 'URL',
         'title'   => 'Title',
         'content' => 'Content'
-      ]
+      ],
+    ],
+    [
+      'type'    => 'dimensions',
+      'name'    => 'dimensions',
+      'label'   => 'Dimensions',
     ],
   ],
   'conditions' => [],

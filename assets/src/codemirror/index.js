@@ -43,10 +43,20 @@ const createInput = (
         matchResults(items) {  
           return new MatchDecorator({
             regexp: dynamicValueRegex,
-            decoration: match => Decoration.replace({
+            decoration: (match, view, from) => Decoration.replace({
               widget: new DynamicString(
                 match[1],
-                getLabel(match[1], items)
+                getLabel(match[1], items),
+                /**
+                 * For deletions, insert can be omitted
+                 * @see https://codemirror.net/examples/change/
+                 */
+                () => view.dispatch({
+                  changes: {
+                    from: from, 
+                    to: from + match[1].length + 4 // value + delimiters
+                  }
+                })
               ),
             })
           })
@@ -106,10 +116,12 @@ const getItemsObject = sections => {
 
 class DynamicString extends WidgetType {
 
-  constructor(slug, label) {
-    super(slug)
-    this.slug = slug
+  constructor(value, label, onRemove) {
+    super(value)
+
+    this.value = value
     this.label = label
+    this.onRemove = onRemove
   }
 
   toDOM() {
@@ -117,8 +129,14 @@ class DynamicString extends WidgetType {
     const span = document.createElement('span')
 
     span.setAttribute('class', 'tf-dynamic-text-item')
-    span.setAttribute('data-id', this.slug)
+    span.setAttribute('data-id', this.value)
     span.textContent = this.label
+        
+    const editButton = document.createElement('span')
+
+    editButton.setAttribute('class', 'tf-dynamic-text-item-delete')
+    editButton.addEventListener('click', this.onRemove)
+    span.appendChild(editButton)
     
     return span
   }
