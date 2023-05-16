@@ -1,7 +1,8 @@
 .tf-dynamic-wrapper {
+  display: flex;
   position: relative;
   width: fit-content;
-  display: flex;
+  align-items: center;
 
   .tf-dynamic-wrapper-popover {
     position: absolute;

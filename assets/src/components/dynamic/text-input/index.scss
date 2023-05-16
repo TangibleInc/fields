@@ -1,6 +1,10 @@
 .tf-dynamic-text-input {
   @include field;
 
+  &:focus-within {
+    border-color: $field-focus-color;
+  }
+  
   & > .cm-editor {
     width: 100%;
     height: 100%;

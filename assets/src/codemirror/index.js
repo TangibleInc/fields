@@ -70,6 +70,18 @@ const createInput = (
         } 
       }), 
       
+      /**
+       * @see https://discuss.codemirror.net/t/changing-the-font-size-of-cm6/2935/6
+       */
+      EditorView.theme({
+        ".cm-scroller": {
+          fontFamily: "inherit",
+          alignItems: "center !important"
+        },
+        "&.cm-editor.cm-focused": {
+          outline: "none"
+        }
+      })
     ]
   })
 )
