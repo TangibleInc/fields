@@ -14,13 +14,13 @@ $fields->register_dynamic_value = function(array $dynamic_value) use($fields) {
 
   if( empty($name) ) return;
 
-  $dynamic_value['settings'] = array_map(function($args) use($fields) {
+  $dynamic_value['fields'] = array_map(function($args) use($fields) {
     return $fields->format_args( 
       $args['name'] ?? '',
       $args,
       false
     );
-  }, $dynamic_value['settings'] ?? []);
+  }, $dynamic_value['fields'] ?? []);
 
   $fields->dynamic_values[ $name ] = $dynamic_value;
 };
@@ -30,7 +30,7 @@ $fields->register_dynamic_value([
   'label'    => 'Post parent',
   'type'     => 'text',
   'callback' => null,
-  'settings' => [
+  'fields'   => [
     [
       'type'    => 'select',
       'name'    => 'display',
@@ -65,7 +65,7 @@ $fields->register_dynamic_value([
   'type'       => 'text',
   'type'       => 'text',
   'callback'   => null,
-  'settings'   => [],
+  'fields'     => [],
   'conditions' => [],
 ]);
 
@@ -74,7 +74,7 @@ $fields->register_dynamic_value([
   'label'      => 'Post color',
   'type'       => 'color',
   'callback'   => null,
-  'settings'   => [],
+  'fields'     => [],
   'conditions' => [],
 ]);
 
@@ -83,7 +83,7 @@ $fields->register_dynamic_value([
   'label'      => 'Post date',
   'type'       => 'date',
   'callback'   => null,
-  'settings'   => [],
+  'fields'     => [],
   'conditions' => [],
 ]);
 
@@ -92,6 +92,6 @@ $fields->register_dynamic_value([
   'label'      => 'Post number',
   'type'       => 'number',
   'callback'   => null,
-  'settings'   => [],
+  'fields'     => [],
   'conditions' => [],
 ]);

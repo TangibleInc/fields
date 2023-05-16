@@ -66,7 +66,7 @@ const BaseWrapper = props => {
 
     if( ! valueName ) return;
 
-    const args = dynamics[ valueName ]?.settings
+    const args = dynamics[ valueName ]?.fields
     setValue(valueName)
 
     if( ! Array.isArray(args) || args.length === 0 ) {

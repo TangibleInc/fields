@@ -32,8 +32,8 @@ const stringToDynamicValue = string => {
       
       return {
         ...response,
-        settings: {
-          ...response.settings,
+        fields: {
+          ...response.fields,
           [setting[0]]: setting[1]
         }
       } 
