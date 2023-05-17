@@ -1,6 +1,7 @@
 import { uniqid } from '../../utils'
 
 const repeaterDispatcher = (emptyItem, maxLength) => (items, action) => {
+  if( action.callback ) setTimeout(action.callback) // Trigger callback after state change
   switch (action.type) {
     case 'add':
       return items.length >= maxLength
@@ -19,14 +20,14 @@ const repeaterDispatcher = (emptyItem, maxLength) => (items, action) => {
       return [...items]
     case 'clone':
       return items.length >= maxLength
-      ? items
-      : [
-          ...items,
-          {
-            ...(action.item),
-            key: uniqid(),
-          },
-        ]
+        ? items
+        : [
+            ...items,
+            {
+              ...(action.item),
+              key: uniqid(),
+            },
+          ]
     case 'clear':
       return []
     default:

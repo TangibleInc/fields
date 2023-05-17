@@ -195,7 +195,7 @@ const Block = ({
         > 
           { getRow(item).map(
             control => ( 
-              <div class="tf-repeater-block-item-field">
+              <div className="tf-repeater-block-item-field">
                 { getControl(control, item, i) }
               </div>  
             ) 

@@ -29,7 +29,7 @@ const Accordion = props => {
     : null
   
   return(
-    <div class='tf-accordion'>
+    <div className='tf-accordion'>
       <ExpandablePanel 
         title={ props.title ?? false }  
         headerLeft={ headerLeft }

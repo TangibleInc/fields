@@ -38,7 +38,7 @@ const Popover = forwardRef(({
         ) }
         ref={ ref }
         style={ style }
-        class="tf-popover"
+        className="tf-popover"
       >
         { children }
         <DismissButton onDismiss={ onClose } />

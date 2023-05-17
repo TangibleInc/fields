@@ -63,7 +63,7 @@ class Format_TestCase extends WP_UnitTestCase {
 		$this->assertEquals($expected, $args['type'] ?? null);
 	}
 
-	private function _test_format_args_types_data() {
+	public function _test_format_args_types_data() {
 		return [
 			'unknown' => ['unknown', 'unknown'],
 			'button_group' => ['alignment_matrix', 'alignment-matrix'],
@@ -87,10 +87,10 @@ class Format_TestCase extends WP_UnitTestCase {
 	 * @dataProvider _test_format_args_type_attributes_data
 	 */
 	public function test_format_args_type_attributes(string $type, array $expected) {
-		$args = tangible_fields()->format_args('test', [
-			'type' => $type,
-			...$expected
-		]);
+		$args = tangible_fields()->format_args('test', 
+      [ 'type' => $type ]
+      + $expected
+    );
 
 		foreach ($expected as $name => $attribute) {
 			$this->assertEquals($attribute, $args[$attribute], "$name should have been rewritten as $attribute");
@@ -98,7 +98,7 @@ class Format_TestCase extends WP_UnitTestCase {
 		}
 	}
 
-	private function _test_format_args_type_attributes_data() {
+	public function _test_format_args_type_attributes_data() {
 		return [
 			// type, [from => to, from => to...]
 			'color_picker' => ['color_picker', [
@@ -142,15 +142,15 @@ class Format_TestCase extends WP_UnitTestCase {
 		$this->assertGreaterThan(0, did_action('wp_enqueue_media'), 'wp_enqueue_media was not called');
 	}
 
-  public function test_format_args_file_ensure_wp_enqueue_media() {
+  public function test_format_args_file_ensure_wp_enqueue_media() {    
     $args = tangible_fields()->format_args('test', [
-			'type' => 'file',
+			'type'     => 'file',
+      'wp_media' => false
 		]);
     $this->assertEquals(0, did_action('wp_enqueue_media'), 'wp_enqueue_media was called');
 
     $args = tangible_fields()->format_args('test', [
 			'type' => 'file',
-      'wp_media' => true
 		]);
     $this->assertGreaterThan(0, did_action('wp_enqueue_media'), 'wp_enqueue_media was not called');
   }
@@ -168,7 +168,7 @@ class Format_TestCase extends WP_UnitTestCase {
 		$this->assertEquals('default', $args['value']);
 	}
 
-  private function _test_format_groups_args_data() {
+  public function _test_format_groups_args_data() {
     return [
       ['repeater'],
       ['accordion'],

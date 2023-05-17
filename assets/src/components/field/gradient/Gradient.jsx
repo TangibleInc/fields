@@ -109,15 +109,15 @@ const Gradient = props => {
   }
 
   return(
-    <div class="tf-gradient">
+    <div className="tf-gradient">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <div class="tf-gradient-container">
+      <div className="tf-gradient-container">
         <input 
           type="text" 
-          class="tf-gradient-input" 
+          className="tf-gradient-input"
           value={ generateGradient() } 
           onClick={ e => isOpen(true) }
         />
@@ -131,14 +131,14 @@ const Gradient = props => {
         { open && 
           <Popover ref={ gradientPopover }>
             <FocusScope autoFocus>
-              <div class="tf-gradient-popover">
-                <div class="tf-gradient-preview" style={{ 
+              <div className="tf-gradient-popover">
+                <div className="tf-gradient-preview" style={{
                   background: generateGradient()  
                 }}>
-                  <div class="tf-gradient-colors">
+                  <div className="tf-gradient-colors">
                     { value.colors?.map((color, i) => (
                       <div 
-                        class="tf-gradient-color tf-color-area-thumb"
+                        className="tf-gradient-color tf-color-area-thumb"
                         style={{ background: value.colors[i] }} 
                         onClick={ () => setEditColor(i) }
                       />
@@ -154,8 +154,8 @@ const Gradient = props => {
                       />
                   </Popover> }
                 </div>
-                <div class="tf-gradient-settings">
-                  <div class="tf-gradient-settings-row">
+                <div className="tf-gradient-settings">
+                  <div className="tf-gradient-settings-row">
                     <Select
                       label={ 'Gradient type' } 
                       selectedKey={ value.type ?? 'linear' } 
@@ -168,7 +168,7 @@ const Gradient = props => {
                   </div>
                   <div>
                     { value.type === 'linear' &&
-                      <div class="tf-gradient-settings-row">
+                      <div className="tf-gradient-settings-row">
                         <Number
                           label={ 'Angle' }
                           value={ value.angle ?? 45 }
@@ -176,7 +176,7 @@ const Gradient = props => {
                         /> 
                       </div> }
                     { value.type === 'radial' &&
-                      <div class="tf-gradient-settings-row">
+                      <div className="tf-gradient-settings-row">
                         <Select 
                           label={ 'Shape' }
                           selectedKey={ value.shape ?? 'ellipse' } 

@@ -25,36 +25,36 @@ const ExpandablePanel = props => {
   classes += props.class ? ` ${props.class}` : ''
   
   return ( 
-    <div class={ classes } data-status={ showItem ? 'open' : 'closed' }>
-      <div class="tf-panel-header" onClick={ toggle }>
-        <div class="tf-panel-header-left">
+    <div className={ classes } data-status={ showItem ? 'open' : 'closed' }>
+      <div className="tf-panel-header" onClick={ toggle }>
+        <div className="tf-panel-header-left">
           { props.headerLeft 
-            ? <div class="tf-panel-header-before-title">
+            ? <div className="tf-panel-header-before-title">
                 { props.headerLeft }
               </div>
             : null }
           { props.title 
-            ? <div class="tf-panel-header-title">
+            ? <div className="tf-panel-header-title">
                 <strong>{ props.title }</strong>
               </div>
             : null }
         </div>
-        <div class="tf-panel-header-right">
+        <div className="tf-panel-header-right">
           { props.headerRight 
-            ? <div class="tf-panel-header-before-title">
+            ? <div className="tf-panel-header-before-title">
                 { props.headerRight }
               </div>
             : null }
-          <span class="tf-panel-arrow" />
+          <span className="tf-panel-arrow" />
         </div>
       </div>
       { showItem || props?.behavior === 'hide'
-        ? <div class='tf-panel-content'>
+        ? <div className='tf-panel-content'>
             { props.children }
           </div> 
         : null }
       { props.footer 
-        ? <div class='tf-panel-footer'>
+        ? <div className='tf-panel-footer'>
             { props.footer }
           </div> 
         : null }
