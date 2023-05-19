@@ -61,7 +61,7 @@ $fields->format_args = function(
       break;
 
     case 'wysiwyg':
-      wp_enqueue_editor();
+      if( isset($args['editor']) && $args['editor'] === 'tinymce' ) wp_enqueue_editor();
       break;
     
     case 'gallery':
