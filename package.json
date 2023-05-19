@@ -12,22 +12,22 @@
     "env": "wp-env",
     "env:start": "wp-env start",
     "env:test": "FOLDER=`basename $PWD`; wp-env run tests-wordpress /var/www/html/wp-content/plugins/$FOLDER/vendor/bin/phpunit -c /var/www/html/wp-content/plugins/$FOLDER/phpunit.xml --verbose",
-    "env:test:7.4": "WP_ENV_PHP_VERSION=7.4 wp-env start && npm run env:test", 
-    "env:test:8.2": "WP_ENV_PHP_VERSION=8.2 wp-env start && npm run env:test", 
+    "env:test:7.4": "WP_ENV_PHP_VERSION=7.4 wp-env start && npm run env:test",
+    "env:test:8.2": "WP_ENV_PHP_VERSION=8.2 wp-env start && npm run env:test",
     "env:stop": "wp-env stop",
     "env:destroy": "wp-env destroy"
   },
   "dependencies": {
     "@codemirror/view": "^6.4.0",
     "@react-aria/color": "^3.0.0-beta.17",
+    "prosemirror-example-setup": "^1.2.2",
+    "prosemirror-model": "^1.19.1",
+    "prosemirror-schema-basic": "^1.2.2",
+    "prosemirror-schema-list": "^1.2.3",
+    "prosemirror-state": "^1.4.3",
+    "prosemirror-view": "^1.31.3",
     "react-aria": "^3.20.0",
-    "react-stately": "^3.18.0",
-    "prosemirror-example-setup": "^1.2.1",
-    "prosemirror-model": "^1.19.0",
-    "prosemirror-schema-basic": "^1.2.1",
-    "prosemirror-schema-list": "^1.2.2",
-    "prosemirror-state": "^1.4.2",
-    "prosemirror-view": "^1.30.2"
+    "react-stately": "^3.18.0"
   },
   "devDependencies": {
     "@tangible/roller": "^1.4.7",
