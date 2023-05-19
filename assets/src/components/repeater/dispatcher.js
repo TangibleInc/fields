@@ -30,6 +30,27 @@ const repeaterDispatcher = (emptyItem, maxLength) => (items, action) => {
           ]
     case 'clear':
       return []
+    /**
+     * Bulk actions are only supported by the Block layout for now, but
+     * should be implemented into the Table layout as well at some point
+     * 
+     * @see ./common/BulkActions.jsx
+     */
+    case 'bulkCheck':
+      return items.map(item => ({...item, _bulkCheckbox: true}))
+    case 'bulkUncheck':
+      return items.map(item => ({...item, _bulkCheckbox: false}))
+    case 'bulkUpdate':
+      return items.map(item => (
+        item._bulkCheckbox === true
+          ? {
+              ...item,
+              [action.control]: action.value
+            }
+          : item
+      ))
+    case 'bulkRemove':
+      return items.filter(item => (item._bulkCheckbox !== true))
     default:
       return items
   }
