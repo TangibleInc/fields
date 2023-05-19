@@ -62,7 +62,7 @@ $fields->format_args = function(
       break;
 
     case 'wysiwyg':
-      wp_enqueue_editor();
+      if( isset($args['editor']) && $args['editor'] === 'tinymce' ) wp_enqueue_editor();
       break;
     
     case 'gallery':
@@ -80,7 +80,7 @@ $fields->format_args = function(
       break;
     
     case 'file':
-      if( isset( $args['wp_media'] ) && $args['wp_media'] ) wp_enqueue_media();
+      if( !isset( $args['wp_media'] ) || $args['wp_media'] ) wp_enqueue_media();
       $args = $fields->format_value($args, 'mime_types', 'mimeTypes');
       $args = $fields->format_value($args, 'max_upload', 'maxUpload');
       break;
@@ -88,6 +88,9 @@ $fields->format_args = function(
     case 'repeater':
       if( empty($args['value']) ) $args['value'] = '';
       $args = $fields->format_groups($type, $args);
+      $args = $fields->format_value($args, 'use_switch', 'useSwitch');
+      $args = $fields->format_value($args, 'use_bulk', 'useBulk');
+      $args = $fields->format_value($args, 'section_title', 'sectionTitle');
       break;
     
     case 'field_group':

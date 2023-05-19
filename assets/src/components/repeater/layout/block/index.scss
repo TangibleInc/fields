@@ -1,3 +1,10 @@
 .tf-repeater-block-items {
   margin-top: 1em;
+
+  // not ideal but it will do until we change the css of the switch component to be able to change its size
+  .tf-panel-header .tf-switch-element,
+  .tf-panel-header .tf-switch-element-selected {
+    transform: scale(0.7);
+  }
 }
+

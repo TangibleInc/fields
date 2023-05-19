@@ -21,9 +21,11 @@ const TextArea = (props) => {
       <textarea
         {...inputProps}
         maxLength={props.maxlength}
+        minLength={props.minlength}
         required={props.required}
         rows={props.rows}
         ref={ref}
+        data-identifier={props.identifier ?? ''}
       ></textarea>
       {props.description && (
         <Description {...descriptionProps}>{props.description}</Description>
