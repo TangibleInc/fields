@@ -143,6 +143,14 @@ class Format_TestCase extends WP_UnitTestCase {
     $this->assertGreaterThan(0, did_action('wp_enqueue_editor'), 'wp_enqueue_editor was not called');
 	}
 
+  public function test_format_args_number_ensure_min_value() {
+		$args = tangible_fields()->format_args('test', [
+			'type' => 'number',
+			'min'  => '10',
+		]);
+		$this->assertEquals('10', $args['value'], 'value is not equal to min_value');
+	}
+
 	public function test_format_args_gallery_ensure_wp_enqueue_media() {
 		$args = tangible_fields()->format_args('test', [
 			'type' => 'gallery',
