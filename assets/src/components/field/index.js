@@ -17,8 +17,8 @@ import InputHidden from './hidden/InputHidden'
 import Number from './number/Number'
 import Radio from './radio/'
 import Select from './select/'
-import SimpleDimension from "./simple-dimension/SimpleDimension";
-import Switch from './switch/Switch'
+import SimpleDimension from './simple-dimension/SimpleDimension'
+import Switch from './switch/'
 import Text from './text/Text'
 import TextArea from './textarea/TextArea'
 
