@@ -1,0 +1,19 @@
+.tf-repeater-bulk-actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: calc(100% - 24px); // Shound't have to do this
+  margin-bottom: 4px;
+    
+  border: $field-border;
+  border-radius: $field-border-radius;
+  background: $field-background;
+  padding: $field-padding;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  & > div,
+  & > button {
+    margin-right: 5px;
+  }
+}

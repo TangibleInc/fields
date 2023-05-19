@@ -118,11 +118,23 @@ const Repeater = props => {
     />
   )
 
-  useEffect(() => props.onChange(items), [items])
+  /**
+   * There are some values we don't want to save (like the bulk action checbox)
+   */
+  const getSavedValue = () => (
+    items.map(
+      ({
+        _bulkCheckbox, 
+        ...item
+      }) => item
+    )
+  )
+
+  useEffect(() => props.onChange && props.onChange( getSavedValue() ), [items])
 
   return(
     <div className={ `tf-repeater tf-repeater-${layout}`}>
-      <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(items) } />
+      <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(getSavedValue()) } />
       {props.label && <Title level={2} className='tf-repeater-title'>{ props.label }</Title>}
       <Layout
         items={ items }
@@ -131,6 +143,9 @@ const Repeater = props => {
         getRow={ getRow }
         getControl={ getControl }
         maxLength = { repeatable ? maxLength : undefined }
+        title={ props.sectionTitle ?? '' }
+        useSwitch={ props.useSwitch }
+        useBulk={ props.useBulk }
       />
       { repeatable && (
         <div className="tf-repeater-actions">

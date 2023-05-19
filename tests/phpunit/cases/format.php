@@ -132,7 +132,15 @@ class Format_TestCase extends WP_UnitTestCase {
 		$args = tangible_fields()->format_args('test', [
 			'type' => 'wysiwyg',
 		]);
-		$this->assertGreaterThan(0, did_action('wp_enqueue_editor'), 'wp_enqueue_editor was not called');
+
+		$this->assertEquals(0, did_action('wp_enqueue_editor'), 'wp_enqueue_editor was called but editor type was not tinymce');
+
+    $args = tangible_fields()->format_args('test', [
+			'type'   => 'wysiwyg',
+      'editor' => 'tinymce'
+		]);
+
+    $this->assertGreaterThan(0, did_action('wp_enqueue_editor'), 'wp_enqueue_editor was not called');
 	}
 
 	public function test_format_args_gallery_ensure_wp_enqueue_media() {
