@@ -54,12 +54,15 @@ $fields->enqueue = function() use($fields) {
       ],
     ],
     'fields'    => $fields->enqueued_fields,
-    'dynamics'  => $fields->dynamic_values,
     'dependents'=> $fields->get_dependent_contexts($fields->enqueued_fields),
+    'dynamics'  => [
+      'values'     => $fields->dynamic_values,
+      'categories' => $fields->dynamic_values_categories
+    ],
     'mimetypes' => get_allowed_mime_types()
   ];
 
-  wp_localize_script( 'tangible-fields', 'TangibleFields', $data );
+  wp_add_inline_script( 'tangible-fields', 'var TangibleFields = ' . json_encode($data), 'before' );
 
   $fields->is_enqueued = true;
 };

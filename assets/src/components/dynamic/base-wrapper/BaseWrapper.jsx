@@ -1,7 +1,8 @@
 import { 
   useState,
   useEffect,
-  useRef
+  useRef,
+  useMemo
 } from 'react'
 
 import { 
@@ -66,7 +67,7 @@ const BaseWrapper = props => {
 
     if( ! valueName ) return;
 
-    const args = dynamics[ valueName ]?.fields
+    const args = dynamics.values[ valueName ]?.fields
     setValue(valueName)
 
     if( ! Array.isArray(args) || args.length === 0 ) {
@@ -94,16 +95,37 @@ const BaseWrapper = props => {
     state.close()
   }
 
-  const choices = Object.keys(dynamics).reduce(
-    (choices, key) => (
-      props.config.getTypes().includes(dynamics[key]?.type)
-      ? {
+  /**
+   * Create an array usable by a combobox list that contains the dynamic values available
+   */
+  const choices = useMemo(() => {
+    
+    const allowedTypes = props.config.getTypes()
+    const categoryKeys = Object.keys(dynamics.categories)
+
+    const categories = categoryKeys.map(categoryKey => {
+      
+      const category = dynamics.categories[ categoryKey ]
+      const categoryChoices = Object.keys(dynamics.values)
+        .filter(value => (
+          category.values.includes(value) && allowedTypes.includes(dynamics.values[value]?.type)
+        ))
+        .reduce((choices, key) => ({
           ...choices,
-          [key]: dynamics[key].label ?? key
-        } 
-      : choices
-    ), {}
-  )
+          [key]: dynamics.values[key].label ?? key
+        }), {},)
+      
+      return {
+        name: category.label,
+        choices: categoryChoices
+      }
+    })
+
+    // Remove empty categories
+    return categories.filter(category => (
+      Object.keys(category.choices).length !== 0
+    ))
+  })
 
   /**
    * Not sure why, but without a ref the state value is always empty when used inside getValue()

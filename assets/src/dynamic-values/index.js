@@ -28,9 +28,9 @@ const getDynamicStrings = string => (
  */
 const dynamicValuesAPI = (value, setValue, types) => ({
   getTypes  : () => types,
-  getList   : () => dynamics,
+  getList   : () => dynamics.values,
   getAll    : () => getDynamicStrings(value).map(stringToDynamicValue),
-  getLabel  : type => dynamics[type] ? dynamics[type].label : type,
+  getLabel  : type => dynamics.values[type] ? dynamics.values[type].label : type,
   stringify : dynamicValueToString,
   parse     : stringToDynamicValue,
   hasValues : () => getDynamicStrings(value).length !== 0,
