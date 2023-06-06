@@ -54,6 +54,7 @@ $fields->format_args = function(
       break;
 
     case 'number':
+      $args['value'] = !empty( $args['value'] ) ? $args['value'] : $args['min'] ?? 0;
       $args = $fields->format_value($args, 'min', 'minValue');
       $args = $fields->format_value($args, 'max', 'maxValue');
       $args = $fields->format_dynamic_types($args, ['number']);
