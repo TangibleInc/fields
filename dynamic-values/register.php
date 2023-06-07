@@ -50,6 +50,9 @@ $fields->set_dynamic_value_category = function(
   $fields->dynamic_values_categories[ $category ]['values'] []= $name; 
 };
 
+/**
+ * TODO: Add an argument to condtionnaly use category accoring to a callback (if plugin installed for example) 
+ */
 $fields->register_dynamic_value_category = function(
   string $name, 
   array $args
