@@ -59,7 +59,7 @@ $fields->enqueue = function() use($fields) {
     'mimetypes' => get_allowed_mime_types()
   ];
 
-  wp_add_inline_script( 'tangible-fields', 'var TangibleFields = ' . json_encode($data), 'before' );
+  wp_add_inline_script( 'tangible-fields', 'var TangibleFields = ' . json_encode($data) . ';', 'before' );
 
   $fields->is_enqueued = true;
 };
