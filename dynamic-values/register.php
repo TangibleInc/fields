@@ -55,7 +55,7 @@ $fields->set_dynamic_value_category = function(
  */
 $fields->register_dynamic_value_category = function(
   string $name, 
-  array $args
+  array $args = []
 ) use($fields) : void {
   
   if( isset($fields->dynamic_values_categories[ $name ]) ) {
@@ -66,7 +66,8 @@ $fields->register_dynamic_value_category = function(
   }
 
   $fields->dynamic_values_categories[ $name ] = [
-    'label'  => $args['label'],
+    'name'   => $name,
+    'label'  => $args['label'] ?? $name,
     'values' => [],
   ] + $args;
 };
