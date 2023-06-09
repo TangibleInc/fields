@@ -41,6 +41,13 @@ $fields->parse_dynamic_value_string = function(string $string) use($fields) : ar
   $response['name'] = $data[0];
   $response['settings'] = [];
 
+  $registered_fields = $fields->dynamic_values[ $data[0] ]['fields'] ?? false;
+
+  if( empty($registered_fields) ) return $response;
+
+  // Make sure to set empty value in case not set from string
+  foreach( $registered_fields as $field ) $response['settings'][ $field['name'] ] = '';
+
   if( count($data) === 1 ) return $response;
 
   return array_reduce(
