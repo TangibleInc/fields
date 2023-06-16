@@ -13,7 +13,8 @@ $fields->register_dynamic_value([
   'type'     => 'text',
   'callback' => function() {
     return get_current_user_id();
-  }
+  },
+  'permission_callback' => '__return_true'
 ]);
 
 $fields->register_dynamic_value([
@@ -49,5 +50,9 @@ $fields->register_dynamic_value([
       'name'    => 'meta_name',
       'label'   => 'Meta name'
     ]
-  ]
+  ],
+  'permission_callback_store' => function() {
+    return in_array('administrator', wp_get_current_user()->roles ?? []);
+  },
+  'permission_callback_parse' => '__return_true'
 ]);

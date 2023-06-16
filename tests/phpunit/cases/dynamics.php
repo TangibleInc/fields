@@ -138,7 +138,9 @@ class Dynamics_TestCase extends WP_UnitTestCase {
       'category' => 'test-category',
       'callback' => function() {
         return 'parsed_value';
-      }
+      },
+      'permission_callback_store' => '__return_true',
+      'permission_callback_parse' => '__return_true'
     ]);
     
     $parsed_value = $fields->render_value('Dynamic value: [[test-value-render]]');
@@ -148,12 +150,66 @@ class Dynamics_TestCase extends WP_UnitTestCase {
   function test_dynamic_value_render_unregistered() {
     
     $fields = tangible_fields();
-    $parsed_value = $fields->render_value('Unregistered dynamic value: [[unregistered-dynamic-value]]');
+
+    $value = 'Unregistered dynamic value: [[unregistered-dynamic-value]]';
+    $parsed_value = $fields->render_value($value);
     
     $this->assertEquals(
       $parsed_value, 
-      'Unregistered dynamic value: [[unregistered-dynamic-value]]', 
+      'Unregistered dynamic value: ', 
       'unregistered dynamic value was parsed'
+    );
+
+    $fields->register_field('store-unregistered-dynamic-value', 
+      [ 'permission_callback' => '__return_true' ]
+      + $fields->_store_callbacks['memory']()
+    );
+
+    $fields->store_value('store-unregistered-dynamic-value', $value);
+    
+    $this->assertEquals(
+      $fields->fetch_value('store-unregistered-dynamic-value'),
+      'Unregistered dynamic value: ', 
+      'Unregistered dynamic value was stored'
+    );
+  }
+
+  /**
+   * @depends test_dynamic_value_category_registration
+   */
+  function test_dynamic_value_render_unauthorized() {
+    
+    $fields = tangible_fields();
+    $fields->register_dynamic_value([
+      'name'     => 'unauthorized-dynamic-value',
+      'category' => 'test-category',
+      'callback' => function() {
+        return 'parsed_value';
+      },
+      'permission_callback_store' => '__return_false',
+      'permission_callback_parse' => '__return_false'
+    ]);
+
+    $value = 'Unauthorized dynamic value: [[unauthorized-dynamic-value]]';
+    $parsed_value = $fields->render_value($value);
+
+    $this->assertEquals(
+      $parsed_value,
+      'Unauthorized dynamic value: ', 
+      'unauthorized dynamic value was parsed'
+    );
+
+    $fields->register_field('store-unauthorized-dynamic-value', 
+      [ 'permission_callback' => '__return_true' ]
+      + $fields->_store_callbacks['memory']()
+    );
+
+    $fields->store_value('store-unauthorized-dynamic-value', $value);
+    
+    $this->assertEquals(
+      $fields->fetch_value('store-unauthorized-dynamic-value'),
+      'Unauthorized dynamic value: ', 
+      'unauthorized dynamic value was stored'
     );
   }
 
@@ -176,7 +232,9 @@ class Dynamics_TestCase extends WP_UnitTestCase {
         return $settings['return_value_1'] === 'yes'
           ? 'value_1'
           : 'value_2';
-      }
+      },
+      'permission_callback_store' => '__return_true',
+      'permission_callback_parse' => '__return_true'
     ]);
 
     $parsed_value = $fields->render_value('[[test-value-with-settings]]');

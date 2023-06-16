@@ -2,16 +2,11 @@
 
 defined('ABSPATH') or die();
 
-/**
- * TODO: pass to JS to be sure to use the same regex everywhere
- */
-$fields->dynamic_value_regex = '/\[\[([A-Za-zÀ-ú0-9_\- ]+(?!\[)[^\[\]]*)\]\]/';
-
 $fields->render_value = function(string $raw_value) use($fields) : string {
   return preg_replace_callback(
     $fields->dynamic_value_regex, 
     $fields->render_dynamic_value, 
-    $raw_value
+    $fields->strip_unauthorized_dynamic_values($raw_value, 'parse')
   );
 };
 
