@@ -1,131 +1,44 @@
-// spacers
-$global-spacer-xs: 4px;
-$global-spacer-sm: 8px;
+@import '../default/variables.scss';
 
-// colors
+// We only need to define the variables we need to overwrite 
 $global-theme-color: var(--wp-admin-theme-color, #3858E9);
 $global-theme-color-darker-10: var(--wp-components-color-accent-darker-10, var(--wp-admin-theme-color-darker-10, #006ba1));
-$global-theme-color-lighter-05: #E2E7FF;
 
 $global-theme-gray-30: #8c8f94;
-$global-theme-gray-40: #787c82;
-$global-theme-gray-100: #101517;
 
-$field-padding: 6px 8px;
 $field-height: 35px;
 $field-width: 100%;
-$field-border-width: 1px;
-$field-border-style: solid;
 $field-border-color: $global-theme-gray-30;
 $field-border: $field-border-width $field-border-style $field-border-color;
 $field-border-radius: 2px;
-$field-background: #fff;
 $field-focus-color: $global-theme-color;
 $field-font-size: 16px;
-$field-font-style: inherit;
-$field-font-weight: inherit;
-$field-font-color: $global-theme-gray-100;
-$field-placeholder-color: $global-theme-gray-40;
 
 $label-font-size: 11px;
-$label-font-style: inherit;
 $label-font-weight: 500;
-$label-font-color: $global-theme-gray-100;
 $label-text-transform: uppercase;
-$label-spacer: $global-spacer-sm;
 
 $description-font-size: 12px;
-$description-font-style: inherit;
-$description-font-weight: inherit;
 $description-font-color: $global-theme-gray-40;
 $description-margin-top: $global-spacer-sm;
-$description-margin-bottom: revert;
 
-$button-background: white;
 $button-border-color: $global-theme-color;
-$button-border-type: solid;
-$button-border-size: 1px;
 $button-border: $button-border-size $button-border-type $button-border-color;
 $button-border-radius: 2px;
 $button-color: $global-theme-color;
 $button-padding: 6px 12px;
 $button-height: 36px;
 
-$button-background--hover: white;
 $button-border-color--hover: $global-theme-color-darker-10;
 $button-color--hover: $global-theme-color-darker-10;
 
-$popover-index: 900;
+@import '../default/mixins.scss';
 
-@mixin field {
-  padding: $field-padding;
-  height: $field-height;
-  width: $field-width;
-  box-sizing: border-box;
-  border: $field-border;
-  border-radius: $field-border-radius;
-  background: $field-background;
-  color: $field-font-color;
-  font-size: $field-font-size;
-  font-style: $field-font-style;
-  font-weight: $field-font-weight;
-
-  &::placeholder {
-    color: $field-placeholder-color;
-    font-size: $field-font-size;
-    font-style: $field-font-style;
-    font-weight: $field-font-weight;      
-  }
-}
-
+// We only need to defined the mixin we need to overwrite
 @mixin field-focus {
   border-color: $field-focus-color;
   box-shadow: 0 0 0 1px $field-focus-color;
   outline: 2px solid transparent;
-}
-
-@mixin label {
-  color: $label-font-color;
-  font-size: $label-font-size;
-  font-style: $label-font-style;
-  font-weight: $label-font-weight;  
-	text-transform: $label-text-transform;
-  margin-bottom: $label-spacer;
-}
-
-@mixin description {
-  color: $description-font-color;
-  font-size: $description-font-size;
-  font-style: $description-font-style;
-  font-weight: $description-font-weight;
-  margin-top: $description-margin-top;
-  margin-bottom: $description-margin-bottom;
-}
-
-@mixin button {
-  box-sizing: border-box;
-  background: $button-background;
-  border: $button-border;
-  border-radius: $button-border-radius;
-  color: $button-color;
-  padding: $button-padding;
-  height: $button-height;
-  cursor: pointer;
-  transition-property: color, background-color, border-color;
-  transition-duration: 0.2s;
-  transition-timing-function: ease-in-out;
-  
-  &:hover {
-    background: $button-background--hover;
-    border-color: $button-border-color--hover;
-    color: $button-color--hover;
-  }
-}
-
-@mixin button-disabled {
-  cursor: not-allowed;
-  pointer-events: none;
-  opacity: 0.5;
 }
 
 .tf-context-wp {

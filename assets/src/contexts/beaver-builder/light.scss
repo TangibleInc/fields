@@ -1,75 +1,11 @@
-// spacers
-$global-spacer-xs: 4px;
-$global-spacer-sm: 8px;
+@import '../default/variables.scss';
 
-// colors
-$global-theme-color: #4b84ce;
-$global-theme-color-darker-10: #31609e;
-$global-theme-color-lighter-05: #E2E7FF;
-
-$global-theme-gray-30: #d3d3d3;
-$global-theme-gray-40: #787c82;
-$global-theme-gray-100: #101517;
-
+// We only need to define the variables we need to overwrite 
 $field-padding: 0 12px;
-$field-height: 32px;
-$field-width: 192px;
-$field-border: solid 1px #d3d3d3;
-$field-border-width: 1px;
-$field-border-radius: 4px;
-$field-border-style: solid;
-$field-background: white;
-$field-focus-color: #4b84ce;
-$field-font-size: inherit;
-$field-font-style: inherit;
-$field-font-weight: inherit;
-$field-font-color: inherit;
-$field-placeholder-color: inherit;
 
-$label-font-size: inherit;
-$label-font-style: inherit;
-$label-font-weight: inherit;
-$label-font-color: inherit;
-$label-spacer: revert;
+@import '../default/mixins.scss';
 
-$description-font-size: inherit;
-$description-font-style: inherit;
-$description-font-weight: inherit;
-$description-font-color: inherit;
-
-$button-background: white;
-$button-border-color: #d3d3d3;
-$button-border-type: solid;
-$button-border-size: 1px;
-$button-border: $button-border-type $button-border-size $button-border-color;
-$button-border-radius: 4px;
-$button-color: #505050;
-$button-padding: 0 12px;
-$button-height: 32px;
-
-$popover-index: 900;
-
-@mixin field {
-  padding: $field-padding;
-  height: $field-height;
-  width: $field-width;
-  border: $field-border;
-  border-radius: $field-border-radius;
-  background: $field-background;
-
-  color: $field-font-color;
-  font-size: $field-font-size;
-  font-style: $field-font-style;
-  font-weight: $field-font-weight;
-
-  &::placeholder {
-    color: $field-placeholder-color;
-    font-size: $field-font-size;
-    font-style: $field-font-style;
-    font-weight: $field-font-weight;      
-  }
-}
-
+// We only need to defined the mixins we need to overwrite
 @mixin field-focus {
   border-color: $field-focus-color;
 }
@@ -98,8 +34,3 @@ $popover-index: 900;
   cursor: pointer;
 }
 
-@mixin button-disabled {
-  cursor: not-allowed;
-  pointer-events: none;
-  opacity: 0.5;
-}
