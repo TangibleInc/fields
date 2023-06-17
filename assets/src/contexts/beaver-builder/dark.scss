@@ -1,0 +1,106 @@
+// spacers
+$global-spacer-xs: 4px;
+$global-spacer-sm: 8px;
+
+// colors
+$global-theme-color: #4b84ce;
+$global-theme-color-darker-10: #31609e;
+$global-theme-color-lighter-05: #E2E7FF;
+
+$global-theme-gray-30: #d3d3d3;
+$global-theme-gray-40: #787c82;
+$global-theme-gray-100: #101517;
+
+$field-padding: 0 12px;
+$field-height: 32px;
+$field-width: 192px;
+$field-border: solid 1px #64666a;
+$field-border-width: 1px;
+$field-border-radius: 4px;
+$field-border-style: solid;
+$field-background: #181b20;
+$field-focus-color: #4b84ce;
+$field-font-size: inherit;
+$field-font-style: inherit;
+$field-font-weight: inherit;
+$field-font-color: inherit;
+$field-placeholder-color: inherit;
+
+$label-font-size: inherit;
+$label-font-style: inherit;
+$label-font-weight: inherit;
+$label-font-color: inherit;
+$label-spacer: revert;
+
+$description-font-size: inherit;
+$description-font-style: inherit;
+$description-font-weight: inherit;
+$description-font-color: inherit;
+
+$button-background: #2c333a;
+$button-border-color: #64666a;
+$button-border-type: solid;
+$button-border-size: 1px;
+$button-border: $button-border-type $button-border-size $button-border-color;
+$button-border-radius: 4px;
+$button-color: white;
+$button-padding: 0 12px;
+$button-height: 32px;
+
+$popover-index: 900;
+
+@mixin field {
+  padding: $field-padding;
+  height: $field-height;
+  width: $field-width;
+  border: $field-border;
+  border-radius: $field-border-radius;
+  background: $field-background;
+
+  color: $field-font-color;
+  font-size: $field-font-size;
+  font-style: $field-font-style;
+  font-weight: $field-font-weight;
+
+  &::placeholder {
+    color: $field-placeholder-color;
+    font-size: $field-font-size;
+    font-style: $field-font-style;
+    font-weight: $field-font-weight;      
+  }
+}
+
+@mixin field-focus {
+  border-color: $field-focus-color;
+}
+
+@mixin label {
+  color: $label-font-color;
+  font-size: $label-font-size;
+  font-style: $label-font-style;
+  font-weight: $label-font-weight;
+}
+
+@mixin description {
+  color: $description-font-color;
+  font-size: $description-font-size;
+  font-style: $description-font-style;
+  font-weight: $description-font-weight;
+}
+
+@mixin button {
+  background: $button-background;
+  border: $button-border;
+  border-radius: $button-border-radius;
+  color: $button-color;
+  padding: $button-padding;
+  height: calc(#{$button-height} - #{$button-border-size *  2}); // Remove border
+  cursor: pointer;
+}
+
+@mixin button-disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.5;
+}
+

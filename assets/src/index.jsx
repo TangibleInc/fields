@@ -1,5 +1,10 @@
-import { render } from 'react-dom'
-import { OverlayProvider } from 'react-aria'
+import { 
+  render, 
+  createRoot 
+} from 'react-dom'
+
+import { createContext } from 'react'
+import { initContexts } from './contexts/'
 
 import { 
   dispatchEvent,
@@ -8,10 +13,30 @@ import {
 
 import Control from './Control'
 
+/**
+ * Used to detect the current context from child components
+ */
+const ControlContext = createContext(null)
+const values = {}
+
 const renderField = props => (
-  <OverlayProvider className={ `tf-context-${props.context ?? 'default'}` }>
-    <Control { ...props } />
-  </OverlayProvider> 
+  <ControlContext.Provider value={{
+    name     : props.context ?? 'default',
+    wrapper  : `tf-context-${props.context ?? 'default'}`,
+    getValue : name => values[name] ?? '' 
+  }}>
+    <Control 
+      { ...props } 
+      onChange={ value => {
+        values[props.name] = value
+        if( props.onChange ) props.onChange(value)
+      }}
+      visibility={{
+        condition: props.condition?.condition ?? false,
+        action: props.condition?.action ?? 'show',
+      }}
+    />
+  </ControlContext.Provider>
 )
 
 /**
@@ -28,12 +53,17 @@ const init = () => {
 
     if( ! element ) continue;
 
-    render(
-      renderField({ 
-        name: field, 
-        ...props 
-      })
-    , element)
+    const component = renderField({ 
+      name: field, 
+      ...props 
+    })
+
+    /**
+     * React 18 is used since WP 6.2 (createRoot() need to be used instead of render())
+     */
+    createRoot
+      ? createRoot(element).render(component)
+      : render(element, component)
 
     dispatchEvent('initField', {
       name  : field, 
@@ -41,14 +71,17 @@ const init = () => {
     })
   }
 
+  initContexts()
 }
 
 /**
  * Make tangibleFields accessible from other scripts
  */
 window.tangibleFields = {
-  render : renderField,
-  event  : addEventListener
+  render         : renderField,
+  event          : addEventListener,
+  values         : values,
+  ControlContext : ControlContext
 }
 
 window.addEventListener('load', init)

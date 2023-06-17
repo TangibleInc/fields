@@ -1,0 +1,21 @@
+.fl-builder-ui-skin--light .tf-context-beaver-builder {
+  @import './light.scss';
+
+  @import '../../components/base/index.scss';
+  @import '../../components/field/index.scss';
+  @import '../../components/repeater/index.scss';
+
+  @import './components/calendar.scss';
+}
+
+.fl-builder-ui-skin--dark .tf-context-beaver-builder {
+  @import './dark.scss';
+
+  @import '../../components/base/index.scss';
+  @import '../../components/field/index.scss';
+  @import '../../components/repeater/index.scss';
+
+  @import './components/calendar.scss';
+}
+
+@import '../../lib/prose-mirror/index.scss';

@@ -9,5 +9,12 @@ node_modules
 
 # Allow symlinked local packages - always use latest commit on composer/npm/yarn update
 composer.lock
-package-lock.json
+# package-lock.json
 yarn.lock
+
+# Testing
+/.phpunit.cache
+/wordpress-develop
+/coverage
+
+*.swp

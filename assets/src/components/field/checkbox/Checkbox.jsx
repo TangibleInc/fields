@@ -1,6 +1,5 @@
 import { 
   useEffect,
-  useState, 
   useRef 
 } from 'react'
 
@@ -18,13 +17,10 @@ import {
 
 const Checkbox = props => {
 
-  const [value, setValue] = useState(props.value ?? '0')
-
   const state = useToggleState(props)
   const ref = useRef()
-
   const { inputProps } = useCheckbox(props, state, ref)
-  
+
   /**
    * useCheckbox does not return label and description props directly
    */
@@ -33,19 +29,21 @@ const Checkbox = props => {
     descriptionProps 
   } = useField(props)
 
-  useEffect(() => state.setSelected(value === '1'), [])
-  useEffect(() => setValue(state.isSelected ? '1' : '0'), [state.isSelected])
-  useEffect(() => props.onChange && props.onChange(value), [value])
-
+  useEffect(() => props.onChange && props.onChange(state.isSelected), [state.isSelected])
+  useEffect(() => {
+    if( props.value === '1' ) state.setSelected(true)
+    if( typeof props.value === 'boolean' && props.value !== state.isSelected ) {
+      state.setSelected(props.value)
+    } 
+  }, [props.value])
+  
   return(
-		<div class="tf-checkbox">
+    <div className="tf-checkbox">
       <Label { ...labelProps }>
-			<label>
         <input { ...inputProps } ref={ ref } />
+        <input type="hidden" name={ props.name ?? '' } value={ state.isSelected ? '1' : '0' } />
         { props.label ?? '' }
-			</label>
-        <input type="hidden" name={ props.name ?? '' } value={ value } />
-      </Label> 
+			</Label>
       { props.description &&
         <Description { ...descriptionProps }>
           { props.description }

@@ -2,39 +2,17 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-top: 1em;
   margin-bottom: $global-spacer-xs;
     
   border: $field-border;
   border-radius: $field-border-radius;
   background: $field-background;
 
-  &[data-status=open] .tf-repeater-block-item-actions {
-    border-top: $field-border;
-  }
-}
-
-.tf-repeater-block-item-header {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  cursor: pointer;
-  border-bottom: $field-border;
-  height: auto;
-
-  .tf-button-action {
-    padding: $field-padding;    
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    height: auto;
-    border-radius: 0;
-    border: 0;
-    padding: 1em 1em 1em 1em;
-    color: $field-font-color;
-    
-    &:hover {
-      background: #f0f0f0;
-    }
+  // not ideal but it will do until we change the css of the switch component to be able to change its size
+  .tf-panel-header .tf-switch-element,
+  .tf-panel-header .tf-switch-element-selected {
+    transform: scale(0.7);
   }
 }
 

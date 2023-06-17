@@ -1,4 +1,4 @@
-.tf-button-group-option {
+.tf-button-group .tf-button-group-option {
   @include button;
   
   display: inline-flex;
@@ -26,9 +26,16 @@
     background: $field-focus-color;
     border-color: $field-focus-color;
   }
+  
 	&:focus-within {
 		box-shadow: inset 0 0 0 $button-border-size #fff,0 0 0 $button-border-size $field-focus-color;
 		position: relative;
 		z-index: 1;
 	}
+
+  .dashicons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

@@ -1,3 +1,4 @@
+@import './common/index.scss';
 @import './layout/block/index.scss';
 @import './layout/table/index.scss';
 
@@ -7,3 +8,13 @@
   padding: 2px;
   padding-bottom: 4px;
 }
+
+.tf-repeater-title {
+  font-size: 1.2em;
+  text-transform: capitalize;
+  position: relative;
+  color: rgb(60, 67, 74);
+  margin: 0.5em 0;
+  padding: 0 0.2em;
+}
+

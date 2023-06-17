@@ -7,6 +7,8 @@ $fields->enqueued_contexts = [];
 $fields->contexts = [
   'default',
   'wp',
+  'elementor',
+  'beaver-builder'
 ];
 
 $fields->set_context = function(string $context) use($fields) {

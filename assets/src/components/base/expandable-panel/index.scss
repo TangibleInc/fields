@@ -1,0 +1,91 @@
+.tf-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 4px;
+    
+  border: $field-border;
+  border-radius: $field-border-radius;
+  background: $field-background;
+}
+
+.tf-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+
+  height: $field-height;
+  border-bottom: $field-border;
+
+  &.tf-button-action {
+    padding: $field-padding;    
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    border: 0;
+    padding: 1em 1em 1em 1em;
+    color: $field-font-color;
+    
+    &:hover {
+      background: #f0f0f0;
+    }
+  }
+}
+
+.tf-panel-header-right,
+.tf-panel-header-before-title,
+.tf-panel-header-title,
+.tf-panel-header-left {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: $field-padding;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.tf-panel-header-left {
+  padding-left: 0;
+}
+
+.tf-panel-footer,
+.tf-panel-content {
+  padding: $field-padding;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+// Needed when behavior is hide
+.tf-panel-closed .tf-panel-content {
+  display: none;
+}
+
+.tf-panel-open .tf-panel-footer {
+  border-top: $field-border;
+}
+
+.tf-panel-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.tf-panel-arrow {
+  border: solid black;
+  border-color: $field-font-color;
+  border-width: 0 1px 1px 0;
+  display: inline-block;
+  height: calc(#{$field-height} / 4);
+  width: calc(#{$field-height} / 4);
+}
+
+.tf-panel-open .tf-panel-arrow {
+  transform: translateY(50%) rotate(-135deg);
+}
+
+.tf-panel-closed .tf-panel-arrow {
+  transform: translateY(-50%) rotate(45deg);
+}

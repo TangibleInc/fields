@@ -1,0 +1,10 @@
+/* Needs to overwrite !important beaver builder rules */
+.tf-calendar table.tf-calendar-table thead tr th,
+.tf-calendar table.tf-calendar-table tbody tr td {
+  display: table-cell;
+  padding: 0px !important;
+
+  .tf-calendar-cell {
+    display: initial;
+  }
+}

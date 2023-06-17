@@ -66,7 +66,7 @@ const MultipleSelect = props => {
     </ListBox>
 
   return(
-    <div class="tf-multiple-select">
+    <div className="tf-multiple-select">
       <input type="hidden" name={ props.name ?? '' } value={ [...selected].join(',') } />
       { props.label &&
         <Label { ...labelProps }>
@@ -83,7 +83,7 @@ const MultipleSelect = props => {
               : selected.size + ' items selected')
             : (props.placeholder ?? 'Select an option') }
         </span>
-        <span aria-hidden="true" class="tf-select-icon">
+        <span aria-hidden="true" className="tf-select-icon">
           ▼
         </span>
       </Button>

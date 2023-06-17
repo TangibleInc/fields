@@ -23,10 +23,10 @@
   .tf-button-number {
     @include button;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 0;
     padding: 0;
+    border-radius: 0;
+    align-items: center;
+    line-height: 0;
     border: 0;
     min-width: 2em;
     height: 50%;
@@ -41,11 +41,10 @@
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
     }
+
     &:last-child {
       border-top-left-radius: 0;
       border-top-right-radius: 0;
     }
-
   }
-  
 }

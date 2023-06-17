@@ -9,12 +9,12 @@ if ( ! function_exists( 'tangible_fields' ) ) :
   }
 endif;
 
-new class {
+new class extends stdClass {
 
   public $name = 'tangible_fields';
 
   // Remember to update the version - Expected format: YYYYMMDD
-  public $version = '20230203';
+  public $version = '20230509';
 
   function __construct() {
 
@@ -49,10 +49,11 @@ new class {
     tangible_fields( $fields );
 
     require_once __DIR__ . '/format.php';
-    require_once __DIR__ . '/dynamic-value.php';
+    require_once __DIR__ . '/dependent-values.php';
     require_once __DIR__ . '/fields.php';
     require_once __DIR__ . '/enqueue.php';
     require_once __DIR__ . '/context.php';
+    require_once __DIR__ . '/store.php';
   }
 
 };

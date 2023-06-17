@@ -1,7 +1,6 @@
 import { 
-  useEffect, 
-  useState, 
-  useRef 
+  useRef,
+  useEffect 
 } from 'react'
 
 import {
@@ -24,11 +23,6 @@ import {
 
 const Switch = props => {
 
-  const [value, setValue] = useState(props.value ?? false)
-  
-  const valueOn = props.valueOn ?? 'on' 
-  const valueOff = props.valueOff ?? 'off'
-
   const state = useToggleState(props)
   const ref = useRef()
 
@@ -40,28 +34,32 @@ const Switch = props => {
    */
   const { 
     labelProps, 
+    fieldProps,
     descriptionProps 
   } = useField(props)
 
-  /**
-   * We don't return a boolean like in the useToggleState value, but a custom string
-   */
-  useEffect(() => state.setSelected(value === valueOn), [])
-  useEffect(() => setValue(state.isSelected ? valueOn : valueOff), [state.isSelected])
-  useEffect(() => props.onChange && props.onChange(value), [value])
+  useEffect(() => props.onChange && props.onChange(state.isSelected), [state.isSelected])
+  useEffect(() => {
+    if( props.value !== state.isSelected )  state.setSelected(props.value)
+  }, [props.value])
 
   return(
-    <div class="tf-switch">
+    <div className="tf-switch">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
         <label>
           <VisuallyHidden>
-            <input { ...inputProps } { ...focusProps } ref={ ref } name="" />
-            <input type="hidden" name={ props.name ?? '' } value={ value } />
+            <input 
+              { ...fieldProps }
+              { ...inputProps } 
+              { ...focusProps }
+              ref={ ref } 
+              name="" 
+            />
           </VisuallyHidden>
-          <div class={ `tf-switch-element${state.isSelected ? '-selected' : '' }` } aria-hidden="true">
+          <div className={ `tf-switch-element${state.isSelected ? '-selected' : '' }` } aria-hidden="true">
             <span></span>
           </div>
         </label>

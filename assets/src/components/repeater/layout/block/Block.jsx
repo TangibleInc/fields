@@ -1,44 +1,126 @@
 import { useState } from 'react'
-import { Button } from '../../../base'
+
+import { 
+  Button, 
+  ModalTrigger,
+  ExpandablePanel 
+} from '../../../base'
+
+import { Checkbox, Switch } from '../../../field'
+import BulkActions from '../../common/BulkActions'
 
 const Block = ({
   items,
   dispatch,
   getRow,
-  getControl
+  getControl,
+  maxLength,
+  title = '',
+  useSwitch,
+  useBulk
 }) => {
 
-  const [activeItem, setActiveItem] = useState(false)
+  const [activeItem, setActiveItem] = useState(0)
   const toggleItem = i => setActiveItem( i !== activeItem ? i : false )
 
+  const bulkOptions = { 'deletion': 'Delete' }
+
+  if ( useSwitch ) {
+    bulkOptions['enabled'] = 'Enabled'
+    bulkOptions['disabled'] = 'Disabled'
+  }
+
+  const getHeaderLeft = (item, i) => {
+    return (
+      <>
+        {
+          useBulk
+          ? <div onClick={ e => e.stopPropagation() }>
+              <Checkbox 
+                value={ item._bulkCheckbox }
+                onChange={ value => dispatch({ 
+                  type    : 'update',
+                  item    : i,
+                  control : '_bulkCheckbox',
+                  value   : value
+                }) } 
+              />
+            </div>  
+          : null
+        }
+        { 
+          useSwitch
+          ? <div onClick={ e => e.stopPropagation() }>
+              <Switch 
+                value={ item.enabled }
+                onChange={ value => dispatch({ 
+                  type    : 'update',
+                  item    : i,
+                  control : 'enabled',
+                  value   : value
+                }) }
+              />
+            </div>  
+          : null 
+        }
+      </>
+    ) 
+  }
+
+  const actions = (i, item) => (
+     <> 
+      { maxLength !== undefined &&
+        <Button
+          type="action"
+          isDisabled={ maxLength <= items.length }
+          onPress={() => dispatch({ 
+            type : 'clone',
+            item : item
+          })}
+        >
+          Clone
+        </Button> }
+      <Button type="action" onPress={ () => toggleItem(i) }>
+        { activeItem !== i ? 'Edit' : 'Close' }
+      </Button>
+      { maxLength !== undefined && 
+        <ModalTrigger 
+          title="Confirmation"
+          label="Remove"
+          onValidate={ () => dispatch({ type : 'remove', item : i }) }
+        >
+          Are you sure you want to remove item { i + 1 }?
+        </ModalTrigger> }
+    </>
+  )
+
   return(
-    <div class='tf-repeater-block-items'>
-      { items && items.map((item, i) => (
-        <div key={ item.key } class="tf-repeater-block-item" data-status={ activeItem === i ? 'open' : 'closed' }>
-          <div class="tf-repeater-block-item-header">
-            <Button type="action" onPress={ () => toggleItem(i) }>
-            Item { i + 1 }
-            </Button>
-          </div>
-          { activeItem === i && 
-            <div class="tf-repeater-block-item-content">{ 
-              getRow(item).map(
-                control => ( 
-                  <div class="tf-repeater-block-item-field">
-                    { getControl(control, item, i) }
-                  </div>  
-                )
-              )}
-            </div> }
-          <div class="tf-repeater-block-item-actions">
-            <Button type="action" onPress={ () => toggleItem(i) }>
-              { activeItem !== i ? 'Edit' : 'Close' }
-            </Button>
-            <Button type="action" onPress={ () => dispatch({ type: 'remove', item: i }) }>
-              Remove
-            </Button>
-          </div>
-        </div>
+    <div className='tf-repeater-block-items'>
+      { useBulk && 
+        <BulkActions
+          actions={ bulkOptions }
+          dispatch={ dispatch }
+        /> }
+      { items && items.slice(0, maxLength).map((item, i) => (
+        <ExpandablePanel
+          key={ item.key } 
+          title={ title ?? 'Item ' + (i + 1) }
+          footer={ actions(i, item) }
+          isOpen={ activeItem === i }
+          className="tf-repeater-block-item"
+          onChange={ visible => visible 
+            ? (activeItem !== i ? setActiveItem(i) : null)
+            : (activeItem === i ? setActiveItem(false) : null) }
+          headerLeft={ getHeaderLeft(item, i) }
+        > 
+          { getRow(item).map(
+            control => ( 
+              <div className="tf-repeater-block-item-field">
+                { getControl(control, item, i) }
+              </div>  
+            ) 
+          ) } 
+        </ExpandablePanel>
       )) }
     </div>
   )

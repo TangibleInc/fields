@@ -1,6 +1,5 @@
 import { useRef } from 'react'
 import { useCalendarState } from 'react-stately'
-import { useVisuallyHidden } from 'react-stately'
 import { createCalendar } from '@internationalized/date'
 
 import { 
@@ -33,9 +32,9 @@ const Calendar = props => {
   )
 
   return(
-    <div class="tf-calendar" { ...calendarProps } ref={ ref }>
-       <div class="tf-calendar-header">
-        <div class="tf-calendar-buttons">
+    <div className="tf-calendar" { ...calendarProps } ref={ ref }>
+      <div className="tf-calendar-header">
+        <div className="tf-calendar-buttons">
           <Button { ...prevButtonProps }>&lt;</Button>
           <div class="tf-calendar-month">
             { title }
