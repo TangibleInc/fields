@@ -7,6 +7,7 @@
   border-radius: 0;
   border-color: $field-focus-color;
   color: $field-focus-color;
+  margin: 0;
   
   &:first-child {
     border-top-left-radius: $button-border-radius;

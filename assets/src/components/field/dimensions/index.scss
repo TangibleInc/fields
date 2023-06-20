@@ -18,7 +18,7 @@
 .tf-dimensions-number-groups {
   display: flex;
   flex-direction: row;
-  width: $dimensions-number-group-width;
+  max-width: $dimensions-number-group-width;
 
   .tf-number {
     flex: 1 1 calc($dimensions-number-group-width / 4);
