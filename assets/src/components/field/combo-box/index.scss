@@ -74,7 +74,8 @@
 
   button:last-child {
     cursor: pointer;
-    background-color: white;
+    color: $field-focus-color;
+    background-color: transparent;
     border: none;
 
     &:focus{

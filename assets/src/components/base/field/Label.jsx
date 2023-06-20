@@ -1,7 +1,7 @@
 const Label = props => (
-  <div className='tf-label' { ...props }>
+  <label className='tf-label' { ...props }>
     { props.children }
-  </div>
+  </label>
 )
 
 export default Label

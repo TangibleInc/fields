@@ -143,7 +143,7 @@ const Repeater = props => {
         getRow={ getRow }
         getControl={ getControl }
         maxLength = { repeatable ? maxLength : undefined }
-        title={ props.sectionTitle ?? '' }
+        title={ props.sectionTitle ?? false }
         useSwitch={ props.useSwitch }
         useBulk={ props.useBulk }
       />

@@ -5,7 +5,6 @@
 
   .tf-button-select {
     @include field;
-    width: calc($field-width - 10px); // Overwrite mixin value 
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -19,7 +18,6 @@
 
   .tf-button-select {
     cursor: pointer;
-    height: calc(#{$button-height} - #{$button-border-size * 2});
     font-size: $field-font-size;
   }
 }

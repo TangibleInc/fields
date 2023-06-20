@@ -18,11 +18,15 @@
 .tf-dimensions-number-groups {
   display: flex;
   flex-direction: row;
-  width: $field-width;
+  width: $dimensions-number-group-width;
 
   .tf-number {
-    flex: 1 1 calc($field-width / 4);
+    flex: 1 1 calc($dimensions-number-group-width / 4);
     
+    .tf-number-field {
+      width: 100%;
+    }
+
     input {
       width: 100%;
       text-align: left;

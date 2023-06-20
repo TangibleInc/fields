@@ -16,13 +16,6 @@
   }
 }
 
-.tf-repeater-block-item-actions,
 .tf-repeater-block-item-field {
   padding: 1em;
-}
-
-.tf-repeater-block-item-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: $global-spacer-sm;
 }

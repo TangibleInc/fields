@@ -4,6 +4,7 @@
 
 .tf-number-field {
   display: flex;
+  width: $field-width;
   flex-direction: row;
   flex-wrap: nowrap;
   position: relative;
@@ -26,6 +27,7 @@
     padding: 0;
     border-radius: 0;
     align-items: center;
+    justify-content: center;
     line-height: 0;
     border: 0;
     min-width: 2em;

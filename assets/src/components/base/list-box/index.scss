@@ -22,13 +22,18 @@
 
   &:not(.tf-list-box-option-selected,.tf-list-box-option-disabled):hover {
     color: $field-focus-color;
-  } 
+  }
 }
 
-.tf-list-box-option-selected {
-  color: $field-font-color;
+.tf-list-box-option-selected,
+.tf-list-box-option-selected.tf-list-box-option-selected {
+  color: $field-background;
   background-color: $field-focus-color;
   
+  &:hover {
+    color: $field-background;
+  }
+
   &::after {
     content: "\2713";
     margin-left: auto;

@@ -15,9 +15,7 @@
   align-items: center;
   width: 100%;
   cursor: pointer;
-
   height: $field-height;
-  border-bottom: $field-border;
 
   &.tf-button-action {
     padding: $field-padding;    
@@ -34,6 +32,11 @@
       background: #f0f0f0;
     }
   }
+
+}
+
+.tf-panel-open .tf-panel-header.tf-button-action {
+  border-bottom: $field-border;
 }
 
 .tf-panel-header-right,
@@ -64,13 +67,15 @@
   display: none;
 }
 
-.tf-panel-open .tf-panel-footer {
+.tf-panel-footer {
   border-top: $field-border;
 }
 
 .tf-panel-footer {
   display: flex;
   justify-content: flex-end;
+  gap: $global-spacer-sm;
+  padding: 1em;
 }
 
 .tf-panel-arrow {

@@ -5,10 +5,11 @@
   gap: $global-spacer-sm;
 
   .tf-dynamic-text-popover {
+    width: $field-width;
     position: absolute;
     top: 100%;
     z-index: $popover-index;
-    right: 0;
+    left: 0;
     
     .tf-list-box-option {
       &:not(.tf-list-box-option-selected,.tf-list-box-option-disabled):hover {
