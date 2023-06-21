@@ -1,36 +1,62 @@
 @import '../default/variables.scss';
 
 // We only need to define the variables we need to overwrite 
-$field-padding: 0 12px;
+$button-color: #676f7a;
+$button-background: #e7ebef;
 
+$button-background--hover: #dadfe5;
+$button-border-color--hover: transparent;
+$button-color--hover: $button-color;
+
+$button-background--focus: $button-background--hover;
+$button-border-color--focus: $global-theme-color;
+$button-color--focus: $button-color;
+
+@import './common-variables.scss';
 @import '../default/mixins.scss';
+@import './common-mixins.scss';
 
 // We only need to defined the mixins we need to overwrite
-@mixin field-focus {
-  border-color: $field-focus-color;
-}
-
-@mixin label {
-  color: $label-font-color;
-  font-size: $label-font-size;
-  font-style: $label-font-style;
-  font-weight: $label-font-weight;
-}
-
-@mixin description {
-  color: $description-font-color;
-  font-size: $description-font-size;
-  font-style: $description-font-style;
-  font-weight: $description-font-weight;
-}
-
 @mixin button {
   background: $button-background;
   border: $button-border;
   border-radius: $button-border-radius;
   color: $button-color;
+  fill: $button-color;
   padding: $button-padding;
   height: calc(#{$button-height} - #{$button-border-size *  2}); // Remove border
   cursor: pointer;
+  box-shadow: $button-box-shadow;
+  font-family: var(--fl-builder-font-family);
+  font-size: $button-font-size;
+  font-style: normal;
+  font-weight: $button-font-weight;
+  line-height: 1;
+  margin: 0;
+  padding: 0 $global-spacer-lg;
+  text-align: center;
+  transition-property: background-color,width;
+  transition-duration: .2s;
+  
+  &:hover {
+    background: $button-background--hover;
+    border-color: $button-border-color--hover;
+    color: $button-color--hover;
+  }  
+  &:focus {
+    background: $button-background--focus;
+    border-color: $button-border-color--focus;
+    color: $button-color--focus;
+  }
 }
 
+@mixin section {
+  border-radius: $section-border-radius;
+  background: $section-background;
+  box-shadow: $field-box-shadow;
+  
+  input, select {
+    box-shadow: unset;
+    border-color: #e6eaed !important;
+  }
+}

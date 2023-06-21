@@ -94,7 +94,8 @@
 }
 
 .tf-multiple-combobox > .tf-popover {
-  
+  width: $field-width;
+
   .tf-list-box-option {
 
     &:not(.tf-list-box-option-selected,.tf-list-box-option-disabled):hover {

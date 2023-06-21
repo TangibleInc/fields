@@ -9,7 +9,8 @@
   font-size: $field-font-size;
   font-style: $field-font-style;
   font-weight: $field-font-weight;
-
+  box-shadow: $field-box-shadow;
+  
   &::placeholder {
     color: $field-placeholder-color;
     font-size: $field-font-size;

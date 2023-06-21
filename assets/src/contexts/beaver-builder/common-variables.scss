@@ -1,0 +1,37 @@
+// We only need to define the variables we need to overwrite
+$global-theme-color: var(--fl-builder-accent-color, #00a0d2);
+$global-theme-color-darker-10: #21759b;
+$global-theme-color-lighter-05: #99E7FF;
+
+$field-focus-color: $global-theme-color;
+$button-border-color--focus: $global-theme-color;
+
+$field-padding: 0 12px;
+$field-height: 36px;
+$field-border-color: transparent;
+$field-border: $field-border-width $field-border-style $field-border-color;
+$field-border-radius: $global-border-radius;
+$field-box-shadow: 0 2px 4px 0 rgba(0,0,0,.12);
+
+$button-padding: 0 12px;
+$button-height: 33px;
+
+$button-font-size: 14px;
+$button-font-weight: 500;
+$button-border-radius: $global-border-radius;
+$button-box-shadow: unset;
+
+$button-border-color: transparent;
+$button-border-type: solid;
+$button-border-size: 2px;
+$button-border: $button-border-type $button-border-size $button-border-color;
+
+$section-padding: $global-spacer-sm $global-spacer-md;
+$section-border-width: 1px;
+$section-border-style: solid;
+$section-border-color: $global-theme-gray-80;
+$section-border: $section-border-width $section-border-style $section-border-color;
+$section-border-radius: $global-border-radius;
+$section-background: $global-theme-gray-90;
+
+$popover-index: 9000000;

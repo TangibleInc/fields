@@ -13,9 +13,16 @@ $global-theme-color: #4b84ce;
 $global-theme-color-darker-10: #31609e;
 $global-theme-color-lighter-05: #E2E7FF;
 
-$global-theme-gray-20: #e0e0e0;
-$global-theme-gray-30: #d3d3d3;
-$global-theme-gray-40: #787c82;
+$global-theme-gray-00: #fff;
+$global-theme-gray-10: #c6cdd6;
+$global-theme-gray-20: #a7b1bb;
+$global-theme-gray-30: #8c8f94;
+$global-theme-gray-40: #7d8690;
+$global-theme-gray-50: #62656A;
+$global-theme-gray-60: #3D4751;
+$global-theme-gray-70: #2c333a;
+$global-theme-gray-80: #23282d;
+$global-theme-gray-90: #181b20;
 $global-theme-gray-100: #101517;
 
 $global-border-radius: 2px;
@@ -37,6 +44,7 @@ $field-font-style: inherit;
 $field-font-weight: inherit;
 $field-font-color: inherit;
 $field-placeholder-color: initial;
+$field-box-shadow: unset;
 
 $label-font-size: inherit;
 $label-font-style: inherit;
@@ -69,7 +77,6 @@ $button-color--hover: $global-theme-color-darker-10;
 $button-background--focus: white;
 $button-border-color--focus: $global-theme-color-darker-10;
 $button-color--focus: $global-theme-color-darker-10;
-
 
 $section-padding: $global-spacer-sm $global-spacer-md;
 $section-border-width: 1px;
