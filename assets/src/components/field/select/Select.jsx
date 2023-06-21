@@ -66,7 +66,7 @@ const Select = props => {
           : triggerProps.onKeyDown(e)
         }
       >
-        <span { ...valueProps }>
+        <span { ...valueProps } className="tf-select__value">
           { state.selectedItem
             ? state.selectedItem.rendered
             : (props.placeholder ?? 'Select an option') }

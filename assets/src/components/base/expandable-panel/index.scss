@@ -2,11 +2,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-bottom: 4px;
-    
-  border: $field-border;
-  border-radius: $field-border-radius;
-  background: $field-background;
+  margin-bottom: $global-spacer-sm;
+  @include section;
 }
 
 .tf-panel-header {
@@ -18,16 +15,25 @@
   height: $field-height;
 
   &.tf-button-action {
-    padding: $field-padding;    
+    appearance: none;
+    box-sizing: border-box;
+    cursor: pointer;
+    background: none;
+    text-align: left;
+    font-family: inherit;
+    font-size: 100%;
+    line-height: 1.15;
+
     display: flex;
     justify-content: space-between;
     width: 100%;
-    height: auto;
+    height: $field-height;
+    color: $field-font-color;
+    margin: 0;
+    padding: $section-padding;
     border-radius: 0;
     border: 0;
-    padding: 1em 1em 1em 1em;
-    color: $field-font-color;
-    
+
     &:hover {
       background: #f0f0f0;
     }
@@ -36,7 +42,7 @@
 }
 
 .tf-panel-open .tf-panel-header.tf-button-action {
-  border-bottom: $field-border;
+  border-bottom: $section-border;
 }
 
 .tf-panel-header-right,
@@ -68,7 +74,7 @@
 }
 
 .tf-panel-footer {
-  border-top: $field-border;
+  border-top:  $section-border;
 }
 
 .tf-panel-footer {

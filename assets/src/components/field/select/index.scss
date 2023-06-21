@@ -3,6 +3,12 @@
   width: $field-width;
   position: relative;
   display: inline-block;
+  
+  &__value {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 
   .tf-button-select {
     @include field;

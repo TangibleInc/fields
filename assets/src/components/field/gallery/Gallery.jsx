@@ -98,8 +98,10 @@ const Gallery = props => {
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <div className="tf-gallery-preview">
-        { value.map(image => <ImagePreview key={ image } id={ image }/>) }
+      <div className="tf-gallery__controls">
+        <div className="tf-gallery-preview">
+          { value.map(image => <ImagePreview key={ image } id={ image }/>) }
+        </div>
       </div>
       <div className="tf-gallery-buttons">
         <Button type="action" onPress={ open }>

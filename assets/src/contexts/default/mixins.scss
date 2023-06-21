@@ -2,7 +2,6 @@
   padding: $field-padding;
   height: $field-height;
   width: $field-width;
-  box-sizing: border-box;
   border: $field-border;
   border-radius: $field-border-radius;
   background: $field-background;
@@ -20,7 +19,9 @@
 }
 
 @mixin field-focus {
+  box-shadow: 0 0 0 1px $field-focus-color;
   border-color: $field-focus-color;
+  outline: 2px solid transparent;
 }
 
 @mixin label {
@@ -59,6 +60,12 @@
     border-color: $button-border-color--hover;
     color: $button-color--hover;
   }
+}
+
+@mixin section {
+  border: $section-border;
+  border-radius: $section-border-radius;
+  background: $section-background;
 }
 
 @mixin button-disabled {
