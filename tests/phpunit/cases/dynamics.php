@@ -20,10 +20,10 @@ class Dynamics_TestCase extends WP_UnitTestCase {
     );
 
     $errored = null;
-		set_error_handler(function($errno, $errstr, ...$args) use (&$errored) {
-			$errored = [$errno, $errstr, $args];
-			restore_error_handler();
-		});
+    set_error_handler(function($errno, $errstr, ...$args) use (&$errored) {
+      $errored = [$errno, $errstr, $args];
+      restore_error_handler();
+    });
 
     $fields->register_dynamic_value_category('test-category');
     $this->assertNotNull($errored, 'registering category with same name did not trigger a warning');
@@ -60,10 +60,10 @@ class Dynamics_TestCase extends WP_UnitTestCase {
     $this->assertNotNull($fields->dynamic_values['test-value'], 'dynamic value was not registered');
 
     $errored = null;
-		set_error_handler(function($errno, $errstr, ...$args) use (&$errored) {
-			$errored = [$errno, $errstr, $args];
-			restore_error_handler();
-		});
+    set_error_handler(function($errno, $errstr, ...$args) use (&$errored) {
+      $errored = [$errno, $errstr, $args];
+      restore_error_handler();
+    });
 
     $fields->register_dynamic_value($args);
     $this->assertNotNull($errored, 'registering dynamic value with same name did not trigger a warning');
@@ -76,10 +76,10 @@ class Dynamics_TestCase extends WP_UnitTestCase {
   function test_dynamic_value_registration_without_name() {
 
     $errored = null;
-		set_error_handler(function($errno, $errstr, ...$args) use (&$errored) {
-			$errored = [$errno, $errstr, $args];
-			restore_error_handler();
-		});
+    set_error_handler(function($errno, $errstr, ...$args) use (&$errored) {
+      $errored = [$errno, $errstr, $args];
+      restore_error_handler();
+    });
 
     $fields = tangible_fields();
     $fields->register_dynamic_value(['category' => 'test-category']);
@@ -91,10 +91,10 @@ class Dynamics_TestCase extends WP_UnitTestCase {
   function test_dynamic_value_registration_without_category() {
 
     $errored = null;
-		set_error_handler(function($errno, $errstr, ...$args) use (&$errored) {
-			$errored = [$errno, $errstr, $args];
-			restore_error_handler();
-		});
+    set_error_handler(function($errno, $errstr, ...$args) use (&$errored) {
+      $errored = [$errno, $errstr, $args];
+      restore_error_handler();
+    });
 
     $fields = tangible_fields();
     $fields->register_dynamic_value(['name' => 'test-value-without-category']);

@@ -9,7 +9,12 @@ defined('ABSPATH') or die();
  */
 $fields->get_dynamic_value_data = function() use($fields) : array {
   return [
-    'values'     => $fields->dynamic_values,
+    'values' => array_filter(
+      $fields->dynamic_values,
+      function($dynamic_value) use($fields) {
+        return $fields->is_dynamic_value_action_allowed($dynamic_value, 'store'); 
+      }
+    ),
     'categories' => array_map(
       function($category) : array {
         return [

@@ -28,13 +28,21 @@ $fields->maybe_strip_unauthorized_dynamic_value = function(
 
   if( empty($dynamic_value) ) return '';
   
+  return $fields->is_dynamic_value_action_allowed($dynamic_value, $action)
+    ? $matches[0]
+    : '';
+};
+
+$fields->is_dynamic_value_action_allowed = function(
+  array $dynamic_value, 
+  string $action
+) : bool {
+
   $permission = $dynamic_value["permission_callback_$action"] ?? false;
   
   if( ! is_callable($permission) ) {
     $permission = $dynamic_value['permission_callback'] ?? false;
-  } 
-  
-  return is_callable($permission) && $permission() === true  
-    ? $matches[0]
-    : '';
+  }
+
+  return is_callable($permission) && $permission() === true;
 };
