@@ -42,9 +42,7 @@ $button-color--hover: $global-theme-color-darker-10;
 }
 
 .tf-context-wp {
-  @import '../../components/base/index.scss';
-  @import '../../components/field/index.scss';
-  @import '../../components/repeater/index.scss';
+  @import '../../components/index.scss';
 }
 
 @import '../../lib/prose-mirror/index.scss';

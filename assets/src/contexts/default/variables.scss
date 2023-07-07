@@ -29,7 +29,9 @@ $global-border-radius: 2px;
 
 $global-context-destructive: #CC1818;
 
-$field-padding: $global-spacer-xs $global-spacer-sm;
+$field-padding-vertical: $global-spacer-xs; 
+$field-padding-horizontal: $global-spacer-sm; 
+$field-padding: $field-padding-vertical $field-padding-horizontal;
 $field-height: 32px;
 $field-width: 192px;
 $field-border-width: 1px;

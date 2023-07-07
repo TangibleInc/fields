@@ -1,13 +1,14 @@
 .tf-dynamic-wrapper {
   display: flex;
   position: relative;
-  width: fit-content;
   align-items: center;
+  gap: $global-spacer-sm;
 
   .tf-dynamic-wrapper-popover {
     position: absolute;
     top: 100%;
     z-index: $popover-index;
+    width: $field-width;
   }
 
   .tf-dynamic-wrapper-popover-form {
