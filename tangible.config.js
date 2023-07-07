@@ -18,6 +18,10 @@ module.exports = {
       dest: 'assets/build/default/index.min.css'
     },
     {
+      src: 'assets/src/contexts/wp/index.scss',
+      dest: 'assets/build/wp/index.min.css'
+    },
+    {
       src: 'assets/src/contexts/elementor/index.scss',
       dest: 'assets/build/elementor/index.min.css'
     },

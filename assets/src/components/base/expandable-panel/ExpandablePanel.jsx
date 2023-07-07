@@ -3,6 +3,8 @@ import {
   useEffect 
 } from 'react'
 
+import { Button } from '../'
+
 const ExpandablePanel = props => {
 
   const [showItem, setShowItem] = useState(true)
@@ -23,10 +25,11 @@ const ExpandablePanel = props => {
   classes += ` tf-panel-${ showItem ? 'open' : 'closed' }`
   classes += props.className ? ` ${props.className}` : ''
   classes += props.class ? ` ${props.class}` : ''
+  classes += ! props.footer ? ' tf-panel-no-footer' : ''
   
   return ( 
     <div className={ classes } data-status={ showItem ? 'open' : 'closed' }>
-      <div className="tf-panel-header" onClick={ toggle }>
+      <Button className="tf-panel-header" type="action" onPress={ toggle }>
         <div className="tf-panel-header-left">
           { props.headerLeft 
             ? <div className="tf-panel-header-before-title">
@@ -47,7 +50,7 @@ const ExpandablePanel = props => {
             : null }
           <span className="tf-panel-arrow" />
         </div>
-      </div>
+      </Button>
       { showItem || props?.behavior === 'hide'
         ? <div className='tf-panel-content'>
             { props.children }

@@ -18,7 +18,7 @@ import {
   Label
 } from '../../base/'
 
-const Number = props => {
+const NumberComponent = props => {
 
   const { locale } = useLocale()
   const [value, setValue] = useState(props.value ?? '')
@@ -52,7 +52,11 @@ const Number = props => {
           ref={ inputRef } 
           inputProps={ inputProps } 
         >
-          <input { ...inputProps} ref={ inputRef } />
+          <input 
+            { ...inputProps} 
+            value={ Number.isInteger(state.numberValue) ? state.numberValue : 0 } 
+            ref={ inputRef } 
+          />
           { hasButtons && <div className='tf-number-button-group'>
             <Button type="number" { ...incrementButtonProps }>+</Button>
             <Button type="number" { ...decrementButtonProps }>-</Button>
@@ -67,4 +71,4 @@ const Number = props => {
   )
 }
 
-export default Number
+export default NumberComponent

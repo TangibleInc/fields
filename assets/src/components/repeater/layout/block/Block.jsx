@@ -15,7 +15,7 @@ const Block = ({
   getRow,
   getControl,
   maxLength,
-  title = '',
+  title = false,
   useSwitch,
   useBulk
 }) => {
@@ -104,7 +104,7 @@ const Block = ({
       { items && items.slice(0, maxLength).map((item, i) => (
         <ExpandablePanel
           key={ item.key } 
-          title={ title ?? 'Item ' + (i + 1) }
+          title={ title ? title : ('Item ' + (i + 1)) }
           footer={ actions(i, item) }
           isOpen={ activeItem === i }
           className="tf-repeater-block-item"

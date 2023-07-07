@@ -4,35 +4,49 @@
 
 .tf-number-field {
   display: flex;
+  width: $field-width;
   flex-direction: row;
   flex-wrap: nowrap;
+  position: relative;
 }
 
 .tf-number-button-group {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  padding: 0;
-  height: $button-height;
+  position: absolute;
+  top: $field-border-width;
+  right: $field-border-width;
+  bottom: $field-border-width;
+  padding: $field-padding;
+  height: auto;
 
   .tf-button-number {
     @include button;
+    display: flex;
+    padding: 0;
     border-radius: 0;
     align-items: center;
+    justify-content: center;
     line-height: 0;
+    border: 0;
+    min-width: 2em;
     height: 50%;
+    line-height: 0;
+    background-color: #eee;
+
+    &:hover {
+      background-color: #e2e2e2;
+    }
 
     &:first-child {
-      border-top-left-radius: $button-border-radius;
-      border-top-right-radius: $button-border-radius;
-    }
-  
-    &:last-child {
-      border-bottom-right-radius: $button-border-radius;
-      border-bottom-left-radius: $button-border-radius;
-      border-top: $button-border;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
     }
 
+    &:last-child {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
   }
-  
 }

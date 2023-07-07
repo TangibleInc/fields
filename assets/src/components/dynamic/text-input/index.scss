@@ -1,5 +1,7 @@
 .tf-dynamic-text-input {
   @include field;
+  height: calc(#{$field-height} - #{$field-padding-vertical * 2});
+  width: calc(#{$field-width} - #{$field-padding-horizontal * 2});
 
   &:focus-within {
     border-color: $field-focus-color;

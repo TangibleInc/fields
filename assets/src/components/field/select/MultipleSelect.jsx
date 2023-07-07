@@ -76,7 +76,7 @@ const MultipleSelect = props => {
         type={ 'select' }
         onPress={ () => isOpen( ! open ) }
       >
-        <span>
+        <span className="tf-multiple-select__value">
           { selected.size > 0
             ? (selected.size === 1
               ? selected.size + ' item selected'

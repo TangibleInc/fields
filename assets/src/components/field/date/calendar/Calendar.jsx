@@ -33,14 +33,12 @@ const Calendar = props => {
 
   return(
     <div className="tf-calendar" { ...calendarProps } ref={ ref }>
-       <div className="tf-calendar-header">
-        <div className="tf-calendar-month">
-          <strong>
-            { title }
-          </strong>
-        </div>
+      <div className="tf-calendar-header">
         <div className="tf-calendar-buttons">
           <Button { ...prevButtonProps }>&lt;</Button>
+          <div class="tf-calendar-month">
+            { title }
+          </div>
           <Button { ...nextButtonProps }>&gt;</Button>
         </div>
       </div>
