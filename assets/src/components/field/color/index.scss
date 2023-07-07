@@ -16,6 +16,10 @@
 .tf-color-container {
   position: relative;
   width: fit-content;
+
+  input {
+    @include field;
+  }
 }
 
 .tf-color-picker {

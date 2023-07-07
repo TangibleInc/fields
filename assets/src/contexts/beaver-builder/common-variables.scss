@@ -6,7 +6,9 @@ $global-theme-color-lighter-05: #99E7FF;
 $field-focus-color: $global-theme-color;
 $button-border-color--focus: $global-theme-color;
 
-$field-padding: 0 12px;
+$field-padding-vertical: 0; 
+$field-padding-horizontal: 12px; 
+$field-padding: $field-padding-vertical $field-padding-horizontal;
 $field-height: 36px;
 $field-border-color: transparent;
 $field-border: $field-border-width $field-border-style $field-border-color;

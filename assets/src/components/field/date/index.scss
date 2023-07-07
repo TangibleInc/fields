@@ -6,6 +6,7 @@
 
 .tf-date-field-container {
   position: relative;
+  width: 100%;
 
   .tf-popover {
     display: flex;
@@ -37,7 +38,9 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-
+  height: calc(#{$field-height} - #{$field-padding-vertical * 2});
+  width: calc(#{$field-width} - #{$field-padding-horizontal * 2});
+  
   &:focus-within {
     border-color: $field-focus-color;
   }
