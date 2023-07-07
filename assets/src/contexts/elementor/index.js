@@ -1,4 +1,6 @@
 /**
+ * /!\ LEGACY /!\ -> New Elementor builder adds a specific class 
+ * 
  * Elementor dosen't add a specific css class according to the editor theme used
  * 
  * To detect if we are in dark mode, we will watch if the dark stylesheet is added or

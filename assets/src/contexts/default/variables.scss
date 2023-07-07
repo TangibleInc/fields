@@ -1,0 +1,93 @@
+// spacers
+$global-spacer-xs: 4px;
+$global-spacer-sm: 8px;
+$global-spacer-xxs: 4px;
+$global-spacer-xs: 6px;
+$global-spacer-sm: 8px;
+$global-spacer-md: 12px;
+$global-spacer-lg: 16px;
+$global-spacer-xl: 20px;
+
+// colors
+$global-theme-color: #4b84ce;
+$global-theme-color-darker-10: #31609e;
+$global-theme-color-lighter-05: #E2E7FF;
+
+$global-theme-gray-00: #fff;
+$global-theme-gray-10: #c6cdd6;
+$global-theme-gray-20: #a7b1bb;
+$global-theme-gray-30: #8c8f94;
+$global-theme-gray-40: #7d8690;
+$global-theme-gray-50: #62656A;
+$global-theme-gray-60: #3D4751;
+$global-theme-gray-70: #2c333a;
+$global-theme-gray-80: #23282d;
+$global-theme-gray-90: #181b20;
+$global-theme-gray-100: #101517;
+
+$global-border-radius: 2px;
+
+$global-context-destructive: #CC1818;
+
+$field-padding: $global-spacer-xs $global-spacer-sm;
+$field-height: 32px;
+$field-width: 192px;
+$field-border-width: 1px;
+$field-border-style: solid;
+$field-border-color: $global-theme-gray-30;
+$field-border: $field-border-width $field-border-style $field-border-color;
+$field-border-radius: $global-border-radius;
+$field-background: white;
+$field-focus-color: $global-theme-color;
+$field-font-size: inherit;
+$field-font-style: inherit;
+$field-font-weight: inherit;
+$field-font-color: inherit;
+$field-placeholder-color: initial;
+$field-box-shadow: unset;
+
+$label-font-size: inherit;
+$label-font-style: inherit;
+$label-font-weight: inherit;
+$label-font-color: inherit;
+$label-text-transform: inherit;
+$label-spacer: revert;
+
+$description-font-size: inherit;
+$description-font-style: inherit;
+$description-font-weight: inherit;
+$description-font-color: inherit;
+$description-margin-top: revert;
+$description-margin-bottom: revert;
+
+$button-background: white;
+$button-border-color: #d3d3d3;
+$button-border-type: solid;
+$button-border-size: 1px;
+$button-border: $button-border-type $button-border-size $button-border-color;
+$button-border-radius: 4px;
+$button-color: #505050;
+$button-padding: 0 12px;
+$button-height: 32px;
+
+$button-background--hover: white;
+$button-border-color--hover: $global-theme-color-darker-10;
+$button-color--hover: $global-theme-color-darker-10;
+
+$button-background--focus: white;
+$button-border-color--focus: $global-theme-color-darker-10;
+$button-color--focus: $global-theme-color-darker-10;
+
+$section-padding: $global-spacer-sm $global-spacer-md;
+$section-border-width: 1px;
+$section-border-style: solid;
+$section-border-color: $global-theme-gray-20;
+$section-border: $section-border-width $section-border-style $section-border-color;
+$section-border-radius: $global-border-radius;
+$section-background: #fff;
+
+$popover-index: 900;
+
+// Field specific variables
+$dimensions-number-group-width: 300px;
+$color-area-height: 150px

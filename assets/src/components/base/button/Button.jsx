@@ -21,11 +21,13 @@ const Button = forwardRef((props, ref) => {
 
   const type = props.type ? `tf-button-${props.type}` : ''
   const context = props.context ? `tf-button-is-${props.context}` : ''
+  const classes = `${type} ${context} ${props.className ?? ''}`
+  
   const CustomTag = props.changeTag && props.changeTag == 'span' ? 'span' : 'button'
   
   return (
     <CustomTag 
-      className={`${type} ${context}`} 
+      className={ classes } 
       style={ props.style } 
       { ...buttonProps } 
       ref={ buttonRef } 

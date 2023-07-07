@@ -5,10 +5,15 @@
   align-items: center;
   cursor: pointer;
   border-radius: 0;
-
+  color: $field-focus-color;
+  margin: 0;
+  
   &:first-child {
     border-top-left-radius: $button-border-radius;
     border-bottom-left-radius: $button-border-radius;
+  }
+  &:not(:first-child) {
+    margin-left: (-$button-border-size);
   }
 
   &:last-child {
@@ -21,6 +26,11 @@
     background: $field-focus-color;
     border-color: $field-focus-color;
   }
+  
+	&:focus-within {
+		position: relative;
+		z-index: 1;
+	}
 
   .dashicons {
     display: flex;

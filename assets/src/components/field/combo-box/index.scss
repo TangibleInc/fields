@@ -1,25 +1,54 @@
 .tf-combo-box {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;  
 }
 
 .tf-combo-box-text {
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   flex-wrap: nowrap;
+  @include field;
+  padding: 0;
+  
+  .tf-popover {
+    border: $field-border;
+    border-bottom-left-radius: $field-border-radius;
+    border-bottom-right-radius: $field-border-radius;
+  }
+  
+	&:focus-within {
+		@include field-focus;
+    
+    .tf-popover {
+      border-color: $field-focus-color;
+      box-shadow: 0 0 0 1px $field-focus-color;
+      outline: 2px solid transparent;
+    }
+	}
 
   input {
-    @include field;
+    border: 0;
+    box-shadow: none;
+    width: 100%;
+    
+    &:focus {
+      box-shadow: none;
+    }
   }
 
-  button {
+  .tf-button-action {
     @include button;
+    border: 0;
+    background: none;
+    max-height: calc(#{$field-height} - 2px);
   }
 
   .tf-popover {
-    top: 100%;
-  }
+		top: 100%;
+    width: fit-content + #{$field-border-width * 2};
+    left: (-$field-border-width);
+	}
 
   .tf-button-action span {
     padding: 0 2px;
@@ -27,11 +56,17 @@
 }
 
 .tf-combo-box-item {
-  height: fit-content;
-  border: 1px grey solid;
-  padding: 2px 5px;
-  margin: 0 2px;
-  background: $field-background;
+  border: 1px solid transparent; 
+	background-color: $global-theme-color-lighter-05;
+	color: $field-focus-color;
+	border-radius: $field-border-radius;
+	font-size: 13px;
+	font-weight: bold;
+	line-height: 1.4;
+  padding: 0.25em 0.5em;
+  display: inline-flex;
+  gap: 0.35em;
+  align-items: center;
 
   span:first-child {
     padding-right: 5px;
@@ -39,7 +74,8 @@
 
   button:last-child {
     cursor: pointer;
-    background-color: white;
+    color: $field-focus-color;
+    background-color: transparent;
     border: none;
 
     &:focus{
@@ -53,23 +89,37 @@
 
 .tf-multiple-combobox-container {
   display: flex;
-  gap: 6px; // Should be a variable?
+  gap: $global-spacer-sm;
   position: relative;
 }
 
 .tf-multiple-combobox > .tf-popover {
-  width: fit-content;
-}
+  width: $field-width;
 
+  .tf-list-box-option {
+
+    &:not(.tf-list-box-option-selected,.tf-list-box-option-disabled):hover {
+      &::after {
+        content: "\002B";
+        margin-left: auto;
+      }
+    }
+  }
+}
+.tf-multiple-combobox {
+  position: relative;
+}
 .tf-multiple-combobox-values {
   display: flex;
   align-items: center;
   padding: $field-padding;
-  min-width: $field-width;
+  box-sizing: border-box;
+  width: $field-width;
+  background-color: $field-background;
   min-height: $field-height;
   border: $field-border;
   border-radius: $field-border-radius;
   flex-wrap: wrap;
-  gap: .5em; // Should be a variable?
+  gap: $global-spacer-sm;
 }
 

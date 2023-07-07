@@ -14,7 +14,13 @@
     height: 100%;
     object-fit: cover;
     overflow: hidden;
+    border-radius: $global-border-radius;
   }
+}
+
+.tf-gallery__controls {
+  @include section;
+  padding: $global-spacer-sm $global-spacer-md;
 }
 
 .tf-gallery-buttons{

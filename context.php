@@ -6,6 +6,7 @@ $fields->current_context = 'default';
 $fields->enqueued_contexts = [];
 $fields->contexts = [
   'default',
+  'wp',
   'elementor',
   'beaver-builder'
 ];
