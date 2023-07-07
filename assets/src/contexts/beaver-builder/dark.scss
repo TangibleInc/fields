@@ -1,15 +1,10 @@
 @import '../default/variables.scss';
 
 // We only need to define the variables we need to overwrite
-$field-padding-vertical: 0; 
-$field-padding-horizontal: 12px; 
-$field-padding: $field-padding-vertical $field-padding-horizontal;
-
 $field-border-color: #64666a;
 $field-border: $field-border-width $field-border-style $field-border-color;
 $field-background: #181b20;
 $field-focus-color: $global-theme-color;
-
 
 $button-color: $global-theme-gray-20;
 $button-background: $global-theme-gray-70;
