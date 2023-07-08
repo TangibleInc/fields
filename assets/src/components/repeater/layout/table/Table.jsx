@@ -1,4 +1,6 @@
 import { Button, ModalTrigger } from '../../../base'
+import { Checkbox } from '../../../field'
+import BulkActions from '../../common/BulkActions'
 
 /**
  * TODO: Implement useTable hook
@@ -6,17 +8,29 @@ import { Button, ModalTrigger } from '../../../base'
  * @see https://react-spectrum.adobe.com/react-aria/useTable.html 
  */
 
+const bulkOptions = { 'deletion': 'Delete' }
+
 const Table = ({
   items,
   fields,
   dispatch,
   getRow,
   getControl,
-  maxLength
+  maxLength,
+  useBulk
 }) => (
+  <div>
+  { 
+    useBulk && 
+    <BulkActions
+      actions={ bulkOptions }
+      dispatch={ dispatch }
+    /> 
+  } 
   <table>
     <thead>
       <tr>
+        <th></th>
         { fields.map(field => (
           <th>{ field.label ?? '' }</th>
         )) }
@@ -25,10 +39,26 @@ const Table = ({
     </thead>
     <tbody>
       { items && items.slice(0, maxLength).map((item, i) => (
-        <tr key={ item.key }>{ 
+        <tr key={ item.key }>
+          <td>{
+            useBulk
+            ? <div onClick={ e => e.stopPropagation() }>
+                <Checkbox 
+                  value={ item._bulkCheckbox }
+                  onChange={ value => dispatch({ 
+                    type    : 'update',
+                    item    : i,
+                    control : '_bulkCheckbox',
+                    value   : value
+                  }) } 
+                />
+              </div>  
+            : null
+          }</td>
+          { 
           getRow(item).map(
             control => (
-              <td>{ getControl(control, item, i) }</td>  
+              <td>{ getControl(control, item, i) }</td>
             )
           )}
           <td>
@@ -58,6 +88,7 @@ const Table = ({
       )) }
     </tbody>
   </table>
+  </div>
 )
 
 export default Table
