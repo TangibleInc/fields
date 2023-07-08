@@ -1,86 +1,67 @@
-$field-padding: 0 12px;
-$field-height: 32px;
-$field-width: 192px;
-$field-border: solid 1px #64666a;
-$field-border-radius: 4px;
+@import '../default/variables.scss';
+
+// We only need to define the variables we need to overwrite
+$field-border-color: #64666a;
+$field-border: $field-border-width $field-border-style $field-border-color;
 $field-background: #181b20;
-$field-focus-color: #4b84ce;
-$field-font-size: inherit;
-$field-font-style: inherit;
-$field-font-weight: inherit;
-$field-font-color: inherit;
-$field-placeholder-color: inherit;
+$field-focus-color: $global-theme-color;
 
-$label-font-size: inherit;
-$label-font-style: inherit;
-$label-font-weight: inherit;
-$label-font-color: inherit;
+$button-color: $global-theme-gray-20;
+$button-background: $global-theme-gray-70;
 
-$description-font-size: inherit;
-$description-font-style: inherit;
-$description-font-weight: inherit;
-$description-font-color: inherit;
+$button-background--hover: #131a22;
+$button-border-color--hover: $button-border-color;
+$button-color--hover: $button-color;
 
-$button-background: #2c333a;
-$button-border-color: #64666a;
-$button-border-type: solid;
-$button-border-size: 1px;
-$button-border: $button-border-type $button-border-size $button-border-color;
-$button-border-radius: 4px;
-$button-color: white;
-$button-padding: 0 12px;
-$button-height: 32px;
+$button-background--focus: white;
+$button-border-color--focus: $global-theme-color;
+$button-color--focus: $button-color;
 
-$popover-index: 900;
+@import './common-variables.scss';
+@import '../default/mixins.scss';
+@import './common-mixins.scss';
 
-@mixin field {
-  padding: $field-padding;
-  height: $field-height;
-  width: $field-width;
-  border: $field-border;
-  border-radius: $field-border-radius;
-  background: $field-background;
-
-  color: $field-font-color;
-  font-size: $field-font-size;
-  font-style: $field-font-style;
-  font-weight: $field-font-weight;
-
-  &::placeholder {
-    color: $field-placeholder-color;
-    font-size: $field-font-size;
-    font-style: $field-font-style;
-    font-weight: $field-font-weight;      
-  }
-}
-
-@mixin label {
-  color: $label-font-color;
-  font-size: $label-font-size;
-  font-style: $label-font-style;
-  font-weight: $label-font-weight;
-}
-
-@mixin description {
-  color: $description-font-color;
-  font-size: $description-font-size;
-  font-style: $description-font-style;
-  font-weight: $description-font-weight;
-}
-
+// We only need to defined the mixins we need to overwrite
 @mixin button {
   background: $button-background;
   border: $button-border;
   border-radius: $button-border-radius;
   color: $button-color;
+  fill: $button-color;
   padding: $button-padding;
   height: calc(#{$button-height} - #{$button-border-size *  2}); // Remove border
   cursor: pointer;
+  box-shadow: $button-box-shadow;
+  font-family: var(--fl-builder-font-family);
+  font-size: $button-font-size;
+  font-style: normal;
+  font-weight: $button-font-weight;
+  line-height: 1;
+  margin: 0;
+  padding: 0 $global-spacer-lg;
+  text-align: center;
+  transition-property: background-color,width;
+  transition-duration: .2s;
+  
+  &:hover {
+    background: $button-background--hover;
+    border-color: $button-border-color--hover;
+    color: $button-color--hover;
+  }
+  &:focus {
+    background: $button-background--focus;
+    border-color: $button-border-color--focus;
+    color: $button-color--focus;
+  }
 }
 
-@mixin button-disabled {
-  cursor: not-allowed;
-  pointer-events: none;
-  opacity: 0.5;
+@mixin section {
+  border-radius: $section-border-radius;
+  background: $section-background;
+  box-shadow: $field-box-shadow;
+  
+  input, select {
+    box-shadow: unset;
+    border-color: #7d8690 !important;
+  }
 }
-

@@ -1,5 +1,13 @@
-.tf-repeater-block-items {
+.tf-repeater-block-item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   margin-top: 1em;
+  margin-bottom: $global-spacer-xs;
+    
+  border: $field-border;
+  border-radius: $field-border-radius;
+  background: $field-background;
 
   // not ideal but it will do until we change the css of the switch component to be able to change its size
   .tf-panel-header .tf-switch-element,
@@ -8,3 +16,6 @@
   }
 }
 
+.tf-repeater-block-item-field {
+  padding: 1em;
+}

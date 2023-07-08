@@ -43,7 +43,7 @@ const Checkbox = props => {
         <input { ...inputProps } ref={ ref } />
         <input type="hidden" name={ props.name ?? '' } value={ state.isSelected ? '1' : '0' } />
         { props.label ?? '' }
-      </Label> 
+			</Label>
       { props.description &&
         <Description { ...descriptionProps }>
           { props.description }

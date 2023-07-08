@@ -143,7 +143,7 @@ const Repeater = props => {
         getRow={ getRow }
         getControl={ getControl }
         maxLength = { repeatable ? maxLength : undefined }
-        title={ props.sectionTitle ?? '' }
+        title={ props.sectionTitle ?? false }
         useSwitch={ props.useSwitch }
         useBulk={ props.useBulk }
       />
@@ -158,7 +158,7 @@ const Repeater = props => {
           </Button>
           <ModalTrigger 
             title="Confirmation"
-            label="Clear item"
+            label="Remove all"
             isDisabled={ items.length <= 0 }
             onValidate={ () => dispatch({ type: 'clear' })}
           >

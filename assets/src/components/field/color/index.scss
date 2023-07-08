@@ -1,7 +1,7 @@
 .tf-color-area-gradient,
 .tf-color-area {
   width: 100%;
-  height: $field-width;
+  height: $color-area-height;
 }
 
 .tf-color-area-thumb {
@@ -16,6 +16,10 @@
 .tf-color-container {
   position: relative;
   width: fit-content;
+
+  input {
+    @include field;
+  }
 }
 
 .tf-color-picker {

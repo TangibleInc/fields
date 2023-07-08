@@ -1,0 +1,18 @@
+// We only need to defined the mixins we need to overwrite
+@mixin field-focus {
+  border-color: $field-focus-color;
+}
+
+@mixin label {
+  color: $label-font-color;
+  font-size: $label-font-size;
+  font-style: $label-font-style;
+  font-weight: $label-font-weight;
+}
+
+@mixin description {
+  color: $description-font-color;
+  font-size: $description-font-size;
+  font-style: $description-font-style;
+  font-weight: $description-font-weight;
+}
