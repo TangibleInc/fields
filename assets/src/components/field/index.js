@@ -5,7 +5,7 @@ import ButtonGroup from './button-group/ButtonGroup'
 import Checkbox from './checkbox/Checkbox'
 import Color from './color/Color'
 import ComboBox from './combo-box/'
-import DatePicker from './date/'
+import Date from './date/Date'
 import Dimensions from './dimensions/Dimensions'
 import DynamicText from './dynamic-text/DynamicText'
 import Editor from './editor/'
@@ -30,7 +30,7 @@ export {
   Checkbox,
   Color,
   ComboBox,
-  DatePicker,
+  Date,
   Dimensions,
   DynamicText,
   Editor,

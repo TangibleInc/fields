@@ -46,11 +46,12 @@ const replaceDependentValues = (
       
       dependentSubkeys.forEach(subkey => {
         const valueSubkey = context[control.name][key][subkey]
-        control[key][subkey] = values[ valueSubkey ] ?? ''
+        control[key][subkey] = values[ valueSubkey ] 
+          ? (values[ valueSubkey ].value ?? values[ valueSubkey ])
+          : ''
       })
-      
     } else {
-      control[key] = values[ valueKey ]
+      control[key] = values[ valueKey ].value ?? values[ valueKey ] 
     }
   })
 

@@ -7,7 +7,7 @@ import { createContext } from 'react'
 import { initContexts } from './contexts/'
 
 import { 
-  dispatchEvent,
+  triggerEvent,
   addEventListener 
 } from './events'
 
@@ -65,7 +65,7 @@ const init = () => {
       ? createRoot(element).render(component)
       : render(element, component)
 
-    dispatchEvent('initField', {
+    triggerEvent('initField', {
       name  : field, 
       props : props
     })

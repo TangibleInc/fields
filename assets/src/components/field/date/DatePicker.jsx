@@ -1,18 +1,18 @@
 import { 
-  useRef, 
   useEffect, 
-  useState 
+  useState,
+  forwardRef
 } from 'react'
-
-import { useDatePickerState } from 'react-stately'
-import { useDatePicker } from 'react-aria'
 
 import { 
   Button, 
-  Popover, 
-  Label,
-  Description
+  Popover
 } from '../../base'
+
+import { 
+  today, 
+  getLocalTimeZone
+} from '@internationalized/date'
 
 import Calendar from './calendar/Calendar'
 import DateField from './DateField'
@@ -21,22 +21,24 @@ import DateField from './DateField'
  * @see https://codesandbox.io/s/reverent-faraday-5nwk87?file=/src/DatePicker.js
  */
 
-const DatePicker = props => {
-  
-  const state = useDatePickerState(props)
-  const [focusedDate, setFocusedDate] = useState(props.value)
-  const ref = useRef()
+const DatePicker = forwardRef(({
+  datePickerProps,
+  hasFutureOnly,
+  state,
+  ...props
+}, ref) => {
   
   const {
     groupProps,
-    labelProps,
-    descriptionProps,
     fieldProps,
     buttonProps,
     dialogProps,
-    calendarProps
-  } = useDatePicker(props, state, ref)
+    calendarProps,
+    inputProps
+  } = datePickerProps
 
+  const [focusedDate, setFocusedDate] = useState(props.value)
+  
   /**
    * Make sure focused date is updated when value from input changes
    * 
@@ -70,31 +72,34 @@ const DatePicker = props => {
   }
   buttonProps.onPress = () => state.setOpen( !state.isOpen )
 
+  const getStringValue = () => (
+    state.value && state.value.toString ? state.value.toString() : ''
+  )
+
+  useEffect(() => {
+    props.onChange && props.onChange( getStringValue() )
+    if( hasFutureOnly && state.value && props.value ) {
+      const dateToday = today(getLocalTimeZone())
+      if( state.value.compare( dateToday ) < 0 ) state.setValue( dateToday )
+    }
+  }, [state.value])
+
   return(
-    <div className="tf-date">
-      { props.label &&
-        <Label { ...labelProps }>
-          { props.label }
-        </Label> }
-      <div className="tf-date-field-container">
-        <div className="tf-date-group" { ...groupProps } ref={ ref }>
-          <DateField { ...fieldProps } />
-          <Button type="action" { ...buttonProps }>
-            🗓
-          </Button>
-        </div>
-        { state.isOpen &&
-          <Popover { ...dialogProps } ref={ ref } state={ state } placement="bottom start">
-            <Calendar { ...calendarProps } focusedValue={ focusedDate } onFocusChange={ setFocusedDate } />
-          </Popover> }
+    <div className="tf-date-field-container">
+      <input { ...inputProps } type='hidden' name={ props.name ?? '' } value={ getStringValue() } /> 
+      <div className="tf-date-group" { ...groupProps } ref={ ref }>
+        <DateField { ...fieldProps } />
+        <Button type="action" { ...buttonProps }>
+          🗓
+        </Button>
       </div>
-      { props.description &&
-        <Description { ...descriptionProps }>
-          { props.description }
-        </Description> }
+      { state.isOpen &&
+        <Popover { ...dialogProps } ref={ ref } state={ state } placement="bottom start">
+          <Calendar { ...calendarProps } focusedValue={ focusedDate } onFocusChange={ setFocusedDate } />
+        </Popover> }
     </div>
   )
-}
+})
 
 export default DatePicker
 

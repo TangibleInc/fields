@@ -1,0 +1,33 @@
+.tf-dynamic-text-input {
+  @include field;
+  height: calc(#{$field-height} - #{$field-padding-vertical * 2});
+  width: calc(#{$field-width} - #{$field-padding-horizontal * 2});
+
+  &:focus-within {
+    border-color: $field-focus-color;
+  }
+  
+  & > .cm-editor {
+    width: 100%;
+    height: 100%;
+
+    .cm-line,
+    .cm-content {
+      padding: 0;
+    }
+
+    .cm-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+
+  .tf-dynamic-text-item-delete {
+    &:before {
+      content: '\2A2F';
+      padding-left: 3px;
+      cursor: pointer;
+    }
+  }
+}

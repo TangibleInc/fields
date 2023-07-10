@@ -1,6 +1,6 @@
 const prefix = 'tangible/fields/'
 
-const dispatchEvent = (name, args = {}) => {
+const triggerEvent = (name, args = {}) => {
 
   const event = new CustomEvent(prefix + name, { detail: args })
 
@@ -16,6 +16,6 @@ const addEventListener = (name, callback) => {
 }
 
 export {
-  dispatchEvent,
+  triggerEvent,
   addEventListener
 }

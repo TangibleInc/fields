@@ -1,30 +1,36 @@
-import {
-  useState,
+import { 
   useEffect,
+  useState,
   useContext,
   useMemo
 } from 'react'
-
-import { OverlayProvider } from 'react-aria'
-import { dispatchEvent, addEventListener } from './events'
-import controls from './controls-list.js'
 
 import { 
   evaluateFieldVisibility,
   getTriggerFields
 } from './visibility/'
 
+import { 
+  addEventListener,
+  triggerEvent
+} from './events'
+
+import { OverlayProvider } from 'react-aria'
+import { dynamicValuesAPI } from './dynamic-values'
+
+import controls from './controls-list.js'
+
 const Control = ({
   visibility,
   ...props
 }) => {
-  
+
   /**
    * @see renderField() in ./src/index.jsx 
    */
   const { ControlContext } = tangibleFields 
   const control = useContext(ControlContext)
-  
+
   const wrapper = {
     ...(props.wrapper ?? {}),
     className: `${props?.wrapper?.class ?? ''} ${control.wrapper}`
@@ -50,12 +56,12 @@ const Control = ({
   delete childProps.wrapper
 
   const onChange = newValue => {
-    
+
     setValue(newValue)
 
     // The timeout make sure the event is dispatched after the state changed
     setTimeout(() => {
-      dispatchEvent('valueChange', {
+      triggerEvent('valueChange', {
         name: props.name ?? false,
         props: props,
         value: newValue,
@@ -124,7 +130,15 @@ const Control = ({
   
   return (
     <OverlayProvider { ...wrapper }>
-      <ControlComponent value={value} onChange={onChange} { ...childProps } />
+      <ControlComponent 
+        { ...childProps } 
+        value={ value }
+        onChange={ onChange } 
+        dynamic={ props.dynamic 
+          ? dynamicValuesAPI(value, setValue, props.dynamic) 
+          : false 
+        }
+      />
     </OverlayProvider>
   )
 }

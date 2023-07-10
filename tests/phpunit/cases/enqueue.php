@@ -30,11 +30,11 @@ class Enqueue_TestCase extends WP_UnitTestCase {
 		$this->assertEquals('tangible-fields-default', wp_styles()->query('tangible-fields-default')->handle);
 		$this->assertEquals('tangible-fields', wp_scripts()->query('tangible-fields')->handle);
 
-		$data = wp_scripts()->get_data('tangible-fields', 'data');
-		$this->assertGreaterThan(0, preg_match('#^var TangibleFields = (.+?);$#', $data, $matches), 'wp_localize_scripts does not have TangibleFields');
+		$data = wp_scripts()->print_inline_script('tangible-fields', 'before', false);
+		$this->assertGreaterThan(0, preg_match('#^var TangibleFields = (.+?);$#', $data, $matches), 'wp_add_inline_script does not have TangibleFields');
 		$data = json_decode($matches[1], true);
 
-		$this->assertEquals(['api', 'fields', 'dependents', 'mimetypes'], array_keys($data));
+		$this->assertEquals(['api', 'fields', 'dependents', 'dynamics', 'mimetypes'], array_keys($data));
 	}
 
 	public function test_fields_enqueue_conditions() {
@@ -55,7 +55,7 @@ class Enqueue_TestCase extends WP_UnitTestCase {
 		]);
 
 		tangible_fields()->maybe_enqueue_scripts();
-		preg_match('#^var TangibleFields = (.+?);$#', wp_scripts()->get_data('tangible-fields', 'data'), $matches);
+		preg_match('#^var TangibleFields = (.+?);$#', wp_scripts()->print_inline_script('tangible-fields', 'before', false), $matches);
 		$data = json_decode($matches[1], true);
 
 		$this->assertArrayNotHasKey('condition', $data['fields']['test']);

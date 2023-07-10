@@ -1,5 +1,11 @@
-import { useRef } from 'react'
+import { 
+  useRef,
+  useState,
+  useEffect
+} from 'react'
+
 import { useNumberFieldState } from 'react-stately'
+import { FieldWrapper } from '../../dynamic'
 
 import { 
   useLocale, 
@@ -15,6 +21,7 @@ import {
 const NumberComponent = props => {
 
   const { locale } = useLocale()
+  const [value, setValue] = useState(props.value ?? '')
   const state = useNumberFieldState({ ...props, locale })
   const inputRef = useRef()
 
@@ -27,20 +34,34 @@ const NumberComponent = props => {
     decrementButtonProps
   } = useNumberField(props, state, inputRef)
 
+  useEffect(() => props.onChange && props.onChange(value), [value])
+
   const hasButtons = props.hasButtons ?? true
-  
-  return (
+
+  return(
     <div className='tf-number'>
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
       <div className='tf-number-field' { ...groupProps }>
-        <input { ...inputProps} value={ Number.isInteger(state.numberValue) ? state.numberValue : 0 } ref={ inputRef } />
-        { hasButtons && <div className='tf-number-button-group'> 
-          <Button type="number" { ...incrementButtonProps }>+</Button> 
-          <Button type="number" { ...decrementButtonProps }>-</Button>
-        </div> }
+        <FieldWrapper 
+          { ...props } 
+          value={ value }
+          onValueSelection={ setValue }
+          ref={ inputRef } 
+          inputProps={ inputProps } 
+        >
+          <input 
+            { ...inputProps} 
+            value={ Number.isInteger(state.numberValue) ? state.numberValue : 0 } 
+            ref={ inputRef } 
+          />
+          { hasButtons && <div className='tf-number-button-group'>
+            <Button type="number" { ...incrementButtonProps }>+</Button>
+            <Button type="number" { ...decrementButtonProps }>-</Button>
+          </div> }
+        </FieldWrapper>
       </div>
       { props.description &&
         <Description { ...descriptionProps }>

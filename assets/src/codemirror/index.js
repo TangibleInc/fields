@@ -6,6 +6,8 @@ import {
   WidgetType
 } from '@codemirror/view'
 
+import { dynamicValueRegex } from '../dynamic-values'
+
 /**
  * Create code mirror example 
  */
@@ -13,7 +15,8 @@ const createInput = (
   element, 
   initialText = '', 
   onChange = false,
-  sections = []
+  sections = [],
+  getLabel = (match, items) => (items[ match ] ?? match)
 ) => (
   new EditorView({
     doc: initialText,
@@ -33,17 +36,27 @@ const createInput = (
           this.placeholders = this.matchResults(this.items).createDeco(view)
         }
       
-        update(update){
+        update(update) {
           this.placeholders = this.matchResults(this.items).updateDeco(update, this.placeholders)
         }
 
         matchResults(items) {  
           return new MatchDecorator({
-            regexp: /\[\[([A-Za-zÀ-ú0-9_\- ]+(?!\[)[^\[\]]*)\]\]/g,
-            decoration: match => Decoration.replace({
+            regexp: dynamicValueRegex,
+            decoration: (match, view, from) => Decoration.replace({
               widget: new DynamicString(
                 match[1],
-                items[ match[1] ] ?? match[1]
+                getLabel(match[1], items),
+                /**
+                 * For deletions, insert can be omitted
+                 * @see https://codemirror.net/examples/change/
+                 */
+                () => view.dispatch({
+                  changes: {
+                    from: from, 
+                    to: from + match[1].length + 4 // value + delimiters
+                  }
+                })
               ),
             })
           })
@@ -65,8 +78,20 @@ const createInput = (
         if( view.docChanged && onChange ) {
           onChange(view.state.doc.toString())
         } 
-      })
+      }), 
       
+      /**
+       * @see https://discuss.codemirror.net/t/changing-the-font-size-of-cm6/2935/6
+       */
+      EditorView.theme({
+        ".cm-scroller": {
+          fontFamily: "inherit",
+          alignItems: "center !important"
+        },
+        "&.cm-editor.cm-focused": {
+          outline: "none"
+        }
+      })
     ]
   })
 )
@@ -91,10 +116,12 @@ const getItemsObject = sections => {
 
 class DynamicString extends WidgetType {
 
-  constructor(slug, label) {
-    super(slug)
-    this.slug = slug
+  constructor(value, label, onRemove) {
+    super(value)
+
+    this.value = value
     this.label = label
+    this.onRemove = onRemove
   }
 
   toDOM() {
@@ -102,13 +129,20 @@ class DynamicString extends WidgetType {
     const span = document.createElement('span')
 
     span.setAttribute('class', 'tf-dynamic-text-item')
-    span.setAttribute('data-id', this.slug)
+    span.setAttribute('data-id', this.value)
     span.textContent = this.label
+        
+    const editButton = document.createElement('span')
+
+    editButton.setAttribute('class', 'tf-dynamic-text-item-delete')
+    editButton.addEventListener('click', this.onRemove)
+    span.appendChild(editButton)
     
     return span
   }
-
 }
 
-export default createInput
+export { 
+  createInput
+}
 

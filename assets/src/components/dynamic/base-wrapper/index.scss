@@ -1,0 +1,34 @@
+.tf-dynamic-wrapper {
+  display: flex;
+  position: relative;
+  align-items: center;
+  gap: $global-spacer-sm;
+
+  .tf-dynamic-wrapper-popover {
+    position: absolute;
+    top: 100%;
+    z-index: $popover-index;
+    width: $field-width;
+  }
+
+  .tf-dynamic-wrapper-popover-form {
+    background: $field-background;
+    z-index: $popover-index;
+    width: 100%;
+    padding: $field-padding;
+    border: $field-border;
+  }
+
+  .tf-dynamic-wrapper-popover-form > * {
+    margin: 12px 0;
+  }
+
+  .tf-dynamic-wrapper-popover-buttons {
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      margin-left: 6px;
+    }
+  }
+}
