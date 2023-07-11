@@ -74,6 +74,7 @@ export default props => {
       <ComboBox 
         focusStrategy={ 'first' }
         label={ props.label ?? null }
+        placeholder={ props.placeholder }
         description={ props.description ?? false }
         selectedKey={ value } 
         onSelectionChange={ setValue }
