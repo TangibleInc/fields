@@ -1,50 +1,42 @@
-import { forwardRef } from 'react'
+import {useRef, useContext} from 'react'
+import {DismissButton, Overlay, usePopover} from 'react-aria';
 
-import {
-  DismissButton,
-  FocusScope,
-  mergeProps,
-  useDialog,
-  useModal,
-  useOverlay,
-} from 'react-aria'
+function Popover({ children, state, ...props }) {
+  let popoverRef = useRef(null);
+  let { popoverProps, underlayProps } = usePopover({
+    ...props,
+    popoverRef
+  }, state);
 
-const Popover = forwardRef(({
-  title,
-  children,
-  isOpen,
-  onClose,
-  style,
-  ...otherProps
-}, ref) => {
 
-  const { overlayProps } = useOverlay({
-    onClose,
-    isOpen,
-    isDismissable: true
-  }, ref)
-
-  const { modalProps } = useModal()
-  const { dialogProps } = useDialog({}, ref)
+  /**
+   * The Overlay component will create the popover at the end of body, which means
+   * we will not be inside the gloabal context class (tf-context-{name})
+   * 
+   * It needs to be added again in order to correctly apply style inside the popover
+   * 
+   * @see renderField() in ./src/index.jsx 
+   */
+  const { ControlContext } = tangibleFields 
+  const control = useContext(ControlContext)
 
   return (
-    <FocusScope restoreFocus autoFocus>
-      <div
-        { ...mergeProps(
-          overlayProps, 
-          dialogProps, 
-          otherProps, 
-          modalProps
-        ) }
-        ref={ ref }
-        style={ style }
-        className="tf-popover"
-      >
-        { children }
-        <DismissButton onDismiss={ onClose } />
+    <Overlay>
+      <div className={ control.wrapper }>
+        <div {...underlayProps} className="tf-underlay" />
+        <div        
+          {...popoverProps}
+          ref={popoverRef}
+          className="tf-popover"
+        >
+          <DismissButton onDismiss={state.close} />
+          {children} A
+          <DismissButton onDismiss={state.close} />
+        </div>
       </div>
-    </FocusScope>
-  )
-})
+    </Overlay>
+  );
+}
 
-export default Popover
+
+export default Popover;

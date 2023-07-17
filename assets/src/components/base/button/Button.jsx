@@ -13,7 +13,7 @@ const Button = forwardRef((props, ref) => {
   /**
    * Use new ref if no ref forwarded
    */
-  const _ref = useRef()
+  const _ref = props.buttonRef
   const buttonRef = ref ?? _ref
 
   const { buttonProps } = useButton(props, ref)
