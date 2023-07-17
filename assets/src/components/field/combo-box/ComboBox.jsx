@@ -19,7 +19,8 @@ import {
   Button,
   Label,
   Description,
-  ListBox
+  ListBox,
+  Popover
  } from '../../base'
 
  import { getOption } from '../../../utils'
@@ -129,8 +130,12 @@ const ComboBox = props => {
           }
 
           { state.isOpen && 
-            // Can't use popover component because it causes conflicts with focus events
-            <div className="tf-popover">
+            <Popover
+              state={state}
+              triggerRef={inputRef}
+              popoverRef={popoverRef}
+              placement="bottom start"
+            >
               <ListBox
                 listBoxRef={ listBoxRef }
                 state={ state }
@@ -141,7 +146,7 @@ const ComboBox = props => {
               >
                 { item => <Item key={ item.id }>{ item.name }</Item> }
               </ListBox>
-            </div> }
+            </Popover> }
         </div>
       </FocusScope>
       { props.description &&
