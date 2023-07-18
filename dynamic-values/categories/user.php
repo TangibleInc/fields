@@ -11,8 +11,8 @@ $fields->register_dynamic_value([
   'name'     => 'user_id',
   'label'    => 'User ID',
   'type'     => 'text',
-  'callback' => function() {
-    return get_current_user_id();
+  'callback' => function($settings, $config) {
+    return $config['context']['current_user_id'];
   },
   'permission_callback' => '__return_true'
 ]);
@@ -22,14 +22,14 @@ $fields->register_dynamic_value([
   'name'       => 'user_meta',
   'label'      => 'User meta',
   'type'       => 'text',
-  'callback'   => function($settings) {
+  'callback'   => function($settings, $config) {
     
     $source = $settings['source'] ?? 'current';
     $meta_name = $settings['meta_name'] ?? '';
     
     $user_id = (int) (
       $source === 'current'
-        ? get_current_user_id()
+        ? $config['context']['current_user_id']
         : $settings['user_id'] ?? 0
     );
 
