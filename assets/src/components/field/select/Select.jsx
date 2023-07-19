@@ -61,6 +61,7 @@ const Select = props => {
       <Button
         type={ 'select' }
         { ...triggerProps }
+        buttonRef={ref}
         onKeyDown={ e => e.code === 'Space' 
           ? state.toggle() 
           : triggerProps.onKeyDown(e)
@@ -76,11 +77,7 @@ const Select = props => {
         </span>
       </Button>
       { state.isOpen && 
-        <Popover 
-          isOpen={ state.isOpen } 
-          onClose={ state.close }
-          ref={ ref }
-        >
+        <Popover state={state} triggerRef={ref} placement="bottom start">
           <ListBox
             { ...menuProps }
             listBoxRef={ listRef }
