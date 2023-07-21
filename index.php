@@ -55,6 +55,8 @@ new class extends stdClass {
     require_once __DIR__ . '/enqueue.php';
     require_once __DIR__ . '/context.php';
     require_once __DIR__ . '/store.php';
+
+    do_action('tangible_fields_loaded', $fields);
   }
 
 };
