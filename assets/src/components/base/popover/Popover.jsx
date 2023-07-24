@@ -30,7 +30,7 @@ function Popover({ children, state, ...props }) {
           className="tf-popover"
         >
           <DismissButton onDismiss={state.close} />
-          {children} A
+          {children}
           <DismissButton onDismiss={state.close} />
         </div>
       </div>

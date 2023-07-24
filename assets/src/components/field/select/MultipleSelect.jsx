@@ -24,13 +24,14 @@ import {
 
 import { initSet } from '../../../utils'
 
+
 const MultipleSelect = props => {
   
   const [selected, setSelected] = useState( 
     props.value ? initSet(props.value) : new Set() 
   )
-  
-  const [open, isOpen] = useState(false)
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const state = useListState({
     ...props,
@@ -39,15 +40,17 @@ const MultipleSelect = props => {
     selectedKeys: selected
   })
 
+  const buttonRef = useRef();
   const listBoxRef = useRef()
   const PopoverRef = useRef()
 
   const { 
     listBoxProps, 
     labelProps, 
-    descriptionProps 
-  } = useListBox(props, state, listBoxRef)
-  
+    descriptionProps
+  } = useListBox(props, state, PopoverRef)
+
+
   /**
    * We return an array instead of a Set because it works better with JSON.stringify
    */
@@ -57,26 +60,29 @@ const MultipleSelect = props => {
 
   const ListBoxComponent =
     <ListBox
+      { ...listBoxProps }
       listBoxRef={ listBoxRef }
       state={ state }
-      items={ props.items }
-      { ...listBoxProps }
+      items={ props.items }     
     >
       { item => <Item key={ item.id }>{ item.name }</Item> }
     </ListBox>
 
-  return(
-    <div className="tf-multiple-select">
-      <input type="hidden" name={ props.name ?? '' } value={ [...selected].join(',') } />
-      { props.label &&
+
+  return (
+    <>
+      <div className="tf-multiple-select">
+        <input type="hidden" name={ props.name ?? '' } value={ [...selected].join(',') } />
+        { props.label &&
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <Button
-        type={ 'select' }
-        onPress={ () => isOpen( ! open ) }
-      >
-        <span className="tf-multiple-select__value">
+        <Button 
+          type={ 'select' }
+          buttonRef={PopoverRef} 
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <span className="tf-multiple-select__value">
           { selected.size > 0
             ? (selected.size === 1
               ? selected.size + ' item selected'
@@ -86,24 +92,27 @@ const MultipleSelect = props => {
         <span aria-hidden="true" className="tf-select-icon">
           ▼
         </span>
-      </Button>
-      { open
-        ? <Popover 
-            isOpen={ open } 
-            onClose={ () => isOpen(false) }
-            ref={ PopoverRef }
+        </Button>
+        {isOpen ? (
+          <Popover
+            state={{ isOpen, close: () => setIsOpen(false) }}
+            triggerRef={PopoverRef}
           >
-            { ListBoxComponent }
+            {ListBoxComponent}
           </Popover>
-        : <VisuallyHidden>
-          { ListBoxComponent }
-          </VisuallyHidden> }
-      { props.description &&
+        ) : (
+          <VisuallyHidden>{ListBoxComponent}</VisuallyHidden>
+        )}
+        { props.description &&
         <Description { ...descriptionProps }>
           { props.description }
         </Description> }
-    </div>
-  )
+      </div>
+    </>
+  );
+
 } 
+
+
 
 export default MultipleSelect
