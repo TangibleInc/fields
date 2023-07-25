@@ -1,5 +1,6 @@
 .tf-dynamic-text-input {
   @include field;
+  height: calc(#{$field-height} - #{$field-padding-vertical * 2});
   width: calc(#{$field-width} - #{$field-padding-horizontal * 2});
 
   &:focus-within {
@@ -13,14 +14,6 @@
     .cm-line,
     .cm-content {
       padding: 0;
-    }
-
-    .cm-scroller{
-      overflow-y: hidden;
-      &::-webkit-scrollbar {
-        height: 3px;
-        background-color: $field-border-color;
-      }
     }
 
     .cm-content {
