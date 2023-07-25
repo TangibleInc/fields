@@ -1,7 +1,8 @@
 .tf-text {
   display: flex; 
-  flex-direction: column; 
-
+  flex-direction: column;
+  box-sizing: content-box;
+  
   input {
     @include field;
   }
