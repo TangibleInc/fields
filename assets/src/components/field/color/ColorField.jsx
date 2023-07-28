@@ -36,11 +36,15 @@ const ColorField = forwardRef(({
   return(
     <div className="tf-color-container">
       <input ref={ ref } { ...inputProps } 
-        onFocus={ () => isOpen(true)}
+        onClick={() => isOpen(true)}
         value={ state.inputValue }
       />
       { open && 
-        <Popover ref={ popover }>
+        <Popover
+          state={{ isOpen: open, close: () => isOpen(false) }} 
+          triggerRef={ref}
+          placement="bottom start"
+        >
           <ColorPicker 
             value={ state.colorValue?.toString(format) }
             onChange={ onChange } 
