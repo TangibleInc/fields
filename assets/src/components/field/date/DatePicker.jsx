@@ -49,6 +49,29 @@ const DatePicker = forwardRef(({
     if( props.value !== focusedDate ) setFocusedDate(props.value)
   }, [props.value])
 
+  /**
+   * We can't use useFocusWithin because it's not working well when nested (the ColorPicker
+   * component already implment it)
+   *
+   * @see https://react-spectrum.adobe.com/react-aria/useFocusWithin.html
+   * @see https://stackoverflow.com/a/42234988/10491705
+   */
+  useEffect(() => {
+    document.addEventListener('mousedown', onClickOutside)
+    return () => document.removeEventListener('mousedown', onClickOutside)
+  }, [ref])
+
+  const onClickOutside = event => {
+    const tempRef = ref.current ?? false
+
+    if ( ! tempRef ) return;
+    if ( tempRef.contains(event.target) ) {
+      return;
+    }
+
+    state.setOpen( false )
+  }
+  buttonProps.onPress = () => state.setOpen( !state.isOpen )
 
   const getStringValue = () => (
     state.value && state.value.toString ? state.value.toString() : ''

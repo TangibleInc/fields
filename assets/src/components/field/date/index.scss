@@ -8,8 +8,8 @@
   display: flex;
   justify-content: center;
   width: auto;
-	border-radius: $field-border-radius;
-	border: $field-border;
+  border-radius: $field-border-radius;
+  border: $field-border;
 
   @import './calendar/';
 }

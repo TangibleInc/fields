@@ -4,8 +4,10 @@
 }
 
 .tf-popover {
-  background: var(--page-background);
-  border: 1px solid var(--spectrum-global-color-gray-400);
-  box-shadow: 0 8px 20px rgba(0 0 0 / 0.1);
-  border-radius: 6px;
+  background: $field-background;
+  border: $field-border;
+  color: $field-font-color;
+  z-index: $popover-index;
 }
+
+// Update

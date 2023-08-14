@@ -45,7 +45,7 @@ const Gradient = props => {
 
   const input = useRef()
   const gradientPopover = useRef()
-  const colorPopover = useRef(value.colors.map(() => createRef()));
+  const colorPopover = useRef()
   
   const { 
     labelProps, 
@@ -172,7 +172,7 @@ const Gradient = props => {
           {editColor !== false && (
             <Popover
               state={{ isOpen: editColor !== false, close: () => setEditColor(false) }}
-              triggerRef={colorPopover} // Use the appropriate ref based on the selected color index
+              triggerRef={colorPopover} 
               placement="bottom"
             >
               <ColorPicker

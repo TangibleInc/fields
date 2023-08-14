@@ -1,5 +1,13 @@
-import {useRef, useContext} from 'react'
-import {DismissButton, Overlay, usePopover} from 'react-aria';
+import {
+  useRef, 
+  useContext
+} from 'react'
+
+import {
+  DismissButton, 
+  Overlay, 
+  usePopover
+} from 'react-aria'
 
 function Popover({ children, state, ...props }) {
   let popoverRef = useRef(null);
@@ -7,7 +15,6 @@ function Popover({ children, state, ...props }) {
     ...props,
     popoverRef
   }, state);
-
 
   /**
    * The Overlay component will create the popover at the end of body, which means
@@ -27,16 +34,18 @@ function Popover({ children, state, ...props }) {
         <div        
           {...popoverProps}
           ref={popoverRef}
+          style={{
+            ...popoverProps.style
+          }}
           className="tf-popover"
         >
           <DismissButton onDismiss={state.close} />
-          {children}
+          {children} 
           <DismissButton onDismiss={state.close} />
         </div>
       </div>
     </Overlay>
   );
 }
-
 
 export default Popover;
