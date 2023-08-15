@@ -38,7 +38,7 @@ const replaceDependentValues = (
 
   const dependentKeys = Object.keys(context[control.name])
   dependentKeys.forEach(key => {
-    
+
     const valueKey = context[control.name][key]
     
     if( valueKey instanceof Object ) {
@@ -51,7 +51,9 @@ const replaceDependentValues = (
           : ''
       })
     } else {
-      control[key] = values[ valueKey ].value ?? values[ valueKey ] 
+      control[key] = values[ valueKey ] 
+        ? (values[ valueKey ].value ?? values[ valueKey ])
+        : '' 
     }
   })
 
