@@ -246,4 +246,36 @@ class Dynamics_TestCase extends WP_UnitTestCase {
     $parsed_value = $fields->render_value('[[test-value-with-settings::return_value_1=yes]]');
     $this->assertEquals($parsed_value, 'value_1', 'parsed value was not equal to value_1 with return_value_1=yes');
   }
+
+  /**
+   * @depends test_dynamic_value_category_registration
+   */
+  function test_dynamic_value_render_with_context() {
+    
+    $fields = tangible_fields();
+    $fields->register_dynamic_value([
+      'name'     => 'test-value-with-config',
+      'category' => 'test-category',
+      'callback' => function($settings, $config) {
+        return $config['context']['current_user_id'] . '-' . $config['context']['current_post_id'];
+      },
+      'permission_callback_store' => '__return_true',
+      'permission_callback_parse' => '__return_true'
+    ]);
+
+    $default_config = $fields->get_dynamic_value_default_config();
+    
+    $parsed_value = $fields->render_value('[[test-value-with-config]]');
+    $expected_value = $default_config['context']['current_user_id'] . '-' . $default_config['context']['current_post_id'];
+    $this->assertEquals($parsed_value, $expected_value, 'parsed value was not equal to default config');
+
+    $parsed_value = $fields->render_value('[[test-value-with-config]]', [ 
+      'context' => [
+        'current_post_id' => 2
+      ]
+    ]);
+    $expected_value = $default_config['context']['current_user_id'] . '-' . 2;
+    $this->assertEquals($parsed_value, $expected_value, 'parsed was not equal to config');
+  }
+
 }

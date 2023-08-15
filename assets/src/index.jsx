@@ -63,7 +63,7 @@ const init = () => {
      */
     createRoot
       ? createRoot(element).render(component)
-      : render(element, component)
+      : render(component, element)
 
     triggerEvent('initField', {
       name  : field, 
