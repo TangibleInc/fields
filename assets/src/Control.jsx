@@ -102,7 +102,7 @@ const Control = ({
       // Avoid unnecessary evaluations
       if( ! triggerFields.includes(field.name) ) return;  
       
-      evaluateVisibility()
+      setTimeout(evaluateVisibility)
     })
 
     /**
