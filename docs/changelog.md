@@ -1,3 +1,9 @@
+# 20230829
+
+- Dependent values: 
+  - Remove backend logic and rewrite on the JS side
+  - Remove previous limitation (works on every attributes and on both fields/subfields)
+
 # 20230822
 
 - Visibility conditions: Delay evaluateVisibility to next event cycle (prevent issues where values is not updated yet)
