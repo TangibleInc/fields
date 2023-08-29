@@ -12,7 +12,7 @@ import BulkActions from '../../common/BulkActions'
 const Block = ({
   items,
   dispatch,
-  getRow,
+  rowFields,
   getControl,
   maxLength,
   title = false,
@@ -113,13 +113,11 @@ const Block = ({
             : (activeItem === i ? setActiveItem(false) : null) }
           headerLeft={ getHeaderLeft(item, i) }
         > 
-          { getRow(item).map(
-            control => ( 
-              <div className="tf-repeater-block-item-field">
-                { getControl(control, item, i) }
-              </div>  
-            ) 
-          ) } 
+          { rowFields.map(control => ( 
+            <div className="tf-repeater-block-item-field">
+              { getControl(control, item, i) }
+            </div>
+          )) } 
         </ExpandablePanel>
       )) }
     </div>

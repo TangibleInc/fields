@@ -19,9 +19,11 @@ import { OverlayProvider } from 'react-aria'
 import { dynamicValuesAPI } from './dynamic-values'
 
 import controls from './controls-list.js'
+import DependendWrapper from './components/dependent/DependendWrapper'
 
 const Control = ({
   visibility,
+  data,
   ...props
 }) => {
 
@@ -48,13 +50,6 @@ const Control = ({
 
   if (!ControlComponent) return <></>;
 
-  const childProps = Object.assign({}, props)
-
-  delete childProps.value
-  delete childProps.onChange
-  delete childProps.class
-  delete childProps.wrapper
-
   const onChange = newValue => {
 
     setValue(newValue)
@@ -77,7 +72,7 @@ const Control = ({
     } 
 
     // The default callback looks only for a value in other defined fields, but we can overwrite it if needed
-    const getValue = visibility.getValue ?? control.getValue
+    const getValue = data.getValue ?? control.getValue
     const result = evaluateFieldVisibility(visibility.condition, getValue)
     
     setVisibility( visibility.action !== 'hide' ? result : ! result )
@@ -96,7 +91,7 @@ const Control = ({
      */
     addEventListener('valueChange', field => {
 
-      // We rely on visibility.watcher for subfield changes (@see below)
+      // We rely on data.watcher for subfield changes (@see below)
       if( field.props?.controlType === 'subfield' ) return;
       
       // Avoid unnecessary evaluations
@@ -110,8 +105,8 @@ const Control = ({
      *  
      * It is currently used to watch changes in subfields (repeaters, field-groups)
      */
-    if( visibility.watcher ) {
-      visibility.watcher(fieldName => {
+    if( data.watcher ) {
+      data.watcher(fieldName => {
         // Avoid unnecessary evaluations
         if( triggerFields.includes(fieldName) ) evaluateVisibility()
       })
@@ -130,14 +125,16 @@ const Control = ({
   
   return (
     <OverlayProvider { ...wrapper }>
-      <ControlComponent 
-        { ...childProps } 
-        value={ value }
-        onChange={ onChange } 
-        dynamic={ props.dynamic 
-          ? dynamicValuesAPI(value, setValue, props.dynamic) 
-          : false 
-        }
+      <DependendWrapper controlProps={ props } data={ data } renderControl={ controlProps => ( 
+        <ControlComponent 
+          { ...controlProps } 
+          value={ value }
+          onChange={ onChange } 
+          dynamic={ props.dynamic 
+            ? dynamicValuesAPI(value, setValue, props.dynamic) 
+            : false 
+          }
+        />)}
       />
     </OverlayProvider>
   )
