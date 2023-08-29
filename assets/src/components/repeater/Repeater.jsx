@@ -10,8 +10,11 @@ import {
   initDispatcher 
 } from './dispatcher.js'
 
-import { Button, Title, ModalTrigger } from '../base'
-import { applyDependentValues } from '../../dependent-values' 
+import { 
+  Button, 
+  Title, 
+  ModalTrigger 
+} from '../base'
 
 import Layouts from './layout' 
 import Control from '../../Control'
@@ -47,21 +50,12 @@ const Repeater = props => {
   const emptyItem = {}
   fields.forEach(field => emptyItem[ field.name ] = '')
 
-  const [visibilityCallbacks, setVisibilityCallbacks] = useState([])
   const [items, dispatch] = useReducer(
     repeaterDispatcher(emptyItem, maxLength), 
     props.value ?? '',
     initDispatcher
   )
 
-  const getRow = item => (
-    applyDependentValues(
-      props.element ?? false,
-      rowFields,
-      item
-    )
-  )
-  
   const hasField = name => (
     rowFields.map(
       field => field.name ?? false
@@ -69,26 +63,37 @@ const Repeater = props => {
   )
 
   /**
-   * Call all the visibility callback registered for a given repeater row
+   * Can be used by repeater sub-controls to watch value change from the current row/block
    */
-  const evaluateRowVisibility = (rowKey, fieldName) => {
-    visibilityCallbacks.forEach(callback => callback(rowKey, fieldName))
+  const [onChangeCallback, setChangeCallback] = useState([])
+
+  /**
+   * Call all the visibility callback attached to data.watcher (@see <Control /> below)
+   */
+  const triggerRowCallbackEvents = (rowKey, fieldName) => {
+    onChangeCallback.forEach(callback => callback(rowKey, fieldName))
   }
 
   const getControl = (control, item, i) => (
-    <Control 
+    <Control
+      key={ item.key + i} 
       value={ item[control.name] ?? '' }
       onChange={ value => dispatch({ 
         type     : 'update',
         item     : i,
         control  : control.name,
         value    : value,
-        callback : () => evaluateRowVisibility(item.key, control.name)  
+        callback : () => triggerRowCallbackEvents(item.key, control.name)
       }) }
       controlType={ 'subfield' }
       visibility={{
         action: control.condition?.action ?? 'show',
-        condition: control.condition?.condition ?? false,
+        condition: control.condition?.condition ?? false
+      }}
+      /**
+       * Used by visbility and dependent values to detect changes and access data 
+       */
+      data={{
         /**
          * The field value can either be from a subvalue or from another field value
          */
@@ -98,21 +103,20 @@ const Repeater = props => {
             : (context[name] ?? '')
         ),
         /**
-         * Needed to trigger a re-evaluatation of the visibility conditions according when a subfield value change
-         * TODO: When removing a row remove associated callbacks
+         * Possibility to add callback event that will be triggered each time a field from the current row will
+         * change
+         * @todo Avoid multiple definition (currently no way to remove watch from child which not ideal)
          */
-        watcher: evaluationCallback => {
-          setVisibilityCallbacks(
-            prevValue => [ 
-              ...prevValue,
-              (rowKey, fieldName) => {
-                rowKey === item.key && control.name 
-                  ? evaluationCallback(fieldName) 
-                  : null
-              } 
-            ]
-          )       
-        }
+        watcher: callback => setChangeCallback(
+          prevValue => [ 
+            ...prevValue,
+            (rowKey, fieldName) => {
+              rowKey === item.key && control.name 
+                ? callback(fieldName, item.key) 
+                : null
+            } 
+          ]
+        )
       }}
       { ...control }
     />
@@ -140,7 +144,7 @@ const Repeater = props => {
         items={ items }
         fields={ fields }
         dispatch={ dispatch }
-        getRow={ getRow }
+        rowFields={ rowFields }
         getControl={ getControl }
         maxLength = { repeatable ? maxLength : undefined }
         title={ props.sectionTitle ?? false }

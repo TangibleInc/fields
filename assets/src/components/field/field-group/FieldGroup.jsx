@@ -10,7 +10,6 @@ import {
   areSameObjects 
 } from '../../../utils'
 
-import { applyDependentValues } from '../../../dependent-values' 
 import Control from '../../../Control'
 
 /**
@@ -18,7 +17,7 @@ import Control from '../../../Control'
  */
 const FieldGroup = props => {
 
-  const [visibilityCallback, setVisibilityCallback] = useState(false)
+  const [onChangeCallback, setChangeCallback] = useState(false)
   const [fieldUpdateCallback, setFieldUpdateCallback] = useState(false)
 
   const [value, setValue] = useState(
@@ -41,14 +40,14 @@ const FieldGroup = props => {
       [name]: attributeValue
     })
 
-    if( ! visibilityCallback ) return;
+    if( ! onChangeCallback ) return;
 
     /**
      * Save the callback to use it in the useEffect so that it's executed
      * after state update 
      */
     setFieldUpdateCallback(() => 
-      () => visibilityCallback(name)
+      () => onChangeCallback(name)
     )
   }
 
@@ -86,41 +85,41 @@ const FieldGroup = props => {
   return(
     <div className="tf-field-group">
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
-      { applyDependentValues(
-          props.element ?? false,
-          fields, 
-          value
-        ).map(
-          (control, index) => (
-            <div key={ index } className="tf-field-group-item">
-              <Control
-                { ...control }
-                value={ value[control.name] ?? '' }
-                controlType={ 'subfield' }
-                onChange={ value => setAttribute(control.name, value) }
-                visibility={{
-                  condition: control.condition?.condition ?? false,
-                  action: control.condition?.action ?? 'show',
-                  /**
-                   * The field value can either be from a subvalue or from another field value
-                   */
-                  getValue: name => (
-                    hasField(name)
-                      ? (valueRef.current[name] ?? '')
-                      : (context.getValue(name) ?? '')
-                  ),
-                  /**
-                   * Needed to trigger a re-evaluatation of the visibility conditions according when a 
-                   * subfield value change
-                   */
-                  watcher: evaluationCallback => {
-                    setVisibilityCallback(() => (name) => evaluationCallback(name) )
-                  }
-                }}
-              />
-            </div>  
-          )
-        )}
+      { fields.map((control, index) => (
+        <div key={ index } className="tf-field-group-item">
+          <Control
+            { ...control }
+            value={ value[control.name] ?? '' }
+            controlType={ 'subfield' }
+            onChange={ value => setAttribute(control.name, value) }
+            visibility={{
+              condition: control.condition?.condition ?? false,
+              action: control.condition?.action ?? 'show',
+            }}
+            /**
+             * Used by visbility and dependent values to detect changes and access data
+             */
+            data={{
+              /**
+               * The field value can either be from a subvalue or from another field value
+               */
+              getValue: name => (
+                hasField(name)
+                  ? (valueRef.current[name] ?? '')
+                  : (context.getValue(name) ?? '')
+              ),
+              /**
+               * Needed to trigger a re-evaluatation of the visibility conditions / dependent values
+               * when a subfield value change
+               */
+              watcher: evaluationCallback => {
+                setChangeCallback(() => (name) => evaluationCallback(name) )
+              }
+            }}
+          />
+        </div>
+        )
+      )}
     </div>
   )
 }

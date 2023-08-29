@@ -34,7 +34,7 @@ class Enqueue_TestCase extends WP_UnitTestCase {
 		$this->assertGreaterThan(0, preg_match('#^var TangibleFields = (.+?);$#', $data, $matches), 'wp_add_inline_script does not have TangibleFields');
 		$data = json_decode($matches[1], true);
 
-		$this->assertEquals(['api', 'fields', 'dependents', 'dynamics', 'mimetypes'], array_keys($data));
+		$this->assertEquals(['api', 'fields', 'dynamics', 'mimetypes'], array_keys($data));
 	}
 
 	public function test_fields_enqueue_conditions() {
