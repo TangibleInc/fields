@@ -1,3 +1,7 @@
+# 20230831
+
+- Dynamic values: Fix issues with dynamic values settings not working due to recent changes
+
 # 20230829
 
 - Dependent values: 
