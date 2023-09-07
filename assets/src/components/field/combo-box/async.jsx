@@ -28,9 +28,15 @@ const getAsyncProps = props => {
         ? await Tangible?.ajax(props.ajaxAction, data)
         : await get(props.searchUrl ?? '', data) 
       
+      console.log(results)
+      const formatedResults = props.mapResults
+        ? mapResults(results, props.mapResults)
+        : results
+      console.log(formatedResults)
+
       return {
         items: getOptions(
-          (results ?? []).reduce((items, item) => ({ ...items, [item.id]: item.title }), {})
+          (formatedResults ?? []).reduce((items, item) => ({ ...items, [item.id]: item.title }), {})
         )
       }
     }
@@ -42,6 +48,37 @@ const getAsyncProps = props => {
     onInputChange: list.setFilterText,
   }
 }
+
+/**
+ * We expect the response to be a list of object, and will use the id and title attribute
+ * as the list value/name
+ * 
+ * Some endpoint will retrurn a different structure so we use the mapResults parameter to convert
+ * those response to the expected format
+ */
+const mapResults = (results, mapResults) => (
+  results.map(item => {
+
+    if( mapResults.id ) {
+      item.id = mapResultsItem(item, mapResults.id)
+    }
+
+    if( mapResults.title ) {
+      item.title = mapResultsItem(item, mapResults.title)
+    }
+
+    return item
+  })
+)
+
+/**
+ * TODO: support nested objects 
+ */
+const mapResultsItem = (item, config) => (
+  typeof config === 'object'
+    ? item[ config.key ][ config.attribute ]
+    : item[ config ]
+)
 
 export {
   getAsyncProps

@@ -77,6 +77,7 @@ $fields->format_args = function(
       // We use kebab-case for control types in js
       $args['type'] = $type === 'combo_box' ? 'combo-box' : 'text-suggestion';
       $args = $fields->format_value($args, 'is_async', 'isAsync');
+      $args = $fields->format_value($args, 'map_results', 'mapResults');
       $args = $fields->format_value($args, 'async_args', 'asyncArgs');
       $args = $fields->format_value($args, 'search_url', 'searchUrl');
       $args = $fields->format_value($args, 'ajax_action', 'ajaxAction');
