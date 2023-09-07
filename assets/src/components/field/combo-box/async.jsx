@@ -28,11 +28,9 @@ const getAsyncProps = props => {
         ? await Tangible?.ajax(props.ajaxAction, data)
         : await get(props.searchUrl ?? '', data) 
       
-      console.log(results)
       const formatedResults = props.mapResults
         ? mapResults(results, props.mapResults)
         : results
-      console.log(formatedResults)
 
       return {
         items: getOptions(

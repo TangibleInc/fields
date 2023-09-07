@@ -69,7 +69,6 @@ const DependendWrapper = ({
   useEffect(() => {
     if( data.watcher ) {
       data.watcher((fieldName) => {
-        console.log(key)
         maybeUpdateProps(fieldName)
       })
     }
@@ -81,7 +80,7 @@ const DependendWrapper = ({
       dependentFields,
       data.getValue
     )
-    ), [key])
+  ), [key])
   
   return(
     <Fragment key={ key }>
