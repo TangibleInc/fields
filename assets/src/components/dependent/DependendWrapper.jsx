@@ -1,9 +1,7 @@
 import { 
   useMemo,
-  useState,
   useEffect,
-  useCallback,
-  Fragment
+  useCallback
 } from 'react'
 
 import { 
@@ -19,11 +17,10 @@ import {
 const DependendWrapper = ({
   renderControl,
   controlProps,
+  refresh,
   data
 }) => {
   
-  const [key, setKey] = useState(0)
-
   const childProps =  Object.assign({}, controlProps)
 
   delete childProps.value
@@ -45,7 +42,7 @@ const DependendWrapper = ({
     if( ! controlProps.dependent || ! dependentFields ) return;
     if( ! Object.keys(dependentFields).includes(fieldName) ) return;
 
-    setKey(key + 1)
+    refresh()
   }
 
   const dependentWatcher = useCallback(field => {
@@ -54,7 +51,7 @@ const DependendWrapper = ({
     if( field.props?.controlType === 'subfield' ) return;
 
     maybeUpdateProps(field.name)
-  }, [key])
+  }, [])
   
   useEffect(() => {
     const callback = addEventListener('valueChange', dependentWatcher)
@@ -62,14 +59,13 @@ const DependendWrapper = ({
   }, [dependentWatcher])
 
   /**
-   * The visibility watcher is an additional callback we can use to watch changes
+   * The data watcher is an additional callback we can use to watch changes
    *  
    * It is currently used to watch changes in subfields (repeaters, field-groups)
    */
   useEffect(() => {
     if( data.watcher ) {
-      data.watcher((fieldName) => {
-        console.log(key)
+      data.watcher(fieldName => {
         maybeUpdateProps(fieldName)
       })
     }
@@ -81,13 +77,9 @@ const DependendWrapper = ({
       dependentFields,
       data.getValue
     )
-    ), [key])
+  ), [])
   
-  return(
-    <Fragment key={ key }>
-      { renderControl(formatedProps) }
-    </Fragment>
-  )
+  return renderControl(formatedProps)
 }
 
 export default DependendWrapper

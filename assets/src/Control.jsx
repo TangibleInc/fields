@@ -20,6 +20,7 @@ import { dynamicValuesAPI } from './dynamic-values'
 
 import controls from './controls-list.js'
 import DependendWrapper from './components/dependent/DependendWrapper'
+import RenderWrapper from './components/render/RenderWrapper'
 
 const Control = ({
   visibility,
@@ -40,7 +41,7 @@ const Control = ({
 
   const [value, setValue] = useState(props.value ?? '')
   const [isVisible, setVisibility] = useState(false) // False until we evaluate conditions
-  
+
   useEffect(() => {
     props.onChange && props.onChange(value)
   }, [value])
@@ -64,6 +65,11 @@ const Control = ({
     })
   }
   
+  /**
+   * For lisibility,it would be nice to move the visibility condition logic to a separate wrapper like 
+   * for the dependent values
+   */
+
   const evaluateVisibility = () => {
 
     if( ! visibility.condition ) {
@@ -125,17 +131,28 @@ const Control = ({
   
   return (
     <OverlayProvider { ...wrapper }>
-      <DependendWrapper controlProps={ props } data={ data } renderControl={ controlProps => ( 
-        <ControlComponent 
-          { ...controlProps } 
-          value={ value }
-          onChange={ onChange } 
-          dynamic={ props.dynamic 
-            ? dynamicValuesAPI(value, setValue, props.dynamic) 
-            : false 
-          }
-        />)}
-      />
+      <RenderWrapper 
+        controlType={ props.controlType ?? 'field' }
+        name={ props.name ?? false } 
+        setValue={ setValue }
+        render={ refreshRender => (
+          <DependendWrapper 
+            refresh={ refreshRender } 
+            data={ data } 
+            controlProps={ props } 
+            renderControl={ controlProps => (
+              <ControlComponent 
+                { ...controlProps } 
+                value={ value }
+                onChange={ onChange } 
+                dynamic={ props.dynamic 
+                  ? dynamicValuesAPI(value, setValue, props.dynamic) 
+                  : false 
+                }
+              />
+            )} 
+          />
+      )} />
     </OverlayProvider>
   )
 }

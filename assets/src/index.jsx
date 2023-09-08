@@ -28,7 +28,7 @@ const renderField = props => (
     <Control 
       { ...props } 
       onChange={ value => {
-        store.setValue(props.name, value)
+        store._setValueFromControl(props.name, value)
         if( props.onChange ) props.onChange(value)
       }}
       visibility={{
