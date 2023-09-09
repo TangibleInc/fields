@@ -1,3 +1,13 @@
+# 20230908
+
+- JavaScript:
+  - Improve possibility to interact with data from outside the module by adding tangibleFields.store
+  - Add possibility to trigger events by adding tangibleFields.trigger
+- Fields:
+  - Async ComboBox: Add map_results attribute
+- Dynamic values:
+  - Fix settings not working with recent changes due to dependent values
+
 # 20230831
 
 - Dynamic values: Fix issues with dynamic values settings not working due to recent changes
