@@ -83,6 +83,7 @@ const init = () => {
 window.tangibleFields = {
   render         : renderField,
   event          : addEventListener,
+  trigger        : triggerEvent,
   store          : store,
   ControlContext : ControlContext
 }

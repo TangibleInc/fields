@@ -37,8 +37,8 @@ const RenderWrapper = ({
     // Only support forced refresh for regular field for now (no subfields)
     if( controlType !== 'field' ) return;
 
-    const callback = addEventListener('refreshFieldValue', refreshValue)
-    return () => removeEventListener('refreshFieldValue', callback)
+    const callback = addEventListener('_refreshFieldValue', refreshValue)
+    return () => removeEventListener('_refreshFieldValue', callback)
   }, [key])
 
   return(
