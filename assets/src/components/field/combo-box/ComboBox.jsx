@@ -85,6 +85,7 @@ const ComboBox = props => {
   const inputRef   = useRef()
   const listBoxRef = useRef()
   const popoverRef = useRef()
+  const wrapperRef = useRef()
 
   const {
     buttonProps,
@@ -117,17 +118,16 @@ const ComboBox = props => {
           { props.label }
         </Label> }
       <FocusScope autoFocus={ props.autoFocus } restoreFocus>
-        <div className="tf-combo-box-text">
+        <div className="tf-combo-box-text" ref={ wrapperRef }>
           <input { ...inputProps } ref={ inputRef } />
           {/* add changeTag="span" to change the button to span element */}
 
           { props.showButton &&  
-          <Button type="action" ref={ triggerRef } preventFocusOnPress={ true } { ...buttonProps }>
-            <span aria-hidden="true">
-              ▼
-            </span>
-          </Button>
-          }
+            <Button type="action" ref={ triggerRef } preventFocusOnPress={ true } { ...buttonProps }>
+              <span aria-hidden="true">
+                ▼
+              </span>
+            </Button> }
 
           { state.isOpen && 
             <Popover
@@ -135,6 +135,8 @@ const ComboBox = props => {
               triggerRef={inputRef}
               popoverRef={popoverRef}
               placement="bottom start"
+              style={{ width: wrapperRef?.current?.offsetWidth }}
+              className={ 'tf-combo-box-popover' }
             >
               <ListBox
                 listBoxRef={ listBoxRef }

@@ -9,9 +9,16 @@ import {
   usePopover
 } from 'react-aria'
 
-function Popover({ children, state, ...props }) {
-  let popoverRef = useRef(null);
-  let { popoverProps, underlayProps } = usePopover({
+function Popover({ 
+  children, 
+  state, 
+  style,
+  className = '',
+  ...props 
+}) {
+
+  const popoverRef = useRef(null);
+  const { popoverProps, underlayProps } = usePopover({
     ...props,
     popoverRef
   }, state);
@@ -35,11 +42,12 @@ function Popover({ children, state, ...props }) {
           {...popoverProps}
           ref={popoverRef}
           style={{
-            ...popoverProps.style
+            ...popoverProps.style,
+            ...style,
+            boxSizing: 'border-box'
           }}
-          className="tf-popover"
+          className={ `tf-popover ${className}` }
         >
-          <DismissButton onDismiss={state.close} />
           {children} 
           <DismissButton onDismiss={state.close} />
         </div>
