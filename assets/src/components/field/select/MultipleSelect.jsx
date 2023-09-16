@@ -41,6 +41,7 @@ const MultipleSelect = props => {
 
   const listBoxRef = useRef()
   const PopoverRef = useRef()
+  const wrapperRef =useRef()
 
   const { 
     listBoxProps, 
@@ -66,7 +67,7 @@ const MultipleSelect = props => {
     </ListBox>
 
   return(
-    <div className="tf-multiple-select">
+    <div className="tf-multiple-select" ref={ wrapperRef }>
       <input type="hidden" name={ props.name ?? '' } value={ [...selected].join(',') } />
       { props.label &&
         <Label { ...labelProps }>
@@ -93,6 +94,7 @@ const MultipleSelect = props => {
             state={{ isOpen: open, close: () => isOpen(false) }}
             triggerRef={PopoverRef}
             placement="bottom start"
+            style={{ width: wrapperRef?.current?.offsetWidth }}
           >
             { ListBoxComponent }
           </Popover>
