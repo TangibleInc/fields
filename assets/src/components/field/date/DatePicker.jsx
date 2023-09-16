@@ -6,6 +6,7 @@ import {
 
 import { 
   Button, 
+  Dialog,
   Popover
 } from '../../base'
 
@@ -94,8 +95,10 @@ const DatePicker = forwardRef(({
         </Button>
       </div>
       { state.isOpen &&
-        <Popover { ...dialogProps } ref={ ref } state={ state } placement="bottom start">
-          <Calendar { ...calendarProps } focusedValue={ focusedDate } onFocusChange={ setFocusedDate } />
+        <Popover state={state} triggerRef={ref} placement="bottom start">
+          <Dialog {...dialogProps}>
+            <Calendar {...calendarProps} />
+          </Dialog>
         </Popover> }
     </div>
   )

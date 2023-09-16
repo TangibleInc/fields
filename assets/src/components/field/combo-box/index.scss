@@ -10,23 +10,7 @@
   flex-wrap: nowrap;
   @include field;
   padding: 0;
-  
-  .tf-popover {
-    border: $field-border;
-    border-bottom-left-radius: $field-border-radius;
-    border-bottom-right-radius: $field-border-radius;
-  }
-  
-	&:focus-within {
-		@include field-focus;
-    
-    .tf-popover {
-      border-color: $field-focus-color;
-      box-shadow: 0 0 0 1px $field-focus-color;
-      outline: 2px solid transparent;
-    }
-	}
-
+	
   input {
     border: 0;
     box-shadow: none;
@@ -44,14 +28,12 @@
     max-height: calc(#{$field-height} - 2px);
   }
 
-  .tf-popover {
-		top: 100%;
-    width: fit-content + #{$field-border-width * 2};
-    left: (-$field-border-width);
-	}
-
   .tf-button-action span {
     padding: 0 2px;
+  }
+
+  &:focus-within {
+    @include field-focus;
   }
 }
 
@@ -93,8 +75,16 @@
   position: relative;
 }
 
-.tf-multiple-combobox > .tf-popover {
+.tf-multiple-combobox-container > .tf-popover {
   width: $field-width;
+  position: absolute;
+  z-index: $popover-index;
+  left: 0;
+  top: 100%;
+
+  .tf-combo-box {
+    width: 100%;
+  }
 
   .tf-list-box-option {
 
@@ -106,9 +96,11 @@
     }
   }
 }
+
 .tf-multiple-combobox {
   position: relative;
 }
+
 .tf-multiple-combobox-values {
   display: flex;
   align-items: center;
@@ -123,3 +115,12 @@
   gap: $global-spacer-sm;
 }
 
+.tf-combo-box-popover.tf-popover {
+  margin-left: -#{$field-border-width * 2};
+  border: $field-border;
+  border-bottom-left-radius: $field-border-radius;
+  border-bottom-right-radius: $field-border-radius;  
+  border-color: $field-focus-color;
+  box-shadow: 0 0 0 1px $field-focus-color;
+  outline: 2px solid transparent;
+}

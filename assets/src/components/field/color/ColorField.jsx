@@ -16,7 +16,7 @@ const ColorField = forwardRef(({
 
   const [open, isOpen] = useState(false)
   const format = props.format ?? 'hexa'
-  const popover = useRef()
+  const wrapperRef = useRef()
   
   const onChange = value => {
 
@@ -34,13 +34,19 @@ const ColorField = forwardRef(({
   ), [])
 
   return(
-    <div className="tf-color-container">
+    <div className="tf-color-container" ref={ wrapperRef }>
       <input ref={ ref } { ...inputProps } 
-        onFocus={ () => isOpen(true)}
+        onClick={() => isOpen(true)}
         value={ state.inputValue }
       />
       { open && 
-        <Popover ref={ popover }>
+        <Popover
+          state={{ isOpen: open, close: () => isOpen(false) }} 
+          triggerRef={ref}
+          placement="bottom start"
+          style={{ width: wrapperRef?.current?.offsetWidth }}
+          className="tf-color-popover"
+        >
           <ColorPicker 
             value={ state.colorValue?.toString(format) }
             onChange={ onChange } 

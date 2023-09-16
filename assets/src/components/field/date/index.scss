@@ -4,22 +4,15 @@
   align-items: flex-start;
 }
 
-.tf-date-field-container {
-  position: relative;
-  width: 100%;
+.tf-popover {
+  display: flex;
+  justify-content: center;
+  width: auto;
+  border-radius: $field-border-radius;
+  border: $field-border;
 
-  .tf-popover {
-    display: flex;
-    justify-content: center;
-    width: auto;
-		border-radius: $field-border-radius;
-		border: $field-border;
-
-    @import './calendar/';
-  }
+  @import './calendar/';
 }
-
-
 
 .tf-date-group {
   display: flex;
@@ -29,8 +22,11 @@
 
   .tf-button-action {
     height: $field-height;
-  }
-  
+  }  
+}
+
+.tf-date-field-container {
+  width: 100%;
 }
 
 .tf-date-field {

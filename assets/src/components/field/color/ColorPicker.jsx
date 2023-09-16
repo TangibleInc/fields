@@ -3,6 +3,8 @@ import {
   useEffect 
 } from 'react'
 
+import { Dialog } from '../../base'
+
 import { 
   useFocusWithin, 
   FocusScope
@@ -52,40 +54,42 @@ const ColorPicker = props => {
 
   return(
     <div className="tf-color-picker" { ...focusWithinProps }>
-      <FocusScope autoFocus restoreFocus>
-        <ColorArea
-          aria-labelledby="hsb-label-id-1"
-          value={ color }
-          onChange={ setColor }
-          xChannel={ yChannel }
-          yChannel={ zChannel }
-        />
-        <div className="tf-color-input">
-          <label>Color</label>
-          <input 
-            type="text"
-            value={ inputColor }
-            onChange={ e => {
-              setInputColor(e.target.value)
-            }}
-            onBlur={ e => {
-              props.onChange(e.target.value)
-            }}
-            />
-        </div>          
-        <div className="tf-color-sliders">
-          <ColorSlider
-            channel={ xChannel }
+      <Dialog>
+        <FocusScope autoFocus restoreFocus>
+          <ColorArea
+            aria-labelledby="hsb-label-id-1"
             value={ color }
             onChange={ setColor }
+            xChannel={ yChannel }
+            yChannel={ zChannel }
           />
-          { hasAlpha && <ColorSlider
-            channel={ 'alpha' }
-            value={ color }
-            onChange={ setColor }
-          /> }
-        </div>
-      </FocusScope>
+          <div className="tf-color-input">
+            <label>Color</label>
+            <input 
+              type="text"
+              value={ inputColor }
+              onChange={ e => {
+                setInputColor(e.target.value)
+              }}
+              onBlur={ e => {
+                props.onChange(e.target.value)
+              }}
+              />
+          </div>          
+          <div className="tf-color-sliders">
+            <ColorSlider
+              channel={ xChannel }
+              value={ color }
+              onChange={ setColor }
+            />
+            { hasAlpha && <ColorSlider
+              channel={ 'alpha' }
+              value={ color }
+              onChange={ setColor }
+            /> }
+          </div>
+        </FocusScope>
+      </Dialog>
     </div>
   )
 }

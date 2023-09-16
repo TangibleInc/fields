@@ -32,12 +32,14 @@ const Select = props => {
    * @see https://react-spectrum.adobe.com/react-stately/useSelectState.html
    */
   const state = useSelectState(props)
-    
+
+  const ref = useRef()
+  const listRef = useRef()
+  const wrapperRef = useRef()
+
   /**
    * @see https://react-spectrum.adobe.com/react-aria/useSelect.html
    */
-  const ref = useRef()
-  const listRef = useRef()
   const {
     labelProps,
     descriptionProps,
@@ -47,7 +49,7 @@ const Select = props => {
   } = useSelect(props, state, ref)
   
   return(
-    <div className="tf-select">
+    <div className="tf-select" ref={ wrapperRef }>
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
@@ -61,6 +63,7 @@ const Select = props => {
       <Button
         type={ 'select' }
         { ...triggerProps }
+        ref={ref}
         onKeyDown={ e => e.code === 'Space' 
           ? state.toggle() 
           : triggerProps.onKeyDown(e)
@@ -77,9 +80,10 @@ const Select = props => {
       </Button>
       { state.isOpen && 
         <Popover 
-          isOpen={ state.isOpen } 
-          onClose={ state.close }
-          ref={ ref }
+          state={state} 
+          triggerRef={ref} 
+          placement="bottom start"
+          style={{ width: wrapperRef?.current?.offsetWidth }}
         >
           <ListBox
             { ...menuProps }
