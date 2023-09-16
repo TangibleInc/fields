@@ -46,6 +46,7 @@ const Gradient = props => {
   const input = useRef()
   const gradientPopover = useRef()
   const colorPopover = useRef()
+  const wrapperRef = useRef()
   
   const { 
     labelProps, 
@@ -93,7 +94,7 @@ const Gradient = props => {
         <Label { ...labelProps }>
           { props.label }
         </Label> }
-      <div className="tf-gradient-container">
+      <div className="tf-gradient-container" ref={ wrapperRef }>
         <input 
           ref={gradientPopover}
           type="text" 
@@ -113,10 +114,15 @@ const Gradient = props => {
             state={{ isOpen: open, close: () => isOpen(false) }}
             triggerRef={gradientPopover}
             placement="bottom start"
+            style={{ 
+              width: wrapperRef?.current?.offsetWidth, 
+              minWidth: 'fit-content' 
+            }}
+            className="tf-gradient-popover"
           >
             <Dialog>
               <FocusScope autoFocus>
-                <div className="tf-gradient-popover">
+                <div className="tf-gradient-popover-content">
                   <div className="tf-gradient-preview" ref={colorPopover} style={{
                     background: generateGradient()  
                   }}>
@@ -173,7 +179,7 @@ const Gradient = props => {
             <Popover
               state={{ isOpen: editColor !== false, close: () => setEditColor(false) }}
               triggerRef={colorPopover} 
-              placement="bottom"
+              placement={ editColor === 0 ? 'bottom start' : 'bottom end' }
             >
               <ColorPicker
                 value={value.colors[editColor]}

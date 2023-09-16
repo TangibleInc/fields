@@ -3,16 +3,6 @@
   display: flex;
   flex-direction: column;
   width: $field-width;
-
-  & > .tf-popover {
-    top: 100%;
-    width: fit-content;
-    min-width: $field-width;
-  }
-
-  .tf-popover {
-    border: $field-border;
-  }
 }
 
 .tf-gradient-input {
@@ -27,6 +17,10 @@
   .tf-gradient-settings-row {
     padding: 10px 0px;
   }
+}
+
+.tf-gradient-popover .tf-dialog {
+  width: 100%;
 }
 
 .tf-gradient-preview {
