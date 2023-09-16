@@ -116,6 +116,7 @@ class Format_TestCase extends WP_UnitTestCase {
 				'async_args' => 'asyncArgs',
 				'search_url' => 'searchUrl',
 				'ajax_action' => 'ajaxAction',
+				'map_results' => 'mapResults'
 			]],
 			'file' => ['file', [
 				'mime_types' => 'mimeTypes',

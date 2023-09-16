@@ -14,25 +14,23 @@ const Table = ({
   items,
   fields,
   dispatch,
-  getRow,
+  rowFields,
   getControl,
   maxLength,
   useBulk
 }) => (
   <div>
-  { 
-    useBulk && 
+  { useBulk && 
     <BulkActions
       actions={ bulkOptions }
       dispatch={ dispatch }
-    /> 
-  } 
+    /> } 
   <table>
     <thead>
       <tr>
         <th></th>
-        { fields.map(field => (
-          <th>{ field.label ?? '' }</th>
+        { fields.map((field, h) => (
+          <th key={ h }>{ field.label ?? '' }</th>
         )) }
         { maxLength > 1 && <th align='end'></th>}
       </tr>
@@ -40,9 +38,9 @@ const Table = ({
     <tbody>
       { items && items.slice(0, maxLength).map((item, i) => (
         <tr key={ item.key }>
-          <td>{
-            useBulk
-            ? <div onClick={ e => e.stopPropagation() }>
+          <td key={ `${item.key}-enable` }>
+            { useBulk && 
+              <div onClick={ e => e.stopPropagation() }>
                 <Checkbox 
                   value={ item._bulkCheckbox }
                   onChange={ value => dispatch({ 
@@ -52,15 +50,13 @@ const Table = ({
                     value   : value
                   }) } 
                 />
-              </div>  
-            : null
-          }</td>
-          { 
-          getRow(item).map(
-            control => (
-              <td>{ getControl(control, item, i) }</td>
-            )
-          )}
+              </div> }
+          </td>
+          { rowFields.map((control, j) => (
+            <td key={ `${item.key}-${j}` }>
+              { getControl(control, item, i) }
+            </td>
+          )) }
           <td>
             { maxLength !== undefined &&
               <Button

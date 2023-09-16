@@ -2,24 +2,28 @@
 
 defined('ABSPATH') or die();
 
-$fields->render_value = function(string $raw_value) use($fields) : string {
+$fields->render_value = function(string $raw_value, array $config = []) use($fields) : string {
   return preg_replace_callback(
-    $fields->dynamic_value_regex, 
-    $fields->render_dynamic_value, 
+    $fields->dynamic_value_regex,
+    function(array $matches) use($fields, $config): string {
+      return $fields->render_dynamic_value($matches, $config);
+    },
     $fields->strip_unauthorized_dynamic_values($raw_value, 'parse')
   );
 };
 
-$fields->render_dynamic_value = function(array $matches) use($fields) : string {
+$fields->render_dynamic_value = function(array $matches, array $config = []) use($fields) : string {
 
   $data = $fields->parse_dynamic_value_string($matches[1]);
 
   if( empty($data) ) return $matches[0];
   
+  // @see ./config
+  $config = $fields->get_dynamic_value_config($config);
   $render = $fields->dynamic_values[ $data['name'] ]['callback'];
 
   return is_callable($render) 
-    ? $render( $data['settings'] ) 
+    ? $render( $data['settings'], $config ) 
     : $matches[0];
 };
 

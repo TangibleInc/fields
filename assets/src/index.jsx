@@ -12,28 +12,31 @@ import {
 } from './events'
 
 import Control from './Control'
+import store from './store'
 
 /**
  * Used to detect the current context from child components
  */
 const ControlContext = createContext(null)
-const values = {}
 
 const renderField = props => (
   <ControlContext.Provider value={{
     name     : props.context ?? 'default',
     wrapper  : `tf-context-${props.context ?? 'default'}`,
-    getValue : name => values[name] ?? '' 
+    getValue : store.getValue.bind(store) 
   }}>
     <Control 
       { ...props } 
       onChange={ value => {
-        values[props.name] = value
+        store._setValueFromControl(props.name, value)
         if( props.onChange ) props.onChange(value)
       }}
       visibility={{
         condition: props.condition?.condition ?? false,
         action: props.condition?.action ?? 'show',
+      }}
+      data={{
+        getValue: store.getValue.bind(store)
       }}
     />
   </ControlContext.Provider>
@@ -63,7 +66,7 @@ const init = () => {
      */
     createRoot
       ? createRoot(element).render(component)
-      : render(element, component)
+      : render(component, element)
 
     triggerEvent('initField', {
       name  : field, 
@@ -80,7 +83,8 @@ const init = () => {
 window.tangibleFields = {
   render         : renderField,
   event          : addEventListener,
-  values         : values,
+  trigger        : triggerEvent,
+  store          : store,
   ControlContext : ControlContext
 }
 

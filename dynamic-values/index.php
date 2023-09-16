@@ -10,6 +10,7 @@ $fields->dynamic_values_categories = [];
  */
 $fields->dynamic_value_regex = '/\[\[([A-Za-zÀ-ú0-9_\- ]+(?!\[)[^\[\]]*)\]\]/';
 
+require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/enqueue.php';
 require_once __DIR__ . '/permissions.php';
 require_once __DIR__ . '/register.php';

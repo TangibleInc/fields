@@ -165,7 +165,9 @@ const BaseWrapper = props => {
                       onChange={ settingValue => updateSettings(field.name, settingValue) }
                       visibility={{
                         condition: field.condition?.condition ?? false,
-                        action: field.condition?.action ?? 'show',
+                        action: field.condition?.action ?? 'show'
+                      }}
+                      data={{
                         getValue: name => settingsRef.current[name] ?? ''
                       }}
                     />

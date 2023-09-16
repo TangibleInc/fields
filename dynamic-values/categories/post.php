@@ -11,8 +11,8 @@ $fields->register_dynamic_value([
   'name'     => 'post_id',
   'label'    => 'Post ID',
   'type'     => 'text',
-  'callback' => function() {
-    return get_the_ID();
+  'callback' => function($settings, $config) {
+    return $config['context']['current_post_id'];
   },
   'permission_callback' => '__return_true'
 ]);
@@ -22,14 +22,14 @@ $fields->register_dynamic_value([
   'name'       => 'post_meta',
   'label'      => 'Post meta',
   'type'       => 'text',
-  'callback'   => function($settings) {
+  'callback'   => function($settings, $config) {
     
     $source = $settings['source'] ?? 'current';
     $meta_name = $settings['meta_name'] ?? '';
     
     $post_id = (int) (
       $source === 'current'
-        ? get_the_ID()
+        ? $config['context']['current_post_id']
         : $settings['post_id'] ?? 0
     );
      

@@ -1,3 +1,31 @@
+# 20230908
+
+- JavaScript:
+  - Improve possibility to interact with data from outside the module by adding tangibleFields.store
+  - Add possibility to trigger events by adding tangibleFields.trigger
+- Fields:
+  - Async ComboBox: Add map_results attribute
+- Dynamic values:
+  - Fix settings not working with recent changes due to dependent values
+
+# 20230831
+
+- Dynamic values: Fix issues with dynamic values settings not working due to recent changes
+
+# 20230829
+
+- Dependent values: 
+  - Remove backend logic and rewrite on the JS side
+  - Remove previous limitation (works on every attributes and on both fields/subfields)
+
+# 20230822
+
+- Visibility conditions: Delay evaluateVisibility to next event cycle (prevent issues where values is not updated yet)
+- Dynamic values: Add a $config array in render callback
+- Dependent values: Fix error when value is not yet defined
+- Text field: Fix height in wp context
+- Add tangible_fields_loaded action
+
 # 20230712
 
 - Improved CSS for default and wp contexts
