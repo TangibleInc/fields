@@ -99,7 +99,7 @@ const MultipleComboBox = props => {
             ? props.placeholder ?? 'No item selected'
             : values.map(
               (value, i) => (
-                <span className="tf-combo-box-item">
+                <span key={ value } className="tf-combo-box-item">
                   <span>{ props.isAsync ? value.label : props.choices[value] ?? '' }</span>
                   <Button onPress={ () => remove(i) }>x</Button>
                 </span>

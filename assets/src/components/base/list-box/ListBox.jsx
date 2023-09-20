@@ -41,8 +41,8 @@ const ListBox = props => {
       >
         { [...state.collection].map(item => (
           item.type === 'section'
-            ? <Section key={ item.key } section={ item } state={ state } shouldUseVirtualFocus />
-            : <Option key={ item.id ?? item.name } item={ item } state={ state } shouldUseVirtualFocus />
+            ? <Section key={ item.key ?? item.level } section={ item } state={ state } shouldUseVirtualFocus />
+            : <Option key={ item.key ?? item.name } item={ item } state={ state } shouldUseVirtualFocus />
         )) }
       </ul>
       <DismissButton onDismiss={ state.close } />

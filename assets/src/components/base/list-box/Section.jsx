@@ -24,7 +24,7 @@ const Section = ({ section, state }) => {
     elementType: 'li'
   })
 
-  const isFirst = section.key !== state.collection.getFirstKey() 
+  const isFirst = section.key === state.collection.getFirstKey()
 
   return (
     <>
@@ -37,11 +37,11 @@ const Section = ({ section, state }) => {
         <ul { ...groupProps }>
           {[ ...section.childNodes ].map(item => (
             <Option
-              key={ item.name }
+              key={ item.key ?? item.name }
               item={ item }
               state={ state }
             />
-          ))}
+          )) }
         </ul>
       </li>
     </>

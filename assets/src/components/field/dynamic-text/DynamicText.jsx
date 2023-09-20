@@ -18,7 +18,7 @@ import {
   Button,
   Label,
   Description
- } from '../../base'
+} from '../../base'
 
 import { 
   Text,

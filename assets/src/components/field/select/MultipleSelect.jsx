@@ -9,10 +9,7 @@ import {
   VisuallyHidden 
 } from 'react-aria'
 
-import { 
-  Item,
-  useListState
- } from 'react-stately'
+import { useListState } from 'react-stately'
 
 import { 
   Button, 
@@ -62,9 +59,7 @@ const MultipleSelect = props => {
       state={ state }
       items={ props.items }
       { ...listBoxProps }
-    >
-      { item => <Item key={ item.id }>{ item.name }</Item> }
-    </ListBox>
+    />
 
   return(
     <div className="tf-multiple-select" ref={ wrapperRef }>

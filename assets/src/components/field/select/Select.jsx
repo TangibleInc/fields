@@ -1,9 +1,5 @@
 import { useRef } from 'react'
-
-import { 
-  useSelectState,
-  Item 
-} from 'react-stately'
+import { useSelectState } from 'react-stately'
 
 import {
   HiddenSelect, 
@@ -90,9 +86,7 @@ const Select = props => {
             listBoxRef={ listRef }
             state={ state }
             items={ props.items }
-          >
-            { item => <Item key={ item.id }>{ item.name }</Item> }
-          </ListBox>
+          />
         </Popover> }
         { props.description &&
           <Description { ...descriptionProps }>

@@ -3,10 +3,7 @@ import {
   useEffect 
 } from 'react'
 
-import { 
-  useComboBoxState, 
-  Item 
-} from 'react-stately'
+import { useComboBoxState } from 'react-stately'
 
 import {  
   useFilter,
@@ -145,9 +142,7 @@ const ComboBox = props => {
                 focusWithinProps
                 shouldUseVirtualFocus
                 { ...listBoxProps }
-              >
-                { item => <Item key={ item.id }>{ item.name }</Item> }
-              </ListBox>
+              />
             </Popover> }
         </div>
       </FocusScope>
