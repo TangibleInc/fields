@@ -172,6 +172,11 @@ class Dynamics_TestCase extends WP_UnitTestCase {
       'Unregistered dynamic value: ', 
       'Unregistered dynamic value was stored'
     );
+
+    // Cleanup
+    $this->assertTrue( 
+      $fields->store_value('store-unregistered-dynamic-value', null) 
+    );
   }
 
   /**
@@ -210,6 +215,11 @@ class Dynamics_TestCase extends WP_UnitTestCase {
       $fields->fetch_value('store-unauthorized-dynamic-value'),
       'Unauthorized dynamic value: ', 
       'unauthorized dynamic value was stored'
+    );
+
+    // Cleanup
+    $this->assertTrue( 
+      $fields->store_value('store-unauthorized-dynamic-value', null) 
     );
   }
 
@@ -278,4 +288,127 @@ class Dynamics_TestCase extends WP_UnitTestCase {
     $this->assertEquals($parsed_value, $expected_value, 'parsed was not equal to config');
   }
 
+  /**
+   * @depends test_dynamic_value_category_registration
+   */
+  function test_dynamic_values_data_for_enqueue() {
+    
+    $fields = tangible_fields();
+    $data = $fields->get_dynamic_value_data();
+
+    $this->assertIsArray($data, 'get_dynamic_value_data() does not return an array');
+    $this->assertEquals(
+      array_keys($data),
+      ['values', 'categories'],
+      'get_dynamic_value_data() does not contain the expected keys'
+    );
+  
+    $this->assertIsArray($data['values'], 'get_dynamic_value_data()["values"] is not an array');
+    $this->assertIsArray($data['categories'], 'get_dynamic_value_data()["categories"] is not an array');
+    
+    $registered_category = $data['categories']['test-category'] ?? false;
+    $this->assertIsArray($registered_category, 'get_dynamic_value_data()["categories"] does not contain registered category');
+    $this->assertEquals(
+      array_keys($registered_category),
+      ['label', 'name', 'values'],
+      'the registered category does not contain the expected keys'
+    );
+
+    $fields->register_dynamic_value([
+      'name'     => 'test-value-enqueue',
+      'category' => 'test-category',
+      'callback' => function($settings, $config) {
+        return '';
+      },
+      'permission_callback_store' => '__return_true',
+      'permission_callback_parse' => '__return_true'
+    ]);
+
+    $expected_count = count($data['values']) + 1;
+    $data = $fields->get_dynamic_value_data();
+    
+    $this->assertEquals(
+      count($data['values']),
+      $expected_count,
+      'get_dynamic_value_data()["values"] does not contain registered category'
+    );
+    
+    $fields->register_dynamic_value([
+      'name'     => 'test-value-not-allowed-enqueue',
+      'category' => 'test-category',
+      'callback' => function($settings, $config) {
+        return '';
+      },
+      'permission_callback_store' => '__return_false',
+      'permission_callback_parse' => '__return_false'
+    ]);
+
+    $data = $fields->get_dynamic_value_data();
+    $this->assertEquals(
+      count($data['values']),
+      $expected_count,  
+      'get_dynamic_value_data()["values"] does contain unallowed value'
+    );
+  }
+
+  /**
+   * @depends test_dynamic_value_category_registration
+   */
+  function test_dynamic_values_data_for_enqueue_sorted() {
+
+    $fields = tangible_fields();
+
+    $fields->register_dynamic_value([
+      'name'     => 'test-value-sort-last',
+      'label'    => 'Z',
+      'category' => 'test-category',
+      'callback' => function($settings, $config) {
+        return '';
+      },
+      'permission_callback_store' => '__return_true',
+      'permission_callback_parse' => '__return_true'
+    ]);
+
+    $fields->register_dynamic_value([
+      'name'     => 'test-value-sort-first',
+      'label'    => 'A',
+      'category' => 'test-category',
+      'callback' => function($settings, $config) {
+        return '';
+      },
+      'permission_callback_store' => '__return_true',
+      'permission_callback_parse' => '__return_true'
+    ]);
+
+    $fields->register_dynamic_value([
+      'name'     => 'test-value-sort-middle',
+      'label'    => 'M',
+      'category' => 'test-category',
+      'callback' => function($settings, $config) {
+        return '';
+      },
+      'permission_callback_store' => '__return_true',
+      'permission_callback_parse' => '__return_true'
+    ]);
+
+    $data = $fields->get_dynamic_value_data();
+
+    $this->assertGreaterThan(
+      array_search('test-value-sort-first', array_keys($data['values'])),
+      array_search('test-value-sort-last', array_keys($data['values'])),
+      'get_dynamic_value_data()["values"] is not sorted alphabetically'
+    );
+
+    $this->assertGreaterThan(
+      array_search('test-value-sort-first', array_keys($data['values'])),
+      array_search('test-value-sort-middle', array_keys($data['values'])),
+      'get_dynamic_value_data()["values"] is not sorted alphabetically'
+    );
+
+    $this->assertGreaterThan(
+      array_search('test-value-sort-middle', array_keys($data['values'])),
+      array_search('test-value-sort-last', array_keys($data['values'])),
+      'get_dynamic_value_data()["values"] is not sorted alphabetically'
+    );
+  }
 }

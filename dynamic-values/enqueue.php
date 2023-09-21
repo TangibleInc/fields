@@ -10,7 +10,7 @@ defined('ABSPATH') or die();
 $fields->get_dynamic_value_data = function() use($fields) : array {
   return [
     'values' => array_filter(
-      $fields->dynamic_values,
+      $fields->sort_alphabetically($fields->dynamic_values),
       function($dynamic_value) use($fields) {
         return $fields->is_dynamic_value_action_allowed($dynamic_value, 'store'); 
       }
@@ -26,4 +26,11 @@ $fields->get_dynamic_value_data = function() use($fields) : array {
       $fields->dynamic_values_categories
     )
   ];
+};
+
+$fields->sort_alphabetically = function(array $items, string $key = 'label') : array {
+  uasort($items, function($item_1, $item_2) use($key) {
+    return strcmp($item_1[ $key ] ?? '', $item_2[ $key ] ?? '');
+  });
+  return $items;
 };
