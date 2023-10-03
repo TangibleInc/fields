@@ -1,12 +1,26 @@
+# 20231003
+
+- Fields:
+    - ColorPicker: Switch to new Popober component
+    - Gradient: Switch to new Popober component
+    - ComboBox: Switch to new Popober component
+    - Select: Switch to new Popober component
+    - DatePicker: Switch to new Popober component
+    - ListBox: Fix missing key errors
+- Dynamic values:
+    - Order alphabetically inside categories
+    - Add optional description parameter
+
+
 # 20230908
 
 - JavaScript:
-  - Improve possibility to interact with data from outside the module by adding tangibleFields.store
-  - Add possibility to trigger events by adding tangibleFields.trigger
+    - Improve possibility to interact with data from outside the module by adding tangibleFields.store
+    - Add possibility to trigger events by adding tangibleFields.trigger
 - Fields:
-  - Async ComboBox: Add map_results attribute
+    - Async ComboBox: Add map_results attribute
 - Dynamic values:
-  - Fix settings not working with recent changes due to dependent values
+    - Fix settings not working with recent changes due to dependent values
 
 # 20230831
 
@@ -15,8 +29,8 @@
 # 20230829
 
 - Dependent values: 
-  - Remove backend logic and rewrite on the JS side
-  - Remove previous limitation (works on every attributes and on both fields/subfields)
+    - Remove backend logic and rewrite on the JS side
+    - Remove previous limitation (works on every attributes and on both fields/subfields)
 
 # 20230822
 
@@ -30,10 +44,10 @@
 
 - Improved CSS for default and wp contexts
 - Fields:
-  - Number: Added string value support
-  - Repeater: Added bulk action for table layout
-  - ComboBox: Added placeholder support for single value
+    - Number: Added string value support
+    - Repeater: Added bulk action for table layout
+    - ComboBox: Added placeholder support for single value
 - Implemented dynamic value feature
-  - Added post category: post_id, post_meta
-  - Added user category: user_id, user_meta
-  - Supported field types: color_picker, date_picker, number, text
+    - Added post category: post_id, post_meta
+    - Added user category: user_id, user_meta
+    - Supported field types: color_picker, date_picker, number, text
