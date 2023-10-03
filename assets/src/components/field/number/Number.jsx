@@ -54,8 +54,9 @@ const NumberComponent = props => {
         >
           <input 
             { ...inputProps} 
-            value={ Number.isInteger(state.numberValue) ? state.numberValue : 0 } 
+            value={ parseInt(state.numberValue) } 
             ref={ inputRef } 
+            name={ props.name ?? '' }
           />
           { hasButtons && <div className='tf-number-button-group'>
             <Button type="number" { ...incrementButtonProps }>+</Button>
