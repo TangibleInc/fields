@@ -7,22 +7,24 @@ $fields->register_dynamic_value_category('user', [
 ]);
 
 $fields->register_dynamic_value([
-  'category' => 'user',
-  'name'     => 'user_id',
-  'label'    => 'User ID',
-  'type'     => 'text',
-  'callback' => function($settings, $config) {
+  'category'    => 'user',
+  'name'        => 'user_id',
+  'label'       => 'User ID',
+  'type'        => 'text',
+  'description' => 'Return the current user ID, if any',
+  'callback'    => function($settings, $config) {
     return $config['context']['current_user_id'];
   },
   'permission_callback' => '__return_true'
 ]);
 
 $fields->register_dynamic_value([
-  'category'   => 'user',
-  'name'       => 'user_meta',
-  'label'      => 'User meta',
-  'type'       => 'text',
-  'callback'   => function($settings, $config) {
+  'category'    => 'user',
+  'name'        => 'user_meta',
+  'label'       => 'User meta',
+  'type'        => 'text',
+  'description' => 'Return a given user meta for the current user',
+  'callback'    => function($settings, $config) {
     
     $source = $settings['source'] ?? 'current';
     $meta_name = $settings['meta_name'] ?? '';
