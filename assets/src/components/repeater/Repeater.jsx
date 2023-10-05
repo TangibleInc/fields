@@ -2,7 +2,8 @@ import {
   useEffect, 
   useReducer,
   useState,
-  useContext
+  useContext,
+  useRef
 } from 'react'
 
 import { 
@@ -74,6 +75,12 @@ const Repeater = props => {
     onChangeCallback.forEach(callback => callback(rowKey, fieldName))
   }
 
+  /**
+   * Not sure why, but without a ref the state value is always empty when used inside getValue()
+   */
+  const values = useRef()
+  values.current = items
+
   const getControl = (control, item, i) => (
     <Control
       key={ item.key + i} 
@@ -99,7 +106,7 @@ const Repeater = props => {
          */
         getValue: name => (
           hasField(name)
-            ? (item[name] ?? '') 
+            ? (values.current[i][name] ?? '') 
             : (context[name] ?? '')
         ),
         /**
