@@ -37,7 +37,7 @@ const Table = ({
     </thead>
     <tbody>
       { items && items.slice(0, maxLength).map((item, i) => (
-        <tr key={ item.key }>
+        <tr key={ item.key ?? i }>
           <td key={ `${item.key}-enable` }>
             { useBulk && 
               <div onClick={ e => e.stopPropagation() }>
