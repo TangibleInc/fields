@@ -8,12 +8,14 @@
     "dev": "roll dev",
     "build": "roll build",
     "format": "roll format",
+    "jest:test": "jest --config=tests/jest/jest.config.js test",
     "-- Local environment --": "https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env",
     "env": "wp-env",
     "env:start": "wp-env start",
     "env:test": "FOLDER=`basename $PWD`; wp-env run tests-wordpress /var/www/html/wp-content/plugins/$FOLDER/vendor/bin/phpunit --testdox -c /var/www/html/wp-content/plugins/$FOLDER/phpunit.xml --verbose",
     "env:test:7.4": "WP_ENV_PHP_VERSION=7.4 wp-env start && npm run env:test",
     "env:test:8.2": "WP_ENV_PHP_VERSION=8.2 wp-env start && npm run env:test",
+    "env:test:react": "",
     "env:stop": "wp-env stop",
     "env:destroy": "wp-env destroy",
     "env:clean": "wp-env clean all"
@@ -31,7 +33,14 @@
     "react-stately": "^3.18.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.22.20",
+    "@babel/preset-react": "^7.22.15",
     "@tangible/roller": "^1.4.7",
-    "@wordpress/env": "^5.15.0"
+    "@testing-library/react": "^14.0.0",
+    "@wordpress/env": "^5.15.0",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "react-test-renderer": "^18.2.0"
   }
 }
