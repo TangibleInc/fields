@@ -1,4 +1,4 @@
-import '../../assets/src/index.jsx'
+import '../../../assets/src/index.jsx'
 import { render } from '@testing-library/react'
 
 describe('window.tangibleFields', () => {
