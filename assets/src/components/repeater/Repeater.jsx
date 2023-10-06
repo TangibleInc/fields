@@ -2,7 +2,8 @@ import {
   useEffect, 
   useReducer,
   useState,
-  useContext
+  useContext,
+  useRef
 } from 'react'
 
 import { 
@@ -39,6 +40,12 @@ const Repeater = props => {
     if( layout === 'table' ) {
       delete rowField.label
       delete rowField.description
+      /**
+       * As label/description is not displayed when in table layout, we use aria-label/aria-description 
+       * instead to avoid accessibility issues
+       */
+      if( field.label ) rowField['aria-label'] = field.label
+      if( field.description ) rowField['aria-description'] = field.description
     }
 
     delete rowField.value
@@ -74,6 +81,12 @@ const Repeater = props => {
     onChangeCallback.forEach(callback => callback(rowKey, fieldName))
   }
 
+  /**
+   * Not sure why, but without a ref the state value is always empty when used inside getValue()
+   */
+  const values = useRef()
+  values.current = items
+
   const getControl = (control, item, i) => (
     <Control
       key={ item.key + i} 
@@ -99,7 +112,7 @@ const Repeater = props => {
          */
         getValue: name => (
           hasField(name)
-            ? (item[name] ?? '') 
+            ? (values.current[i][name] ?? '') 
             : (context[name] ?? '')
         ),
         /**
