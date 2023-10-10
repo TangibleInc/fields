@@ -7,22 +7,24 @@ $fields->register_dynamic_value_category('post', [
 ]);
 
 $fields->register_dynamic_value([
-  'category' => 'post',
-  'name'     => 'post_id',
-  'label'    => 'Post ID',
-  'type'     => 'text',
-  'callback' => function($settings, $config) {
+  'category'    => 'post',
+  'name'        => 'post_id',
+  'label'       => 'Post ID',
+  'type'        => 'text',
+  'description' => 'Return the current post ID, if any',
+  'callback'    => function($settings, $config) {
     return $config['context']['current_post_id'];
   },
   'permission_callback' => '__return_true'
 ]);
 
 $fields->register_dynamic_value([
-  'category'   => 'post',
-  'name'       => 'post_meta',
-  'label'      => 'Post meta',
-  'type'       => 'text',
-  'callback'   => function($settings, $config) {
+  'category'    => 'post',
+  'name'        => 'post_meta',
+  'label'       => 'Post meta',
+  'type'        => 'text',
+  'description' => 'Return a given post meta for a the current or a selected post',
+  'callback'    => function($settings, $config) {
     
     $source = $settings['source'] ?? 'current';
     $meta_name = $settings['meta_name'] ?? '';

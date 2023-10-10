@@ -157,6 +157,8 @@ const BaseWrapper = props => {
                 <Title level={4}>
                   Dynamic value settings
                 </Title>
+                { dynamics.values[ value ].description && 
+                  <i>{ dynamics.values[ value ].description }</i> }
                 { settingsForm.map(field => (
                   <div className="tf-dynamic-wrapper-popover-field">
                     <Control
