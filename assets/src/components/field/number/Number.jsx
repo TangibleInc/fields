@@ -54,7 +54,7 @@ const NumberComponent = props => {
         >
           <input 
             { ...inputProps} 
-            value={ parseInt(state.numberValue) } 
+            value={ Number.isInteger(state.numberValue) ? state.numberValue : 0 } 
             ref={ inputRef } 
             name={ props.name ?? '' }
           />
