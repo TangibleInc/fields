@@ -56,7 +56,7 @@ const Date = props => {
   } = useDatePicker({...props, minValue: minValue }, state, ref)
   
   return(
-    <div className="tf-date">
+    <div className="tf-date-picker">
       { props.label &&
         <Label { ...labelProps }>
           { props.label }
