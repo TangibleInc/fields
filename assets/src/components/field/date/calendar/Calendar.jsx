@@ -36,7 +36,7 @@ const Calendar = props => {
       <div className="tf-calendar-header">
         <div className="tf-calendar-buttons">
           <Button { ...prevButtonProps }>&lt;</Button>
-          <div class="tf-calendar-month">
+          <div className="tf-calendar-month">
             { title }
           </div>
           <Button { ...nextButtonProps }>&gt;</Button>
