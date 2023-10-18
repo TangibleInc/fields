@@ -64,11 +64,13 @@ npm run format
 
 ## Tests
 
-This modules comes with a suite of unit and integration tests.
+### PHPUnit
+
+This module comes with a suite of unit and integration tests.
 
 `composer install --dev` will install PHPUnit.
 
-### Method 1: Cloning wordpress-develop.git (Previous)
+#### Method 1: Cloning wordpress-develop.git (Previous)
 
 You will need a copy of https://github.com/WordPress/wordpress-develop.git available. You can run `git clone https://github.com/WordPress/wordpress-develop.git` in this directory as this is where the bootstrap script expects it to be by default (the `WORDPRESS_DEVELOP_DIR` environment variable overrides this path).
 
@@ -84,7 +86,7 @@ Coverage can be had using `vendor/bin/phpunit --coverage-text` (requires the XDe
 
 https://docs.phpunit.de/en/9.6/ for more information.
 
-### Method 2: Using wp-env (Recommended)
+#### Method 2: Using wp-env (Recommended)
 
 Alternatively, you can use the [wp-env](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) tool to quickly spin up a local dev and test environment, optionally switching between multiple PHP versions.
 
@@ -113,6 +115,14 @@ npm run env:stop
 To “destroy” and remove cache:
 ```
 npm run env:destroy
+```
+
+### Jest
+
+We rely on Jest to test the frontend side of the module:
+```
+npm install
+npm run jest:test
 ```
 
 ## Render fields
