@@ -8,9 +8,11 @@ const { dynamics } = TangibleFields
 /**
  * Extract dynamic values token from a string like this one:
  * 
- * This is a text with a [[dynamic-value]] 
+ * This is a text with a [[dynamic-value]]
+ * 
+ * @see ./dynamic-values/index.php 
  */
-const dynamicValueRegex = /\[\[([A-Za-zÀ-ú0-9_\- ]+(?!\[)[^\[\]]*)\]\]/g 
+const dynamicValueRegex = /\[\[((?:(?!\]\]).)+)\]\]/g
 const getDynamicStrings = string => (
   typeof string === 'string'
     ? Array.from(

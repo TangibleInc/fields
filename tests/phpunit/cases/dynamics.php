@@ -411,4 +411,62 @@ class Dynamics_TestCase extends WP_UnitTestCase {
       'get_dynamic_value_data()["values"] is not sorted alphabetically'
     );
   }
+
+  function _test_dynamic_values_regex_data() {
+    return[
+      [ 'text [[test-regex1]] text [[test-regex2]] text [[test-regex3]] text' ],
+      [ '[[test-regex1]][[test-regex2]][[test-regex3]]' ],
+      [ '[[test-regex1]]] ] ][ [[test-regex2]]][[test-regex3]]' ]
+    ];
+  }
+
+  /**
+   * @dataProvider _test_dynamic_values_regex_data
+   */
+  function test_dynamic_values_regex($string) {
+
+    $fields = tangible_fields();
+    $matches = [];
+
+    preg_match_all(
+      $fields->dynamic_value_regex,
+      $string,
+      $all_matches
+    );
+    
+    $this->assertEquals(3, count($all_matches[1]), 'string should contains 3 dynamic values');
+    foreach([0, 1, 2] as $key) {
+      $this->assertEquals('[[test-regex' . ($key + 1) . ']]', $all_matches[0][$key], 'first group should be [[dynamic-value-name]]');
+    }
+    foreach([0, 1, 2] as $key) {
+      $this->assertEquals('test-regex' . ($key + 1), $all_matches[1][$key], 'second group should be dynamic-value-name');
+    }
+  }
+
+  function test_dynamic_values_regex_with_parameters() {
+
+    $fields = tangible_fields();
+    $matches = [];
+
+    /**
+     * Currently will still fail if array is last parameter => to fix
+     */
+    preg_match(
+      $fields->dynamic_value_regex,
+      '[[dynamic-value-test::value=test::value="{"test":"test"}::value=[1,2,3]::value=9]]',
+      $matches
+    );
+
+    $this->assertEquals(2, count($matches), 'string should contains 3 dynamic values');
+    $this->assertEquals(
+      '[[dynamic-value-test::value=test::value="{"test":"test"}::value=[1,2,3]::value=9]]', 
+      $matches[0],
+      'string should contains 3 dynamic values'
+    );
+    $this->assertEquals(
+      'dynamic-value-test::value=test::value="{"test":"test"}::value=[1,2,3]::value=9', 
+      $matches[1], 
+      'string should contains 3 dynamic values'
+    );
+  }
 }

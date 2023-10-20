@@ -21,7 +21,7 @@ $fields->maybe_strip_unauthorized_dynamic_value = function(
 ) use($fields) : string {
 
   $data = $fields->parse_dynamic_value_string($matches[1]);
-
+  
   if( empty($data) ) return '';
   
   $dynamic_value = $fields->dynamic_values[ $data['name'] ] ?? false;
