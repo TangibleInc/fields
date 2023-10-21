@@ -416,7 +416,6 @@ class Dynamics_TestCase extends WP_UnitTestCase {
     return[
       [ 'text [[test-regex1]] text [[test-regex2]] text [[test-regex3]] text' ],
       [ '[[test-regex1]][[test-regex2]][[test-regex3]]' ],
-      [ '[[test-regex1]]] ] ][ [[test-regex2]]][[test-regex3]]' ]
     ];
   }
 
@@ -448,25 +447,46 @@ class Dynamics_TestCase extends WP_UnitTestCase {
     $fields = tangible_fields();
     $matches = [];
 
-    /**
-     * Currently will still fail if array is last parameter => to fix
-     */
     preg_match(
       $fields->dynamic_value_regex,
       '[[dynamic-value-test::value=test::value="{"test":"test"}::value=[1,2,3]::value=9]]',
       $matches
     );
 
-    $this->assertEquals(2, count($matches), 'string should contains 3 dynamic values');
+    $this->assertEquals(2, count($matches), 'regex didn\'t match expected string');
     $this->assertEquals(
       '[[dynamic-value-test::value=test::value="{"test":"test"}::value=[1,2,3]::value=9]]', 
       $matches[0],
-      'string should contains 3 dynamic values'
+      'regex didn\'t match expected string'
     );
     $this->assertEquals(
       'dynamic-value-test::value=test::value="{"test":"test"}::value=[1,2,3]::value=9', 
       $matches[1], 
-      'string should contains 3 dynamic values'
+      'regex didn\'t match expected string'
+    );
+  }
+
+  function test_dynamic_values_regex_last_paramater_is_an_array() {
+
+    $fields = tangible_fields();
+    $matches = [];
+
+    preg_match(
+      $fields->dynamic_value_regex,
+      '[[dynamic-value-test::value=[]::value=[]]]',
+      $matches
+    );
+
+    $this->assertEquals(2, count($matches), 'regex didn\'t match expected string');
+    $this->assertEquals(
+      '[[dynamic-value-test::value=[]::value=[]]]', 
+      $matches[0],
+      'regex didn\'t match expected string'
+    );
+    $this->assertEquals(
+      'dynamic-value-test::value=[]::value=[]', 
+      $matches[1], 
+      'regex didn\'t match expected string'
     );
   }
 }

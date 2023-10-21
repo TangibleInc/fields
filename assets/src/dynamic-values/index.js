@@ -12,7 +12,7 @@ const { dynamics } = TangibleFields
  * 
  * @see ./dynamic-values/index.php 
  */
-const dynamicValueRegex = /\[\[((?:(?!\]\]).)+)\]\]/g
+const dynamicValueRegex = /\[\[((?:(?!\]\]).)+\]?)\]\]/g
 const getDynamicStrings = string => (
   typeof string === 'string'
     ? Array.from(
