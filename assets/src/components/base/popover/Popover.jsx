@@ -44,6 +44,7 @@ function Popover({
           style={{
             ...popoverProps.style,
             ...style,
+            zIndex: 1000000,
             boxSizing: 'border-box'
           }}
           className={ `tf-popover ${className}` }
