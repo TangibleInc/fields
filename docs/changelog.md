@@ -1,16 +1,25 @@
+# 20231101
+
+- Fields:
+    - Increase default z-index for fields that rely on the Popover component
+    - Number: Fix issue with name not being used as it should in input element
+- Visibility conditions:
+    - Repeater: Fix issue with conditions not being evaluated properly in some cases
+- Dynamic values:
+    - Improve dynamic value detection and allow array to be used as setting values
+
 # 20231003
 
 - Fields:
-    - ColorPicker: Switch to new Popober component
-    - Gradient: Switch to new Popober component
-    - ComboBox: Switch to new Popober component
-    - Select: Switch to new Popober component
-    - DatePicker: Switch to new Popober component
+    - ColorPicker: Switch to new Popover component
+    - Gradient: Switch to new Popover component
+    - ComboBox: Switch to new Popover component
+    - Select: Switch to new Popover component
+    - DatePicker: Switch to new Popover component
     - ListBox: Fix missing key errors
 - Dynamic values:
     - Order alphabetically inside categories
     - Add optional description parameter
-
 
 # 20230908
 
