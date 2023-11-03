@@ -24,5 +24,13 @@ class Context_TestCase extends WP_UnitTestCase {
 		$this->assertEquals(['default','wp','elementor','beaver-builder','custom'], tangible_fields()->contexts);
 		$this->assertEquals('custom', tangible_fields()->current_context);
 		$this->assertEquals(['default', 'custom'], tangible_fields()->enqueued_contexts);
-	}
+    tangible_fields()->set_context('default');
+  }
+
+  public function test_fields_context_with_enqueue_config() {
+    tangible_fields()->set_context('wp');
+    tangible_fields()->enqueue([ 'context' => ['elementor'] ]); 
+		$this->assertEquals(['wp', 'elementor'], tangible_fields()->enqueued_contexts);
+    tangible_fields()->set_context('default');
+  }
 }

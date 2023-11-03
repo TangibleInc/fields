@@ -21,12 +21,19 @@ $fields->enqueue_field = function(
   $fields->enqueued_fields[ $name ] = $args;
 };
 
-$fields->enqueue = function() use($fields) {
+$fields->enqueue = function(array $config = []) use($fields) {
+
+  if( ! empty($config['context']) && is_array($config['context']) ) {
+    $fields->enqueued_contexts = [ 
+      ...$fields->enqueued_contexts, 
+      ...$config['context'] 
+    ];
+  }
 
   $contexts = ! empty($fields->enqueued_contexts) 
     ? $fields->enqueued_contexts 
     : ['default'];
-  
+
   foreach( $contexts as $context ) {
 
     wp_enqueue_style( 
