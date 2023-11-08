@@ -95,7 +95,7 @@ const Block = ({
   )
 
   return(
-    <div className='tf-repeater-block-items'>
+    <div className='tf-repeater-items tf-repeater-block-items'>
       { useBulk && 
         <BulkActions
           actions={ bulkOptions }

@@ -1,12 +1,14 @@
 import '../../../../assets/src/index.jsx'
-import { within } from '@testing-library/react'
+import { 
+  within,
+  render 
+} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { 
   rendersWithMinimal,
   rendersWithoutLabelThrowWarning,
   rendersLabelAndDescription
 } from '../../utils/fields.js'
-import { render } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 
 const fields = window.tangibleFields
 

@@ -35,7 +35,7 @@ const Table = ({
         { maxLength > 1 && <th align='end'></th>}
       </tr>
     </thead>
-    <tbody>
+    <tbody className='tf-repeater-items tf-repeater-table-items'>
       { items && items.slice(0, maxLength).map((item, i) => (
         <tr key={ item.key ?? i }>
           <td key={ `${item.key}-enable` }>
