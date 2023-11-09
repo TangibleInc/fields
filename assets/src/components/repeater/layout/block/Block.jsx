@@ -36,7 +36,9 @@ const Block = ({
         {
           useBulk
           ? <div onClick={ e => e.stopPropagation() }>
-              <Checkbox 
+              <Checkbox
+                label={ `Select item ${i + 1}` }
+                labelVisuallyHidden={ true }
                 value={ item._bulkCheckbox }
                 onChange={ value => dispatch({ 
                   type    : 'update',
@@ -52,6 +54,8 @@ const Block = ({
           useSwitch
           ? <div onClick={ e => e.stopPropagation() }>
               <Switch 
+                label={ `Enable item ${i + 1}` }
+                labelVisuallyHidden={ true }
                 value={ item.enabled }
                 onChange={ value => dispatch({ 
                   type    : 'update',

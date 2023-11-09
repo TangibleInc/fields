@@ -58,7 +58,7 @@ const Date = props => {
   return(
     <div className="tf-date-picker">
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <FieldWrapper 
@@ -85,7 +85,7 @@ const Date = props => {
         />
       </FieldWrapper>
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

@@ -37,7 +37,7 @@ const ColorField = forwardRef(({
     <div className="tf-color-container" ref={ wrapperRef }>
       <input ref={ ref } { ...inputProps } 
         onClick={() => isOpen(true)}
-        value={ state.inputValue }
+        value={ state.inputValue ?? '' }
       />
       { open && 
         <Popover

@@ -5,7 +5,7 @@ import {
 
 import {
   useFocusRing, 
-  useSwitch, 
+  useSwitch,
   VisuallyHidden,
   useField
 } from 'react-aria'
@@ -26,7 +26,10 @@ const Switch = props => {
   const state = useToggleState(props)
   const ref = useRef()
 
-  const { inputProps } = useSwitch(props, state, ref)
+  const { inputProps } = useSwitch({
+    ...props,
+    children: props.label ?? ''
+  }, state, ref)
   const { focusProps } = useFocusRing()
   
   /**
@@ -46,7 +49,7 @@ const Switch = props => {
   return(
     <div className="tf-switch">
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
         <label>
@@ -64,7 +67,7 @@ const Switch = props => {
           </div>
         </label>
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

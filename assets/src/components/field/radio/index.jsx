@@ -18,7 +18,9 @@ export default props => {
   return(
     <RadioGroup { ...props } onChange={ setValue }>
       { options.map(option => (
-        <Radio { ...option }>{ option.label ?? '' }</Radio>
+        <Radio key={ option.value ?? '' } { ...option }>
+          { option.label ?? '' }
+        </Radio>
       )) }
     </RadioGroup>
   )

@@ -60,8 +60,15 @@ const BulkActions = (props) => {
 
   return(
     <div className='tf-repeater-bulk-actions'>
-      <Checkbox value={ checkbox } onChange={ setCheckbox } />
+      <Checkbox 
+        label={ 'Select or unselect all items' }
+        labelVisuallyHidden={ true }      
+        value={ checkbox } 
+        onChange={ setCheckbox } 
+      />
       <Select
+        label={ 'Select bulk action' }
+        labelVisuallyHidden={ true }
         placeholder="Bulk actions"
         choices={ props.actions }
         value={ action }

@@ -23,6 +23,7 @@ export default props => {
       <input type="hidden" name={ props.name ?? ''} value={ value } />
       <Switch
         label={ props.label ?? '' }
+        labelVisuallyHidden={ props.labelVisuallyHidden ?? false }
         description={ props.description ?? '' }
         value={ value === valueOn } 
         onChange={ switchValue => setValue(switchValue ? valueOn : valueOff )} 

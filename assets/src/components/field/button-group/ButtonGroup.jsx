@@ -37,7 +37,7 @@ const ButtonGroup = props => {
   return(
     <div className="tf-button-group">
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <div className="tf-button-group-container" { ...radioGroupProps }>
@@ -52,7 +52,7 @@ const ButtonGroup = props => {
         </ButtonGroupContext.Provider>
       </div>
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

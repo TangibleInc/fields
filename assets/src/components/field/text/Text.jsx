@@ -22,7 +22,7 @@ const TextField = props => {
   const ref = useRef()
 
   const { 
-    labelProps, 
+    labelProps,
     inputProps, 
     descriptionProps, 
   } = useTextField(props, ref)
@@ -34,7 +34,7 @@ const TextField = props => {
   return(
     <div className='tf-text'>
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <TextInput
@@ -45,7 +45,7 @@ const TextField = props => {
         dynamic={ props.dynamic ?? false } 
       />
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

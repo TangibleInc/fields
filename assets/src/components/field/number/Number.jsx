@@ -41,7 +41,7 @@ const NumberComponent = props => {
   return(
     <div className='tf-number'>
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <div className='tf-number-field' { ...groupProps }>
@@ -50,7 +50,7 @@ const NumberComponent = props => {
           value={ value }
           onValueSelection={ setValue }
           ref={ inputRef } 
-          inputProps={ inputProps } 
+          inputProps={ inputProps }
         >
           <input 
             { ...inputProps} 
@@ -65,7 +65,7 @@ const NumberComponent = props => {
         </FieldWrapper>
       </div>
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

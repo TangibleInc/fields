@@ -38,16 +38,13 @@ const Repeater = props => {
     const rowField = Object.assign({}, field)
     
     if( layout === 'table' ) {
-      delete rowField.label
-      delete rowField.description
       /**
-       * As label/description is not displayed when in table layout, we use aria-label/aria-description 
-       * instead to avoid accessibility issues
+       * As label/description is not visibile in table cell but still needs to be set for accesibility 
        */
-      if( field.label ) rowField['aria-label'] = field.label
-      if( field.description ) rowField['aria-description'] = field.description
+      rowField.labelVisuallyHidden = true
+      rowField.descriptionVisuallyHidden = true
     }
-
+    
     delete rowField.value
     delete rowField.onChange
     

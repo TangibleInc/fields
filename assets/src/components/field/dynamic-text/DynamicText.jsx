@@ -77,7 +77,7 @@ const DynamicText = props => {
   return(
     <div className="tf-dynamic-text">
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <div className="tf-dynamic-text-field">
@@ -95,6 +95,8 @@ const DynamicText = props => {
         { state.isOpen && (
           <div className="tf-dynamic-text-popover" ref={ overlayRef } { ...overlayProps }>
             <ComboBox 
+              label={ 'Select dynamic token' }
+              labelVisuallyHidden={ true }
               choices={ props.choices ?? {} }
               autoFocus={ true }
               showButton={ false }
@@ -114,7 +116,7 @@ const DynamicText = props => {
         ) }
       </div>
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

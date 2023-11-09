@@ -83,6 +83,8 @@ export default props => {
         isAsync={ props.isAsync ?? false }
         showButton={ props.showButton ?? true }
         menuTrigger="focus"
+        labelVisuallyHidden={ props.labelVisuallyHidden ?? false }
+        descriptionVisuallyHidden={ props.descriptionVisuallyHidden ?? false }
         { ...itemProps }          
       >
         { RenderChoices }

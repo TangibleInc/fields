@@ -52,12 +52,12 @@ const TinyMce = props => {
   return (
     <div className="tf-editor">
       {props.label &&
-        <Label {...labelProps}>
+        <Label labelProps={ labelProps } parent={ props }>
           {props.label}
         </Label>}
       <textarea ref={ref} {...inputProps}>{value}</textarea>
       {props.description &&
-        <Description {...descriptionProps}>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           {props.description}
         </Description>}
     </div>

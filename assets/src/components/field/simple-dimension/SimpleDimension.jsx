@@ -47,22 +47,24 @@ const Dimensions = props => {
   return(
     <div className="tf-simple-dimensions">
       { props.label &&
-      <Label { ...labelProps }>
-        { props.label }
-      </Label> }
+        <Label labelProps={ labelProps } parent={ props }>
+          { props.label }
+        </Label> }
       <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(value) } { ...fieldProps } />
       <div className="tf-simple-dimensions-container">
         <div>
           <Number
             value={ value['value'] ?? 0 }
             name={ 'value' }
-            label={ false }
+            label={ 'Dimension number' }
+            labelVisuallyHidden={ true }
             description={ false }
             onChange={ number => setAttribute(number, 'value') }
           />
         </div>
         <Select
-          label={ false }
+          label={ 'Dimension unit' }
+          labelVisuallyHidden={ true }
           description={ false }
           selectedKey={ value.unit ?? 'px' }
           onSelectionChange={ unit => setAttribute(unit, 'unit') }
@@ -74,7 +76,7 @@ const Dimensions = props => {
         </Select>
       </div>
       { props.description &&
-      <Description { ...descriptionProps }>
+      <Description descriptionProps={ descriptionProps } parent={ props }>
         { props.description }
       </Description> }
     </div>

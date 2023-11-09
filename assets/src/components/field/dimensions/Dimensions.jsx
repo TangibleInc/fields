@@ -91,7 +91,7 @@ const Dimensions = props => {
   return(
     <div className="tf-dimensions">
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(value) } { ...fieldProps } />
@@ -99,18 +99,21 @@ const Dimensions = props => {
         <div className={ groupClasses }>
           { ['top', 'left', 'right', 'bottom'].map(position => (
             <Number 
+              key={ position }
               value={ value[position] ?? 0 } 
               name={ position }
-              label={ false }
               description={ false }
+              label={ `Value for ${position} position` }
+              labelVisuallyHidden={ true }
               onChange={ number => isLinked()
                 ? setLinkedPosition(number)
                 : setAttribute(number, position) }
             />
-          )) }          
+          )) }
         </div>
         <Select 
-          label={ false }
+          label={ `Dimensions unit` }
+          labelVisuallyHidden={ true }
           description={ false }
           selectedKey={ value.unit ?? 'px' } 
           onSelectionChange={ unit => setAttribute(unit, 'unit') }
@@ -127,7 +130,7 @@ const Dimensions = props => {
         }
       </div>
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

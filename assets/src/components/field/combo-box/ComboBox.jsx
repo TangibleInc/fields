@@ -111,7 +111,7 @@ const ComboBox = props => {
   return(
     <div className="tf-combo-box" { ...focusWithinProps }>
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <FocusScope autoFocus={ props.autoFocus } restoreFocus>
@@ -147,7 +147,7 @@ const ComboBox = props => {
         </div>
       </FocusScope>
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

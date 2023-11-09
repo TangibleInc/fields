@@ -91,7 +91,7 @@ const Gradient = props => {
   return(
     <div className="tf-gradient">
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <div className="tf-gradient-container" ref={ wrapperRef }>
@@ -101,6 +101,7 @@ const Gradient = props => {
           className="tf-gradient-input"
           value={ generateGradient() } 
           onClick={ e => isOpen(true) }
+          readOnly // Added to remove warning (because value but no onChange event), but not sure it's an appropriate fix
         />
         <input 
           type="hidden"
@@ -194,7 +195,7 @@ const Gradient = props => {
 
       </div>      
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

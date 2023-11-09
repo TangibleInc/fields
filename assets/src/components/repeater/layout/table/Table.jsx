@@ -63,8 +63,8 @@ const Table = ({
                 type="action"
                 isDisabled={ maxLength <= items.length }
                 onPress={() => dispatch({ 
-                  type    : 'clone',
-                  item    : item
+                  type : 'clone',
+                  item : item
                 })}
               >
                 Clone

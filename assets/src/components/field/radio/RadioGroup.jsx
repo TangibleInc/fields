@@ -39,7 +39,7 @@ const RadioGroup = props => {
   return(
     <div className="tf-radio-group">
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <div className="tf-radio-group-container" { ...radioGroupProps }>
@@ -48,7 +48,7 @@ const RadioGroup = props => {
         </RadioContext.Provider>
       </div>
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

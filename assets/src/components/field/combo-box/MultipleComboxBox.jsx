@@ -90,7 +90,7 @@ const MultipleComboBox = props => {
   return(
     <div className="tf-multiple-combobox">
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <div className="tf-multiple-combobox-container">
@@ -138,7 +138,7 @@ const MultipleComboBox = props => {
           </div> ) }
       </div>
       { props.description &&
-          <Description { ...descriptionProps }>
+          <Description descriptionProps={ descriptionProps } parent={ props }>
             { props.description }
           </Description> }
   </div>

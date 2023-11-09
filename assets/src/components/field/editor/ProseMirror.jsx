@@ -69,13 +69,13 @@ const ProseMirror = (props) => {
   return (
     <div className="tf-editor">
       {props.label &&
-        <Label {...labelProps}>
+        <Label labelProps={ labelProps } parent={ props }>
           {props.label}
         </Label>}
       <input { ...inputProps } type="hidden" name={props.name} value={value} />
       <div ref={editorRef} />
       {props.description &&
-        <Description {...descriptionProps}>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           {props.description}
         </Description>}
     </div>

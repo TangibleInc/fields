@@ -117,7 +117,10 @@ const FileUpload = (props) => {
 
   return (
     <div className="tf-file">
-      {props.label && <Label {...labelProps}>{props.label}</Label>}
+      { props.label && 
+        <Label labelProps={ labelProps } parent={ props }>
+          { props.label }
+        </Label> }
       <VisuallyHidden>
         <input
           type="file"
@@ -165,7 +168,9 @@ const FileUpload = (props) => {
         <Notice message={notice} type="error" onDismiss={() => setNotice(false)} />
       )}
       {props.description && (
-        <Description {...descriptionProps}>{props.description}</Description>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
+          { props.description }
+        </Description>
       )}
     </div>
   )

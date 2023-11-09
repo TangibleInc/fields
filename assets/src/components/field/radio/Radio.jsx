@@ -16,7 +16,7 @@ const Radio = props => {
   return (
     <label className="tf-radio">
       <input {...inputProps} ref={ref} />
-      {props.children}
+      { props.children }
     </label>
   )
 }

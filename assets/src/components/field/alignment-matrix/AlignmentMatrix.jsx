@@ -1,6 +1,6 @@
 import Radio from '../radio/Radio'
 import { RadioGroup } from '../radio/RadioGroup'
-
+import { VisuallyHidden } from 'react-aria'
 import { useState, useEffect } from 'react'
 
 const AlignmentMatrix = (props) => {
@@ -24,8 +24,16 @@ const AlignmentMatrix = (props) => {
     <div className='tf-alignment-matrix'>
       <RadioGroup {...props} onChange={setValue}>
         <div className='tf-alignment-matrix-container'>
-          {options.map((option) => (
-            <Radio id={option} value={option}></Radio>
+          {options.map(option => (
+            <Radio 
+              key={ option } 
+              id={ option } 
+              value={ option }
+            >
+              <VisuallyHidden>
+                { option }
+              </VisuallyHidden>  
+            </Radio>
           ))}
         </div>
       </RadioGroup>

@@ -95,7 +95,7 @@ const Gallery = props => {
   return(
     <div className="tf-gallery">
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <div className="tf-gallery__controls">
@@ -116,10 +116,9 @@ const Gallery = props => {
         }
       </div>
 
-     
       <input type="hidden" name={ props.name ?? '' } value={ value.join(',') } { ...inputProps } />
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

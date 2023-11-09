@@ -65,7 +65,7 @@ const MultipleSelect = props => {
     <div className="tf-multiple-select" ref={ wrapperRef }>
       <input type="hidden" name={ props.name ?? '' } value={ [...selected].join(',') } />
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <Button
@@ -97,7 +97,7 @@ const MultipleSelect = props => {
           { ListBoxComponent }
           </VisuallyHidden> }
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

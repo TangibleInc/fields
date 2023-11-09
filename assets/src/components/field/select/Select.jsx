@@ -47,7 +47,7 @@ const Select = props => {
   return(
     <div className="tf-select" ref={ wrapperRef }>
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <HiddenSelect
@@ -89,7 +89,7 @@ const Select = props => {
           />
         </Popover> }
         { props.description &&
-          <Description { ...descriptionProps }>
+          <Description descriptionProps={ descriptionProps } parent={ props }>
             { props.description }
           </Description> }
     </div>

@@ -35,7 +35,7 @@ const Color = props =>{
   return(
     <div className="tf-color">
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <FieldWrapper 
@@ -55,7 +55,7 @@ const Color = props =>{
         />
       </FieldWrapper>
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>
