@@ -1,10 +1,10 @@
 # 20231109
 
 - Style contexts:
-   - Add possibility to manually enqueue contextes
+    - Add possibility to manually enqueue contextes
 - Fields:
-   - Label: Fix missing missing label warning in various fields
-   - Repeater: Fix dependent value not working if not comming from a subfield
+    - Label: Fix missing missing label warning in various fields
+    - Repeater: Fix dependent value not working if not comming from a subfield
 
 # 20231101
 
