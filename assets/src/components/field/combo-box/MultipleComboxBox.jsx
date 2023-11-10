@@ -99,7 +99,7 @@ const MultipleComboBox = props => {
             ? props.placeholder ?? 'No item selected'
             : values.map(
               (value, i) => (
-                <span key={ value } className="tf-combo-box-item">
+                <span key={ value.key ?? i } className="tf-combo-box-item">
                   <span>{ props.isAsync ? value.label : props.choices[value] ?? '' }</span>
                   <Button onPress={ () => remove(i) }>x</Button>
                 </span>
@@ -113,7 +113,8 @@ const MultipleComboBox = props => {
           <div className="tf-popover" ref={ overlayRef } { ...overlayProps }>
             <ComboBox
               focusStrategy={ 'first' }
-              label={ false }
+              label={ 'Select an item to add' }
+              labelVisuallyHidden={ true }
               description={ false }
               disabledKeys={ getDisabledKeys() }
               autoFocus={ true }

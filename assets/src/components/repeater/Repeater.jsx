@@ -110,7 +110,7 @@ const Repeater = props => {
         getValue: name => (
           hasField(name)
             ? (values.current[i][name] ?? '') 
-            : (context[name] ?? '')
+            : (context.getValue(name ?? ''))
         ),
         /**
          * Possibility to add callback event that will be triggered each time a field from the current row will

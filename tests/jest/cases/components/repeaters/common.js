@@ -148,7 +148,6 @@ const commonRepeaterTests = layout => {
     expect(currentsRowKeys[1]).toBe(initialRowKeys[2])
     expect(currentsRowKeys[2]).toBe(initialRowKeys[3])
 
-
     expect(itemsContainer.children.length).toBe(3)
 
     // Confirmation popup - Cancel

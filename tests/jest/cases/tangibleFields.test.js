@@ -1,6 +1,8 @@
 import '../../../assets/src/index.jsx'
 import { render } from '@testing-library/react'
 
+const fields = window.tangibleFields
+
 describe('window.tangibleFields', () => {
   
   it('exists', () => {
@@ -9,8 +11,6 @@ describe('window.tangibleFields', () => {
 
   it('can render fields', () => {
     
-    const fields = window.tangibleFields
-
     expect(typeof fields.render).toBe('function')
 
     const { container } = render(
@@ -27,8 +27,6 @@ describe('window.tangibleFields', () => {
 
   it('can trigger and subscribe to events', () => {
     
-    const fields = window.tangibleFields
-
     expect(typeof fields.event).toBe('function')
     expect(typeof fields.trigger).toBe('function')
     
@@ -46,8 +44,6 @@ describe('window.tangibleFields', () => {
 
   it('can access the fields values', () => {
     
-    const fields = window.tangibleFields
-
     expect(typeof fields.store).toBe('object')
     
     render(
