@@ -2,7 +2,8 @@ import '../../../assets/src/index.jsx'
 import { 
   render, 
   within, 
-  act
+  act,
+  screen
 } from '@testing-library/react'
 
 const fields = window.tangibleFields
@@ -172,6 +173,49 @@ describe('dependent value feature', () => {
     
     // TODO: Add test when multiple rows and after update but needs to understand why re-render not complete in tests first
 
+  })
+
+  it('can use an object as a dependent value', () => {
+
+    const { container } = render( 
+      <>
+        { fields.render({
+          label   : 'Field group',
+          name    : 'field-group',
+          type    : 'field-group',
+          value   : { 
+            subfield1 : 'Subvalue1', 
+            subfield2 : 'Subvalue2'
+          },
+          fields  : [
+            {
+              label : 'Subfield 1',
+              type  : 'hidden',
+              name  : 'subfield1' 
+            },
+            {
+              label : 'Subfield 2',
+              type  : 'hidden',
+              name  : 'subfield2' 
+            },
+          ]
+        }) }
+        { fields.render({
+          label       : '{{field-group.subfield1}}',
+          description : '{{field-group.subfield2}}',
+          type        : 'text',
+          value       : 'Initial value of field 1',
+          name        : 'field-1',
+          dependent   : true
+        }) }
+      </>
+    )
+
+    const textFields = container.getElementsByClassName('tf-text')
+    expect(textFields.length).toBe(1)
+
+    expect(within(textFields[0]).getByLabelText('Subvalue1')).toBeTruthy()
+    expect(within(textFields[0]).getByText('Subvalue2')).toBeTruthy()
   })
   
 })
