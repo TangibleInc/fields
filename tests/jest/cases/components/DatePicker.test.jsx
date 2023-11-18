@@ -1,9 +1,9 @@
 import '../../../../assets/src/index.jsx'
+import userEvent from '@testing-library/user-event'
 import { 
   within,
   render 
 } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { 
   rendersWithMinimal,
   rendersWithoutLabelThrowWarning,

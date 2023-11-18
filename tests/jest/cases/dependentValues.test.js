@@ -2,8 +2,7 @@ import '../../../assets/src/index.jsx'
 import { 
   render, 
   within, 
-  act,
-  screen
+  act
 } from '@testing-library/react'
 
 const fields = window.tangibleFields
@@ -173,6 +172,226 @@ describe('dependent value feature', () => {
     
     // TODO: Add test when multiple rows and after update but needs to understand why re-render not complete in tests first
 
+  })
+
+  it('works for field groups', async () => {
+
+    render(
+      <>
+        { fields.render({
+          label   : 'Field 1',
+          type    : 'text',
+          value   : 'Initial value of field 1',
+          name    : 'field-1' 
+        }) }
+        { fields.render({
+          label   : 'Label',
+          name    : 'field-group-field',
+          type    : 'field-group',
+          value   : { 
+            'key': 1, 
+            'subfield-1': 'Initial value of the repeater subfield 1' 
+          },
+          fields  : [
+            {
+              label       : 'Subfield 1',
+              type        : 'hidden',
+              name        : 'subfield-1' 
+            },
+            {
+              label       : '{{field-1}}',
+              description : '{{subfield-1}}',
+              type        : 'text',
+              name        : 'subfield-2',
+              dependent   : true
+            }
+          ]
+        }) }
+      </>
+    )
+
+    const subfields = document.querySelectorAll(`.tf-field-group-item`)
+    expect(subfields.length).toBe(2)
+
+    const dependentLabel = await within(subfields[1]).findByText('Initial value of field 1')
+    expect(dependentLabel).toBeTruthy()
+    expect(dependentLabel.getAttribute('class')).toBe('tf-label')
+    
+    const dependentDescription = await within(subfields[1]).findByText('Initial value of the repeater subfield 1')
+    expect(dependentDescription).toBeTruthy()
+    expect(dependentDescription.getAttribute('class')).toBe('tf-description')
+  })
+
+  it('works for nested repeater fields', async () => {
+
+    render(
+      <>
+        { fields.render({
+          label   : 'Field 1',
+          type    : 'text',
+          value   : 'Value field 1',
+          name    : 'field-1' 
+        }) }
+        { fields.render({
+          label   : 'Label',
+          name    : 'repeater-field',
+          type    : 'repeater',
+          layout  : 'block',
+          value   : [
+            { 
+              key       : 1,
+              subfield1 : 'Value first field repeater', 
+              subfield2 : [
+                {
+                  key             : 1, 
+                  nestedsubfield1 : 'Value first field nested repeater',
+                  nestedsubfield2 : '',
+                  nestedsubfield3 : '',
+                  nestedsubfield4 : ''
+                } 
+              ]       
+            }
+          ],
+          fields  : [
+            {
+              label : 'Subfield 1',
+              type  : 'hidden',
+              name  : 'subfield1' 
+            },
+            {
+              label   : 'Label',
+              name    : 'subfield2',
+              type    : 'repeater',
+              layout  : 'block',
+              fields  : [
+                {
+                  label     : 'Nested subfield 1',
+                  type      : 'text',
+                  name      : 'nestedsubfield1'
+                },
+                {
+                  label     : '{{field-1}}',
+                  type      : 'text',
+                  name      : 'nestedsubfield2',
+                  dependent : true
+                },
+                {
+                  label     : '{{subfield1}}',
+                  type      : 'text',
+                  name      : 'nestedsubfield3',
+                  dependent : true
+                },
+                {
+                  label     : '{{nestedsubfield1}}',
+                  type      : 'text',
+                  name      : 'nestedsubfield4',
+                  dependent : true
+                }
+              ]
+            }
+          ]
+        }) }
+      </>
+    )
+
+    const repeaters = document.getElementsByClassName('tf-repeater-items')
+    expect(repeaters.length).toBe(2)
+
+    const [repeater, nestedRepeater] = repeaters
+
+    expect(repeater.childNodes.length).toBe(1)
+    expect(nestedRepeater.childNodes.length).toBe(1)
+
+    const repeaterFields = repeater.querySelector('.tf-panel-content') 
+    expect(repeaterFields.childNodes.length).toBe(2)
+
+    const nestedRepeaterFields = nestedRepeater.querySelector('.tf-panel-content') 
+    expect(nestedRepeaterFields.childNodes.length).toBe(4)
+
+    expect(within(nestedRepeaterFields.childNodes[0]).getByLabelText('Nested subfield 1')).toBeTruthy()
+    expect(within(nestedRepeaterFields.childNodes[1]).getByLabelText('Value field 1')).toBeTruthy()
+    expect(within(nestedRepeaterFields.childNodes[2]).getByLabelText('Value first field repeater')).toBeTruthy()
+    expect(within(nestedRepeaterFields.childNodes[3]).getByLabelText('Value first field nested repeater')).toBeTruthy()
+  })
+
+  it('works for nested field groups', async () => {
+    
+    render(
+      <>
+        { fields.render({
+          label   : 'Field 1',
+          type    : 'text',
+          value   : 'Value field 1',
+          name    : 'field-1' 
+        }) }
+        { fields.render({
+          label   : 'Label',
+          name    : 'field-group',
+          type    : 'field-group',
+          value   : { 
+            key       : 1,
+            subfield1 : 'Value first field of the field group', 
+            subfield2 : {
+              key             : 1, 
+              nestedsubfield1 : 'Value first field of the nested field group',
+              nestedsubfield2 : '',
+              nestedsubfield3 : '',
+              nestedsubfield4 : ''
+            } 
+          },
+          fields  : [
+            {
+              label : 'Subfield 1',
+              type  : 'hidden',
+              name  : 'subfield1' 
+            },
+            {
+              label   : 'Label',
+              name    : 'subfield2',
+              type    : 'field-group',
+              fields  : [
+                {
+                  label     : 'Nested subfield 1',
+                  type      : 'text',
+                  name      : 'nestedsubfield1'
+                },
+                {
+                  label     : '{{field-1}}',
+                  type      : 'text',
+                  name      : 'nestedsubfield2',
+                  dependent : true
+                },
+                {
+                  label     : '{{subfield1}}',
+                  type      : 'text',
+                  name      : 'nestedsubfield3',
+                  dependent : true
+                },
+                {
+                  label     : '{{nestedsubfield1}}',
+                  type      : 'text',
+                  name      : 'nestedsubfield4',
+                  dependent : true
+                }
+              ]
+            }
+          ]
+        }) }
+      </>
+    )
+
+    const fieldGroups = document.getElementsByClassName('tf-field-group')
+    expect(fieldGroups.length).toBe(2)
+
+    const nestedFieldGroup = fieldGroups[1]
+
+    const nestedFields = nestedFieldGroup.querySelectorAll('.tf-field-group-item') 
+    expect(nestedFields.length).toBe(4)
+
+    expect(within(nestedFields[0]).getByLabelText('Nested subfield 1')).toBeTruthy()
+    expect(within(nestedFields[1]).getByLabelText('Value field 1')).toBeTruthy()
+    expect(within(nestedFields[2]).getByLabelText('Value first field of the field group')).toBeTruthy()
+    expect(within(nestedFields[3]).getByLabelText('Value first field of the nested field group')).toBeTruthy()
   })
 
   it('can use an object as a dependent value', () => {

@@ -1,15 +1,10 @@
 import { 
   useState,
   useEffect,
-  useContext,
   useRef
 } from 'react'
 
-import { 
-  initJSON, 
-  areSameObjects 
-} from '../../../utils'
-
+import { initJSON } from '../../../utils'
 import Control from '../../../Control'
 
 /**
@@ -29,9 +24,6 @@ const FieldGroup = props => {
    */
   const valueRef = useRef()
   valueRef.current = value
-
-  const { ControlContext } = tangibleFields 
-  const context = useContext(ControlContext)
 
   const setAttribute = (name, attributeValue) => { 
     
@@ -60,19 +52,6 @@ const FieldGroup = props => {
     fieldUpdateCallback()
     setFieldUpdateCallback(false)
   }, [value])
-  
-  useEffect(() => {
-
-    if( typeof props.value !== 'object' ) return;
-
-    const haveSameSize = Object.keys(props.value).length === Object.keys(value).length
-    const haveSameValues = areSameObjects(props.value, value)
-
-    // Avoid inifinte loops, but should find a more sane way
-    if( ! haveSameSize || haveSameValues ) return; 
-
-    setValue(props.value)
-  }, [props.value])
 
   const fields = props.fields ?? []
 
@@ -93,8 +72,8 @@ const FieldGroup = props => {
             controlType={ 'subfield' }
             onChange={ value => setAttribute(control.name, value) }
             visibility={{
-              condition: control.condition?.condition ?? false,
-              action: control.condition?.action ?? 'show',
+              condition : control.condition?.condition ?? false,
+              action    : control.condition?.action ?? 'show',
             }}
             /**
              * Used by visbility and dependent values to detect changes and access data
@@ -106,14 +85,14 @@ const FieldGroup = props => {
               getValue: name => (
                 hasField(name)
                   ? (valueRef.current[name] ?? '')
-                  : (context.getValue(name) ?? '')
+                  : (props.data.getValue(name) ?? '')
               ),
               /**
                * Needed to trigger a re-evaluatation of the visibility conditions / dependent values
                * when a subfield value change
                */
               watcher: evaluationCallback => {
-                setChangeCallback(() => (name) => evaluationCallback(name) )
+                setChangeCallback(() => name => evaluationCallback(name) )
               }
             }}
           />

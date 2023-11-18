@@ -144,7 +144,8 @@ const Control = ({
               <ControlComponent 
                 { ...controlProps } 
                 value={ value }
-                onChange={ onChange } 
+                onChange={ onChange }
+                data={ data }
                 dynamic={ props.dynamic 
                   ? dynamicValuesAPI(value, setValue, props.dynamic) 
                   : false 

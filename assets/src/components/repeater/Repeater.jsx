@@ -2,7 +2,6 @@ import {
   useEffect, 
   useReducer,
   useState,
-  useContext,
   useRef
 } from 'react'
 
@@ -29,9 +28,6 @@ const Repeater = props => {
 
   const repeatable = props.repeatable ?? true
   const maxLength = props.maxlength ?? Infinity
-
-  const { ControlContext } = tangibleFields 
-  const context = useContext(ControlContext)
 
   const rowFields = fields.map(field => {
 
@@ -97,20 +93,20 @@ const Repeater = props => {
       }) }
       controlType={ 'subfield' }
       visibility={{
-        action: control.condition?.action ?? 'show',
-        condition: control.condition?.condition ?? false
+        action    : control.condition?.action ?? 'show',
+        condition : control.condition?.condition ?? false
       }}
       /**
        * Used by visbility and dependent values to detect changes and access data 
        */
       data={{
         /**
-         * The field value can either be from a subvalue or from another field value
+         * The field value can either be from a subvalue or from the parent getter if no match
          */
         getValue: name => (
           hasField(name)
             ? (values.current[i][name] ?? '') 
-            : (context.getValue(name ?? ''))
+            : (props.data.getValue(name ?? ''))
         ),
         /**
          * Possibility to add callback event that will be triggered each time a field from the current row will

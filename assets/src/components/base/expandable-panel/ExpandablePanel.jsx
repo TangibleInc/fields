@@ -5,6 +5,15 @@ import {
 
 import { Button } from '../'
 
+/**
+ * Note: 
+ * 
+ * We use onClick on the header otherwise we can't use e.stopPropagation() 
+ * in headerLeft/headerRight, however onClick is deprecated for Button and we should use
+ * onPress instead (but it won't allow e.stopPropagation() anymore)
+ * 
+ * Maybe we can't use a <Button /> for the panel header 
+ */
 const ExpandablePanel = props => {
 
   const [showItem, setShowItem] = useState(true)
@@ -29,7 +38,7 @@ const ExpandablePanel = props => {
   
   return ( 
     <div className={ classes } data-status={ showItem ? 'open' : 'closed' }>
-      <Button className="tf-panel-header" type="action" onPress={ toggle }>
+      <Button className="tf-panel-header" type="action" onClick={ toggle }>
         <div className="tf-panel-header-left">
           { props.headerLeft 
             ? <div className="tf-panel-header-before-title">
