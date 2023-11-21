@@ -113,6 +113,7 @@ $fields->format_args = function(
       break;
 
     case 'text':
+      $args = $fields->format_value($args, 'read_only', 'readOnly');
       $args = $fields->format_dynamic_types($args);
       break;
   }

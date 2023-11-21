@@ -126,6 +126,9 @@ class Format_TestCase extends WP_UnitTestCase {
 				'value_on' => 'valueOn',
 				'value_off' => 'valueOff',
 			]],
+      'switch' => ['text', [
+				'read_only' => 'readOnly'
+			]],
 		];
 	}
 

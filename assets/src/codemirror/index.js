@@ -16,13 +16,13 @@ const createInput = (
   initialText = '', 
   onChange = false,
   sections = [],
-  getLabel = (match, items) => (items[ match ] ?? match)
+  getLabel = (match, items) => (items[ match ] ?? match),
+  config = {}
 ) => (
   new EditorView({
     doc: initialText,
     parent: element,
     extensions: [
-      
       /**
        * Needed to display a string like [[this]] as a span element instead
        * 
@@ -91,7 +91,15 @@ const createInput = (
         "&.cm-editor.cm-focused": {
           outline: "none"
         }
-      })
+      }),
+
+      /**
+       * Readonly mode
+       * @see https://discuss.codemirror.net/t/codemirror-6-readonly-view/2333
+       */
+      EditorView.contentAttributes.of({ 
+        contenteditable: ! (config.readOnly ?? false) 
+      }),
     ]
   })
 )

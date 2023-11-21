@@ -16,14 +16,15 @@ const TextInput = forwardRef(({
   const editor = useRef()
 
   const [value, setValue] = useState(props.value ?? '')
-  
+
   useEffect(() => {
     editor.current = createInput(
       ref.current, 
       value, 
       setValue,
       props.choices,
-      getDynamicValueLabel
+      getDynamicValueLabel,
+      { readOnly: props.readOnly ?? false }
     )
   }, [])
 
