@@ -1,5 +1,5 @@
 import '../../../assets/src/index.jsx'
-import { render } from '@testing-library/react'
+import { render, within } from '@testing-library/react'
 
 const fields = window.tangibleFields
 
@@ -58,4 +58,50 @@ describe('window.tangibleFields', () => {
     expect(fields.store.getValue('test-field-store')).toBe('test-field-store-value')
   })
 
+  it('has access to utils functions', () => expect(typeof fields.utils).toBe('object'))
+  
+  it('can get registered field types', () => {
+  
+    expect(typeof fields.types).toBe('object')
+
+    const Text = fields.types.get('text')
+    
+    expect(typeof Text).toBe('function')
+
+    const { container } = render(
+      <Text 
+        name="field-name" 
+        label="Label for text type" 
+        value="Initial value" 
+      />
+    )
+  
+    expect(within(container).getByLabelText(`Label for text type`)).toBeTruthy()
+    expect(within(container).getByText(`Initial value`)).toBeTruthy()
+  })
+
+  it('can register a new custom field type', () => {
+  
+    fields.types.add('custom-field', props => (
+      <div className="tf-custom-field">
+        <input type="text" name={ props.name } defaultValue={ props.value } />  
+        <span>{ props.customAttribute }</span>
+      </div> 
+    ))
+    
+    const CustomField = fields.types.get('custom-field')
+    expect(typeof CustomField).toBe('function')
+
+    const { container } = render(
+      fields.render({
+        type            : 'custom-field',
+        name            : 'custom-field-name',
+        customAttribute : 'custom-field-attribute',
+        value           : 'custom-field-value'
+      })
+    )
+
+    expect(within(container).getByDisplayValue(`custom-field-value`)).toBeTruthy()
+    expect(within(container).getByText(`custom-field-attribute`)).toBeTruthy()
+  })
 })

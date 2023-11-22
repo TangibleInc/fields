@@ -18,7 +18,7 @@ import {
 import { OverlayProvider } from 'react-aria'
 import { dynamicValuesAPI } from './dynamic-values'
 
-import controls from './controls-list.js'
+import types from './types.js'
 import DependendWrapper from './components/dependent/DependendWrapper'
 import RenderWrapper from './components/render/RenderWrapper'
 
@@ -46,8 +46,7 @@ const Control = ({
     props.onChange && props.onChange(value)
   }, [value])
 
-  const type = props.type ?? 'text'
-  const ControlComponent = controls[type] ?? false
+  const ControlComponent = types.get(props.type ?? 'text')
 
   if (!ControlComponent) return <></>;
 

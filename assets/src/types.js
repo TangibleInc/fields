@@ -26,7 +26,7 @@ import {
   TextArea
 } from './components/field/'
 
-export default {
+const types = {
   'accordion'       : Accordion,
   'alignment-matrix': AlignmentMatrix,
   'border'          : Border,
@@ -51,4 +51,14 @@ export default {
   'text-suggestion' : DynamicText,
   'wysiwyg'         : Editor,
   'textarea'        : TextArea
+}
+
+export default {
+  _types: types,
+  get(type) {
+    return this._types[type] ?? false
+  },
+  add(type, Component) {
+    this._types[type] = Component
+  }
 }

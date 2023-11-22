@@ -1,6 +1,5 @@
 import { render, within } from '@testing-library/react'
 import '../../../../../assets/src/index.jsx'
-import controls from '../../../../../assets/src/controls-list.js'
 import { commonRepeaterTests } from './common.js'
 
 const fields = window.tangibleFields
@@ -13,7 +12,7 @@ describe('Repeater with a table layout', () => {
   commonRepeaterTests('table')
 
   // Remove control with subfields + hidden because no label 
-  const controlTypes = Object.keys(controls).filter(type => (
+  const controlTypes = Object.keys(fields.types._types).filter(type => (
     ! ['accordion', 'field-group', 'hidden', 'repeater'].includes(type)
   ))
 

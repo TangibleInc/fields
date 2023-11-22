@@ -35,7 +35,7 @@ const FilePreview = props => {
   return(
     <li className="tf-file-item">
       <span>{ data.title.rendered }</span>
-      <Button type="upload-list" onPress={ () => props.remove() }>
+      <Button type="action" onPress={ () => props.remove() }>
         Remove
       </Button>
     </li>

@@ -6,7 +6,7 @@ defined('ABSPATH') or die();
  * For each control type, convert $args to props expected the react component 
  * associated
  * 
- * @see ./assets/src/controls-list.js
+ * @see ./assets/src/types.js
  */
 $fields->format_args = function(
   string $name, 

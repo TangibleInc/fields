@@ -13,6 +13,8 @@ import {
 
 import Control from './Control'
 import store from './store'
+import types from './types'
+import * as utils from './utils'
 
 /**
  * Used to detect the current context from child components
@@ -85,6 +87,8 @@ window.tangibleFields = {
   event          : addEventListener,
   trigger        : triggerEvent,
   store          : store,
+  types          : types,
+  utils          : utils,
   ControlContext : ControlContext
 }
 
