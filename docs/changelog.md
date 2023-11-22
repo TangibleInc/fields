@@ -1,3 +1,17 @@
+# 20231121
+
+- JavaScript:
+    - Add possibility to register custom field types from tangibleFields object
+    - Add possibility to access utils functions from tangibleFields object
+- Dependent values:
+    - Add possibility to access dependent values attribute if value is an object
+- Fields:
+    - Repeaters and Field groups: Allows multiple level of nesting for visibility conditions and dependent values
+    - Field groups: Fix issues with infinite re-render
+    - Accordions: Fix issues with content visibility being changed when using header switch
+    - Text: Add support for read_only parameter
+    - File: Fix styling for delete button
+
 # 20231109
 
 - Style contexts:
