@@ -1,5 +1,5 @@
 import '../../../assets/src/index.jsx'
-import { render, within } from '@testing-library/react'
+import { render, within, act } from '@testing-library/react'
 
 const fields = window.tangibleFields
 
@@ -103,5 +103,28 @@ describe('window.tangibleFields', () => {
 
     expect(within(container).getByDisplayValue(`custom-field-value`)).toBeTruthy()
     expect(within(container).getByText(`custom-field-attribute`)).toBeTruthy()
+  })
+
+  it('has access to fields functions', () => expect(typeof fields.fields).toBe('object'))
+
+  it('can re-render a field', () => {
+
+    render(
+      fields.render({
+        type  : 'text',
+        name  : 'test-rerender',
+        label : 'Test re-render',
+        value : ''
+      })
+    )
+    
+    let eventHasBeenTriggered = false
+    fields.event('_fieldRerender', fieldName => {
+      eventHasBeenTriggered = fieldName === 'test-rerender'
+    })
+
+    act(() => fields.fields.rerender('test-rerender'))
+    
+    expect(eventHasBeenTriggered).toBe(true)
   })
 })

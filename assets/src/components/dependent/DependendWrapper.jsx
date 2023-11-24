@@ -55,9 +55,7 @@ const DependendWrapper = ({
   
   useEffect(() => {
     const callback = addEventListener('valueChange', dependentWatcher)
-    return () => {
-      removeEventListener('valueChange', callback)
-    }
+    return () => removeEventListener('valueChange', callback)
   }, [dependentWatcher])
 
   /**

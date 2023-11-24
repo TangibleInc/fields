@@ -14,6 +14,7 @@ import {
 import Control from './Control'
 import store from './store'
 import types from './types'
+import fields from './fields'
 import * as utils from './utils'
 
 /**
@@ -89,6 +90,7 @@ window.tangibleFields = {
   store          : store,
   types          : types,
   utils          : utils,
+  fields         : fields,
   ControlContext : ControlContext
 }
 
