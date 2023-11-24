@@ -1,26 +1,17 @@
 import { 
   useEffect,
   useState,
-  useContext,
-  useMemo
+  useContext
 } from 'react'
 
-import { 
-  evaluateFieldVisibility,
-  getTriggerFields
-} from './visibility/'
-
-import { 
-  addEventListener,
-  triggerEvent
-} from './events'
-
+import { triggerEvent } from './events'
 import { OverlayProvider } from 'react-aria'
 import { dynamicValuesAPI } from './dynamic-values'
 
 import types from './types.js'
 import DependendWrapper from './components/dependent/DependendWrapper'
 import RenderWrapper from './components/render/RenderWrapper'
+import VisibilityWrapper from './components/visibility/VisibilityWrapper'
 
 const Control = ({
   visibility,
@@ -40,7 +31,6 @@ const Control = ({
   }
 
   const [value, setValue] = useState(props.value ?? '')
-  const [isVisible, setVisibility] = useState(false) // False until we evaluate conditions
 
   useEffect(() => {
     props.onChange && props.onChange(value)
@@ -64,95 +54,34 @@ const Control = ({
     })
   }
   
-  /**
-   * For lisibility,it would be nice to move the visibility condition logic to a separate wrapper like 
-   * for the dependent values
-   */
-
-  const evaluateVisibility = () => {
-
-    if( ! visibility.condition ) {
-      setVisibility(true)
-      return;
-    } 
-
-    // The default callback looks only for a value in other defined fields, but we can overwrite it if needed
-    const getValue = data.getValue ?? control.getValue
-    const result = evaluateFieldVisibility(visibility.condition, getValue)
-    
-    setVisibility( visibility.action !== 'hide' ? result : ! result )
-  }
-
-  useEffect(() => {
-    
-    evaluateVisibility() // Initial visibility
-    
-    if( ! visibility.condition || ! triggerFields ) {
-      return;
-    } 
-
-    /**
-     * Trigger visibility re-evaluation on
-     */
-    addEventListener('valueChange', field => {
-
-      // We rely on data.watcher for subfield changes (@see below)
-      if( field.props?.controlType === 'subfield' ) return;
-      
-      // Avoid unnecessary evaluations
-      if( ! triggerFields.includes(field.name) ) return;  
-      
-      setTimeout(evaluateVisibility)
-    })
-
-    /**
-     * The visibility watcher is an additional callback we can use to evaluate
-     *  
-     * It is currently used to watch changes in subfields (repeaters, field-groups)
-     */
-    if( data.watcher ) {
-      data.watcher(fieldName => {
-        // Avoid unnecessary evaluations
-        if( triggerFields.includes(fieldName) ) evaluateVisibility()
-      })
-    }
-  }, [])
-  
-  /**
-   * Determine for which fields a value change should trigger a re-evaluation of 
-   * the visibility conditions (see visibility.watcher)
-   */
-  const triggerFields = useMemo(() => (
-    visibility.condition ? getTriggerFields(visibility.condition) : false
-  ))
-
-  if ( ! isVisible ) return <></>;
-  
   return (
     <OverlayProvider { ...wrapper }>
-      <RenderWrapper 
-        controlType={ props.controlType ?? 'field' }
-        name={ props.name ?? false } 
-        setValue={ setValue }
-        render={ refreshRender => (
+      <VisibilityWrapper visibility={ visibility } data={ data }>
+        <RenderWrapper 
+          controlType={ props.controlType ?? 'field' }
+          name={ props.name ?? false } 
+          setValue={ setValue }
+        >
+        { refreshRender => 
           <DependendWrapper 
             refresh={ refreshRender } 
             data={ data } 
             controlProps={ props } 
-            renderControl={ controlProps => (
-              <ControlComponent 
-                { ...controlProps } 
-                value={ value }
-                onChange={ onChange }
-                data={ data }
-                dynamic={ props.dynamic 
-                  ? dynamicValuesAPI(value, setValue, props.dynamic) 
-                  : false 
-                }
-              />
-            )} 
-          />
-      )} />
+          >
+          { controlProps => 
+            <ControlComponent 
+              { ...controlProps } 
+              value={ value }
+              onChange={ onChange }
+              data={ data }
+              dynamic={ props.dynamic 
+                ? dynamicValuesAPI(value, setValue, props.dynamic) 
+                : false 
+              }
+            /> }
+          </DependendWrapper> }
+        </RenderWrapper>
+      </VisibilityWrapper>
     </OverlayProvider>
   )
 }

@@ -15,10 +15,10 @@ import {
 } from './utils'
 
 const DependendWrapper = ({
-  renderControl,
   controlProps,
   refresh,
-  data
+  data,
+  children
 }) => {
   
   const childProps =  Object.assign({}, controlProps)
@@ -55,7 +55,9 @@ const DependendWrapper = ({
   
   useEffect(() => {
     const callback = addEventListener('valueChange', dependentWatcher)
-    return () => removeEventListener('valueChange', callback)
+    return () => {
+      removeEventListener('valueChange', callback)
+    }
   }, [dependentWatcher])
 
   /**
@@ -79,7 +81,7 @@ const DependendWrapper = ({
     )
   ), [])
   
-  return renderControl(formatedProps)
+  return children(formatedProps)
 }
 
 export default DependendWrapper

@@ -17,7 +17,7 @@ import {
  * Could we use useContext for this?
  */
 const RenderWrapper = ({ 
-  render,
+  children,
   controlType, 
   setValue,
   name
@@ -43,7 +43,7 @@ const RenderWrapper = ({
 
   return(
     <Fragment key={ key }>
-      { render(refreshRender) }
+      { children(refreshRender) }
     </Fragment>
   )
 }

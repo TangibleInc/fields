@@ -125,7 +125,7 @@ const BaseWrapper = props => {
     return categories.filter(category => (
       Object.keys(category.choices).length !== 0
     ))
-  })
+  }, [])
 
   /**
    * Not sure why, but without a ref the state value is always empty when used inside getValue()
