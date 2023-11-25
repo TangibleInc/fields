@@ -5,6 +5,18 @@ import {
 
 import { BaseWrapper } from '../'
 
+/**
+ * Props needed:
+ * - dynamic: dynamic object from dynamicValuesAPI() in ./dynamic-values/index.js
+ * - value: state value from parent field component
+ * - onValueSelection: callback from when value is selected, used to set state in parent field component
+ * - ref: Ref used by parent field component for input element
+ * 
+ * Optional:
+ * - inputProps: Needed if parent field component require inputProps to be displayed at all time (example: for a label) 
+ * - name: Field name, only needed if parent use one 
+ * - onValueRemove: Callback when we remove dynamic value
+ */
 const FieldWrapper = forwardRef(({
   inputProps = {},
   ...props
@@ -30,7 +42,10 @@ const FieldWrapper = forwardRef(({
       }}
       remove={{
         isDisabled: isDynamic === false,
-        onPress: () => setIsDynamic(false)
+        onPress: () => {
+          setIsDynamic(false)
+          if( props.onValueRemove ) props.onValueRemove()
+        }
       }}
     >
       { isDynamic

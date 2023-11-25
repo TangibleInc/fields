@@ -10,11 +10,9 @@ const fields = window.tangibleFields
 /**
  * TODO:
  * - Improve repeater tests by adding test when multiple rows
- * - Test dependent value in nested objects/arrays
- * - Test dependent value in field-group
  */
 
-describe('dependent value feature', () => {
+describe('dependent values feature', () => {
 
   it('does nothing if dependent not defined', () => {
  
@@ -35,7 +33,7 @@ describe('dependent value feature', () => {
       </>
     )
 
-    const dependentField = document.getElementsByClassName('tested-element')[0] 
+    const dependentField = document.getElementsByClassName('tested-element')[0]
     expect(dependentField).toBeTruthy()
 
     const initialLabel = within(dependentField).getByText('{{test-field-1}}')

@@ -28,8 +28,9 @@ const getDynamicStrings = string => (
  * @see ../Control.jsx 
  * @see ../components/dynamics/ 
  */
-const dynamicValuesAPI = (value, setValue, types) => ({
-  getTypes  : () => types,
+const dynamicValuesAPI = (value, setValue, config) => ({
+  getTypes  : () => config.types,
+  getMode   : () => config.mode,
   getList   : () => dynamics.values,
   getAll    : () => getDynamicStrings(value).map(stringToDynamicValue),
   getLabel  : type => dynamics.values[type] ? dynamics.values[type].label : type,

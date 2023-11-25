@@ -12,8 +12,40 @@ window.TangibleFields = {
   },
   fields: [],
   dynamics: {
-    values: [],
-    categories: []
+    categories: [
+      {
+        label: 'Test category',
+        name: 'test-category',
+        values: [
+          'test-value-no-settings',
+          'test-value-settings'
+        ]
+      }
+    ],
+    values: [
+      {
+        category: 'test-category',
+        name: 'test-value-no-settings',
+        label: 'Test value no settings',
+        type: 'text',
+        description: 'Test value no settings description',
+        fields: [],
+      },
+      {
+        category: 'test-category',
+        name: 'test-value-settings',
+        label: 'Test value settings',
+        type: 'text',
+        description: 'Test value settings description',
+        fields: [
+          {
+            type: 'text',
+            name: 'dynamic-value-setting',
+            label: 'Dynamic value setting',
+          }
+        ],
+      }
+    ]
   },
   mimetypes: {},
 }

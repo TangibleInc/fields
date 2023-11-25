@@ -29,6 +29,8 @@ $fields->register_dynamic_value([
     $source = $settings['source'] ?? 'current';
     $meta_name = $settings['meta_name'] ?? '';
     
+    if( empty($meta_name) ) return '';
+    
     $post_id = (int) (
       $source === 'current'
         ? $config['context']['current_post_id']

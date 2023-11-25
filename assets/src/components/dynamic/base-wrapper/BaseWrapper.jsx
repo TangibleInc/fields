@@ -186,6 +186,8 @@ const BaseWrapper = props => {
               </div>
             : <ComboBox 
                 choices={ choices }
+                label={ 'Select dynamic value to insert' }
+                labelVisuallyHidden={ true }
                 autoFocus={ true }
                 showButton={ false }
                 onChange={ saveDynamicValue }
