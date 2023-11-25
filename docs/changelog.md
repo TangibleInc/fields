@@ -1,3 +1,12 @@
+# 20231124
+
+- Visibility conditions:
+    - Move code into separate wrapper
+- JavaScript:
+    - Add possibility to re-render from tangibleFields object
+- Dynamic values:
+    - Text: Add support for replace mode
+
 # 20231121
 
 - JavaScript:
