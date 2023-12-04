@@ -39,6 +39,7 @@ $fields->format_args = function(
       
     case 'button_group':
       $args['type'] = 'button-group';
+      $args = $fields->format_value($args, 'read_only', 'isDisabled');
       break;
 
     case 'color_picker':
@@ -105,6 +106,10 @@ $fields->format_args = function(
     case 'accordion':
       $args = $fields->format_groups($type, $args);
       $args = $fields->format_value($args, 'use_switch', 'useSwitch');
+      break;
+
+    case 'select':
+      $args = $fields->format_value($args, 'read_only', 'isDisabled');
       break;
 
     case 'switch':

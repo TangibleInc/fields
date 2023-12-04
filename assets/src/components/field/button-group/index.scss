@@ -12,6 +12,7 @@
     border-top-left-radius: $button-border-radius;
     border-bottom-left-radius: $button-border-radius;
   }
+
   &:not(:first-child) {
     margin-left: (-$button-border-size);
   }
@@ -37,4 +38,9 @@
     align-items: center;
     justify-content: center;
   }
+}
+
+.tf-button-group-container[aria-disabled="true"] .tf-button-group-option {
+  opacity: 0.5;
+  pointer-events: none;
 }
