@@ -4,7 +4,7 @@ defined('ABSPATH') or die();
 
 $fields->fetch_value = function (
   string $name
-) use ($fields) : mixed {
+) use ($fields) {
   if ( ! $field = $fields->get_field( $name ) ) {
     return new WP_Error( 'tf-unknown-field', sprintf( __( 'Unknown field %1$s' ), $name ) );
   }
@@ -24,8 +24,8 @@ $fields->fetch_value = function (
 
 $fields->store_value = function (
   string $name,
-  mixed $value,
-) use ($fields) : mixed {
+  $value
+) use ($fields) {
   if ( ! $field = $fields->get_field( $name ) ) {
     return new WP_Error( 'tf-unknown-field', sprintf( __( 'Unknown field %1$s' ), $name ) );
   }
@@ -48,6 +48,10 @@ $fields->store_value = function (
     }
   }
 
+  if ( is_string($value) ) {
+    $value = $fields->strip_unauthorized_dynamic_values($value, 'store');
+  }
+  
   if ( ! $field['store_callback']($name, $value) ) {
     return new WP_Error( 'tf-error', sprintf( __( 'Could not save value for %1$s' ), $name ) );
   }

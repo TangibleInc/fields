@@ -23,12 +23,12 @@ const Option = ({ item, state }) => {
   if( isSelected ) classes = classes += ' tf-list-box-option-selected'
   if( isDisabled ) classes = classes += ' tf-list-box-option-disabled'
   if( isFocused ) classes = classes += ' tf-list-box-option-focus'
-  
+
   return(
     <li
       { ...mergeProps(optionProps, focusProps) }
       ref={ ref }
-      class={ classes }
+      className={ classes }
     >
       { item.rendered }
     </li>

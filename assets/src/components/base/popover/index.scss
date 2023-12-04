@@ -1,7 +1,11 @@
+.tf-underlay {
+  position: fixed;
+  inset: 0;
+}
+
 .tf-popover {
   background: $field-background;
+  border: $field-border;
   color: $field-font-color;
-  position: absolute;
   z-index: $popover-index;
-  width: 100%;
 }

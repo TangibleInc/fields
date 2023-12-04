@@ -5,10 +5,10 @@ import ButtonGroup from './button-group/ButtonGroup'
 import Checkbox from './checkbox/Checkbox'
 import Color from './color/Color'
 import ComboBox from './combo-box/'
-import DatePicker from './date/'
+import Date from './date/Date'
 import Dimensions from './dimensions/Dimensions'
 import DynamicText from './dynamic-text/DynamicText'
-import Editor from './editor/Editor'
+import Editor from './editor/'
 import FieldGroup from './field-group/FieldGroup'
 import File from './file/File'
 import Gradient from './gradient/Gradient'
@@ -17,8 +17,8 @@ import InputHidden from './hidden/InputHidden'
 import Number from './number/Number'
 import Radio from './radio/'
 import Select from './select/'
-import SimpleDimension from "./simple-dimension/SimpleDimension";
-import Switch from './switch/Switch'
+import SimpleDimension from './simple-dimension/SimpleDimension'
+import Switch from './switch/'
 import Text from './text/Text'
 import TextArea from './textarea/TextArea'
 
@@ -30,7 +30,7 @@ export {
   Checkbox,
   Color,
   ComboBox,
-  DatePicker,
+  Date,
   Dimensions,
   DynamicText,
   Editor,

@@ -32,7 +32,7 @@ const CalendarCell = ({ state, date }) => {
         { ...mergeProps(buttonProps, focusProps) }
         ref={ ref }
         hidden={ isOutsideVisibleRange }
-        class={ classes }
+        className={ classes }
       >
         { formattedDate }
       </div>

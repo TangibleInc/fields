@@ -1,0 +1,12 @@
+.tf-dynamic-text-input {
+  width: calc(100% - 2px);
+  box-sizing: content-box;
+}
+
+.tf-dynamic-text-input > .cm-editor .cm-content {
+  padding: 6px 8px;
+}
+
+.tf-dynamic-text-input .cm-editor {
+  box-sizing: border-box !important;
+}

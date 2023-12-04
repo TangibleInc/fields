@@ -17,33 +17,34 @@ const Accordion = props => {
   const isEnabled = isEnabled => {
     setValue({
       ...value, 
-      enabled: isEnabled === true || isEnabled === 'on' 
+      enabled: isEnabled === true || isEnabled === 'on'
         ? 'on' : 'off'
     })
   }
   
   const headerLeft = props.useSwitch
     ? <div onClick={ e => e.stopPropagation() }>
-        <Switch value={ value.enabled ?? 'off' } onChange={ isEnabled }  />
+        <Switch 
+          value={ value.enabled ?? 'off' } 
+          onChange={ isEnabled }
+          label={ 'Toggle accordion' }
+          labelVisuallyHidden={ true }
+        />
       </div>  
     : null
   
   return(
-    <div class='tf-accordion'>
+    <div className='tf-accordion'>
+      <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
       <ExpandablePanel 
         title={ props.title ?? false }  
         headerLeft={ headerLeft }
         behavior={ 'hide' }
       >
         <FieldGroup 
-          { ...props } 
-          fields={[
-            ...props.fields,
-            {
-              type: 'hidden',
-              name: 'enabled' 
-            }
-          ]} 
+          { ...props }
+          name={ null } 
+          fields={ props.fields } 
           value={ value }
           onChange={ setValue }
         />  

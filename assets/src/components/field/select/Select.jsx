@@ -1,9 +1,5 @@
 import { useRef } from 'react'
-
-import { 
-  useSelectState,
-  Item 
-} from 'react-stately'
+import { useSelectState } from 'react-stately'
 
 import {
   HiddenSelect, 
@@ -32,12 +28,14 @@ const Select = props => {
    * @see https://react-spectrum.adobe.com/react-stately/useSelectState.html
    */
   const state = useSelectState(props)
-    
+
+  const ref = useRef()
+  const listRef = useRef()
+  const wrapperRef = useRef()
+
   /**
    * @see https://react-spectrum.adobe.com/react-aria/useSelect.html
    */
-  const ref = useRef()
-  const listRef = useRef()
   const {
     labelProps,
     descriptionProps,
@@ -47,9 +45,9 @@ const Select = props => {
   } = useSelect(props, state, ref)
   
   return(
-    <div class="tf-select">
+    <div className="tf-select" ref={ wrapperRef }>
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <HiddenSelect
@@ -61,37 +59,37 @@ const Select = props => {
       <Button
         type={ 'select' }
         { ...triggerProps }
+        ref={ref}
         onKeyDown={ e => e.code === 'Space' 
           ? state.toggle() 
           : triggerProps.onKeyDown(e)
         }
       >
-        <span { ...valueProps }>
+        <span { ...valueProps } className="tf-select__value">
           { state.selectedItem
             ? state.selectedItem.rendered
             : (props.placeholder ?? 'Select an option') }
         </span>
-        <span aria-hidden="true" class="tf-select-icon">
+        <span aria-hidden="true" className="tf-select-icon">
           ▼
         </span>
       </Button>
       { state.isOpen && 
         <Popover 
-          isOpen={ state.isOpen } 
-          onClose={ state.close }
-          ref={ ref }
+          state={state} 
+          triggerRef={ref} 
+          placement="bottom start"
+          style={{ width: wrapperRef?.current?.offsetWidth }}
         >
           <ListBox
             { ...menuProps }
             listBoxRef={ listRef }
             state={ state }
             items={ props.items }
-          >
-            { item => <Item key={ item.id }>{ item.name }</Item> }
-          </ListBox>
+          />
         </Popover> }
         { props.description &&
-          <Description { ...descriptionProps }>
+          <Description descriptionProps={ descriptionProps } parent={ props }>
             { props.description }
           </Description> }
     </div>

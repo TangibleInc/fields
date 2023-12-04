@@ -43,7 +43,7 @@ $fields->register_field = function(
  */
 $fields->get_field = function(
   string $name
-) use ($fields) : array|null {
+) use ($fields) {
   return $this->registered_fields[ $name ] ?? null;
 };
 

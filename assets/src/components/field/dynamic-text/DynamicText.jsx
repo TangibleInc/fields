@@ -18,14 +18,14 @@ import {
   Button,
   Label,
   Description
- } from '../../base'
+} from '../../base'
 
 import { 
   Text,
   ComboBox
 } from '../'
 
-import createInput from './codemirror'
+import { createInput } from '../../../codemirror/'
 
 const editors = {} // CodeMirror instance (useRef instead?)
 
@@ -75,12 +75,12 @@ const DynamicText = props => {
   }
   
   return(
-    <div class="tf-dynamic-text">
+    <div className="tf-dynamic-text">
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
-      <div class="tf-dynamic-text-field">
+      <div className="tf-dynamic-text-field">
         <VisuallyHidden>
           <Text 
             label={ props.label ?? false } 
@@ -88,13 +88,15 @@ const DynamicText = props => {
             value={ value }
           />
         </VisuallyHidden>
-        <div ref={ input } class="tf-dynamic-text-input" { ...inputProps }></div>
+        <div ref={ input } className="tf-dynamic-text-input" { ...inputProps }></div>
         <Button type="action" ref={ triggerRef } { ...triggerProps }>
           Add
         </Button>
         { state.isOpen && (
-          <div class="tf-dynamic-text-popover" ref={ overlayRef } { ...overlayProps }>
+          <div className="tf-dynamic-text-popover" ref={ overlayRef } { ...overlayProps }>
             <ComboBox 
+              label={ 'Select dynamic token' }
+              labelVisuallyHidden={ true }
               choices={ props.choices ?? {} }
               autoFocus={ true }
               showButton={ false }
@@ -114,7 +116,7 @@ const DynamicText = props => {
         ) }
       </div>
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

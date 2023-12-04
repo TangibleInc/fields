@@ -1,4 +1,6 @@
 import { Button, ModalTrigger } from '../../../base'
+import { Checkbox } from '../../../field'
+import BulkActions from '../../common/BulkActions'
 
 /**
  * TODO: Implement useTable hook
@@ -6,39 +8,63 @@ import { Button, ModalTrigger } from '../../../base'
  * @see https://react-spectrum.adobe.com/react-aria/useTable.html 
  */
 
+const bulkOptions = { 'deletion': 'Delete' }
+
 const Table = ({
   items,
   fields,
   dispatch,
-  getRow,
+  rowFields,
   getControl,
-  maxLength
+  maxLength,
+  useBulk
 }) => (
+  <div>
+  { useBulk && 
+    <BulkActions
+      actions={ bulkOptions }
+      dispatch={ dispatch }
+    /> } 
   <table>
     <thead>
       <tr>
-        { fields.map(field => (
-          <th>{ field.label ?? '' }</th>
+        <th></th>
+        { fields.map((field, h) => (
+          <th key={ h }>{ field.label ?? '' }</th>
         )) }
         { maxLength > 1 && <th align='end'></th>}
       </tr>
     </thead>
-    <tbody>
+    <tbody className='tf-repeater-items tf-repeater-table-items'>
       { items && items.slice(0, maxLength).map((item, i) => (
-        <tr key={ item.key }>{ 
-          getRow(item).map(
-            control => (
-              <td>{ getControl(control, item, i) }</td>  
-            )
-          )}
+        <tr key={ item.key ?? i }>
+          <td key={ `${item.key}-enable` }>
+            { useBulk && 
+              <div onClick={ e => e.stopPropagation() }>
+                <Checkbox 
+                  value={ item._bulkCheckbox }
+                  onChange={ value => dispatch({ 
+                    type    : 'update',
+                    item    : i,
+                    control : '_bulkCheckbox',
+                    value   : value
+                  }) } 
+                />
+              </div> }
+          </td>
+          { rowFields.map((control, j) => (
+            <td key={ `${item.key}-${j}` }>
+              { getControl(control, item, i) }
+            </td>
+          )) }
           <td>
             { maxLength !== undefined &&
               <Button
                 type="action"
                 isDisabled={ maxLength <= items.length }
                 onPress={() => dispatch({ 
-                  type    : 'clone',
-                  item    : item
+                  type : 'clone',
+                  item : item
                 })}
               >
                 Clone
@@ -58,6 +84,7 @@ const Table = ({
       )) }
     </tbody>
   </table>
+  </div>
 )
 
 export default Table

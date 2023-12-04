@@ -7,6 +7,7 @@ import {
 import { 
   Description,
   Label,
+  Dialog,
   Popover
 } from '../../base'
 
@@ -45,6 +46,7 @@ const Gradient = props => {
   const input = useRef()
   const gradientPopover = useRef()
   const colorPopover = useRef()
+  const wrapperRef = useRef()
   
   const { 
     labelProps, 
@@ -73,28 +75,6 @@ const Gradient = props => {
     }
   }
 
-  /**
-   * We can't use useFocusWithin because it's not working well when nested (the ColorPicker
-   * component already implment it)
-   * 
-   * @see https://react-spectrum.adobe.com/react-aria/useFocusWithin.html
-   * @see https://stackoverflow.com/a/42234988/10491705
-   */
-  useEffect(() => {
-    document.addEventListener('mousedown', onClickOutside)
-    return () => document.removeEventListener('mousedown', onClickOutside)
-  }, [gradientPopover])
-  
-  const onClickOutside = event => {
-
-    const ref = gradientPopover.current ?? false
-    
-    if( ! ref ) return;
-    if( ref.contains(event.target) ) return;
-    
-    isOpen(false)
-  }
-
   const updateColor = (i, color) => {
     const newColors = [ ...value.colors ]
     newColors[i] = color?.toString('rgba')
@@ -109,17 +89,19 @@ const Gradient = props => {
   }
 
   return(
-    <div class="tf-gradient">
+    <div className="tf-gradient">
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
-      <div class="tf-gradient-container">
+      <div className="tf-gradient-container" ref={ wrapperRef }>
         <input 
+          ref={gradientPopover}
           type="text" 
-          class="tf-gradient-input" 
+          className="tf-gradient-input"
           value={ generateGradient() } 
           onClick={ e => isOpen(true) }
+          readOnly // Added to remove warning (because value but no onChange event), but not sure it's an appropriate fix
         />
         <input 
           type="hidden"
@@ -129,71 +111,91 @@ const Gradient = props => {
           { ...fieldProps } 
         />
         { open && 
-          <Popover ref={ gradientPopover }>
-            <FocusScope autoFocus>
-              <div class="tf-gradient-popover">
-                <div class="tf-gradient-preview" style={{ 
-                  background: generateGradient()  
-                }}>
-                  <div class="tf-gradient-colors">
-                    { value.colors?.map((color, i) => (
-                      <div 
-                        class="tf-gradient-color tf-color-area-thumb"
-                        style={{ background: value.colors[i] }} 
-                        onClick={ () => setEditColor(i) }
-                      />
-                    )) }
+          <Popover
+            state={{ isOpen: open, close: () => isOpen(false) }}
+            triggerRef={gradientPopover}
+            placement="bottom start"
+            style={{ 
+              width: wrapperRef?.current?.offsetWidth, 
+              minWidth: 'fit-content' 
+            }}
+            className="tf-gradient-popover"
+          >
+            <Dialog>
+              <FocusScope autoFocus>
+                <div className="tf-gradient-popover-content">
+                  <div className="tf-gradient-preview" ref={colorPopover} style={{
+                    background: generateGradient()  
+                  }}>
+                    <div className="tf-gradient-colors">
+                      { value.colors?.map((color, i) => (
+                        <div 
+                          className="tf-gradient-color tf-color-area-thumb"
+                          style={{ background: value.colors[i] }} 
+                          onClick={ () => setEditColor(i) }
+                        />
+                      )) }
+                    </div>
                   </div>
-                  { editColor !== false && 
-                    <Popover ref={ colorPopover }>
-                      <ColorPicker 
-                        value={ value.colors[editColor] }
-                        onChange={ color => updateColor(editColor, color) }
-                        hasAlpha={ true } 
-                        onFocusChange={ isFocus => isFocus === false ? setEditColor(false) : false }
-                      />
-                  </Popover> }
-                </div>
-                <div class="tf-gradient-settings">
-                  <div class="tf-gradient-settings-row">
-                    <Select
-                      label={ 'Gradient type' } 
-                      selectedKey={ value.type ?? 'linear' } 
-                      onSelectionChange={ type => updateValue('type', type) }
-                    >
-                      <Item key="linear">Linear</Item>
-                      <Item key="radial">Radial</Item>
-                      <Item key="conic">Conical</Item>
-                    </Select>
-                  </div>
-                  <div>
-                    { value.type === 'linear' &&
-                      <div class="tf-gradient-settings-row">
-                        <Number
-                          label={ 'Angle' }
-                          value={ value.angle ?? 45 }
-                          onChange={ angle => updateValue('angle', angle) }
-                        /> 
-                      </div> }
-                    { value.type === 'radial' &&
-                      <div class="tf-gradient-settings-row">
-                        <Select 
-                          label={ 'Shape' }
-                          selectedKey={ value.shape ?? 'ellipse' } 
-                          onSelectionChange={ shape => updateValue('shape', shape) }
-                        >
-                          <Item key="circle">Circle</Item>
-                          <Item key="ellipse">Ellipse</Item>
-                        </Select> 
-                      </div> }
+                  <div className="tf-gradient-settings">
+                    <div className="tf-gradient-settings-row">
+                      <Select
+                        label={ 'Gradient type' } 
+                        selectedKey={ value.type ?? 'linear' } 
+                        onSelectionChange={ type => updateValue('type', type) }
+                      >
+                        <Item key="linear">Linear</Item>
+                        <Item key="radial">Radial</Item>
+                        <Item key="conic">Conical</Item>
+                      </Select>
+                    </div>
+                    <div>
+                      { value.type === 'linear' &&
+                        <div className="tf-gradient-settings-row">
+                          <Number
+                            label={ 'Angle' }
+                            value={ value.angle ?? 45 }
+                            onChange={ angle => updateValue('angle', angle) }
+                          /> 
+                        </div> }
+                      { value.type === 'radial' &&
+                        <div className="tf-gradient-settings-row">
+                          <Select 
+                            label={ 'Shape' }
+                            selectedKey={ value.shape ?? 'ellipse' } 
+                            onSelectionChange={ shape => updateValue('shape', shape) }
+                          >
+                            <Item key="circle">Circle</Item>
+                            <Item key="ellipse">Ellipse</Item>
+                          </Select> 
+                        </div> }
+                    </div> 
                   </div> 
-                </div> 
-              </div>  
-            </FocusScope>
+                </div>  
+              </FocusScope>
+            </Dialog>
           </Popover>  }
+
+          {editColor !== false && (
+            <Popover
+              state={{ isOpen: editColor !== false, close: () => setEditColor(false) }}
+              triggerRef={colorPopover} 
+              placement={ editColor === 0 ? 'bottom start' : 'bottom end' }
+            >
+              <ColorPicker
+                value={value.colors[editColor]}
+                onChange={(color) => updateColor(editColor, color)}
+                hasAlpha={true}
+                onFocusChange={(isFocus) =>
+                  isFocus === false ? setEditColor(false) : false
+                }
+              />
+            </Popover>
+          )}
+
       </div>      
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

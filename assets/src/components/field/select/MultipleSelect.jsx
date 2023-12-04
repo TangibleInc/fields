@@ -9,10 +9,7 @@ import {
   VisuallyHidden 
 } from 'react-aria'
 
-import { 
-  Item,
-  useListState
- } from 'react-stately'
+import { useListState } from 'react-stately'
 
 import { 
   Button, 
@@ -41,6 +38,7 @@ const MultipleSelect = props => {
 
   const listBoxRef = useRef()
   const PopoverRef = useRef()
+  const wrapperRef =useRef()
 
   const { 
     listBoxProps, 
@@ -61,37 +59,37 @@ const MultipleSelect = props => {
       state={ state }
       items={ props.items }
       { ...listBoxProps }
-    >
-      { item => <Item key={ item.id }>{ item.name }</Item> }
-    </ListBox>
+    />
 
   return(
-    <div class="tf-multiple-select">
+    <div className="tf-multiple-select" ref={ wrapperRef }>
       <input type="hidden" name={ props.name ?? '' } value={ [...selected].join(',') } />
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <Button
         type={ 'select' }
+        ref={PopoverRef}
         onPress={ () => isOpen( ! open ) }
       >
-        <span>
+        <span className="tf-multiple-select__value">
           { selected.size > 0
             ? (selected.size === 1
               ? selected.size + ' item selected'
               : selected.size + ' items selected')
             : (props.placeholder ?? 'Select an option') }
         </span>
-        <span aria-hidden="true" class="tf-select-icon">
+        <span aria-hidden="true" className="tf-select-icon">
           ▼
         </span>
       </Button>
       { open
-        ? <Popover 
-            isOpen={ open } 
-            onClose={ () => isOpen(false) }
-            ref={ PopoverRef }
+        ? <Popover
+            state={{ isOpen: open, close: () => isOpen(false) }}
+            triggerRef={PopoverRef}
+            placement="bottom start"
+            style={{ width: wrapperRef?.current?.offsetWidth }}
           >
             { ListBoxComponent }
           </Popover>
@@ -99,7 +97,7 @@ const MultipleSelect = props => {
           { ListBoxComponent }
           </VisuallyHidden> }
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

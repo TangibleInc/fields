@@ -1,50 +1,60 @@
-import { forwardRef } from 'react'
+import {
+  useRef, 
+  useContext
+} from 'react'
 
 import {
-  DismissButton,
-  FocusScope,
-  mergeProps,
-  useDialog,
-  useModal,
-  useOverlay,
+  DismissButton, 
+  Overlay, 
+  usePopover
 } from 'react-aria'
 
-const Popover = forwardRef(({
-  title,
-  children,
-  isOpen,
-  onClose,
+function Popover({ 
+  children, 
+  state, 
   style,
-  ...otherProps
-}, ref) => {
+  className = '',
+  ...props 
+}) {
 
-  const { overlayProps } = useOverlay({
-    onClose,
-    isOpen,
-    isDismissable: true
-  }, ref)
+  const popoverRef = useRef(null);
+  const { popoverProps, underlayProps } = usePopover({
+    ...props,
+    popoverRef
+  }, state);
 
-  const { modalProps } = useModal()
-  const { dialogProps } = useDialog({}, ref)
+  /**
+   * The Overlay component will create the popover at the end of body, which means
+   * we will not be inside the gloabal context class (tf-context-{name})
+   * 
+   * It needs to be added again in order to correctly apply style inside the popover
+   * 
+   * @see renderField() in ./src/index.jsx 
+   */
+  const { ControlContext } = tangibleFields 
+  const control = useContext(ControlContext)
 
   return (
-    <FocusScope restoreFocus autoFocus>
-      <div
-        { ...mergeProps(
-          overlayProps, 
-          dialogProps, 
-          otherProps, 
-          modalProps
-        ) }
-        ref={ ref }
-        style={ style }
-        class="tf-popover"
-      >
-        { children }
-        <DismissButton onDismiss={ onClose } />
+    <Overlay>
+      <div className={ control.wrapper }>
+        <div {...underlayProps} className="tf-underlay" />
+        <div        
+          {...popoverProps}
+          ref={popoverRef}
+          style={{
+            ...popoverProps.style,
+            ...style,
+            zIndex: 1000000,
+            boxSizing: 'border-box'
+          }}
+          className={ `tf-popover ${className}` }
+        >
+          {children} 
+          <DismissButton onDismiss={state.close} />
+        </div>
       </div>
-    </FocusScope>
-  )
-})
+    </Overlay>
+  );
+}
 
-export default Popover
+export default Popover;

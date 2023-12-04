@@ -1,7 +1,7 @@
 .tf-color-area-gradient,
 .tf-color-area {
   width: 100%;
-  height: $field-width;
+  height: $color-area-height;
 }
 
 .tf-color-area-thumb {
@@ -16,10 +16,13 @@
 .tf-color-container {
   position: relative;
   width: fit-content;
+
+  input {
+    @include field;
+  }
 }
 
 .tf-color-picker {
-  position: absolute;
   width: 100%;
   z-index: $popover-index;
   background: $field-background;
@@ -35,10 +38,21 @@
     }
   }
 
+  .tf-color-input{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+
   .tf-color-sliders {
     padding: $field-padding;
     padding-bottom: 10px;
   }
+  
+}
+
+.tf-color-input > input{
+  width: 100%;
 }
 
 .tf-color-slider {

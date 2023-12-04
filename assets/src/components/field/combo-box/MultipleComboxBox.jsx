@@ -88,18 +88,18 @@ const MultipleComboBox = props => {
   )
   
   return(
-    <div class="tf-multiple-combobox">
+    <div className="tf-multiple-combobox">
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
-      <div class="tf-multiple-combobox-container">
-        <div ref={ input } class="tf-multiple-combobox-values" { ...inputProps }>
+      <div className="tf-multiple-combobox-container">
+        <div ref={ input } className="tf-multiple-combobox-values" { ...inputProps }>
           { values.length === 0
             ? props.placeholder ?? 'No item selected'
             : values.map(
               (value, i) => (
-                <span class="tf-combo-box-item">
+                <span key={ value.key ?? i } className="tf-combo-box-item">
                   <span>{ props.isAsync ? value.label : props.choices[value] ?? '' }</span>
                   <Button onPress={ () => remove(i) }>x</Button>
                 </span>
@@ -109,38 +109,39 @@ const MultipleComboBox = props => {
         <Button type="action" ref={ triggerRef } { ...triggerProps }>
           Add
         </Button>
+        { state.isOpen && (
+          <div className="tf-popover" ref={ overlayRef } { ...overlayProps }>
+            <ComboBox
+              focusStrategy={ 'first' }
+              label={ 'Select an item to add' }
+              labelVisuallyHidden={ true }
+              description={ false }
+              disabledKeys={ getDisabledKeys() }
+              autoFocus={ true }
+              multiple={ true }
+              showButton={ false }
+              menuTrigger="focus"
+              onSelectionChange={ value => {
+                if( ! value ) return;
+                add(value)
+                state.close()
+              }}
+              onFocusChange={ isFocus => isFocus 
+                ? (! state.isOpen && state.open())
+                : state.close() 
+              }
+              isAsync={ props.isAsync ?? false }
+              { ...itemProps }
+            >
+              { props.children }
+            </ComboBox>
+            <DismissButton onDismiss={ state.close } />
+          </div> ) }
       </div>
-      { state.isOpen && (
-        <div class="tf-popover" ref={ overlayRef } { ...overlayProps }>
-          <ComboBox
-            focusStrategy={ 'first' }
-            label={ false }
-            description={ false }
-            disabledKeys={ getDisabledKeys() }
-            autoFocus={ true }
-            multiple={ true }
-            showButton={ false }
-            menuTrigger="focus"
-            onSelectionChange={ value => {
-              if( ! value ) return;
-              add(value)
-              state.close()
-            }}
-            onFocusChange={ isFocus => isFocus 
-              ? (! state.isOpen && state.open())
-              : state.close() 
-            }
-            isAsync={ props.isAsync ?? false }
-            { ...itemProps }
-          >
-            { props.children }
-          </ComboBox>
-          <DismissButton onDismiss={ state.close } />
-        </div> ) }
       { props.description &&
-        <Description { ...descriptionProps }>
-          { props.description }
-        </Description> }
+          <Description descriptionProps={ descriptionProps } parent={ props }>
+            { props.description }
+          </Description> }
   </div>
   )
 }

@@ -24,12 +24,12 @@ const Section = ({ section, state }) => {
     elementType: 'li'
   })
 
-  const isFirst = section.key !== state.collection.getFirstKey() 
+  const isFirst = section.key === state.collection.getFirstKey()
 
   return (
     <>
-      { ! isFirst && <li class="tf-list-box-section-separator" {...separatorProps} /> }
-      <li class="tf-list-box-section" { ...itemProps }>
+      { ! isFirst && <li className="tf-list-box-section-separator" {...separatorProps} /> }
+      <li className="tf-list-box-section" { ...itemProps }>
         { section.rendered &&
           <span { ...headingProps }>
             { section.rendered }
@@ -37,11 +37,11 @@ const Section = ({ section, state }) => {
         <ul { ...groupProps }>
           {[ ...section.childNodes ].map(item => (
             <Option
-              key={ item.name }
+              key={ item.key ?? item.name }
               item={ item }
               state={ state }
             />
-          ))}
+          )) }
         </ul>
       </li>
     </>

@@ -1,0 +1,18 @@
+.tf-repeater-bulk-actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 4px;
+    
+  border: $field-border;
+  border-radius: $field-border-radius;
+  background: $field-background;
+  padding: $field-padding;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  & > div,
+  & > button {
+    margin-right: 5px;
+  }
+}

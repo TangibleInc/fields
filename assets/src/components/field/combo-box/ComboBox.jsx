@@ -3,10 +3,7 @@ import {
   useEffect 
 } from 'react'
 
-import { 
-  useComboBoxState, 
-  Item 
-} from 'react-stately'
+import { useComboBoxState } from 'react-stately'
 
 import {  
   useFilter,
@@ -19,7 +16,8 @@ import {
   Button,
   Label,
   Description,
-  ListBox
+  ListBox,
+  Popover
  } from '../../base'
 
  import { getOption } from '../../../utils'
@@ -84,6 +82,7 @@ const ComboBox = props => {
   const inputRef   = useRef()
   const listBoxRef = useRef()
   const popoverRef = useRef()
+  const wrapperRef = useRef()
 
   const {
     buttonProps,
@@ -110,27 +109,32 @@ const ComboBox = props => {
   })
 
   return(
-    <div class="tf-combo-box" { ...focusWithinProps }>
+    <div className="tf-combo-box" { ...focusWithinProps }>
       { props.label &&
-        <Label { ...labelProps }>
+        <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
       <FocusScope autoFocus={ props.autoFocus } restoreFocus>
-        <div class="tf-combo-box-text">
+        <div className="tf-combo-box-text" ref={ wrapperRef }>
           <input { ...inputProps } ref={ inputRef } />
           {/* add changeTag="span" to change the button to span element */}
 
           { props.showButton &&  
-          <Button type="action" ref={ triggerRef } preventFocusOnPress={ true } { ...buttonProps }>
-            <span aria-hidden="true">
-              ▼
-            </span>
-          </Button>
-          }
+            <Button type="action" ref={ triggerRef } preventFocusOnPress={ true } { ...buttonProps }>
+              <span aria-hidden="true">
+                ▼
+              </span>
+            </Button> }
 
           { state.isOpen && 
-            // Can't use popover component because it causes conflicts with focus events
-            <div class="tf-popover"> 
+            <Popover
+              state={state}
+              triggerRef={inputRef}
+              popoverRef={popoverRef}
+              placement="bottom start"
+              style={{ width: wrapperRef?.current?.offsetWidth }}
+              className={ 'tf-combo-box-popover' }
+            >
               <ListBox
                 listBoxRef={ listBoxRef }
                 state={ state }
@@ -138,14 +142,12 @@ const ComboBox = props => {
                 focusWithinProps
                 shouldUseVirtualFocus
                 { ...listBoxProps }
-              >
-                { item => <Item key={ item.id }>{ item.name }</Item> }
-              </ListBox>
-            </div> }
+              />
+            </Popover> }
         </div>
       </FocusScope>
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

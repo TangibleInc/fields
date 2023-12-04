@@ -16,5 +16,7 @@ yarn.lock
 /.phpunit.cache
 /wordpress-develop
 /coverage
+.wp-env.override.json
+/test-results
 
 *.swp

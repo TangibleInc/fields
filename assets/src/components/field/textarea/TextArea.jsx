@@ -17,16 +17,23 @@ const TextArea = (props) => {
 
   return (
     <div className='tf-text-area'>
-      {props.label && <Label {...labelProps}>{props.label}</Label>}
+      {props.label && 
+        <Label labelProps={ labelProps } parent={ props }>
+          { props.label }
+        </Label> }
       <textarea
         {...inputProps}
         maxLength={props.maxlength}
+        minLength={props.minlength}
         required={props.required}
         rows={props.rows}
         ref={ref}
+        data-identifier={props.identifier ?? ''}
       ></textarea>
       {props.description && (
-        <Description {...descriptionProps}>{props.description}</Description>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
+          { props.description }
+        </Description>
       )}
     </div>
   )

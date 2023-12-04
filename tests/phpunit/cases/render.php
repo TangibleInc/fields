@@ -17,7 +17,7 @@ class Render_TestCase extends WP_UnitTestCase {
 
 	public function test_fields_render_enqueues_field() {
 		tangible_fields()->register_field('test', [
-			'type' => 'number',
+			'type' => 'switch',
 		]);
 
 		$html = tangible_fields()->render_field('test');
@@ -26,7 +26,7 @@ class Render_TestCase extends WP_UnitTestCase {
 		[$element] = $matches;
 
 		$this->assertEquals([
-			'type' => 'number',
+			'type' => 'switch',
 			'element' => $element,
 			'context' => 'default',
 		], tangible_fields()->enqueued_fields['test']);
@@ -40,7 +40,7 @@ class Render_TestCase extends WP_UnitTestCase {
 		});
 
 		$html = tangible_fields()->render_field('test', [
-			'type' => 'number',
+			'type' => 'switch',
 		]);
 
 		$this->assertNotNull($errored, 'calling render_field without register_field did not trigger a warning');
@@ -52,7 +52,7 @@ class Render_TestCase extends WP_UnitTestCase {
 		[$element] = $matches;
 
 		$this->assertEquals([
-			'type' => 'number',
+			'type' => 'switch',
 			'element' => $element,
 			'context' => 'default',
 		], tangible_fields()->enqueued_fields['test']);

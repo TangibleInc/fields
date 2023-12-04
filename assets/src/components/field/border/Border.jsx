@@ -14,7 +14,8 @@ const Border = (props) => {
   const {
     labelProps,
     fieldProps,
-    descriptionProps } = useField(props)
+    descriptionProps 
+  } = useField(props)
 
   const [value, setValue] = useState(
     initJSON(props.value ?? '', {
@@ -52,13 +53,15 @@ const Border = (props) => {
   return (
     <div className='tf-border'>
       {props.label &&
-        <Label {...labelProps}>
+        <Label labelProps={ labelProps } parent={ props }>
           {props.label}
         </Label>}
       <input type="hidden" name={props.name ?? ''} value={JSON.stringify(value)} {...fieldProps} />
       <div className='tf-border-container'>
         <div className='tf-border-dimensions-container'>
           <Dimensions
+            label={ 'Border dimensions' }
+            labelVisuallyHidden={ true }
             onChange={handleData}
             linked={props.linked}
             units={units}
@@ -67,6 +70,8 @@ const Border = (props) => {
         </div>
         <div className='tf-border-color-picker-container'>
           <Color
+            label={ 'Border Color' }
+            labelVisuallyHidden={ true }
             onChange={handleData}
             value={value.color}
             format={format}
@@ -75,7 +80,7 @@ const Border = (props) => {
         </div>
       </div>
       {props.description && (
-        <Description {...descriptionProps}>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           {props.description}
         </Description>
       )}

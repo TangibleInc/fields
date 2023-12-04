@@ -63,7 +63,7 @@ class Format_TestCase extends WP_UnitTestCase {
 		$this->assertEquals($expected, $args['type'] ?? null);
 	}
 
-	private function _test_format_args_types_data() {
+	public function _test_format_args_types_data() {
 		return [
 			'unknown' => ['unknown', 'unknown'],
 			'button_group' => ['alignment_matrix', 'alignment-matrix'],
@@ -87,10 +87,10 @@ class Format_TestCase extends WP_UnitTestCase {
 	 * @dataProvider _test_format_args_type_attributes_data
 	 */
 	public function test_format_args_type_attributes(string $type, array $expected) {
-		$args = tangible_fields()->format_args('test', [
-			'type' => $type,
-			...$expected
-		]);
+		$args = tangible_fields()->format_args('test', 
+      [ 'type' => $type ]
+      + $expected
+    );
 
 		foreach ($expected as $name => $attribute) {
 			$this->assertEquals($attribute, $args[$attribute], "$name should have been rewritten as $attribute");
@@ -98,7 +98,7 @@ class Format_TestCase extends WP_UnitTestCase {
 		}
 	}
 
-	private function _test_format_args_type_attributes_data() {
+	public function _test_format_args_type_attributes_data() {
 		return [
 			// type, [from => to, from => to...]
 			'color_picker' => ['color_picker', [
@@ -116,6 +116,7 @@ class Format_TestCase extends WP_UnitTestCase {
 				'async_args' => 'asyncArgs',
 				'search_url' => 'searchUrl',
 				'ajax_action' => 'ajaxAction',
+				'map_results' => 'mapResults'
 			]],
 			'file' => ['file', [
 				'mime_types' => 'mimeTypes',
@@ -125,6 +126,9 @@ class Format_TestCase extends WP_UnitTestCase {
 				'value_on' => 'valueOn',
 				'value_off' => 'valueOff',
 			]],
+      'switch' => ['text', [
+				'read_only' => 'readOnly'
+			]],
 		];
 	}
 
@@ -132,7 +136,23 @@ class Format_TestCase extends WP_UnitTestCase {
 		$args = tangible_fields()->format_args('test', [
 			'type' => 'wysiwyg',
 		]);
-		$this->assertGreaterThan(0, did_action('wp_enqueue_editor'), 'wp_enqueue_editor was not called');
+
+		$this->assertEquals(0, did_action('wp_enqueue_editor'), 'wp_enqueue_editor was called but editor type was not tinymce');
+
+    $args = tangible_fields()->format_args('test', [
+			'type'   => 'wysiwyg',
+      'editor' => 'tinymce'
+		]);
+
+    $this->assertGreaterThan(0, did_action('wp_enqueue_editor'), 'wp_enqueue_editor was not called');
+	}
+
+  public function test_format_args_number_ensure_min_value() {
+		$args = tangible_fields()->format_args('test', [
+			'type' => 'number',
+			'min'  => '10',
+		]);
+		$this->assertEquals('10', $args['value'], 'value is not equal to min_value');
 	}
 
 	public function test_format_args_gallery_ensure_wp_enqueue_media() {
@@ -142,15 +162,15 @@ class Format_TestCase extends WP_UnitTestCase {
 		$this->assertGreaterThan(0, did_action('wp_enqueue_media'), 'wp_enqueue_media was not called');
 	}
 
-  public function test_format_args_file_ensure_wp_enqueue_media() {
+  public function test_format_args_file_ensure_wp_enqueue_media() {    
     $args = tangible_fields()->format_args('test', [
-			'type' => 'file',
+			'type'     => 'file',
+      'wp_media' => false
 		]);
     $this->assertEquals(0, did_action('wp_enqueue_media'), 'wp_enqueue_media was called');
 
     $args = tangible_fields()->format_args('test', [
 			'type' => 'file',
-      'wp_media' => true
 		]);
     $this->assertGreaterThan(0, did_action('wp_enqueue_media'), 'wp_enqueue_media was not called');
   }
@@ -168,7 +188,7 @@ class Format_TestCase extends WP_UnitTestCase {
 		$this->assertEquals('default', $args['value']);
 	}
 
-  private function _test_format_groups_args_data() {
+  public function _test_format_groups_args_data() {
     return [
       ['repeater'],
       ['accordion'],
@@ -221,5 +241,59 @@ class Format_TestCase extends WP_UnitTestCase {
     $this->assertTrue($args['fields'][0]['hasAlpha']);
 		$this->assertEquals('color-picker', $args['fields'][0]['type']);
 		$this->assertEquals($_expected, $args['fields'][1]['label']);
+  }
+
+  public function _test_format_dynamic_values_data() {
+    return [
+      ['color_picker', 'replace', ['color']],
+      ['date_picker', 'replace', ['date']],
+      ['number', 'replace', ['number']],
+      ['text', 'insert', ['text', 'date', 'color', 'number']]
+    ];
+  }
+
+  /**
+   * @dataProvider _test_format_dynamic_values_data
+   */
+  public function test_format_dynamic_values(string $type, string $default_mode, array $default_types) {
+    $fields = tangible_fields(); 
+    
+    $args = $fields->format_args($type, [
+      'type' => $type
+    ]);
+    $this->assertFalse($args['dynamic'], 'value of $args["dynamic"] should be set to false when not set');
+
+    $args = $fields->format_args($type, [
+      'type'    => $type,
+      'dynamic' => false
+    ]);
+    $this->assertFalse($args['dynamic'], 'value of $args["dynamic"] should stay false when initial value is false');
+    
+    $args = $fields->format_args($type, [
+      'type'    => $type,
+      'dynamic' => true
+    ]);
+
+    $this->assertIsArray($args['dynamic'], 'value of $args["dynamic"] should be converted to an array when dynamic true');
+    $this->assertEquals($default_mode, $args['dynamic']['mode'], '$args["dynamic"]["mode"] should be equal to default if not specified');
+    $this->assertEquals($default_types, $args['dynamic']['types'], '$args["dynamic"]["types"] should be equal to default if not specified');
+    
+    $set_mode = $default_mode === 'insert' ? 'replace' : 'insert';
+    $set_types = ['text', 'number', 'custom'];
+    $expected_types = [ ...array_intersect($set_types, $default_types) ];
+    
+    $args = $fields->format_args($type, [
+      'type'    => $type,
+      'dynamic' => [
+        'mode'  => $set_mode,
+        'types' => $set_types,
+      ]
+    ]);
+
+
+    $this->assertIsArray($args['dynamic'], 'value of $args["dynamic"] should stay an array when passed value was an array');
+    $this->assertEquals($set_mode, $args['dynamic']['mode'], '$args["dynamic"]["mode"] should be equal to passed value when specified');
+    $this->assertNotContains('custom', $args['dynamic']['types'], '$args["dynamic"]["types"] should remove unexpected values');
+    $this->assertEquals($expected_types, $args['dynamic']['types'], '$args["dynamic"]["types"] should only contains authorized types');
   }
 }

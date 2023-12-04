@@ -74,6 +74,7 @@ export default props => {
       <ComboBox 
         focusStrategy={ 'first' }
         label={ props.label ?? null }
+        placeholder={ props.placeholder }
         description={ props.description ?? false }
         selectedKey={ value } 
         onSelectionChange={ setValue }
@@ -82,6 +83,8 @@ export default props => {
         isAsync={ props.isAsync ?? false }
         showButton={ props.showButton ?? true }
         menuTrigger="focus"
+        labelVisuallyHidden={ props.labelVisuallyHidden ?? false }
+        descriptionVisuallyHidden={ props.descriptionVisuallyHidden ?? false }
         { ...itemProps }          
       >
         { RenderChoices }

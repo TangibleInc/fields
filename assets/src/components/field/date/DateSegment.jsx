@@ -10,7 +10,7 @@ const DateSegment = ({ segment, state }) => {
   if( segment.isPlaceholder ) classes += ' tf-date-segment-placeholder'
 
   return (
-    <div class={ classes } { ...segmentProps } ref={ ref }>
+    <div className={ classes } { ...segmentProps } ref={ ref }>
       {/* Always reserve space for the placeholder, to prevent layout shift when editing. */}
       <span aria-hidden="true">      
         { segment.placeholder }

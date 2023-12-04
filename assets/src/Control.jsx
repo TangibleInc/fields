@@ -1,40 +1,88 @@
 import { 
-  useState, 
-  useEffect 
+  useEffect,
+  useState,
+  useContext
 } from 'react'
 
-import controls from './controls-list.js'
-import { dispatchEvent } from './events'
+import { triggerEvent } from './events'
+import { OverlayProvider } from 'react-aria'
+import { dynamicValuesAPI } from './dynamic-values'
 
-const Control = props => {
+import types from './types.js'
+import DependendWrapper from './components/dependent/DependendWrapper'
+import RenderWrapper from './components/render/RenderWrapper'
+import VisibilityWrapper from './components/visibility/VisibilityWrapper'
+
+const Control = ({
+  visibility,
+  data,
+  ...props
+}) => {
+
+  /**
+   * @see renderField() in ./src/index.jsx 
+   */
+  const { ControlContext } = tangibleFields 
+  const control = useContext(ControlContext)
+
+  const wrapper = {
+    ...(props.wrapper ?? {}),
+    className: `${props?.wrapper?.class ?? ''} ${control.wrapper}`
+  }
 
   const [value, setValue] = useState(props.value ?? '')
 
-  useEffect(() => props.onChange && props.onChange(value), [value])
-  
-  const type = props.type ?? 'text'
-  const ControlComponent = controls[ type ] ?? false
-  
-  if( ! ControlComponent ) return <></>;
+  useEffect(() => {
+    props.onChange && props.onChange(value)
+  }, [value])
 
-  const childProps = Object.assign({}, props)
-  
-  delete childProps.value
-  delete childProps.onChange
-  
+  const ControlComponent = types.get(props.type ?? 'text')
+
+  if (!ControlComponent) return <></>;
+
   const onChange = newValue => {
 
-    dispatchEvent('valueChange', {
-      name      : props.name ?? false, 
-      props     : props,
-      value     : newValue,
-    })
-
     setValue(newValue)
-  }
 
-  return(
-    <ControlComponent value={ value } onChange={ onChange } { ...childProps }  />
+    // The timeout make sure the event is dispatched after the state changed
+    setTimeout(() => {
+      triggerEvent('valueChange', {
+        name: props.name ?? false,
+        props: props,
+        value: newValue,
+      })
+    })
+  }
+  
+  return (
+    <OverlayProvider { ...wrapper }>
+      <VisibilityWrapper visibility={ visibility } data={ data }>
+        <RenderWrapper 
+          controlType={ props.controlType ?? 'field' }
+          name={ props.name ?? false } 
+          setValue={ setValue }
+        >
+        { refreshRender => 
+          <DependendWrapper 
+            refresh={ refreshRender } 
+            data={ data } 
+            controlProps={ props } 
+          >
+          { controlProps => 
+            <ControlComponent 
+              { ...controlProps } 
+              value={ value }
+              onChange={ onChange }
+              data={ data }
+              dynamic={ props.dynamic 
+                ? dynamicValuesAPI(value, setValue, props.dynamic) 
+                : false 
+              }
+            /> }
+          </DependendWrapper> }
+        </RenderWrapper>
+      </VisibilityWrapper>
+    </OverlayProvider>
   )
 }
 

@@ -14,7 +14,7 @@ new class extends stdClass {
   public $name = 'tangible_fields';
 
   // Remember to update the version - Expected format: YYYYMMDD
-  public $version = '20230403';
+  public $version = '20231124';
 
   function __construct() {
 
@@ -49,12 +49,14 @@ new class extends stdClass {
     tangible_fields( $fields );
 
     require_once __DIR__ . '/format.php';
-    require_once __DIR__ . '/dependent-values.php';
+    require_once __DIR__ . '/dynamic-values/index.php';
     require_once __DIR__ . '/fields.php';
     require_once __DIR__ . '/fields-conditional.php';
     require_once __DIR__ . '/enqueue.php';
     require_once __DIR__ . '/context.php';
     require_once __DIR__ . '/store.php';
+
+    do_action('tangible_fields_loaded', $fields);
   }
 
 };

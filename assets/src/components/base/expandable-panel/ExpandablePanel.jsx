@@ -3,6 +3,17 @@ import {
   useEffect 
 } from 'react'
 
+import { Button } from '../'
+
+/**
+ * Note: 
+ * 
+ * We use onClick on the header otherwise we can't use e.stopPropagation() 
+ * in headerLeft/headerRight, however onClick is deprecated for Button and we should use
+ * onPress instead (but it won't allow e.stopPropagation() anymore)
+ * 
+ * Maybe we can't use a <Button /> for the panel header 
+ */
 const ExpandablePanel = props => {
 
   const [showItem, setShowItem] = useState(true)
@@ -23,38 +34,39 @@ const ExpandablePanel = props => {
   classes += ` tf-panel-${ showItem ? 'open' : 'closed' }`
   classes += props.className ? ` ${props.className}` : ''
   classes += props.class ? ` ${props.class}` : ''
+  classes += ! props.footer ? ' tf-panel-no-footer' : ''
   
   return ( 
-    <div class={ classes } data-status={ showItem ? 'open' : 'closed' }>
-      <div class="tf-panel-header" onClick={ toggle }>
-        <div class="tf-panel-header-left">
+    <div className={ classes } data-status={ showItem ? 'open' : 'closed' }>
+      <Button className="tf-panel-header" type="action" onClick={ toggle }>
+        <div className="tf-panel-header-left">
           { props.headerLeft 
-            ? <div class="tf-panel-header-before-title">
+            ? <div className="tf-panel-header-before-title">
                 { props.headerLeft }
               </div>
             : null }
           { props.title 
-            ? <div class="tf-panel-header-title">
+            ? <div className="tf-panel-header-title">
                 <strong>{ props.title }</strong>
               </div>
             : null }
         </div>
-        <div class="tf-panel-header-right">
+        <div className="tf-panel-header-right">
           { props.headerRight 
-            ? <div class="tf-panel-header-before-title">
+            ? <div className="tf-panel-header-before-title">
                 { props.headerRight }
               </div>
             : null }
-          <span class="tf-panel-arrow" />
+          <span className="tf-panel-arrow" />
         </div>
-      </div>
+      </Button>
       { showItem || props?.behavior === 'hide'
-        ? <div class='tf-panel-content'>
+        ? <div className='tf-panel-content'>
             { props.children }
           </div> 
         : null }
       { props.footer 
-        ? <div class='tf-panel-footer'>
+        ? <div className='tf-panel-footer'>
             { props.footer }
           </div> 
         : null }

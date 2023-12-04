@@ -1,6 +1,8 @@
 import { 
   useEffect, 
-  useReducer 
+  useReducer,
+  useState,
+  useRef
 } from 'react'
 
 import { 
@@ -8,8 +10,11 @@ import {
   initDispatcher 
 } from './dispatcher.js'
 
-import { Button, Title, ModalTrigger } from '../base'
-import { applyDependentValues } from '../../dependent' 
+import { 
+  Button, 
+  Title, 
+  ModalTrigger 
+} from '../base'
 
 import Layouts from './layout' 
 import Control from '../../Control'
@@ -17,7 +22,7 @@ import Control from '../../Control'
 const Repeater = props => {
 
   const fields = props.fields ?? []
-
+  
   const layout = props.layout ?? 'table'
   const Layout = Layouts[ layout ]
 
@@ -29,10 +34,13 @@ const Repeater = props => {
     const rowField = Object.assign({}, field)
     
     if( layout === 'table' ) {
-      delete rowField.label
-      delete rowField.description
+      /**
+       * As label/description is not visibile in table cell but still needs to be set for accesibility 
+       */
+      rowField.labelVisuallyHidden = true
+      rowField.descriptionVisuallyHidden = true
     }
-
+    
     delete rowField.value
     delete rowField.onChange
     
@@ -48,43 +56,109 @@ const Repeater = props => {
     initDispatcher
   )
 
-  const getRow = item => (
-    applyDependentValues(
-      props.element ?? false,
-      rowFields,
-      item
-    )
+  const hasField = name => (
+    rowFields.map(
+      field => field.name ?? false
+    ).includes(name)
   )
 
+  /**
+   * Can be used by repeater sub-controls to watch value change from the current row/block
+   */
+  const [onChangeCallback, setChangeCallback] = useState([])
+
+  /**
+   * Call all the visibility callback attached to data.watcher (@see <Control /> below)
+   */
+  const triggerRowCallbackEvents = (rowKey, fieldName) => {
+    onChangeCallback.forEach(callback => callback(rowKey, fieldName))
+  }
+
+  /**
+   * Not sure why, but without a ref the state value is always empty when used inside getValue()
+   */
+  const values = useRef()
+  values.current = items
+
   const getControl = (control, item, i) => (
-    <Control 
+    <Control
+      key={ item.key + i} 
       value={ item[control.name] ?? '' }
       onChange={ value => dispatch({ 
-        type    : 'update',
-        item    : i,
-        control : control.name,
-        value   : value
+        type     : 'update',
+        item     : i,
+        control  : control.name,
+        value    : value,
+        callback : () => triggerRowCallbackEvents(item.key, control.name)
       }) }
+      controlType={ 'subfield' }
+      visibility={{
+        action    : control.condition?.action ?? 'show',
+        condition : control.condition?.condition ?? false
+      }}
+      /**
+       * Used by visbility and dependent values to detect changes and access data 
+       */
+      data={{
+        /**
+         * The field value can either be from a subvalue or from the parent getter if no match
+         */
+        getValue: name => (
+          hasField(name)
+            ? (values.current[i][name] ?? '') 
+            : (props.data.getValue(name ?? ''))
+        ),
+        /**
+         * Possibility to add callback event that will be triggered each time a field from the current row will
+         * change
+         * @todo Avoid multiple definition (currently no way to remove watch from child which not ideal)
+         */
+        watcher: callback => setChangeCallback(
+          prevValue => [ 
+            ...prevValue,
+            (rowKey, fieldName) => {
+              rowKey === item.key && control.name 
+                ? callback(fieldName, item.key) 
+                : null
+            } 
+          ]
+        )
+      }}
       { ...control }
     />
   )
 
-  useEffect(() => props.onChange(items), [items])
+  /**
+   * There are some values we don't want to save (like the bulk action checbox)
+   */
+  const getSavedValue = () => (
+    items.map(
+      ({
+        _bulkCheckbox, 
+        ...item
+      }) => item
+    )
+  )
+
+  useEffect(() => props.onChange && props.onChange( getSavedValue() ), [items])
 
   return(
-    <div class={ `tf-repeater tf-repeater-${layout}`}>
-      <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(items) } />
+    <div className={ `tf-repeater tf-repeater-${layout}`}>
+      <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(getSavedValue()) } />
       {props.label && <Title level={2} className='tf-repeater-title'>{ props.label }</Title>}
       <Layout
         items={ items }
         fields={ fields }
         dispatch={ dispatch }
-        getRow={ getRow }
+        rowFields={ rowFields }
         getControl={ getControl }
         maxLength = { repeatable ? maxLength : undefined }
+        title={ props.sectionTitle ?? false }
+        useSwitch={ props.useSwitch }
+        useBulk={ props.useBulk }
       />
       { repeatable && (
-        <div class="tf-repeater-actions">
+        <div className="tf-repeater-actions">
           <Button 
             type="action" 
             onPress={ () => dispatch({ type: 'add' }) } 
@@ -94,7 +168,7 @@ const Repeater = props => {
           </Button>
           <ModalTrigger 
             title="Confirmation"
-            label="Clear item"
+            label="Remove all"
             isDisabled={ items.length <= 0 }
             onValidate={ () => dispatch({ type: 'clear' })}
           >

@@ -1,11 +1,15 @@
 import { 
   useEffect,
-  useState, 
-  useRef 
+  useRef,
+  Fragment
 } from 'react'
 
 import { useToggleState } from 'react-stately'
-import { useCheckbox, useField } from 'react-aria'
+import { 
+  useCheckbox, 
+  useField,
+  VisuallyHidden 
+} from 'react-aria'
 
 import { 
   Description,
@@ -18,13 +22,13 @@ import {
 
 const Checkbox = props => {
 
-  const [value, setValue] = useState(props.value ?? '0')
-
   const state = useToggleState(props)
   const ref = useRef()
+  const { inputProps } = useCheckbox({ 
+    ...props,
+    children: props.label ?? false 
+  }, state, ref)
 
-  const { inputProps } = useCheckbox(props, state, ref)
-  
   /**
    * useCheckbox does not return label and description props directly
    */
@@ -33,19 +37,32 @@ const Checkbox = props => {
     descriptionProps 
   } = useField(props)
 
-  useEffect(() => state.setSelected(value === '1'), [])
-  useEffect(() => setValue(state.isSelected ? '1' : '0'), [state.isSelected])
-  useEffect(() => props.onChange && props.onChange(value), [value])
+  useEffect(() => props.onChange && props.onChange(state.isSelected), [state.isSelected])
+  useEffect(() => {
+    if( props.value === '1' ) state.setSelected(true)
+    if( typeof props.value === 'boolean' && props.value !== state.isSelected ) {
+      state.setSelected(props.value)
+    } 
+  }, [props.value])
 
+  /**
+   * If label needs to be visually hidden for the checkbox, we can't rely on the labelVisuallyHidden
+   * prop of the Label component as the checkbox element is also inside the label and needs to be Visibile 
+   * in any case 
+   */
+  const LabelWrapper = props?.labelVisuallyHidden ? VisuallyHidden : Fragment
+  
   return(
-    <div class="tf-checkbox">
-      <Label { ...labelProps }>
+    <div className="tf-checkbox">
+      <Label labelProps={ labelProps } parent={{ ...props, labelVisuallyHidden: false }}>
         <input { ...inputProps } ref={ ref } />
-        <input type="hidden" name={ props.name ?? '' } value={ value } />
-        { props.label ?? '' }
-      </Label> 
+        <input type="hidden" name={ props.name ?? '' } value={ state.isSelected ? '1' : '0' } />
+        <LabelWrapper>
+          { props.label ?? '' }
+        </LabelWrapper>
+			</Label>
       { props.description &&
-        <Description { ...descriptionProps }>
+        <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }
         </Description> }
     </div>

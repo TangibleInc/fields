@@ -2,51 +2,76 @@
   padding: 0;
   margin: 5px 0;
   list-style: none;
-  border: 1px solid gray;
-  max-width: 250;
-  max-height: 300;
-  overflow: auto;
+  max-width: 100%;
+	min-width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
   background: $field-background;
 }
 
 .tf-list-box-option {
+  font-size: 13px;
+  display: flex;
   background: transparent;
-  padding: 2px 5px;
+  padding: 5px 9px;
   outline: none;
   cursor: pointer;
+  border-radius: 2px;
+  margin: 0 5px;
+	gap: $global-spacer-sm;
+
+  &:not(.tf-list-box-option-selected,.tf-list-box-option-disabled):hover {
+    color: $field-focus-color;
+  }
 }
 
-.tf-list-box-option-selected {
-  background: $field-focus-color;
-  color: $field-font-color;
+.tf-list-box-option-selected,
+.tf-list-box-option-selected.tf-list-box-option-selected {
+  color: $field-background;
+  background-color: $field-focus-color;
+  
+  &:hover {
+    color: $field-background;
+  }
+
+  &::after {
+    content: "\2713";
+    margin-left: auto;
+  }
 }
 
 .tf-list-box-option-disabled {
   color: #aaa;
+  cursor: default;
 }
 
 .tf-list-box-option-focus {
-  outline: 2px solid $field-focus-color;
+  color: $field-focus-color;
+  box-shadow: inset 0 0 0 2px;
 }
 
-.tf-list-box-section-separator {
-  border-top: 1px solid gray;
-  margin: 2px 5px;
+.tf-list-box-section-separator:not(:first-child) {
+  border-top: 1px solid $global-theme-gray-30;
+  margin: 12px 0;
 }
 
 .tf-list-box-section {
 
   & > span {
-    font-weight: bold;
-    font-size: 1.1em;
-    padding: 2px 5px;
+    display: block;
+    font-size: 11px;
+    line-height: 1.45;
+    margin: 0;
+    padding: 5px 9px;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: $global-theme-gray-40;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 
   & > ul {
     padding: 0;
     list-style: none;
   }
-
 }
-
-
