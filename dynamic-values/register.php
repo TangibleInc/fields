@@ -71,3 +71,8 @@ $fields->register_dynamic_value_category = function(
     'values' => [],
   ] + $args;
 };
+
+$fields->get_dynamic_value = function($dynamic_value_name) use ($fields) {
+
+  return $fields->dynamic_values[$dynamic_value_name];
+};

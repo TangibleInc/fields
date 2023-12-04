@@ -489,4 +489,32 @@ class Dynamics_TestCase extends WP_UnitTestCase {
       'regex didn\'t match expected string'
     );
   }
+
+  /**
+   * @depends test_dynamic_value_category_registration
+   */
+  function test_dynamic_value_get_dynamic_value() {
+
+    $fields = tangible_fields();
+
+    $fields->register_dynamic_value([
+      'name'     => 'test-value-get-category',
+      'label'    => 'Category',
+      'category' => 'test-category',
+      'callback' => function($settings, $config) {
+        return '';
+      },
+      'permission_callback_store' => '__return_true',
+      'permission_callback_parse' => '__return_true'
+    ]);
+
+    $dynamic_value = $fields->get_dynamic_value('test-value-get-category');
+
+    $category = $dynamic_value['category'];
+    $this->assertEquals('test-category', $category, 'The 2 categories are not equal');
+
+    $label = $dynamic_value['label'];
+    $this->assertEquals('Category', $label, 'The 2 labels are not equal');
+    
+  }
 }
