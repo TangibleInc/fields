@@ -1,4 +1,5 @@
 import Repeater from './components/repeater/Repeater'
+import ConditonalPanel from './components/conditional/ConditonalPanel'
 
 import {
   Accordion,
@@ -27,30 +28,31 @@ import {
 } from './components/field/'
 
 const types = {
-  'accordion'       : Accordion,
-  'alignment-matrix': AlignmentMatrix,
-  'border'          : Border,
-  'button-group'    : ButtonGroup,
-  'checkbox'        : Checkbox,
-  'color-picker'    : Color,
-  'combo-box'       : ComboBox,
-  'date-picker'     : Date,
-  'dimensions'      : Dimensions,
-  'field-group'     : FieldGroup,
-  'file'            : File,
-  'gradient'        : Gradient,
-  'gallery'         : Gallery,
-  'hidden'          : InputHidden,
-  'number'          : Number,
-  'repeater'        : Repeater,
-  'radio'           : Radio,
-  'select'          : Select,
-  'simple-dimension': SimpleDimension,
-  'switch'          : Switch,
-  'text'            : Text,
-  'text-suggestion' : DynamicText,
-  'wysiwyg'         : Editor,
-  'textarea'        : TextArea
+  'accordion'         : Accordion,
+  'alignment-matrix'  : AlignmentMatrix,
+  'border'            : Border,
+  'button-group'      : ButtonGroup,
+  'checkbox'          : Checkbox,
+  'color-picker'      : Color,
+  'conditional-panel' : ConditonalPanel,
+  'combo-box'         : ComboBox,
+  'date-picker'       : Date,
+  'dimensions'        : Dimensions,
+  'field-group'       : FieldGroup,
+  'file'              : File,
+  'gradient'          : Gradient,
+  'gallery'           : Gallery,
+  'hidden'            : InputHidden,
+  'number'            : Number,
+  'repeater'          : Repeater,
+  'radio'             : Radio,
+  'select'            : Select,
+  'simple-dimension'  : SimpleDimension,
+  'switch'            : Switch,
+  'text'              : Text,
+  'text-suggestion'   : DynamicText,
+  'wysiwyg'           : Editor,
+  'textarea'          : TextArea
 }
 
 export default {

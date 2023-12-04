@@ -1,0 +1,11 @@
+.tf-repeater-bare-items {
+  display: flex;
+  flex-direction: column;
+  row-gap: $global-spacer-sm;
+
+  .tf-repeater-bare-row {
+    display: flex;
+    width: 100%;
+    gap: $global-spacer-sm;
+  }
+}

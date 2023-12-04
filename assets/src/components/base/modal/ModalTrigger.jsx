@@ -31,7 +31,7 @@ const ModalTrigger = props => {
               { props.children }
               <div className="tf-modal-actions">
                 <Button
-                  type="action"
+                  type="danger"
                   onPress={() => {
                     state.close()
                     props.onValidate()

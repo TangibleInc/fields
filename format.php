@@ -46,6 +46,10 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'enable_opacity', 'hasAlpha');
       $args = $fields->format_dynamic_types($args, 'replace', ['color']);
       break;
+
+    case 'conditional_panel':
+      $args['type'] = 'conditional-panel';
+      break;
     
     case 'date_picker':
       $args['type'] = 'date-picker';
@@ -120,6 +124,10 @@ $fields->format_args = function(
 
   if( isset($args['value']) && $args['value'] === false ) {
     $args['value'] = '';
+  }
+
+  if( ! empty($args['label_visually_hidden']) ) {
+    $args = $fields->format_value($args, 'label_visually_hidden', 'labelVisuallyHidden');
   }
 
   return $args;

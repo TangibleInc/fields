@@ -3,10 +3,23 @@
   box-sizing: content-box;
 }
 
+.tf-dynamic-wrapper-popover-field .tf-dynamic-text-input {
+  box-sizing: border-box;
+  height: $field-height;
+}
+
 .tf-dynamic-text-input > .cm-editor .cm-content {
   padding: 6px 8px;
 }
 
 .tf-dynamic-text-input .cm-editor {
   box-sizing: border-box !important;
+}
+
+.tf-text .tf-dynamic-wrapper {
+  width: 100%;
+}
+
+.tf-conditional-panel-conditions .tf-dynamic-text-input {
+  min-width: 200px;
 }
