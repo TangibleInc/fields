@@ -8,6 +8,8 @@ defined('ABSPATH') or die();
  */
 $fields->evaluate_conditional = function() {
   // Calls evaluate_condition on the field value
+
+  // Need to wait the conditional panel.
 };
 
 /**
@@ -24,7 +26,7 @@ $fields->evaluate_condition = function(
 
   foreach ( $condition as $lho => $_parts ) {
     if ( preg_match( '#^\[\[.+?\]\]$#', $lho ) ) {
-      // @todo Evaluate dynamic fields when we have them.
+      $lho = $fields->render_value($lho);
     }
 
     // Relations.
@@ -89,12 +91,4 @@ $fields->evaluate_condition = function(
   }
 
   return ( ! empty ( $part_results ) ) && ( count( $part_results ) === count( array_filter( $part_results ) ) );
-};
-
-/**
- * Renders a conditional fieldset.
- */
-$fields->_render_callback_default_conditional_field = function( $args, $field ) {
-  // @todo Nicolas, please output the HTML placeholders as required
-  // @todo Nicolas, also complete the test in cases/fields.php test_fields_render_callback_conditional_fields_default
 };

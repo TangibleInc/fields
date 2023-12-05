@@ -4,11 +4,29 @@ class Conditions_TestCase extends WP_UnitTestCase {
 	 * @dataProvider _test_fields_evaluate_condition_data
 	 */
 	public function test_fields_evaluate_condition(bool $result, array $condition) {
+
+		wp_set_current_user( 1 );
 		$this->assertSame($result, tangible_fields()->evaluate_condition($condition));
 	}
 
 	public function _test_fields_evaluate_condition_data() {
 		return [
+
+			'dynamic value true'	=> [
+				true, [
+					'[[user_id]]'	=> [
+						'_eq'	=> 1
+					],
+				],
+			],
+
+			'dynamic value false'	=> [
+				false, [
+					'[[user_id]]'	=> [
+						'_eq'	=> get_current_user_id()
+					],
+				],
+			],
 
 			'basic' => [
 				true, [
