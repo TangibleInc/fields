@@ -35,6 +35,7 @@ const FieldWrapper = forwardRef(({
 
   return(
     <BaseWrapper
+      className="tf-dynamic-field-wrapper"
       config={ props.dynamic ?? false }
       onValueSelection={ dynamicValue => {
         setIsDynamic(true)
@@ -47,6 +48,7 @@ const FieldWrapper = forwardRef(({
           if( props.onValueRemove ) props.onValueRemove()
         }
       }}
+      buttonType={ props.buttonType ?? 'outside' }
     >
       { isDynamic
         ? 

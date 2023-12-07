@@ -30,7 +30,7 @@ describe('dynamic values feature', () => {
     )
 
     expect(within(container).queryByText('Insert')).toBeFalsy()
-    expect(within(container).queryByText('Remove')).toBeFalsy()
+    expect(within(container).queryByText('Clear')).toBeFalsy()
   })
 
   test.each(controlTypes)('%p type do not render dynamic values UI if dynamic is false', type => {
@@ -45,7 +45,7 @@ describe('dynamic values feature', () => {
     )
 
     expect(within(container).queryByText('Insert')).toBeFalsy()
-    expect(within(container).queryByText('Remove')).toBeFalsy()
+    expect(within(container).queryByText('Clear')).toBeFalsy()
   })
 
   test.each(controlTypes)('%p type does render dynamic values UI if dynamic is true', type => {
@@ -63,9 +63,9 @@ describe('dynamic values feature', () => {
     
     // Special case for text, as it uses insert mode by default instead if replace like other types
     if( type === 'text' ) {
-      expect(within(container).queryByText('Remove')).toBeFalsy()
+      expect(within(container).queryByText('Clear')).toBeFalsy()
     }
-    else expect(within(container).getByText('Remove')).toBeTruthy()
+    else expect(within(container).getByText('Clear')).toBeTruthy()
   })
 
   test.each(controlTypes)('%p type open dynamic value combobox when clicking on insert button', async type => {
@@ -116,8 +116,33 @@ describe('dynamic values feature', () => {
       })
     )
 
+    expect(within(container).queryByText('Clear')).toBeFalsy()
     expect(within(container).getByText('Insert')).toBeTruthy()
-    expect(within(container).getByText('Remove')).toBeTruthy()
+  })
+
+  it('can use remove when using replace mode for text type', async () => {
+
+    const user = userEvent.setup()
+    const { container } = render(
+      fields.render({
+        label   : 'Label name',
+        type    : 'text',
+        value   : '[[test-value-no-settings]]',
+        name    : 'name',
+        dynamic : {
+          mode    : 'replace',
+          types   : [ 'text' ]
+        }
+      })
+    )
+
+    expect(within(container).queryByText('Insert')).toBeFalsy()
+    expect(within(container).getByText('Clear')).toBeTruthy()
+
+    await user.click(within(container).getByText('Clear'))
+
+    expect(within(container).getByText('Insert')).toBeTruthy()
+    expect(within(container).queryByText('Clear')).toBeFalsy()
   })
 
   it('can use insert for text type', () => {
@@ -135,7 +160,7 @@ describe('dynamic values feature', () => {
     )
 
     expect(within(container).getByText('Insert')).toBeTruthy()
-    expect(within(container).queryByText('Remove')).toBeFalsy()
+    expect(within(container).queryByText('Clear')).toBeFalsy()
   })
 
 })

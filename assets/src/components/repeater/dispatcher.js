@@ -13,6 +13,17 @@ const repeaterDispatcher = (emptyItem, maxLength) => (items, action) => {
               ...(action.data ?? emptyItem),
             },
           ]
+    case 'insert':
+      return items.length >= maxLength
+        ? items
+        : [
+            ...items.slice(0, action.position),
+            {
+              key: uniqid(),
+              ...(action.data ?? emptyItem),
+            },
+            ...items.slice(action.position),
+          ]
     case 'remove':
       return [...items.slice(0, action.item), ...items.slice(action.item + 1)]
     case 'update':

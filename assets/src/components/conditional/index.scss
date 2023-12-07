@@ -1,0 +1,32 @@
+.tf-conditional-group-actions {
+  display: flex;
+  align-items: center;
+  gap: $global-spacer-sm;
+  padding: $global-spacer-sm 0;
+
+  strong {
+    text-transform: uppercase;
+  }
+}
+
+.tf-conditional-panel-condition-actions {
+  display: flex;
+  gap: calc($global-spacer-sm / 2);
+
+  .tf-button-action:first-child {
+    text-transform: uppercase;
+  }
+
+  .tf-button-danger:last-child {
+    position: relative;
+
+    &:before {
+      content: '';
+      height: $button-border-size;
+      width: 100%;
+      background-color: $global-context-destructive;
+      width: 10px;
+      position: absolute;
+    }
+  }
+}

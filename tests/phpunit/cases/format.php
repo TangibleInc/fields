@@ -69,6 +69,7 @@ class Format_TestCase extends WP_UnitTestCase {
 			'button_group' => ['alignment_matrix', 'alignment-matrix'],
 			'button_group' => ['button_group', 'button-group'],
 			'color_picker' => ['color_picker', 'color-picker'],
+			'conditional_panel' => ['conditional_panel', 'conditional-panel'],
 			'date_picker' => ['date_picker', 'date-picker'],
 			'number' => ['number', 'number'],
 			'simple_dimension' => ['simple_dimension', 'simple-dimension'],
@@ -101,9 +102,15 @@ class Format_TestCase extends WP_UnitTestCase {
 	public function _test_format_args_type_attributes_data() {
 		return [
 			// type, [from => to, from => to...]
+      'all_types' => ['all_types', [
+        'label_visually_hidden' => 'labelVisuallyHidden'
+      ]],
 			'color_picker' => ['color_picker', [
 				'enable_opacity' => 'hasAlpha',
 			]],
+      'conditional_panel' => ['conditional_panel', [
+        'use_modal' => 'useModal'
+      ]],
       'date_picker' => ['date_picker', [
         'future_only' => 'futureOnly'
       ]],
@@ -295,7 +302,6 @@ class Format_TestCase extends WP_UnitTestCase {
         'types' => $set_types,
       ]
     ]);
-
 
     $this->assertIsArray($args['dynamic'], 'value of $args["dynamic"] should stay an array when passed value was an array');
     $this->assertEquals($set_mode, $args['dynamic']['mode'], '$args["dynamic"]["mode"] should be equal to passed value when specified');

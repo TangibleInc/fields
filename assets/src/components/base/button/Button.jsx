@@ -2,7 +2,11 @@ import {
   useRef,
   forwardRef 
 } from 'react'
-import { useButton } from 'react-aria'
+
+import { 
+  useButton,
+  VisuallyHidden
+} from 'react-aria'
 
 /**
  * @see https://react-spectrum.adobe.com/react-aria/useButton.html
@@ -33,7 +37,9 @@ const Button = forwardRef((props, ref) => {
       ref={ buttonRef } 
       type='button'
     >
-      { children }
+      { props.contentVisuallyHidden
+        ? <VisuallyHidden>{ children }</VisuallyHidden>
+        : children }
     </CustomTag>
   )
 })
