@@ -20,6 +20,8 @@
   color: $button-primary-text;
 }
 
+.tf-button-danger[disabled],
+.tf-button-primary[disabled],
 .tf-button-action[disabled] {
   @include button-disabled;
 }

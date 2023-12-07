@@ -1,5 +1,5 @@
 import Repeater from './components/repeater/Repeater'
-import ConditonalPanel from './components/conditional/ConditonalPanel'
+import ConditionalPanel from './components/conditional/ConditonalPanel'
 
 import {
   Accordion,
@@ -34,7 +34,7 @@ const types = {
   'button-group'      : ButtonGroup,
   'checkbox'          : Checkbox,
   'color-picker'      : Color,
-  'conditional-panel' : ConditonalPanel,
+  'conditional-panel' : ConditionalPanel,
   'combo-box'         : ComboBox,
   'date-picker'       : Date,
   'dimensions'        : Dimensions,

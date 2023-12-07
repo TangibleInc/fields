@@ -1,26 +1,42 @@
 import { 
   useState, 
-  useEffect 
+  useEffect,
+  Fragment
 } from 'react'
 
 import { 
   uniqid, 
-  initJSON 
+  initJSON,
+  deepCopy
 } from '../../utils'
 
-import { Button } from '../base/'
+import { 
+  Button, 
+  ModalTrigger
+} from '../base/'
+
 import ConditionGroup from './ConditionGroup'
 
-const Panel = props => {
+const ConditionalPanel = props => {
   
   const emptyRow = () => ({ 
     key: uniqid(), 
     data: [{ key: uniqid() }] 
   })
 
-  const [value, setValue] = useState(
-    initJSON(props.value ?? '', [ emptyRow() ])
-  )
+  /**
+   * If no modal, saved value is not used
+   * 
+   * When we use the modal however, we need both state as change can be discared when
+   * closing the modal
+   */
+  const initialValue = () => initJSON(props.value ?? '', [ emptyRow() ]) 
+  const [savedValue, setSavedValue] = useState( initialValue() )
+  const [value, setValue] = useState( initialValue() )
+
+  useEffect(() => {
+    props.onChange && props.onChange(props.useModal ? savedValue : value)
+  }, [props.useModal ? savedValue : value])
 
   /**
    * Auto remove groups when no group when empty, unless it's the last one
@@ -43,29 +59,49 @@ const Panel = props => {
     setValue([ ...updatedValue ])
   }
 
+  const Wrapper = props.useModal ? ModalTrigger : Fragment
+  const wrapperProps = props.useModal 
+    ? { 
+        title       : 'Conditional rules', 
+        label       : 'Open conditional panel',
+        confirmText : 'Save',
+        onCancel    : () => {
+          setValue([ ...deepCopy(savedValue) ])
+        },
+        onValidate  : () => {
+          setSavedValue([ ...deepCopy(value) ])
+        },
+      } 
+    : {}
+
   return(
-    <div className="tf-conditional-panel">
-      <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(value) } />
-      <div className="tf-conditional-panel-container">
-        <div className="tf-conditional-groups">
-          { value.map((group, i) => (
-            <div key={ group.key } className="tf-conditional-group">
-              <ConditionGroup 
-                value={ group.data } 
-                onChange={ value => updateGroup(value, i) } 
-              />
-              <div className="tf-conditional-group-actions">
-                <strong>Or</strong>
-                <Button type="primary" onPress={ () => insertGroup(i + 1) }>
-                  Add group
-                </Button>
-              </div>
+    <>
+      <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(props.useModal ? savedValue : value) } />
+      <Wrapper { ...wrapperProps }>
+        <div className="tf-conditional-panel">
+          <div className="tf-conditional-panel-container">
+            <div className="tf-conditional-groups">
+              { value.map((group, i) => (
+                <div key={ group.key } className="tf-conditional-group">
+                  <ConditionGroup 
+                    canDelete={ value.length !== 1 || group.data.length !== 1 }
+                    value={ group.data } 
+                    onChange={ value => updateGroup(value, i) } 
+                  />
+                  <div className="tf-conditional-group-actions">
+                    <strong>Or</strong>
+                    <Button type="primary" onPress={ () => insertGroup(i + 1) }>
+                      Add group
+                    </Button>
+                  </div>
+                </div>
+              )) }
             </div>
-          )) }
+          </div>
         </div>
-      </div>
-    </div>
+      </Wrapper>
+    </>
   )
 }
 
-export default Panel
+export default ConditionalPanel

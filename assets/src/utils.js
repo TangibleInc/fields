@@ -73,11 +73,19 @@ const areSameObjects = (object1, object2) => (
   JSON.stringify(object1) === JSON.stringify(object2)
 )
 
+/**
+ * @see https://stackoverflow.com/a/47690512/10491705 
+ */
+const deepCopy = object => (
+  JSON.parse(JSON.stringify(object))
+)
+
 export { 
   areSameObjects,
   uniqid,
   getOptions,
   getOption,
   initJSON,
-  initSet
+  initSet,
+  deepCopy
 }
