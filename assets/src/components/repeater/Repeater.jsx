@@ -22,7 +22,7 @@ import Control from '../../Control'
 const Repeater = props => {
 
   const fields = props.fields ?? []
-  
+
   const layout = props.layout ?? 'table'
   const Layout = Layouts[ layout ]
 
@@ -156,6 +156,8 @@ const Repeater = props => {
         title={ props.sectionTitle ?? false }
         useSwitch={ props.useSwitch }
         useBulk={ props.useBulk }
+        afterRow={ props.afterRow }
+        beforeRow={ props.beforeRow }
       />
       { repeatable && (
         <div className="tf-repeater-actions">

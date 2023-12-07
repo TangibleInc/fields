@@ -39,12 +39,18 @@ $fields->format_args = function(
       
     case 'button_group':
       $args['type'] = 'button-group';
+      $args = $fields->format_value($args, 'read_only', 'isDisabled');
       break;
 
     case 'color_picker':
       $args['type'] = 'color-picker';
       $args = $fields->format_value($args, 'enable_opacity', 'hasAlpha');
       $args = $fields->format_dynamic_types($args, 'replace', ['color']);
+      break;
+
+    case 'conditional_panel':
+      $args['type'] = 'conditional-panel';
+      $args = $fields->format_value($args, 'use_modal', 'useModal');
       break;
     
     case 'date_picker':
@@ -107,6 +113,10 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'use_switch', 'useSwitch');
       break;
 
+    case 'select':
+      $args = $fields->format_value($args, 'read_only', 'isDisabled');
+      break;
+
     case 'switch':
       $args = $fields->format_value($args, 'value_on', 'valueOn');
       $args = $fields->format_value($args, 'value_off', 'valueOff');        
@@ -120,6 +130,10 @@ $fields->format_args = function(
 
   if( isset($args['value']) && $args['value'] === false ) {
     $args['value'] = '';
+  }
+
+  if( ! empty($args['label_visually_hidden']) ) {
+    $args = $fields->format_value($args, 'label_visually_hidden', 'labelVisuallyHidden');
   }
 
   return $args;

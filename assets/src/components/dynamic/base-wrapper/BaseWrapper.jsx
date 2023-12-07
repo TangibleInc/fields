@@ -139,16 +139,39 @@ const BaseWrapper = props => {
       }
     )
   }
+  
+  /**
+   * There are 2 wasy to display insert/clear button:
+   * - 2 button after the fields
+   * - Inside the input (only used for text currently)
+   */
+  const buttonType = props.buttonType ?? 'outside'
+  const hasInsert  = buttonType === 'outside' || (! props.remove || props.remove.isDisabled)
+  const hasClear   = buttonType === 'outside' || (props.remove && props.remove.isDisabled === false)
+
+  const classes = `tf-dynamic-wrapper tf-dynamic-wrapper-buttons-${buttonType} ${props.className ?? ''}`
 
   return(
-    <div className="tf-dynamic-wrapper">
+    <div className={ classes } data-dynamic="true">
       { props.children }
-      <Button type="action" ref={ triggerRef } { ...triggerProps }>
+      { hasInsert && 
+        <Button 
+          type={ buttonType === 'outside' ? 'action' : 'icon' } 
+          className="tf-dynamic-wrapper-insert" 
+          ref={ triggerRef } 
+          contentVisuallyHidden={ buttonType === 'inside' } 
+          { ...triggerProps }
+        > 
         Insert
-      </Button>
-      { props.remove && 
-        <Button type="action" { ...props.remove }>
-          Remove
+      </Button> }
+      { hasClear &&
+        <Button 
+          type={ buttonType === 'outside' ? 'action' : 'icon' }
+          className="tf-dynamic-wrapper-clear"
+          contentVisuallyHidden={ buttonType === 'inside' }
+          { ...props.remove } 
+        >
+          Clear
         </Button> }
       { state.isOpen && (
         <div className="tf-dynamic-wrapper-popover" ref={ overlayRef } { ...overlayProps }>

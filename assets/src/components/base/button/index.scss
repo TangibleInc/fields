@@ -1,4 +1,6 @@
-.tf-button-action {
+.tf-button-primary,
+.tf-button-action,
+.tf-button-danger {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,6 +10,18 @@
   @include button;
 }
 
+.tf-button-danger {
+  color: $global-context-destructive;
+  border-color: $global-context-destructive;
+}
+
+.tf-button-primary {
+  background-color: $button-primary-color;
+  color: $button-primary-text;
+}
+
+.tf-button-danger[disabled],
+.tf-button-primary[disabled],
 .tf-button-action[disabled] {
   @include button-disabled;
 }

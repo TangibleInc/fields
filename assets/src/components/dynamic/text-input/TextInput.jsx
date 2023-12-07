@@ -67,6 +67,7 @@ const TextInput = forwardRef(({
           setValue('')
         }}
         inputProps={ inputProps }
+        buttonType={ 'inside' }
       >
         <input { ...inputProps } type="hidden" value={ value }/>
         <div ref={ ref } className="tf-dynamic-text-input"></div>
@@ -78,6 +79,7 @@ const TextInput = forwardRef(({
     <BaseWrapper
       config={ props.dynamic ?? '' } 
       onValueSelection={ insertDynamicValue }
+      buttonType={ 'inside' }
     >
       <input { ...inputProps } type="hidden" value={ value }/>
       <div ref={ ref } className="tf-dynamic-text-input"></div>
