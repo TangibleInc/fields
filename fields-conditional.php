@@ -14,11 +14,13 @@ $fields->evaluate_conditional = function(
   foreach ($conditional as $key => $conditions) {
     $result_and = true;
     foreach ($conditions->data as $key => $condition) {
-      $result_and = $fields->evaluate_condition([
-        $condition->left_value => [
-          $condition->operator => $condition->right_value
-        ]
-      ]) && $result_and;
+      if ( isset($condition->left_value) && isset($condition->operator) && isset($condition->right_value) ) {
+        $result_and = $fields->evaluate_condition([
+          $condition->left_value => [
+            $condition->operator => $condition->right_value
+          ]
+        ]) && $result_and;
+      }
     }
     $result_or = $result_or || $result_and;
   }
