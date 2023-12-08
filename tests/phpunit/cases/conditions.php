@@ -9,6 +9,110 @@ class Conditions_TestCase extends WP_UnitTestCase {
 		$this->assertSame($result, tangible_fields()->evaluate_condition($condition));
 	}
 
+	/**
+	 * @dataProvider _test_fields_evaluate_conditional_data
+	 */
+	public function test_fields_evaluate_conditional(bool $result, string $conditions) {
+
+		wp_set_current_user( 1 );
+		$this->assertSame($result, tangible_fields()->evaluate_conditional(json_decode($conditions)));
+	}
+
+	public function _test_fields_evaluate_conditional_data() {
+		return [
+
+			'basic nested and modal false'	=> [
+				false, json_encode([	
+					[
+            			'key' => '60be9330eb99c0',
+            			'data' => [ 
+							[
+								'key' => '60be9330ebae0c',
+								'left_value' => '[[post_id]]',
+								'operator' => '_eq',
+								'right_value' => 5,
+							], 
+							[
+								'key' => '60be93e414b920',
+								'left_value' => '[[user_id]]',
+								'operator' => '_eq',
+								'right_value' => 1,
+							]
+						]
+					],
+				]),
+			],
+			'basic nested modal true'	=> [
+				true, json_encode([	
+					[
+            			'key' => '60be9330eb99c0',
+            			'data' => [  
+							[
+								'key' => '60be93e414b920',
+								'left_value' => '[[user_id]]',
+								'operator' => '_eq',
+								'right_value' => 1,
+							]
+						]
+
+					],
+				]),
+			],
+			'basic nested or modal true'	=> [
+				true, json_encode([	
+					[
+            			'key' => '60be9330eb99c0',
+            			'data' => [  
+							[
+								'key' => '60be93e414b920',
+								'left_value' => '[[user_id]]',
+								'operator' => '_eq',
+								'right_value' => 1,
+							]
+						]
+					],
+					[
+            			'key' => '60be9330eb99c1',
+            			'data' => [  
+							[
+								'key' => '60be93e414b921',
+								'left_value' => '[[post_id]]',
+								'operator' => '_eq',
+								'right_value' => 5,
+							]
+						]
+					],
+				]),
+			],
+			'basic nested or modal false'	=> [
+				false, json_encode([	
+					[
+            			'key' => '60be9330eb99c0',
+            			'data' => [  
+							[
+								'key' => '60be93e414b920',
+								'left_value' => '[[user_id]]',
+								'operator' => '_eq',
+								'right_value' => 2,
+							]
+						]
+					],
+					[
+            			'key' => '60be9330eb99c1',
+            			'data' => [  
+							[
+								'key' => '60be93e414b921',
+								'left_value' => '[[post_id]]',
+								'operator' => '_eq',
+								'right_value' => 5,
+							]
+						]
+					],
+				]),
+			],
+		];
+	}
+
 	public function _test_fields_evaluate_condition_data() {
 		return [
 
