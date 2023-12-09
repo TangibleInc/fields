@@ -64,5 +64,9 @@ $fields->render_field = function(
 
   $fields->enqueue_field( $name, $args );
 
+  if ( ! empty ( $field['render_callback'] ) ) {
+    return $field['render_callback']( $args, $field );
+  }
+
   return '<div id="' . $args['element'] . '" ></div>';
 };

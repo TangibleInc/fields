@@ -51,6 +51,7 @@ new class extends stdClass {
     require_once __DIR__ . '/format.php';
     require_once __DIR__ . '/dynamic-values/index.php';
     require_once __DIR__ . '/fields.php';
+    require_once __DIR__ . '/fields-conditional.php';
     require_once __DIR__ . '/enqueue.php';
     require_once __DIR__ . '/context.php';
     require_once __DIR__ . '/store.php';
