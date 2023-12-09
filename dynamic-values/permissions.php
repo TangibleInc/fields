@@ -38,6 +38,8 @@ $fields->is_dynamic_value_action_allowed = function(
   string $action
 ) : bool {
 
+  if( $action === 'evaluate' ) return true;
+
   $permission = $dynamic_value["permission_callback_$action"] ?? false;
   
   if( ! is_callable($permission) ) {

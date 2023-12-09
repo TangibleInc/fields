@@ -28,6 +28,12 @@ $fields->evaluate_conditional = function(
   return $result_or;
 };
 
+$fields->condition_has_dynamic_value = function($value) use($fields) : bool {
+  return ! is_object($value) 
+      && ! is_array($value) 
+      && preg_match( $fields->dynamic_value_regex, (string) $value );
+};
+
 /**
  * See Conditions_TestCase::_test_fields_evaluate_condition_data for examples.
  */
@@ -41,8 +47,8 @@ $fields->evaluate_condition = function(
   }
 
   foreach ( $condition as $lho => $_parts ) {
-    if ( preg_match( '#^\[\[.+?\]\]$#', $lho ) ) {
-      $lho = $fields->render_value($lho);
+    if ( $fields->condition_has_dynamic_value($lho) ) {
+      $lho = $fields->render_value($lho, [ 'action' => 'evaluate' ]);
     }
 
     // Relations.
@@ -66,6 +72,9 @@ $fields->evaluate_condition = function(
 
     // Comparison.
     foreach ( $_parts as $op => $rho ) {
+      if ( $fields->condition_has_dynamic_value($rho) ) {
+        $rho = $fields->render_value($rho, [ 'action' => 'evaluate' ]);
+      }
       switch ( $op ) {
         case '_eq':
           $part_results []= $lho == $rho;

@@ -8,7 +8,7 @@ $fields->render_value = function(string $raw_value, array $config = []) use($fie
     function(array $matches) use($fields, $config): string {
       return $fields->render_dynamic_value($matches, $config);
     },
-    $fields->strip_unauthorized_dynamic_values($raw_value, 'parse')
+    $fields->strip_unauthorized_dynamic_values($raw_value, $config['action'] ?? 'parse')
   );
 };
 

@@ -217,6 +217,15 @@ class Dynamics_TestCase extends WP_UnitTestCase {
       'unauthorized dynamic value was stored'
     );
 
+    $value = 'Unauthorized dynamic value but rendered for an evaluate action: [[unauthorized-dynamic-value]]';
+    $parsed_value = $fields->render_value($value, [ 'action' => 'evaluate' ]);
+    
+    $this->assertEquals(
+      $parsed_value,
+      'Unauthorized dynamic value but rendered for an evaluate action: parsed_value', 
+      'unauthorized dynamic value was not parsed despite being render with the evaluate action'
+    );
+    
     // Cleanup
     $this->assertTrue( 
       $fields->store_value('store-unauthorized-dynamic-value', null) 
