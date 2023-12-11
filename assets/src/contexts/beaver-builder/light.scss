@@ -52,7 +52,7 @@ $button-color--focus: $button-color;
 
 @mixin section {
   border-radius: $section-border-radius;
-  background: $section-background;
+  background: #fff;
   box-shadow: $field-box-shadow;
   
   input, select {

@@ -1,6 +1,7 @@
 @import '../default/variables.scss';
 
 // We only need to define the variables we need to overwrite
+$section-background: $global-theme-gray-90;
 $field-border-color: #64666a;
 $field-border: $field-border-width $field-border-style $field-border-color;
 $field-background: #181b20;
