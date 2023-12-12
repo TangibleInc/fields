@@ -32,9 +32,19 @@ const FilePreview = props => {
     )
   }
 
+  const fileUrl = data.source_url
+  const fileExtension = fileUrl.split('/').pop().split('.').length === 2
+    ? fileUrl.split('/').pop().split('.')[1]
+    : ''
+
   return(
     <li className="tf-file-item">
-      <span>{ data.title.rendered }</span>
+      { data.media_type === 'image' && <img
+        loading="lazy" decoding="async"
+        src={fileUrl} alt={data.alt_text}
+        className="attachment-medium size-medium"
+      />}
+      <span>{`${data.title.rendered}${fileExtension !== '' ? '.' + fileExtension : ''}`}</span>
       <Button type="action" onPress={ () => props.remove() }>
         Remove
       </Button>
