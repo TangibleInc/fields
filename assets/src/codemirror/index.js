@@ -56,7 +56,8 @@ const createInput = (
                     from: from, 
                     to: from + match[1].length + 4 // value + delimiters
                   }
-                })
+                }),
+                config
               ),
             })
           })
@@ -124,12 +125,13 @@ const getItemsObject = sections => {
 
 class DynamicString extends WidgetType {
 
-  constructor(value, label, onRemove) {
+  constructor(value, label, onRemove, config) {
     super(value)
 
     this.value = value
     this.label = label
     this.onRemove = onRemove
+    this.config = config
   }
 
   toDOM() {
@@ -140,6 +142,8 @@ class DynamicString extends WidgetType {
     span.setAttribute('data-id', this.value)
     span.textContent = this.label
         
+    if( this.config?.readOnly === true ) return span;
+
     const editButton = document.createElement('span')
 
     editButton.setAttribute('class', 'tf-dynamic-text-item-delete')
@@ -153,4 +157,3 @@ class DynamicString extends WidgetType {
 export { 
   createInput
 }
-

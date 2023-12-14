@@ -41,6 +41,10 @@
 .tf-dynamic-wrapper[data-dynamic="true"] {
   .cm-editor {
     padding-right: 25px;
+
+    &:has(.cm-content[contenteditable="false"]) {
+      padding-right: 0px;
+    }
   }
 }
 
