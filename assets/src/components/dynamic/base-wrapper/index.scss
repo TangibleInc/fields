@@ -55,5 +55,11 @@
       line-height: 1;
       padding: 0px 5px;
     }
+
+    &.cm-content[contenteditable="false"] {
+      &::before {
+        display: none;
+      }
+    }
   }
 }
