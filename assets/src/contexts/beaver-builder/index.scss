@@ -5,6 +5,8 @@
 
   @import './components/calendar.scss';
   @import './components/editor.scss';
+  @import './components/dynamic/text-input.scss';
+  @import './components/repeater/block.scss';
 }
 
 .fl-builder-ui-skin--dark .tf-context-beaver-builder {
@@ -14,6 +16,8 @@
 
   @import './components/calendar.scss';
   @import './components/editor.scss';
+  @import './components/dynamic/text-input.scss';
+  @import './components/repeater/block.scss';
 }
 
 @import '../../lib/prose-mirror/index.scss';
