@@ -42,7 +42,7 @@ $fields->evaluate_condition = function(
 ) use ( $fields ) : bool {
   $part_results = [];
 
-  if ( empty( $condition ) ) {
+  if ( ( empty( $condition ) ) || ( count( $condition ) === 1 && empty($condition[0]) ) ) {
     return true;
   }
 
