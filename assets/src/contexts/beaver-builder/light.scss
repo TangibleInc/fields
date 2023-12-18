@@ -60,3 +60,18 @@ $button-color--focus: $button-color;
     border-color: #e6eaed !important;
   }
 }
+
+
+.tf-dynamic-text-input > .cm-editor .cm-content {
+  padding: 12px;
+}
+
+.tf-panel {
+  .tf-panel-header { border-bottom: 1px solid #E6EAED; }
+  .tf-panel-footer { border-top: 1px solid #E6EAED; }
+}
+
+.fl-lightbox .fl-form-table {
+  max-width: calc(100% - 35px);
+  table-layout: fixed;
+}

@@ -66,3 +66,8 @@ $button-color--focus: $button-color;
     border-color: #7d8690 !important;
   }
 }
+
+.fl-lightbox .fl-form-table {
+  max-width: calc(100% - 35px);
+  table-layout: fixed;
+}
