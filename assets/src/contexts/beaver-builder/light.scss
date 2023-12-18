@@ -66,12 +66,12 @@ $button-color--focus: $button-color;
   padding: 12px;
 }
 
-.tf-panel {
-  .tf-panel-header { border-bottom: 1px solid #E6EAED; }
+.tf-panel.tf-panel-open {
+  .tf-button-action.tf-panel-header { border-bottom: 1px solid #E6EAED; }
   .tf-panel-footer { border-top: 1px solid #E6EAED; }
 }
 
-.fl-lightbox .fl-form-table {
+.fl-lightbox table.fl-form-table {
   max-width: calc(100% - 35px);
   table-layout: fixed;
 }
