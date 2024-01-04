@@ -1,3 +1,11 @@
+# 20240104
+
+- Fields:
+    - Buttons group: Add support for read_only parameter
+    - Select: Add support for read_only parameter
+    - Add new conditional panel field type
+- Beaver builder: Various style improvment in beaver-builder context
+
 # 20231124
 
 - Visibility conditions:
