@@ -1,7 +1,7 @@
-.tf-repeater-table {
+.tf-repeater-table-container {
   display: flex;
   flex-direction: column;
-  width: fit-content;
+  width: 100%;
   padding: 4px;
     
   border: $field-border;
@@ -9,9 +9,29 @@
   background: $field-background;
 
   table {
+    width: 100%;
+
     th, tr {
       min-height: $field-height;
       padding: 2px;
+    }
+
+    th {
+      height: $field-height;
+    }
+
+    td > div {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .tf-repeater-row-actions {
+    width: 1%;
+    & > div {
+      display: inline-flex;
+      gap: $global-spacer-xs;
     }
   }
   

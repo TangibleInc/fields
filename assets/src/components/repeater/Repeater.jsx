@@ -145,39 +145,44 @@ const Repeater = props => {
   return(
     <div className={ `tf-repeater tf-repeater-${layout}`}>
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(getSavedValue()) } />
-      {props.label && <Title level={2} className='tf-repeater-title'>{ props.label }</Title>}
-      <Layout
-        items={ items }
-        fields={ fields }
-        dispatch={ dispatch }
-        rowFields={ rowFields }
-        getControl={ getControl }
-        maxLength = { repeatable ? maxLength : undefined }
-        title={ props.sectionTitle ?? false }
-        useSwitch={ props.useSwitch }
-        useBulk={ props.useBulk }
-        afterRow={ props.afterRow }
-        beforeRow={ props.beforeRow }
-      />
-      { repeatable && (
-        <div className="tf-repeater-actions">
-          <Button 
-            type="action" 
-            onPress={ () => dispatch({ type: 'add' }) } 
-            isDisabled={ maxLength <= items.length }
-          >
-            Add item
-          </Button>
-          <ModalTrigger 
-            title="Confirmation"
-            label="Remove all"
-            isDisabled={ items.length <= 0 }
-            onValidate={ () => dispatch({ type: 'clear' })}
-          >
-            Are you sure you want to clear all item(s)?
-          </ModalTrigger>
-        </div>
-      )}
+      { props.label && 
+        <Title level={2} className='tf-repeater-title'>
+          { props.label }
+        </Title> }
+      <div className={ `tf-repeater-container tf-repeater-${layout}-container` }>
+        <Layout
+          items={ items }
+          fields={ fields }
+          dispatch={ dispatch }
+          rowFields={ rowFields }
+          getControl={ getControl }
+          maxLength = { repeatable ? maxLength : undefined }
+          title={ props.sectionTitle ?? false }
+          useSwitch={ props.useSwitch }
+          useBulk={ props.useBulk }
+          afterRow={ props.afterRow }
+          beforeRow={ props.beforeRow }
+        />
+        { repeatable && (
+          <div className="tf-repeater-actions">
+            <Button 
+              type="action" 
+              onPress={ () => dispatch({ type: 'add' }) } 
+              isDisabled={ maxLength <= items.length }
+            >
+              Add item
+            </Button>
+            <ModalTrigger 
+              title="Confirmation"
+              label="Remove all"
+              isDisabled={ items.length <= 0 }
+              onValidate={ () => dispatch({ type: 'clear' })}
+            >
+              Are you sure you want to clear all item(s)?
+            </ModalTrigger>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

@@ -20,7 +20,8 @@ const ModalTrigger = props => {
       <Button 
         { ...triggerProps }
         type="action"
-        isDisabled={ props.isDisabled } 
+        isDisabled={ props.isDisabled }
+        { ...(props.buttonProps ?? {}) }
       >
         { props.label }
       </Button>

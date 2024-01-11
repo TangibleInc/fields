@@ -20,3 +20,7 @@
 .tf-repeater-block-item-field {
   padding: 1em;
 }
+
+.tf-repeater-block-item-field:has(> div[data-overlay-container="true"]:empty) {
+  display: none;
+}
