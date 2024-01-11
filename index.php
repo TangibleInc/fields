@@ -48,13 +48,10 @@ new class extends stdClass {
     $fields = $this;
     tangible_fields( $fields );
 
-    require_once __DIR__ . '/format.php';
     require_once __DIR__ . '/dynamic-values/index.php';
-    require_once __DIR__ . '/fields.php';
-    require_once __DIR__ . '/fields-conditional.php';
+    require_once __DIR__ . '/fields/index.php';
     require_once __DIR__ . '/enqueue.php';
     require_once __DIR__ . '/context.php';
-    require_once __DIR__ . '/store.php';
 
     do_action('tangible_fields_loaded', $fields);
   }

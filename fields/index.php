@@ -4,6 +4,10 @@ defined('ABSPATH') or die();
 
 $fields->registered_fields = [];
 
+require_once __DIR__ . '/conditional.php';
+require_once __DIR__ . '/format.php';
+require_once __DIR__ . '/store.php';
+
 /**
  * Register a field.
  *
