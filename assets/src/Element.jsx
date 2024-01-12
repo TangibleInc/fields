@@ -25,7 +25,8 @@ const Element = ({
     ...(props.wrapper ?? {}),
     className: `${props?.wrapper?.class ?? ''} ${control.wrapper}`
   }
-
+  delete wrapper.class
+  
   const ElementComponent = types.get(props.type ?? false, 'element')
   if (!ElementComponent) return <></>;
 

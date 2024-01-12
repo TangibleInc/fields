@@ -29,6 +29,7 @@ const Control = ({
     ...(props.wrapper ?? {}),
     className: `${props?.wrapper?.class ?? ''} ${control.wrapper}`
   }
+  delete wrapper.class
 
   const [value, setValue] = useState(props.value ?? '')
 
