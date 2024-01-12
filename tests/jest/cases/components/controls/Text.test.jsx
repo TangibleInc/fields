@@ -1,11 +1,11 @@
-import '../../../../assets/src/index.jsx'
+import '../../../../../assets/src/index.jsx'
 import { 
   rendersWithMinimal,
   rendersWithoutLabelThrowWarning,
   rendersLabelAndDescription,
   renderHasElement,
   renderHasNotElement
-} from '../../utils/fields.js'
+} from '../../../utils/fields.js'
 
 const fields = window.tangibleFields
 

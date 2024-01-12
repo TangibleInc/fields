@@ -66,7 +66,7 @@ $fields->render_field = function(
 
   $args = $fields->format_args( $name, $field );
 
-  $fields->enqueue_field( $name, $args );
+  $fields->enqueue_item( $name, 'fields', $args );
 
   if ( ! empty ( $field['render_callback'] ) ) {
     return $field['render_callback']( $args, $field );

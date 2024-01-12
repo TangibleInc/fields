@@ -15,13 +15,13 @@ import {
 } from './utils'
 
 const DependendWrapper = ({
-  controlProps,
+  itemProps,
   refresh,
   data,
   children
 }) => {
   
-  const childProps =  Object.assign({}, controlProps)
+  const childProps =  Object.assign({}, itemProps)
 
   delete childProps.value
   delete childProps.onChange
@@ -32,14 +32,14 @@ const DependendWrapper = ({
    * Store fields that needs to be watched in order to update dependent values accordingly
    */
   const dependentFields = useMemo(() => (
-    controlProps.dependent
-      ? Object.assign({}, getDependentFields(controlProps))
+    itemProps.dependent
+      ? Object.assign({}, getDependentFields(itemProps))
       : false
   ), [])
 
   const maybeUpdateProps = (fieldName) => {
 
-    if( ! controlProps.dependent || ! dependentFields ) return;
+    if( ! itemProps.dependent || ! dependentFields ) return;
     if( ! Object.keys(dependentFields).includes(fieldName) ) return;
 
     refresh()
@@ -48,7 +48,7 @@ const DependendWrapper = ({
   const dependentWatcher = useCallback(field => {
 
     // Only regular fields (event is also triggerd for repeater subfields)
-    if( field.props?.controlType === 'subfield' ) return;
+    if( field.props?.itemType === 'subfield' ) return;
 
     maybeUpdateProps(field.name)
   }, [])

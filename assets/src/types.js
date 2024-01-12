@@ -27,7 +27,15 @@ import {
   TextArea
 } from './components/field/'
 
-const types = {
+import { 
+  Button,
+  Label,
+  Description,
+  Modal,
+  ModalTrigger 
+} from './components/base'
+
+const controls = {
   'accordion'         : Accordion,
   'alignment-matrix'  : AlignmentMatrix,
   'border'            : Border,
@@ -55,12 +63,19 @@ const types = {
   'textarea'          : TextArea
 }
 
+const elements = {
+  'button'            : Button,
+}
+
 export default {
-  _types: types,
-  get(type) {
-    return this._types[type] ?? false
+  _types : {
+    control : controls, 
+    element : elements
   },
-  add(type, Component) {
-    this._types[type] = Component
+  get(name, type = 'control') {
+    return this._types[ type ]?.[ name ] ?? false
+  },
+  add(name, Component, type = 'control') {
+    this._types[ type ][ name ] = Component
   }
 }

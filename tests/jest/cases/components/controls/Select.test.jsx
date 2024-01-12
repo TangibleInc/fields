@@ -1,10 +1,10 @@
-import '../../../../assets/src/index.jsx'
+import '../../../../../assets/src/index.jsx'
 import { render, within } from '@testing-library/react'
 import { 
   rendersWithoutLabelThrowWarning,
   renderHasElement,
   renderHasNotElement
-} from '../../utils/fields.js'
+} from '../../../utils/fields.js'
 
 const fields = window.tangibleFields
 

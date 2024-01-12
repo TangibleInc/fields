@@ -50,6 +50,7 @@ new class extends stdClass {
 
     require_once __DIR__ . '/dynamic-values/index.php';
     require_once __DIR__ . '/fields/index.php';
+    require_once __DIR__ . '/elements/index.php';
     require_once __DIR__ . '/enqueue.php';
     require_once __DIR__ . '/context.php';
 

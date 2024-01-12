@@ -69,7 +69,7 @@ const FieldGroup = props => {
           <Control
             { ...control }
             value={ value[control.name] ?? '' }
-            controlType={ 'subfield' }
+            itemType={ 'subfield' }
             onChange={ value => setAttribute(control.name, value) }
             visibility={{
               condition : control.condition?.condition ?? false,

@@ -12,7 +12,7 @@ describe('Repeater with a table layout', () => {
   commonRepeaterTests('table')
 
   // Remove control with subfields + hidden because no label 
-  const controlTypes = Object.keys(fields.types._types).filter(type => (
+  const controlTypes = Object.keys(fields.types._types['control']).filter(type => (
     ! ['accordion', 'field-group', 'hidden', 'repeater', 'conditional-panel'].includes(type)
   ))
 

@@ -1,4 +1,4 @@
-import '../../../../assets/src/index.jsx'
+import '../../../../../assets/src/index.jsx'
 import userEvent from '@testing-library/user-event'
 import { 
   within,
@@ -8,7 +8,7 @@ import {
   rendersWithMinimal,
   rendersWithoutLabelThrowWarning,
   rendersLabelAndDescription
-} from '../../utils/fields.js'
+} from '../../../utils/fields.js'
 
 const fields = window.tangibleFields
 

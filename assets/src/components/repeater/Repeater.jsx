@@ -91,7 +91,7 @@ const Repeater = props => {
         value    : value,
         callback : () => triggerRowCallbackEvents(item.key, control.name)
       }) }
-      controlType={ 'subfield' }
+      itemType={ 'subfield' }
       visibility={{
         action    : control.condition?.action ?? 'show',
         condition : control.condition?.condition ?? false

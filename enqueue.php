@@ -7,18 +7,22 @@ defined('ABSPATH') or die();
  * 
  * It will be passed to JS in order to init our react fields
  */
-$fields->enqueued_fields = [];
+$fields->enqueued = [
+  'fields'   => [],
+  'elements' => []
+];
 
 $fields->is_enqueued = false;
 
-$fields->enqueue_field = function(
-  string $name, 
+$fields->enqueue_item = function(
+  string $name,
+  string $type,
   array $args
 ) use($fields) : void {
   
   $args['context'] = $fields->current_context;
   
-  $fields->enqueued_fields[ $name ] = $args;
+  $fields->enqueued[ $type ][ $name ] = $args;
 };
 
 $fields->enqueue = function(array $config = []) use($fields) {
@@ -60,7 +64,8 @@ $fields->enqueue = function(array $config = []) use($fields) {
         'media' => esc_url_raw( rest_url( '/wp/v2/media/' ) ),
       ],
     ],
-    'fields'    => $fields->enqueued_fields,
+    'fields'    => $fields->enqueued['fields'],
+    'elements'  => $fields->enqueued['elements'],
     'dynamics'  => $fields->get_dynamic_value_data(),
     'mimetypes' => get_allowed_mime_types()
   ];
@@ -72,7 +77,9 @@ $fields->enqueue = function(array $config = []) use($fields) {
 
 $fields->maybe_enqueue_scripts = function() use($fields) : void {
 
-  if( empty($fields->enqueued_fields) || $fields->is_enqueued ) {
+  $has_registrations = empty($fields->enqueued['fields']) && empty($fields->enqueued['elements']);
+
+  if( $has_registrations || $fields->is_enqueued ) {
     return;
   } 
 

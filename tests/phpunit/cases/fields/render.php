@@ -1,5 +1,5 @@
 <?php
-class Render_TestCase extends WP_UnitTestCase {
+class RenderField_TestCase extends WP_UnitTestCase {
   public function setUp() : void {
     tangible_fields()->registered_fields = [];
   }
@@ -29,7 +29,7 @@ class Render_TestCase extends WP_UnitTestCase {
       'type' => 'switch',
       'element' => $element,
       'context' => 'default',
-    ], tangible_fields()->enqueued_fields['test']);
+    ], tangible_fields()->enqueued['fields']['test']);
   }
 
   public function test_fields_render_compat() {
@@ -55,7 +55,7 @@ class Render_TestCase extends WP_UnitTestCase {
       'type' => 'switch',
       'element' => $element,
       'context' => 'default',
-    ], tangible_fields()->enqueued_fields['test']);
+    ], tangible_fields()->enqueued['fields']['test']);
   }
 
   public function test_fields_render_callback() {

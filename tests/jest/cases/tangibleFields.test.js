@@ -9,7 +9,7 @@ describe('window.tangibleFields', () => {
     expect(window.tangibleFields).toBeDefined()
   })
 
-  it('can render fields', () => {
+  it('can render fields when no type specified', () => {
     
     expect(typeof fields.render).toBe('function')
 
@@ -23,7 +23,43 @@ describe('window.tangibleFields', () => {
     
     const classes = container.firstChild.classList
     expect(classes.contains('tf-context-default')).toEqual(true)
+    expect(within(container).getByText('Label')).toBeTruthy()
   })
+
+  it('can render fields when type specified', () => {
+    
+    expect(typeof fields.render).toBe('function')
+
+    const { container } = render(
+      fields.render({
+        label : 'Label',
+        type  : 'text',
+        name  : 'test-field' 
+      }, 'field')
+    )
+    
+    const classes = container.firstChild.classList
+    expect(classes.contains('tf-context-default')).toEqual(true)
+    expect(within(container).getByText('Label')).toBeTruthy()
+  })
+
+  it('can render elements', () => {
+    
+    expect(typeof fields.render).toBe('function')
+
+    const { container } = render(
+      fields.render({
+        content : 'Content',
+        type    : 'button',
+        name    : 'button-field' 
+      }, 'element')
+    )
+    
+    const classes = container.firstChild.classList
+    expect(classes.contains('tf-context-default')).toEqual(true)
+    expect(within(container).getByText('Content')).toBeTruthy()
+  })
+
 
   it('can trigger and subscribe to events', () => {
     
