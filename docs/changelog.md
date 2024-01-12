@@ -1,3 +1,11 @@
+# 20240112
+
+- Fields:
+    - Repeater: Table - Improve CSS
+    - Wrapper: Remove warning we class is set from wrapper parameter
+- Elements: Adds possibility to render non-fields component from PHP
+
+
 # 20240104
 
 - Fields:
