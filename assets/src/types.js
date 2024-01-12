@@ -30,9 +30,7 @@ import {
 import { 
   Button,
   Label,
-  Description,
-  Modal,
-  ModalTrigger 
+  Description
 } from './components/base'
 
 const controls = {
@@ -65,6 +63,8 @@ const controls = {
 
 const elements = {
   'button'            : Button,
+  'description'       : Description,
+  'label'             : Label
 }
 
 export default {
