@@ -103,6 +103,8 @@ $advenced-item-index-height: 40px;
 }
 
 .tf-repeater-advanced-item {
+  position: relative;
+  background-color: $field-background;
   border: $field-border;
   border-color: rgba($field-border-color, 0.5);
   border-radius: $field-border-radius;
@@ -110,13 +112,24 @@ $advenced-item-index-height: 40px;
   border-radius: 0px;
 }
 
-.tf-repeater-advanced-container .tf-repeater-actions:first-of-type {
+.tf-repeater-advanced-item[data-open="true"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background-color: $button-primary-color;
+}
+
+.tf-repeater-advanced-container > .tf-repeater-actions {
   border: $field-border;
   border-color: rgba($field-border-color, 0.5);
   border-radius: $field-border-radius;
   border-top: none;
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
+  background-color: $field-background;
 }
 
 .tf-repeater-advanced-row {
