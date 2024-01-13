@@ -126,3 +126,7 @@ $advenced-item-index-height: 40px;
     padding: $section-padding;
   }
 }
+
+.tf-repeater-advanced-item-field:has(> div[data-overlay-container="true"]:empty) {
+  display: none;
+}
