@@ -105,6 +105,9 @@ class FormatField_TestCase extends WP_UnitTestCase {
       'all_types' => ['all_types', [
         'label_visually_hidden' => 'labelVisuallyHidden'
       ]],
+      'accordion' => ['accordion', [
+        'use_switch' => 'useSwitch'
+      ]],
       'color_picker' => ['color_picker', [
         'enable_opacity' => 'hasAlpha',
       ]],
@@ -135,6 +138,12 @@ class FormatField_TestCase extends WP_UnitTestCase {
       ]],
       'text' => ['text', [
         'read_only' => 'readOnly'
+      ]],
+      'repeater' => ['repeater', [
+        'use_switch' => 'useSwitch',
+        'use_bulk' => 'useBulk',
+        'section_title' => 'sectionTitle',
+        'header_fields' => 'headerFields'
       ]],
       'button_group' => ['button_group', [
         'read_only' => 'isDisabled'

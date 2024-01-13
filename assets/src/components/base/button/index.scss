@@ -29,3 +29,28 @@
 .tf-button-action:focus {
   outline: none;
 }
+
+.tf-button-text-danger,
+.tf-button-text-primary,
+.tf-button-text-action {
+  background: transparent;
+  border: none;
+  display: inline;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: 700;
+  }
+}
+
+.tf-button-text-action {
+  color: $button-color;
+}
+
+.tf-button-text-danger {
+  color: $global-context-destructive;
+}
+
+.tf-button-text-primary {
+  color: $button-primary-color;
+}

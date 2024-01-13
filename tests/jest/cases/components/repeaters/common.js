@@ -1,5 +1,6 @@
 import { render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import Advanced from '../../../../../assets/src/components/repeater/layout/advanced/Advanced'
 
 const fields = window.tangibleFields
 
@@ -28,9 +29,10 @@ const commonRepeaterTests = layout => {
     expect(classes.contains(`tf-repeater-${layout}`)).toEqual(true)
   })
 
-  it('renders one subfield on inital render if no value passed', () => {
+  it('renders one subfield on inital render if no value passed', async () => {
 
-    render(
+    const user = userEvent.setup()
+    const { container } = render(
       fields.render({
         type   : 'repeater',
         layout : layout,
@@ -49,13 +51,19 @@ const commonRepeaterTests = layout => {
       })
     )
 
+    // Needs to open panel to see fields
+    if( layout === 'advanced' ) {
+      await user.click(container.querySelector('.tf-button-repeater-overview-open'))
+    }
+    
     expect(document.getElementsByClassName('tf-text').length).toBe(1)
     expect(document.getElementsByClassName('tf-number').length).toBe(1)
   })
 
-  it('renders no subfield on inital render if value is an empty array', () => {
+  it('renders no subfield on inital render if value is an empty array', async () => {
 
-    render(
+    const user = userEvent.setup()
+    const { container } = render(
       fields.render({
         type   : 'repeater',
         layout : layout,
@@ -74,6 +82,11 @@ const commonRepeaterTests = layout => {
         ]
       })
     )
+
+    // Needs to open panel to see fields
+    if( layout === 'advanced' ) {
+      await user.click(container.querySelector('.tf-button-repeater-overview-open'))
+    }
 
     expect(document.getElementsByClassName('tf-text').length).toBe(0)
     expect(document.getElementsByClassName('tf-number').length).toBe(0)
@@ -96,6 +109,8 @@ const commonRepeaterTests = layout => {
         ]
       })
     )
+
+    const removeText = layout === 'advanced' ? 'Delete' : 'Remove'
 
     expect(document.querySelector(`.tf-repeater-items`)).toBeTruthy()
     expect(document.querySelector(`.tf-repeater-${layout}-items`)).toBeTruthy()
@@ -121,7 +136,7 @@ const commonRepeaterTests = layout => {
     // Confirmation popup - Cancel
     
     expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
-    await user.click(within(itemsContainer.children[2]).getByText('Remove'))
+    await user.click(within(itemsContainer.children[2]).getByText(removeText))
     expect(document.querySelector(`.tf-modal-container`)).toBeTruthy()
     await user.click(within(document.querySelector(`.tf-modal-container`)).getByText('Cancel'))
     expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
@@ -131,9 +146,9 @@ const commonRepeaterTests = layout => {
     // Confirmation popup - Delete second item
 
     expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
-    await user.click(within(itemsContainer.children[1]).getByText('Remove'))
+    await user.click(within(itemsContainer.children[1]).getByText(removeText))
     expect(document.querySelector(`.tf-modal-container`)).toBeTruthy()
-    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText('Remove'))
+    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText(removeText))
     expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
 
     expect(itemsContainer.children.length).toBe(3)

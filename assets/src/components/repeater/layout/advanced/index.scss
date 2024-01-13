@@ -1,0 +1,128 @@
+$advenced-item-index-width: 32px;
+$advenced-item-index-height: 40px;
+
+.tf-repeater-advanced-label-row {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: $section-padding;
+  box-sizing: border-box;
+  gap: $global-spacer-sm;
+
+  .tf-repeater-advanced-label-row-item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex: 1;
+    flex-wrap: wrap;
+  }
+
+  .tf-repeater-advanced-label-row-arrow,
+  .tf-repeater-advanced-label-row-index {
+    width: $advenced-item-index-width;
+  }
+}
+
+.tf-repeater-advanced-header {
+  background: $field-background-secondary;
+  margin: 0;
+
+  border: $field-border;
+  border-radius: $field-border-radius;
+  border-color: rgba($field-border-color, 0.5);
+  border-bottom: none;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+
+  .tf-repeater-advanced-header-item {
+    height: $field-height;
+    @include label;
+    margin-bottom: 0;
+  }
+}
+
+.tf-repeater-advanced-overview {
+  background: $field-background;
+  
+  .tf-repeater-advanced-label-row-arrow,
+  .tf-repeater-advanced-label-row-index {
+    height: $advenced-item-index-height;
+    text-align: center;
+    line-height: $advenced-item-index-height;
+  }
+
+  .tf-repeater-advanced-label-row-index {
+    background: $field-background-secondary;
+  }
+
+  .tf-repeater-advanced-label-row-arrow {
+    cursor: pointer;
+  }
+
+  .tf-repeater-advanced-label-row-arrow > div {
+    border: solid black;
+    border-color: $field-font-color;
+    border-width: 0 1px 1px 0;
+    display: inline-block;
+    height: calc(#{$field-height} / 4);
+    width: calc(#{$field-height} / 4);
+  }
+  
+  .tf-repeater-advanced-overview-item-actions {
+    display: none;
+    width: 100%;
+  }
+}
+
+.tf-repeater-advanced-overview-item-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+.tf-repeater-advanced-overview-item-fields {
+  display: flex;
+}
+
+.tf-repeater-advanced-overview:hover .tf-repeater-advanced-overview-item-actions {
+  display: initial;
+  width: 100%;
+}
+
+.tf-repeater-advanced-item[data-open="true"] .tf-repeater-advanced-overview {
+  background-color: $global-theme-color-lighter-05;
+}
+
+.tf-repeater-advanced-item[data-open="true"] .tf-repeater-advanced-label-row-arrow > div {
+  transform: translateY(50%) rotate(-135deg);
+}
+
+.tf-repeater-advanced-item[data-open="false"] .tf-repeater-advanced-label-row-arrow > div {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.tf-repeater-advanced-item {
+  border: $field-border;
+  border-color: rgba($field-border-color, 0.5);
+  border-radius: $field-border-radius;
+  border-top: none;
+  border-radius: 0px;
+}
+
+.tf-repeater-advanced-container .tf-repeater-actions:first-of-type {
+  border: $field-border;
+  border-color: rgba($field-border-color, 0.5);
+  border-radius: $field-border-radius;
+  border-top: none;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+.tf-repeater-advanced-row {
+  margin-left: $advenced-item-index-width;
+
+  .tf-repeater-advanced-item-field {
+    padding: $section-padding;
+  }
+}

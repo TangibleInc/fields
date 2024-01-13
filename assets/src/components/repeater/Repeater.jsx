@@ -155,6 +155,7 @@ const Repeater = props => {
           fields={ fields }
           dispatch={ dispatch }
           rowFields={ rowFields }
+          headerFields={ props.headerFields }
           getControl={ getControl }
           maxLength = { repeatable ? maxLength : undefined }
           title={ props.sectionTitle ?? false }
