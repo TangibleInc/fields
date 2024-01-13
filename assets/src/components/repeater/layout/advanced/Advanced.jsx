@@ -19,8 +19,8 @@ const Advanced = ({
   const [openSection, setOpenSection] = useState(false)
   const headerColumns = headerFields
     ? fields.filter(field => headerFields.includes(field.name))
-    : fields 
-
+    : fields
+  
   return(
     <div className='tf-repeater-advanced'>
       <div className='tf-repeater-advanced-header tf-repeater-advanced-label-row'>
@@ -48,7 +48,11 @@ const Advanced = ({
                   { headerColumns.map((column, h) => (
                     <div key={ h } className='tf-repeater-advanced-overview-item tf-repeater-advanced-label-row-item'>
                       { item[ column.name ] && item[ column.name ] !== '' 
-                        ? item[ column.name ]
+                        ? (
+                          typeof item[ column.name ] === 'object' 
+                            ? JSON.stringify(item[ column.name ]) 
+                            : item[ column.name ]
+                          )
                         : <i>Empty</i> }
                     </div>
                   )) }
