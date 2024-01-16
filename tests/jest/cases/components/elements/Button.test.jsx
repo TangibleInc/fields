@@ -1,6 +1,12 @@
 import '../../../../../assets/src/index.jsx'
 import { renderHasElement } from '../../../utils/elements.js'
-import { within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { 
+  within,
+  render
+} from '@testing-library/react'
+
+const fields = window.tangibleFields
 
 describe('Button component', () => {
 
@@ -50,4 +56,24 @@ describe('Button component', () => {
     })
   })
 
+  it('trigger an event when button is pressed', async () => {
+  
+    const user = userEvent.setup()
+    const { container } = render(
+      fields.render({
+        type    : 'button',
+        content : 'Button text',
+        name    : 'button-name' 
+      }, 'element')
+    )
+
+    let buttonName = ''
+    fields.event('buttonPressed', ({ name }) => {
+      buttonName = name
+    })
+    
+    await user.click(within(container).getByText('Button text'))
+    
+    expect(buttonName).toBe('button-name')
+  })
 })

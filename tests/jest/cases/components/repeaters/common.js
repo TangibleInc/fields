@@ -1,6 +1,5 @@
 import { render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Advanced from '../../../../../assets/src/components/repeater/layout/advanced/Advanced'
 
 const fields = window.tangibleFields
 

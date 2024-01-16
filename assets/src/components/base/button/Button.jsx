@@ -8,6 +8,8 @@ import {
   VisuallyHidden
 } from 'react-aria'
 
+import { triggerEvent } from '../../../events'
+
 /**
  * @see https://react-spectrum.adobe.com/react-aria/useButton.html
  */
@@ -40,7 +42,15 @@ const Button = forwardRef(({
     <CustomTag 
       className={ classes } 
       style={ props.style } 
-      { ...buttonProps } 
+      { ...buttonProps }
+      onClick={ event => {
+        buttonProps.onClick(event)
+        triggerEvent('buttonPressed', {
+          name  : props.name ?? false,
+          props : props,
+          event : event,
+        })
+      }}
       ref={ buttonRef } 
       type='button'
     >
