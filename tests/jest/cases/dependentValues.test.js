@@ -435,4 +435,71 @@ describe('dependent values feature', () => {
     expect(within(textFields[0]).getByText('Subvalue2')).toBeTruthy()
   })
   
+  it('works if repeater and field-group are dependents', async () => {
+
+    // Basic test to make sure it can renders, but it should be tested more extensively at some point
+
+    render(
+      <>
+        { fields.render({
+          label     : 'Field 1',
+          type      : 'text',
+          value     : 'Initial value of field 1',
+          name      : 'field-1' 
+        }) }
+        { fields.render({
+          label     : 'Label',
+          name      : 'repeater-field',
+          type      : 'repeater',
+          layout    : 'block',
+          dependent :  true,
+          refresh   : '{{field-1}}',
+          fields    : [
+            {
+              label       : 'Subfield 1',
+              type        : 'hidden',
+              name        : 'subfield-1' 
+            },
+            {
+              label       : '{{field-1}}',
+              description : '{{subfield-1}}',
+              type        : 'text',
+              name        : 'subfield-2',
+              dependent   : true
+            }
+          ]
+        }) }
+        { fields.render({
+          label     : 'Label',
+          name      : 'field-group-name',
+          type      : 'field-group',
+          layout    : 'block',
+          dependent :  true,
+          refresh   : '{{field-1}}',
+          fields    : [
+            {
+              label       : 'Subfield 1',
+              type        : 'hidden',
+              name        : 'subfield-1' 
+            },
+            {
+              label       : '{{field-1}}',
+              description : '{{subfield-1}}',
+              type        : 'text',
+              name        : 'subfield-2',
+              dependent   : true
+            }
+          ]
+        }) }
+      </>
+    )
+
+    const repeater = document.getElementsByClassName('tf-field-group')
+    const fieldGroup = document.getElementsByClassName('tf-field-group')
+    
+    expect(repeater.length).toBe(1)
+    expect(fieldGroup.length).toBe(1)
+  })
+
+
 })
