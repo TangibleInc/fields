@@ -228,4 +228,18 @@ describe('conditional panel', () => {
     expect(within(savedModal).getAllByText('Add group').length).toBe(2)
   })
 
+  it('add label to conditional panel', async () => {
+
+    const user = userEvent.setup()
+    const { container } = render(
+      fields.render({
+        type  : 'conditional-panel',
+        name  : 'conditional-panel-name',
+        label : 'Conditional Panel' 
+      })
+    )
+
+    expect(within(container).getByText('Conditional Panel')).toBeTruthy()
+  })
+
 })
