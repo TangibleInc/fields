@@ -22,7 +22,10 @@
 
 .tf-button-danger[disabled],
 .tf-button-primary[disabled],
-.tf-button-action[disabled] {
+.tf-button-action[disabled],
+.tf-button-text-danger[disabled],
+.tf-button-text-primary[disabled],
+.tf-button-text-action[disabled] {
   @include button-disabled;
 }
 

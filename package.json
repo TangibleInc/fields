@@ -36,6 +36,7 @@
     "@babel/preset-env": "^7.22.20",
     "@babel/preset-react": "^7.22.15",
     "@tangible/roller": "^1.4.7",
+    "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^14.0.0",
     "@wordpress/env": "^5.15.0",
     "babel-jest": "^29.7.0",
