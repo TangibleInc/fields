@@ -57,16 +57,19 @@ const Advanced = ({
                     </div>
                   )) }
                 </div>
-                {
-                maxLength ? 
+                { maxLength !== undefined &&
                   <div className="tf-repeater-advanced-overview-item-actions">
                     <Button type="text-primary" onPress={ () => setOpenSection(openSection === i ? false : i) }>
                       { openSection === i ? 'Close' : 'Edit' } 
                     </Button>
-                    <Button type="text-primary" onPress={() => dispatch({ 
-                      type : 'clone',
-                      item : item
-                    })}>
+                    <Button 
+                      type="text-primary" 
+                      isDisabled={ maxLength <= items.length }
+                      onPress={() => dispatch({ 
+                        type : 'clone',
+                        item : item
+                      })}
+                    >
                       Duplicate
                     </Button>
                     <ModalTrigger 
@@ -77,8 +80,7 @@ const Advanced = ({
                     >
                       Are you sure you want to remove item { i + 1 }?
                     </ModalTrigger>
-                  </div>
-                : '' } 
+                  </div> } 
               </div>
               <Button
                 key={ 'arrow' } 

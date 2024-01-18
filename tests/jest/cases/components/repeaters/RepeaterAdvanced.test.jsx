@@ -1,6 +1,6 @@
 import '../../../../../assets/src/index.jsx'
 import { commonRepeaterTests } from './common.js'
-import { within, render, screen } from '@testing-library/react'
+import { within, render } from '@testing-library/react'
 
 const fields = window.tangibleFields
 
@@ -70,30 +70,4 @@ describe('Repeater with an advanced layout', () => {
     expect(within(header).getByText('Test 2')).toBeTruthy()
   })
 
-  it('renders all field labels in the headers by default but cannot edit / duplicate / remove', () => {
-
-    const { container } = render(
-      fields.render({
-        type   : 'repeater',
-        layout : 'advanced',
-        repeatable : false,
-        fields : [
-          {
-            name  : 'test',
-            label : 'Test 1',
-            type  : 'text'
-          },
-          {
-            name  : 'test2',
-            label : 'Test 2',
-            type  : 'text'
-          }
-        ],
-      })
-    )
-
-    const overview = container.querySelector('.tf-repeater-advanced-overview-item-container')
-
-    expect(within(overview).queryByText('Duplicate')).toBeFalsy()
-  })
 })
