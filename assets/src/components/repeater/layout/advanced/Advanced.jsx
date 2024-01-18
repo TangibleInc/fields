@@ -57,25 +57,30 @@ const Advanced = ({
                     </div>
                   )) }
                 </div>
-                <div className="tf-repeater-advanced-overview-item-actions">
-                  <Button type="text-primary" onPress={ () => setOpenSection(openSection === i ? false : i) }>
-                    { openSection === i ? 'Close' : 'Edit' } 
-                  </Button>
-                  <Button type="text-primary" onPress={() => dispatch({ 
-                    type : 'clone',
-                    item : item
-                  })}>
-                    Duplicate
-                  </Button>
-                  <ModalTrigger 
-                    label="Delete"
-                    title="Confirmation"
-                    onValidate={ () => dispatch({ type : 'remove', item : i })}
-                    buttonProps={{ type: 'text-danger' }}
-                  >
-                    Are you sure you want to remove item { i + 1 }?
-                  </ModalTrigger>
-                </div>
+                { maxLength !== undefined &&
+                  <div className="tf-repeater-advanced-overview-item-actions">
+                    <Button type="text-primary" onPress={ () => setOpenSection(openSection === i ? false : i) }>
+                      { openSection === i ? 'Close' : 'Edit' } 
+                    </Button>
+                    <Button 
+                      type="text-primary" 
+                      isDisabled={ maxLength <= items.length }
+                      onPress={() => dispatch({ 
+                        type : 'clone',
+                        item : item
+                      })}
+                    >
+                      Duplicate
+                    </Button>
+                    <ModalTrigger 
+                      label="Delete"
+                      title="Confirmation"
+                      onValidate={ () => dispatch({ type : 'remove', item : i })}
+                      buttonProps={{ type: 'text-danger' }}
+                    >
+                      Are you sure you want to remove item { i + 1 }?
+                    </ModalTrigger>
+                  </div> } 
               </div>
               <Button
                 key={ 'arrow' } 

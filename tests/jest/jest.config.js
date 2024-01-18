@@ -4,4 +4,3 @@ module.exports = {
     './setup/window.js'
   ]
 }
-
