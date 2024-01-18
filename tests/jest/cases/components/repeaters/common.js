@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom'
 import { render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
@@ -11,6 +12,9 @@ const fields = window.tangibleFields
  * - Test clone button (check key is different)
  */
 const commonRepeaterTests = layout => {
+
+  const cloneText = layout !== 'advanced' ? 'Clone' : 'Duplicate'
+  const removeText = layout !== 'advanced' ? 'Remove' : 'Delete'
 
   it('contains the wrapper classes', () => {
 
@@ -109,8 +113,6 @@ const commonRepeaterTests = layout => {
       })
     )
 
-    const removeText = layout === 'advanced' ? 'Delete' : 'Remove'
-
     expect(document.querySelector(`.tf-repeater-items`)).toBeTruthy()
     expect(document.querySelector(`.tf-repeater-${layout}-items`)).toBeTruthy()
     
@@ -183,6 +185,93 @@ const commonRepeaterTests = layout => {
     expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
 
     expect(itemsContainer.children.length).toBe(0)
+  })
+
+  it('removes action buttons when repeatable false', () => {
+
+    const { container } = render(
+      fields.render({
+        type       : 'repeater',
+        layout     : layout,
+        repeatable : false,
+        fields     : [
+          {
+            name  : 'test',
+            label : 'Test 1',
+            type  : 'text'
+          },
+          {
+            name  : 'test2',
+            label : 'Test 2',
+            type  : 'text'
+          }
+        ],
+      })
+    )
+
+    expect(within(container).queryByText('Duplicate')).toBeFalsy()
+    expect(within(container).queryByText('Edit')).toBeFalsy()
+    expect(within(container).queryByText('Remove')).toBeFalsy()
+    expect(within(container).queryByText('Delete')).toBeFalsy()
+    expect(within(container).queryByText('Add item')).toBeFalsy()
+    expect(within(container).queryByText('Remove all')).toBeFalsy()
+    expect(within(container).queryByText('Clone')).toBeFalsy()
+  })
+
+  it('supports maxlength property', async () => {
+    
+    const user = userEvent.setup()
+    const { container } = render(
+      fields.render({
+        type       : 'repeater',
+        layout     : layout,
+        maxlength  : 2,
+        fields     : [
+          {
+            name  : 'test',
+            label : 'Test 1',
+            type  : 'text'
+          },
+          {
+            name  : 'test2',
+            label : 'Test 2',
+            type  : 'text'
+          }
+        ],
+      })
+    )
+    
+    let addButton, cloneButton
+
+    addButton = within(container).getByText('Add item')
+    expect(addButton).not.toBeDisabled()
+
+    if( layout !== 'bare' ) {
+      cloneButton  = within(container).getByText(cloneText)
+      expect(cloneButton).not.toBeDisabled()
+    }
+
+    await user.click(within(container).getByText('Add item'))
+
+    addButton = within(container).getByText('Add item')
+    expect(addButton).toBeDisabled()
+    
+    if( layout !== 'bare' ) {
+      cloneButton  = within(container).getAllByText(cloneText)
+      expect(cloneButton[0]).toBeDisabled()
+      expect(cloneButton[1]).toBeDisabled()
+    }
+
+    await user.click(within(container).getAllByText(removeText)[0])
+    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText(removeText)) // Confirmation popup
+
+    addButton = within(container).getByText('Add item')
+    expect(addButton).not.toBeDisabled()
+
+    if( layout !== 'bare' ) {
+      cloneButton  = within(container).getByText(cloneText)
+      expect(cloneButton).not.toBeDisabled()
+    }
   })
 }
 

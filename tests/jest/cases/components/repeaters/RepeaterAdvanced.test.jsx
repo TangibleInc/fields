@@ -33,7 +33,9 @@ describe('Repeater with an advanced layout', () => {
     )
 
     const header = container.querySelector('.tf-repeater-advanced-header')
+    const overview = container.querySelector('.tf-repeater-advanced-overview-item-container')
 
+    expect(within(overview).queryByText('Duplicate')).toBeTruthy()
     expect(within(header).getByText('Test 1')).toBeTruthy()
     expect(within(header).getByText('Test 2')).toBeTruthy()
   })
@@ -67,4 +69,5 @@ describe('Repeater with an advanced layout', () => {
     expect(within(header).queryByText('Test 1')).toBeFalsy()
     expect(within(header).getByText('Test 2')).toBeTruthy()
   })
+
 })
