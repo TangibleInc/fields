@@ -9,6 +9,9 @@ import {
 
 const ModalTrigger = props => {
   
+  // Some props names are going to be different when generated from PHP
+  const content = props.content ?? props.children
+  
   const state = useOverlayTriggerState(props)
   const { triggerProps, overlayProps } = useOverlayTrigger(
     { type: 'dialog' },
@@ -23,13 +26,13 @@ const ModalTrigger = props => {
         isDisabled={ props.isDisabled }
         { ...(props.buttonProps ?? {}) }
       >
-        { props.label }
+        { props.label ?? 'Open modal' }
       </Button>
       { state.isOpen &&
         (
           <Modal className="tf-modal" state={state}>
             <Dialog title={ props.title } { ...overlayProps }>
-              { props.children }
+              { content }
               <div className="tf-modal-actions">
                 <Button
                   type="danger"

@@ -80,7 +80,14 @@ $fields->format_element_args = function(
 
   $args['element'] = uniqid( 'tangible-element-' . $name .'-' );
 
-  switch($type) {}
+  switch($type) {
+
+    case 'modal':
+      $args = $fields->format_value($args, 'cancel_text', 'cancelText');
+      $args = $fields->format_value($args, 'confirm_text', 'confirmText');
+      break;
+
+  }
 
   return $args;
 };
