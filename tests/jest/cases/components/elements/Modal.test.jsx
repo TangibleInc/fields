@@ -90,4 +90,23 @@ describe('Modal component', () => {
     expect(modal).toBeTruthy()
   })
 
+  it('can set children from content parameter', async () => {
+    
+    const user = userEvent.setup()
+
+    const { container } = render(
+      fields.render({
+        type    : 'modal',
+        label   : 'Modal label',
+        title   : `Modal text`,
+        content : 'Test content'
+      }, 'element')
+    )
+
+    await user.click(within(container).getByText('Modal label'))
+
+    const modal = screen.getByText('Test content')
+    expect(modal).toBeTruthy()
+  })
+
 })
