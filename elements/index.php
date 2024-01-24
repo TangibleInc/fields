@@ -87,6 +87,9 @@ $fields->format_element_args = function(
       $args = $fields->format_value($args, 'confirm_text', 'confirmText');
       break;
 
+    case 'button':
+      $args = $fields->format_value($args, 'button_type', 'buttonType');
+      break;
   }
 
   return $args;

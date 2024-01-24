@@ -15,6 +15,9 @@ class FormatElement_TestCase extends WP_UnitTestCase {
         'cancel_text' => 'cancelText',
         'confirm_text' => 'confirmText'
       ]],
+      'button' => ['button', [
+        'button_type' => 'buttonType'
+      ]]
     ];
   }
 

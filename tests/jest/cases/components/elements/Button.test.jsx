@@ -76,4 +76,33 @@ describe('Button component', () => {
     
     expect(buttonName).toBe('button-name')
   })
+
+  it('uses button as element type when buttonType is not set', () => {
+  
+    const { container } = render(
+      fields.render({
+        type    : 'button',
+        content : 'Button text',
+        name    : 'button-name' 
+      }, 'element')
+    )
+    
+    const button = within(container).getByText('Button text')
+    expect(button.getAttribute('type')).toBe('button')
+  })
+
+  it('support buttonType attribute', () => {
+  
+    const { container } = render(
+      fields.render({
+        type       : 'button',
+        content    : 'Button text',
+        name       : 'button-name',
+        buttonType : 'submit'
+      }, 'element')
+    )
+    
+    const button = within(container).getByText('Button text')
+    expect(button.getAttribute('type')).toBe('submit')
+  })
 })
