@@ -2,14 +2,22 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 4px;
     
   border: $field-border;
   border-radius: $field-border-radius;
-  background: $field-background;
+  border-color: rgba($field-border-color, 0.5);
+
+  .tf-repeater-actions {
+    width: 100%;
+    padding: 4px;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    padding: $section-padding;
+  }
 
   table {
     width: 100%;
+    padding: 4px;
 
     th, tr {
       min-height: $field-height;
@@ -18,6 +26,7 @@
 
     th {
       height: $field-height;
+      text-align: left;
     }
 
     td > div {

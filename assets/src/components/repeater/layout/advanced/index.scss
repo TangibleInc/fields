@@ -154,3 +154,7 @@ $advanced-item-index-height: 40px;
 .tf-repeater-advanced-item-field:has(> div[data-overlay-container="true"]:empty) {
   display: none;
 }
+
+.tf-repeater-advanced .tf-repeater-actions {
+  padding: $section-padding;
+}
