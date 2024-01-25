@@ -18,6 +18,7 @@ import {
 
 import Layouts from './layout' 
 import Control from '../../Control'
+import Element from '../../Element'
 
 const Repeater = props => {
 
@@ -80,6 +81,44 @@ const Repeater = props => {
   const values = useRef()
   values.current = items
 
+  const getElement = (element, item, i) => (
+    <Element
+      key={ item.key + i }
+      value={ item[element.name] ?? '' }
+      visibility={{
+        action    : element.condition?.action ?? 'show',
+        condition : element.condition?.condition ?? false
+      }}
+      itemType={ 'subfield' }
+      data={{
+      /**
+       * The field value can either be from a subvalue or from the parent getter if no match
+       */
+      getValue: name => (
+        hasField(name)
+        ? (values.current[i][name] ?? '') 
+        : (props.data.getValue(name ?? ''))
+      ),
+      /**
+       * Possibility to add callback event that will be triggered each time a field from the current row will
+       * change
+       * @todo Avoid multiple definition (currently no way to remove watch from child which not ideal)
+       */
+      watcher: callback => setChangeCallback(
+        prevValue => [ 
+          ...prevValue,
+          (rowKey, fieldName) => {
+              rowKey === item.key && element.name 
+              ? callback(fieldName, item.key) 
+              : null
+            } 
+          ]
+      )
+      }}
+      { ...element }
+    />
+  )
+  
   const getControl = (control, item, i) => (
     <Control
       key={ item.key + i} 
@@ -157,6 +196,7 @@ const Repeater = props => {
           rowFields={ rowFields }
           headerFields={ props.headerFields }
           getControl={ getControl }
+          getElement={ getElement }
           maxLength = { repeatable ? maxLength : undefined }
           title={ props.sectionTitle ?? false }
           useSwitch={ props.useSwitch }

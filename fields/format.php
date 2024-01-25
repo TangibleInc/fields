@@ -14,6 +14,13 @@ $fields->format_args = function(
   bool $element = true
 ) use($fields) : array {
 
+  if ( isset($args['render_type']) ) {
+    $args = $fields->format_element_args($name, $args);
+    $args = $fields->format_value($args, 'render_type', 'renderType');
+  } else {
+    $args['renderType'] = 'control';
+  }
+
   $type = $args['type'] ?? '';
 
   if( $element ) {  
