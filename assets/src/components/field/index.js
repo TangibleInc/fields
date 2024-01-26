@@ -14,6 +14,7 @@ import File from './file/File'
 import Gradient from './gradient/Gradient'
 import Gallery from './gallery/Gallery'
 import InputHidden from './hidden/InputHidden'
+import List from './list/List'
 import Number from './number/Number'
 import Radio from './radio/'
 import Select from './select/'
@@ -39,6 +40,7 @@ export {
   Gradient,
   Gallery,
   InputHidden,
+  List,
   Number,
   Radio,
   Select,

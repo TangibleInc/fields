@@ -85,7 +85,8 @@ export default props => {
         menuTrigger="focus"
         labelVisuallyHidden={ props.labelVisuallyHidden ?? false }
         descriptionVisuallyHidden={ props.descriptionVisuallyHidden ?? false }
-        { ...itemProps }          
+        disabledKeys={ props.disabledKeys ?? false }
+        { ...itemProps }
       >
         { RenderChoices }
       </ComboBox>

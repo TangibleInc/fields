@@ -78,10 +78,12 @@ $fields->format_args = function(
       wp_enqueue_media();
       break;
       
+    case 'list':
     case 'combo_box':
     case 'text_suggestion':
       // We use kebab-case for control types in js
-      $args['type'] = $type === 'combo_box' ? 'combo-box' : 'text-suggestion';
+      if( $type === 'combo_box' ) $args['type'] = 'combo-box';
+      if( $type === 'text_suggestion' ) $args['type'] = 'text-suggestion';
       $args = $fields->format_value($args, 'is_async', 'isAsync');
       $args = $fields->format_value($args, 'map_results', 'mapResults');
       $args = $fields->format_value($args, 'async_args', 'asyncArgs');

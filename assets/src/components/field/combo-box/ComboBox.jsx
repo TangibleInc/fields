@@ -46,7 +46,7 @@ const ComboBox = props => {
     if( ! props.isAsync ) {
       props.onSelectionChange(value)
       return;
-    }  
+    }
 
     const option = getOption(value, props.items)
 

@@ -1,0 +1,55 @@
+.tf-list-items {
+  width: $field-width;
+}
+
+.tf-list-header, 
+.tf-list-item,
+.tf-list-header label {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.tf-list-header {
+  padding: $field-padding;
+  border: $field-border;
+  background: $field-background-secondary;
+  border-radius: $field-border-radius;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  label {
+    height: $field-height;
+    margin: 0;
+  }
+}
+
+.tf-list-item {
+  width: $field-width;
+  height: $field-height;
+  background: $field-background;
+  border: $field-border;
+  border-top: none;
+  box-sizing: border-box;
+
+  .tf-list-item-text {
+    padding: $field-padding;
+    font-weight: $label-font-weight;
+    font-size: $label-font-size;
+    flex: 1;
+  }
+
+  .tf-list-item-actions {
+    display: flex;
+    gap: $global-spacer-sm;;
+  }
+}
+
+.tf-list-search {
+  display: flex;
+  width: $field-width;
+
+  .tf-combo-box {
+    flex: 1;
+  }
+}

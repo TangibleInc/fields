@@ -148,9 +148,16 @@ class FormatField_TestCase extends WP_UnitTestCase {
       'button_group' => ['button_group', [
         'read_only' => 'isDisabled'
       ]],
-      'select' => ['button_group', [
+      'select' => ['select', [
         'read_only' => 'isDisabled'
       ]],
+      'list' => ['list' => [
+        'is_async' => 'isAsync',
+        'async_args' => 'asyncArgs',
+        'search_url' => 'searchUrl',
+        'ajax_action' => 'ajaxAction',
+        'map_results' => 'mapResults'
+      ]]
     ];
   }
 
