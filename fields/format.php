@@ -15,10 +15,16 @@ $fields->format_args = function(
 ) use($fields) : array {
 
   if ( isset($args['render_type']) ) {
-    $args = $fields->format_element_args($name, $args);
+    switch ( $args['render_type'] ) {
+     
+      case 'element':
+        $args = $fields->format_element_args($name, $args);
+        break;
+
+      default: 
+        break;
+    }
     $args = $fields->format_value($args, 'render_type', 'renderType');
-  } else {
-    $args['renderType'] = 'control';
   }
 
   $type = $args['type'] ?? '';

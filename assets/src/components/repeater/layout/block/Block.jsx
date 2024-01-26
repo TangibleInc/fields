@@ -13,7 +13,7 @@ const Block = ({
   items,
   dispatch,
   rowFields,
-  getControl,
+  renderType,
   maxLength,
   title = false,
   useSwitch,
@@ -119,7 +119,7 @@ const Block = ({
         > 
           { rowFields.map(control => ( 
             <div key={ control.name ?? i } className="tf-repeater-block-item-field">
-              { getControl(control, item, i) }
+              { renderType(control, item, i) }
             </div>
           )) } 
         </ExpandablePanel>

@@ -15,7 +15,7 @@ const Table = ({
   fields,
   dispatch,
   rowFields,
-  getControl,
+  renderType,
   maxLength,
   useBulk
 }) => (
@@ -54,7 +54,7 @@ const Table = ({
           </td>
           { rowFields.map((control, j) => (
             <td key={ `${item.key}-${j}` }>
-              { getControl(control, item, i) }
+              { renderType(control, item, i) }
             </td>
           )) }
           <td className='tf-repeater-row-actions'>

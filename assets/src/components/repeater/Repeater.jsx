@@ -81,6 +81,18 @@ const Repeater = props => {
   const values = useRef()
   values.current = items
 
+  const renderType = (data, item, i) => {
+    switch ( data.renderType ) {
+      case 'element' :
+        return ( getElement(data, item, i) )
+        break;
+      
+      default:
+        return ( getControl(data, item, i) )
+        break;
+    }
+  }
+
   const getElement = (element, item, i) => (
     <Element
       key={ item.key + i }
@@ -195,8 +207,7 @@ const Repeater = props => {
           dispatch={ dispatch }
           rowFields={ rowFields }
           headerFields={ props.headerFields }
-          getControl={ getControl }
-          getElement={ getElement }
+          renderType={renderType}
           maxLength = { repeatable ? maxLength : undefined }
           title={ props.sectionTitle ?? false }
           useSwitch={ props.useSwitch }
