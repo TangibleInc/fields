@@ -56,5 +56,4 @@ describe('Repeater with a table layout', () => {
     expect(labels.length).toBe(type === 'text-suggestion' ? 2 : 1)
     expect(labels[0].parentNode.getAttribute('style')).toBe(visuallyHiddenStyle)
   })
-  
 })

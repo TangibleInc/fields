@@ -39,6 +39,15 @@ $fields->get_element = function(
   return $this->registered_elements[ $name ] ?? null;
 };
 
+$fields->is_element = function(string $type) : bool {
+  return in_array($type, [
+    'button',
+    'description',
+    'label',
+    'modal'
+  ]);
+};
+
 /**
  * Render a registered element
  */

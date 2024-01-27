@@ -155,6 +155,10 @@ $advanced-item-index-height: 40px;
   display: none;
 }
 
+.tf-repeater-advanced-item-field:has(input.tf-hidden[type="hidden"]) {
+  padding: 0px;
+}
+
 .tf-repeater-advanced .tf-repeater-actions {
   padding: $section-padding;
 }
