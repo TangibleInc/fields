@@ -17,8 +17,7 @@ import {
 } from '../base'
 
 import Layouts from './layout' 
-import Control from '../../Control'
-import Element from '../../Element'
+import Item from './common/Item'
 
 const Repeater = props => {
 
@@ -81,72 +80,18 @@ const Repeater = props => {
   const values = useRef()
   values.current = items
 
-  const renderType = (data, item, i) => {
-    switch ( data.renderType ) {
-      case 'element' :
-        return ( getElement(data, item, i) )
-        break;
-      
-      default:
-        return ( getControl(data, item, i) )
-        break;
-    }
-  }
-
-  const getElement = (element, item, i) => (
-    <Element
-      key={ item.key + i }
-      value={ item[element.name] ?? '' }
-      visibility={{
-        action    : element.condition?.action ?? 'show',
-        condition : element.condition?.condition ?? false
-      }}
-      itemType={ 'subfield' }
-      data={{
-      /**
-       * The field value can either be from a subvalue or from the parent getter if no match
-       */
-      getValue: name => (
-        hasField(name)
-        ? (values.current[i][name] ?? '') 
-        : (props.data.getValue(name ?? ''))
-      ),
-      /**
-       * Possibility to add callback event that will be triggered each time a field from the current row will
-       * change
-       * @todo Avoid multiple definition (currently no way to remove watch from child which not ideal)
-       */
-      watcher: callback => setChangeCallback(
-        prevValue => [ 
-          ...prevValue,
-          (rowKey, fieldName) => {
-              rowKey === item.key && element.name 
-              ? callback(fieldName, item.key) 
-              : null
-            } 
-          ]
-      )
-      }}
-      { ...element }
-    />
-  )
-  
-  const getControl = (control, item, i) => (
-    <Control
-      key={ item.key + i} 
-      value={ item[control.name] ?? '' }
+  const renderItem = (config, row, i) => (
+    <Item
+      key={ row.key + i }
+      values={ row }
+      config={ config }
       onChange={ value => dispatch({ 
         type     : 'update',
         item     : i,
-        control  : control.name,
+        control  : config.name,
         value    : value,
-        callback : () => triggerRowCallbackEvents(item.key, control.name)
+        callback : () => triggerRowCallbackEvents(row.key, config.name)
       }) }
-      itemType={ 'subfield' }
-      visibility={{
-        action    : control.condition?.action ?? 'show',
-        condition : control.condition?.condition ?? false
-      }}
       /**
        * Used by visbility and dependent values to detect changes and access data 
        */
@@ -168,17 +113,16 @@ const Repeater = props => {
           prevValue => [ 
             ...prevValue,
             (rowKey, fieldName) => {
-              rowKey === item.key && control.name 
-                ? callback(fieldName, item.key) 
+              rowKey === row.key && config.name 
+                ? callback(fieldName, row.key) 
                 : null
             } 
           ]
         )
       }}
-      { ...control }
     />
   )
-
+  
   /**
    * There are some values we don't want to save (like the bulk action checbox)
    */
@@ -207,7 +151,7 @@ const Repeater = props => {
           dispatch={ dispatch }
           rowFields={ rowFields }
           headerFields={ props.headerFields }
-          renderType={renderType}
+          renderItem={ renderItem }
           maxLength = { repeatable ? maxLength : undefined }
           title={ props.sectionTitle ?? false }
           useSwitch={ props.useSwitch }

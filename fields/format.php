@@ -14,19 +14,6 @@ $fields->format_args = function(
   bool $element = true
 ) use($fields) : array {
 
-  if ( isset($args['render_type']) ) {
-    switch ( $args['render_type'] ) {
-     
-      case 'element':
-        $args = $fields->format_element_args($name, $args);
-        break;
-
-      default: 
-        break;
-    }
-    $args = $fields->format_value($args, 'render_type', 'renderType');
-  }
-
   $type = $args['type'] ?? '';
 
   if( $element ) {  
@@ -165,11 +152,16 @@ $fields->format_groups = function(string $type, array $args) use($fields) : arra
   $args = $fields->format_value($args, 'sub_fields', 'fields'); 
 
   $args['fields'] = array_map(function($args) use($fields) {
-    return $fields->format_args( 
-      $args['name'] ?? '',
-      $args,
-      false
-    );
+    return $fields->is_element( $args['type'] ?? '' )
+      ? $fields->format_element_args( 
+          $args['name'] ?? '', 
+          $args 
+        ) 
+      : $fields->format_args( 
+          $args['name'] ?? '',
+          $args,
+          false
+        );
   }, $args['fields'] ?? []);
 
   return $args;

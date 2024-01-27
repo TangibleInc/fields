@@ -273,6 +273,42 @@ const commonRepeaterTests = layout => {
       expect(cloneButton).not.toBeDisabled()
     }
   })
+
+  it('renders with element inside fields', async () => {
+
+    const user = userEvent.setup()
+    const { container } = render(
+      fields.render({
+        type   : 'repeater',
+        layout : layout,
+        fields : [
+          {
+            name    : 'test',
+            label   : 'Test 1',
+            content : 'Test 1',
+            type    : 'description',
+          },
+          {
+            name    : 'test2',
+            label   : 'Test 2',
+            type    : 'text'
+          }
+        ]
+      })
+    )
+
+    // Needs to open panel to see fields
+    if( layout === 'advanced' ) {
+      await user.click(container.querySelector('.tf-button-repeater-overview-open'))
+    }
+
+    const items = container.querySelector('.tf-repeater-items')
+    expect(container.querySelector('.tf-description'))
+    expect(within(items).getByText('Test 1')).toBeTruthy()
+    
+    expect(container.querySelector('.tf-text'))
+    expect(within(items).getByText('Test 2')).toBeTruthy()
+  })
 }
 
 export { commonRepeaterTests }

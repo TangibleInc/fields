@@ -10,19 +10,18 @@ describe('Field group component', () => {
     const { container } = render( 
       <>
         { fields.render({
-          name    : 'field-group-name',
-          type    : 'field-group',
-          fields  : [
+          name   : 'field-group-name',
+          type   : 'field-group',
+          fields : [
             {
-              type : 'description',
-              content  : 'Test 1',
-              name  : 'subfield1',
-              renderType : 'element' 
+              type    : 'description',
+              content : 'Test 1',
+              name    : 'subfield1', 
             },
             {
-              label : 'Subfield 2',
-              type  : 'text',
-              name  : 'subfield2' 
+              label   : 'Subfield 2',
+              type    : 'text',
+              name    : 'subfield2' 
             },
           ]
         }) }

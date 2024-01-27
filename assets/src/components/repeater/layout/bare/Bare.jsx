@@ -3,7 +3,7 @@ import { ModalTrigger } from '../../../base'
 const Bare = ({
   items,
   rowFields,
-  renderType,
+  renderItem,
   maxLength,
   dispatch,
   beforeRow = false,
@@ -15,7 +15,7 @@ const Bare = ({
         { beforeRow && beforeRow(item, i, dispatch) }
         { rowFields.map(control => (
           <div key={ control.name ?? i } className="tf-repeater-bare-item-field">
-            { renderType(control, item, i) }
+            { renderItem(control, item, i) }
           </div>
         )) }
         { maxLength !== undefined &&

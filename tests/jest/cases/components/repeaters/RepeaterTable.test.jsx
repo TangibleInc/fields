@@ -56,36 +56,4 @@ describe('Repeater with a table layout', () => {
     expect(labels.length).toBe(type === 'text-suggestion' ? 2 : 1)
     expect(labels[0].parentNode.getAttribute('style')).toBe(visuallyHiddenStyle)
   })
-  
-  it('renders with element inside fields', () => {
-
-    const { container } = render(
-      fields.render({
-        type   : 'repeater',
-        layout : 'table',
-        fields : [
-          {
-            name        : 'test',
-            label       : 'Test 1',
-            content     : 'Test 1',
-            type        : 'description',
-            renderType  : 'element'
-          },
-          {
-            name        : 'test2',
-            label       : 'Test 2',
-            type        : 'text'
-          }
-        ]
-      })
-    )
-
-    const items = container.querySelector('.tf-repeater-items')
-    expect(container.querySelector('.tf-description'))
-    expect(within(items).getByText('Test 1')).toBeTruthy()
-    
-    expect(container.querySelector('.tf-text'))
-    expect(within(items).getByText('Test 2')).toBeTruthy()
-      
-  })
 })

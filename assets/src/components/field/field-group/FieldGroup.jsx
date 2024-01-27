@@ -5,8 +5,7 @@ import {
 } from 'react'
 
 import { initJSON } from '../../../utils'
-import Control from '../../../Control'
-import Element from '../../../Element'
+import FieldGroupItem from './FieldGroupItem'
 
 /**
  * Display other field and save all values in a single json object 
@@ -47,7 +46,7 @@ const FieldGroup = props => {
   useEffect(() => {
     
     props.onChange && props.onChange(value)
-    
+
     if( ! fieldUpdateCallback ) return;
     
     fieldUpdateCallback()
@@ -62,93 +61,38 @@ const FieldGroup = props => {
     ).includes(name)
   )
 
-  const renderType = (data) => {
-    switch (data.renderType) {
-      case 'element':
-        return ( getElement(data) )
-        break;
-    
-      default:
-        return ( getControl(data) )
-        break;
-    }
-  }
-
-  const getElement = (element) => (
-    <Element
-      { ...element }
-      value={ value[element.name] ?? '' }
-      itemType={ 'subfield' }
-      onChange={ value => setAttribute(element.name, value) }
-      visibility={{
-        condition : element.condition?.condition ?? false,
-        action    : element.condition?.action ?? 'show',
-      }}
-      /**
-       * Used by visbility and dependent values to detect changes and access data
-       */
-      data={{
-        /**
-         * The field value can either be from a subvalue or from another field value
-         */
-        getValue: name => (
-          hasField(name)
-            ? (valueRef.current[name] ?? '')
-            : (props.data.getValue(name) ?? '')
-        ),
-        /**
-         * Needed to trigger a re-evaluatation of the visibility conditions / dependent values
-         * when a subfield value change
-         */
-        watcher: evaluationCallback => {
-          setChangeCallback(() => name => evaluationCallback(name) )
-        }
-      }}
-    />
-  )
-
-  const getControl = (control) => (
-    <Control
-      { ...control }
-      value={ value[control.name] ?? '' }
-      itemType={ 'subfield' }
-      onChange={ value => setAttribute(control.name, value) }
-      visibility={{
-        condition : control.condition?.condition ?? false,
-        action    : control.condition?.action ?? 'show',
-      }}
-      /**
-       * Used by visbility and dependent values to detect changes and access data
-       */
-      data={{
-        /**
-         * The field value can either be from a subvalue or from another field value
-         */
-        getValue: name => (
-          hasField(name)
-            ? (valueRef.current[name] ?? '')
-            : (props.data.getValue(name) ?? '')
-        ),
-        /**
-         * Needed to trigger a re-evaluatation of the visibility conditions / dependent values
-         * when a subfield value change
-         */
-        watcher: evaluationCallback => {
-          setChangeCallback(() => name => evaluationCallback(name) )
-        }
-      }}
-    />
-  )
-
   return(
     <div className="tf-field-group">
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
-      { fields.map((control, index) => (
+      { fields.map((config, index) => (
         <div key={ index } className="tf-field-group-item">
-          { renderType(control) }          
+          <FieldGroupItem
+            values={ value }
+            config={ config }
+            onChange={ value => setAttribute(config.name, value) }
+            /**
+             * Used by visbility and dependent values to detect changes and access data
+             */
+            data={{
+              /**
+               * The field value can either be from a subvalue or from another field value
+               */
+              getValue: name => (
+               hasField(name)
+                  ? (valueRef.current[name] ?? '')
+                  : (props.data.getValue(name) ?? '')
+              ),
+              /**
+               * Needed to trigger a re-evaluatation of the visibility conditions / dependent values
+               * when a subfield value change
+               */
+              watcher: evaluationCallback => {
+                setChangeCallback(() => name => evaluationCallback(name) )
+              }
+            }}
+          />
         </div>
-        )
-      )}
+        )) }
     </div>
   )
 }
