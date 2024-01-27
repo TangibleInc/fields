@@ -155,7 +155,7 @@ $advanced-item-index-height: 40px;
   display: none;
 }
 
-.tf-repeater-advanced-item-field:has(input[type="hidden"]) {
+.tf-repeater-advanced-item-field:has(input.tf-hidden[type="hidden"]) {
   padding: 0px;
 }
 

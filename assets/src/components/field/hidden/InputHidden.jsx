@@ -4,6 +4,7 @@ const InputHidden = props => (
     name={ props.name }
     value={ props.value }
     { ...props.attributes }
+    className={ `tf-hidden ${props.class ?? ''} ${props.className ?? ''}` }
   />
 )
 
