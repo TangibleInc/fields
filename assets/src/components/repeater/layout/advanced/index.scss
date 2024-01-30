@@ -1,5 +1,5 @@
-$advenced-item-index-width: 32px;
-$advenced-item-index-height: 40px;
+$advanced-item-index-width: 32px;
+$advanced-item-index-height: 40px;
 
 .tf-repeater-advanced-label-row {
   display: flex;
@@ -17,9 +17,14 @@ $advenced-item-index-height: 40px;
     flex-wrap: wrap;
   }
 
+  .tf-repeater-advanced-label-row-item:first-child {
+    font-weight: bold;
+    color: $button-primary-color;
+  }
+
   .tf-repeater-advanced-label-row-arrow,
   .tf-repeater-advanced-label-row-index {
-    width: $advenced-item-index-width;
+    width: $advanced-item-index-width;
   }
 }
 
@@ -46,9 +51,9 @@ $advenced-item-index-height: 40px;
   
   .tf-repeater-advanced-label-row-arrow,
   .tf-repeater-advanced-label-row-index {
-    height: $advenced-item-index-height;
+    height: $advanced-item-index-height;
     text-align: center;
-    line-height: $advenced-item-index-height;
+    line-height: $advanced-item-index-height;
   }
 
   .tf-repeater-advanced-label-row-index {
@@ -69,8 +74,11 @@ $advenced-item-index-height: 40px;
   }
   
   .tf-repeater-advanced-overview-item-actions {
-    display: none;
     width: 100%;
+    height: calc($advanced-item-index-height / 2);
+    button {
+      display: none;
+    }
   }
 }
 
@@ -85,11 +93,11 @@ $advenced-item-index-height: 40px;
   display: flex;
 }
 
-.tf-repeater-advanced-overview:hover .tf-repeater-advanced-overview-item-actions {
+.tf-repeater-advanced-overview:hover .tf-repeater-advanced-overview-item-actions button {
   display: initial;
-  width: 100%;
 }
 
+.tf-repeater-advanced-item .tf-repeater-advanced-overview:hover,
 .tf-repeater-advanced-item[data-open="true"] .tf-repeater-advanced-overview {
   background-color: $global-theme-color-lighter-05;
 }
@@ -133,7 +141,10 @@ $advenced-item-index-height: 40px;
 }
 
 .tf-repeater-advanced-row {
-  margin-left: $advenced-item-index-width;
+  margin-left: $advanced-item-index-width;
+  margin-right: $advanced-item-index-width;
+  margin-top: calc($advanced-item-index-width / 2);
+  margin-bottom: calc($advanced-item-index-width / 2);
 
   .tf-repeater-advanced-item-field {
     padding: $section-padding;
@@ -142,4 +153,12 @@ $advenced-item-index-height: 40px;
 
 .tf-repeater-advanced-item-field:has(> div[data-overlay-container="true"]:empty) {
   display: none;
+}
+
+.tf-repeater-advanced-item-field:has(input.tf-hidden[type="hidden"]) {
+  padding: 0px;
+}
+
+.tf-repeater-advanced .tf-repeater-actions {
+  padding: $section-padding;
 }

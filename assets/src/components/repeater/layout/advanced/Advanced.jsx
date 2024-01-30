@@ -8,7 +8,7 @@ const Advanced = ({
   items,
   fields,
   rowFields,
-  getControl,
+  renderItem,
   maxLength,
   dispatch,
   headerFields = false,
@@ -96,7 +96,7 @@ const Advanced = ({
               { beforeRow && beforeRow(item, i, dispatch) }
               { rowFields.map(control => (
                 <div key={ control.name ?? i } className="tf-repeater-advanced-item-field">
-                  { getControl(control, item, i) }
+                  { renderItem(control, item, i) }
                 </div>
               )) }
               { afterRow && afterRow(item, i, dispatch) }

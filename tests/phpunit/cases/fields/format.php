@@ -272,6 +272,24 @@ class FormatField_TestCase extends WP_UnitTestCase {
     $this->assertEquals($_expected, $args['fields'][1]['label']);
   }
 
+  /**
+   * @dataProvider _test_format_groups_args_data
+   */
+  public function test_format_groups_args_elements(string $type) {
+    $args = tangible_fields()->format_groups($type, [
+      'type'   => $type,
+      'fields' => [
+        [ 
+          'type' => 'button', 
+          'button_type' => 'action'
+        ]
+      ]
+    ]);
+
+    $this->assertNotEmpty($args['fields']);
+    $this->assertEquals('action', $args['fields'][0]['buttonType']);
+  }
+
   public function _test_format_dynamic_values_data() {
     return [
       ['color_picker', 'replace', ['color']],

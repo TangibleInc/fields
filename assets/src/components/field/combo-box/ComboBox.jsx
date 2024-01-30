@@ -18,9 +18,9 @@ import {
   Description,
   ListBox,
   Popover
- } from '../../base'
+} from '../../base'
 
- import { getOption } from '../../../utils'
+import { getOption } from '../../../utils'
 
 /**
  * <ComboBox label='Favorite Color'>

@@ -27,6 +27,7 @@ const Button = forwardRef(({
 
   // Some props names are going to be different when generated from PHP
   const content = props.content ?? children
+  const buttonType = props.buttonType ?? 'button'
   const type = props.layout 
     ? (props.layout ? `tf-button-${props.layout}` : '')
     : (props.type ? `tf-button-${props.type}` : '')
@@ -52,7 +53,7 @@ const Button = forwardRef(({
         })
       }}
       ref={ buttonRef } 
-      type='button'
+      type={ buttonType }
     >
       { props.contentVisuallyHidden
         ? <VisuallyHidden>{ content }</VisuallyHidden>

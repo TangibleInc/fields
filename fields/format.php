@@ -154,11 +154,16 @@ $fields->format_groups = function(string $type, array $args) use($fields) : arra
   $args = $fields->format_value($args, 'sub_fields', 'fields'); 
 
   $args['fields'] = array_map(function($args) use($fields) {
-    return $fields->format_args( 
-      $args['name'] ?? '',
-      $args,
-      false
-    );
+    return $fields->is_element( $args['type'] ?? '' )
+      ? $fields->format_element_args( 
+          $args['name'] ?? '', 
+          $args 
+        ) 
+      : $fields->format_args( 
+          $args['name'] ?? '',
+          $args,
+          false
+        );
   }, $args['fields'] ?? []);
 
   return $args;

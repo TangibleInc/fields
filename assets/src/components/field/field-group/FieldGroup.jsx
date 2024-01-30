@@ -5,7 +5,7 @@ import {
 } from 'react'
 
 import { initJSON } from '../../../utils'
-import Control from '../../../Control'
+import FieldGroupItem from './FieldGroupItem'
 
 /**
  * Display other field and save all values in a single json object 
@@ -46,7 +46,7 @@ const FieldGroup = props => {
   useEffect(() => {
     
     props.onChange && props.onChange(value)
-    
+
     if( ! fieldUpdateCallback ) return;
     
     fieldUpdateCallback()
@@ -64,17 +64,12 @@ const FieldGroup = props => {
   return(
     <div className="tf-field-group">
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
-      { fields.map((control, index) => (
+      { fields.map((config, index) => (
         <div key={ index } className="tf-field-group-item">
-          <Control
-            { ...control }
-            value={ value[control.name] ?? '' }
-            itemType={ 'subfield' }
-            onChange={ value => setAttribute(control.name, value) }
-            visibility={{
-              condition : control.condition?.condition ?? false,
-              action    : control.condition?.action ?? 'show',
-            }}
+          <FieldGroupItem
+            values={ value }
+            config={ config }
+            onChange={ value => setAttribute(config.name, value) }
             /**
              * Used by visbility and dependent values to detect changes and access data
              */
@@ -83,7 +78,7 @@ const FieldGroup = props => {
                * The field value can either be from a subvalue or from another field value
                */
               getValue: name => (
-                hasField(name)
+               hasField(name)
                   ? (valueRef.current[name] ?? '')
                   : (props.data.getValue(name) ?? '')
               ),
@@ -97,8 +92,7 @@ const FieldGroup = props => {
             }}
           />
         </div>
-        )
-      )}
+        )) }
     </div>
   )
 }
