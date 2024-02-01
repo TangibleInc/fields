@@ -46,14 +46,20 @@ describe('Repeater with a table layout', () => {
     
     /**
      * 2 particular cases:
-     *  - Text suggestion has 2 label
+     *  - Text suggestion and list have 2 label (because of child combobox)
      *  - Checkbox label is not fully hidden as the checkbox input element needs to always be visible
      */
     if( type === 'checkbox' ) {
       expect(labels.length).toBe(0)
       return;
     }
-    expect(labels.length).toBe(type === 'text-suggestion' ? 2 : 1)
+
+    expect(labels.length).toBe(
+      ['text-suggestion', 'list'].includes(type)  
+        ? 2 
+        : 1
+    )
+
     expect(labels[0].parentNode.getAttribute('style')).toBe(visuallyHiddenStyle)
   })
 })

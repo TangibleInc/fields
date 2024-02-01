@@ -15,16 +15,12 @@ import {
 
 const List = props => {
 
-  /**
-   * [
-   *   {
-   *     value      : 'value1', 
-   *     _canDelete : false, // Optional, true by default
-   *     _enabled   : false  // Optional, true by default
-   *   },
-   *   // ...etc
-   * ]
-   */
+  const emptyItem = { 
+    value: '', 
+    _canDelete: true ,
+    _enabled: true 
+  }
+
   const [items, setItems] = useState(
     initJSON( props.value ?? '[]', [] )
   )
@@ -38,7 +34,13 @@ const List = props => {
   } = useField(props)
 
   const addSelectedItem = () => {
-    setItems([ ...items, { value : selected } ])
+    setItems([ 
+      ...items, 
+      { 
+        ...emptyItem, 
+        value : selected 
+      } 
+    ])
     setSelected('')
     refresh.current = refresh.current + 1 // Simplest way to refresh the inputValue
   }
@@ -50,6 +52,17 @@ const List = props => {
     ])
   }
 
+  const updateItem = (i, name, value) => {
+    setTimeout(() => {
+      setItems([
+        ...items.slice(0, i),
+        { ...items[i], [name]: value },
+        ...items.slice(i + 1)
+      ])
+    })
+
+  }
+
   const getItemText = item => (
     ! props.isAsync
       ? (props.choices[ item ] ?? item)
@@ -59,54 +72,62 @@ const List = props => {
   return(
     <div className="tf-list">
       <input type="hidden" value={ JSON.stringify(items) } { ...fieldProps } />
-      <div className="tf-list-items">
-        <div className="tf-list-header">
-          { props.label &&
-            <Label labelProps={ labelProps } parent={ props }>
-              { props.label }
-            </Label> }
-          <div className="tf-list-header-actions">
-          </div>
-        </div>
+      <div className="tf-list-container">
         <div className="tf-list-items">
-        { items.map((item, i) => (
-          <div key={ item.value } className="tf-list-item">
-            <div className="tf-list-item-text">
-              { getItemText(item.value) }
-            </div>
-            <div key={ item } className="tf-list-item-actions">
-            <Button type="action" onPress={ () => removeItem(i) }>
-              Delete
-            </Button>
-            <Button type="action" onPress={ () => {} }>
-              Activate
-            </Button>
+          <div className="tf-list-header">
+            { props.label &&
+              <Label labelProps={ labelProps } parent={ props }>
+                { props.label }
+              </Label> }
+            <div className="tf-list-header-actions">
             </div>
           </div>
-        )) }
+          <div className="tf-list-items">
+          { items.map((item, i) => (
+            <div key={ item.value } className="tf-list-item">
+              <div className="tf-list-item-text">
+                { getItemText(item.value) }
+              </div>
+              <div key={ item } className="tf-list-item-actions">
+                { item._canDelete && 
+                  <Button 
+                    type="icon-trash" 
+                    onPress={ () => removeItem(i) } 
+                  /> }
+                <Button 
+                  type="icon-eye" 
+                  onPress={ () => updateItem(i, '_enabled', ! item._enabled  ) } 
+                  style={ ! item._enabled 
+                    ? { opacity: 0.5, filter: 'grayscale(60%)' } 
+                    : {} } 
+                />
+              </div>
+            </div>
+          )) }
+          </div>
         </div>
-      </div>
-      <div className='tf-list-search'>
-        <ComboBox 
-          { ...props }
-          key={ refresh.current } 
-          value={ selected }
-          description={ false }
-          labelVisuallyHidden={ true }
-          disabledKeys={ items.map(item => item.value) }
-          multiple={ false }
-          onChange={ item => {
-            if( ! item ) return;
-            setSelected( item )
-          }}
-        />
-        <Button 
-          type="action" 
-          onPress={ addSelectedItem } 
-          isDisabled={ selected === '' }
-        >
-          Add
-        </Button>
+        <div className='tf-list-search'>
+          <ComboBox 
+            { ...props }
+            key={ refresh.current } 
+            value={ selected }
+            description={ false }
+            labelVisuallyHidden={ true }
+            disabledKeys={ items.map(item => item.value) }
+            multiple={ false }
+            onChange={ item => {
+              if( ! item ) return;
+              setSelected( item )
+            }}
+          />
+          <Button 
+            type="action" 
+            onPress={ addSelectedItem } 
+            isDisabled={ selected === '' }
+          >
+            Add
+          </Button>
+        </div>
       </div>
       { props.description &&
         <Description descriptionProps={ descriptionProps } parent={ props }>
