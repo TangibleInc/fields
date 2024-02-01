@@ -1,5 +1,10 @@
 .tf-dynamic-text-input {
-  width: unset;
+  width: auto;
   min-width: calc(#{$field-width} - #{$field-padding-horizontal * 2});
-  height: 48px;
+  height: 24px;
+  padding: 10px;
+
+  & > .cm-editor .cm-line {
+    caret-color: white;
+  }
 }
