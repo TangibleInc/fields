@@ -64,9 +64,6 @@ $fields->render_field = function(
 
   $field = array_merge( $field, $args );
 
-  /**
-   * TODO: Add test for this case
-   */
   if( ! isset($field['value']) && isset($field['fetch_callback']) ) {
     $field['value'] = $fields->fetch_value( $name );
   }
