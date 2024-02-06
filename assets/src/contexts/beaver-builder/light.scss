@@ -61,9 +61,13 @@ $button-color--focus: $button-color;
   }
 }
 
-
-.tf-dynamic-text-input > .cm-editor .cm-content {
-  padding: 12px;
+.tf-dynamic-text-input > .cm-editor  {
+  & .cm-content {
+    padding: 12px;
+  }
+  & .cm-line {
+    caret-color: black;
+  }
 }
 
 .tf-panel.tf-panel-open {

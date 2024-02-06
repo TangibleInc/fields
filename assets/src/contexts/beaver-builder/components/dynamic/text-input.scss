@@ -1,5 +1,6 @@
 .tf-dynamic-text-input {
   width: unset;
   min-width: calc(#{$field-width} - #{$field-padding-horizontal * 2});
-  height: 48px;
+  height: 24px;
+  padding: 10px;
 }
