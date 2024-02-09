@@ -67,8 +67,11 @@ $button-color--focus: $button-color;
   }
 }
 
+$beaver-text-color: white;
+
 .tf-dynamic-text-input > .cm-editor {
   & .cm-line{
     caret-color: white;
   }
 }
+

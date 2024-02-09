@@ -31,9 +31,10 @@ const renderComponent = (props, type = 'field') => (
 
 const renderField = props => (
   <ControlContext.Provider value={{
-    name     : props.context ?? 'default',
-    wrapper  : `tf-context-${props.context ?? 'default'}`,
-    getValue : store.getValue.bind(store) 
+    name            : props.context ?? 'default',
+    wrapper         : `tf-context-${props.context ?? 'default'}`,
+    getValue        : store.getValue.bind(store),
+    portalContainer : props.portalContainer ?? document.body
   }}>
     <Control 
       { ...props } 
@@ -56,7 +57,8 @@ const renderElement = props => (
   <ControlContext.Provider value={{
     name     : props.context ?? 'default',
     wrapper  : `tf-context-${props.context ?? 'default'}`,
-    getValue : store.getValue.bind(store) 
+    getValue : store.getValue.bind(store),
+    portalContainer : props.portalContainer ?? document.body
   }}>
     <Element 
       { ...props } 

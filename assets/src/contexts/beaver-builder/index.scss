@@ -5,8 +5,9 @@
 
   @import './components/calendar.scss';
   @import './components/editor.scss';
+  @import './components/modal.scss';
+  @import './components/popover.scss';
   @import './components/dynamic/text-input.scss';
-  @import './components/repeater/block.scss';
 }
 
 .fl-builder-ui-skin--dark .tf-context-beaver-builder {
@@ -16,8 +17,9 @@
 
   @import './components/calendar.scss';
   @import './components/editor.scss';
+  @import './components/modal.scss';
+  @import './components/popover.scss';
   @import './components/dynamic/text-input.scss';
-  @import './components/repeater/block.scss';
 }
 
 .fl-lightbox form[class*="fl-builder-tangible-module-"] table.fl-form-table {
