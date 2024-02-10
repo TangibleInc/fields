@@ -3,4 +3,9 @@
   min-width: calc(#{$field-width} - #{$field-padding-horizontal * 2});
   height: 24px;
   padding: 10px;
+
+  & > .cm-editor .cm-scroller{
+    overflow-x: hidden;
+  }
+
 }
