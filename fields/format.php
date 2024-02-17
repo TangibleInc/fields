@@ -125,6 +125,7 @@ $fields->format_args = function(
 
     case 'text':
       $args = $fields->format_value($args, 'read_only', 'readOnly');
+      $args = $fields->format_value($args, 'input_mask', 'inputMask');
       $args = $fields->format_dynamic_types($args);
       break;
   }

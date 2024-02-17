@@ -19,11 +19,14 @@ const TextInput = forwardRef(({
   useEffect(() => {
     editor.current = editor.current ?? createInput(
       ref.current,
-      value, 
+      value,
       setValue,
       props.choices,
       getDynamicValueLabel,
-      { readOnly: props.readOnly ?? false }
+      {
+        readOnly: props.readOnly ?? false,
+        inputMask: props.inputMask && props.inputMask !== '' ? props.inputMask : null
+      }
     )
   }, [ref.current])
 
@@ -54,7 +57,7 @@ const TextInput = forwardRef(({
    * - Replace - Only one dynamic value that fully replace the previous field value (no regular text) 
    */
 
-  if( props.dynamic && props.dynamic.getMode() === 'replace' ) {
+  if( !props.inputMask && props.dynamic && props.dynamic.getMode() === 'replace' ) {
     return(
       <FieldWrapper
         { ...props }
@@ -75,13 +78,14 @@ const TextInput = forwardRef(({
       </FieldWrapper> 
     )
   }
-  
+
   return(
     <BaseWrapper
       config={ props.dynamic ?? '' } 
       onValueSelection={ insertDynamicValue }
       buttonType={ 'inside' }
       readOnly={ props.readOnly ?? false }
+      inputMasking={ props.inputMask }
     >
       <input { ...inputProps } type="hidden" value={ value }/>
       <div ref={ ref } className="tf-dynamic-text-input"></div>
