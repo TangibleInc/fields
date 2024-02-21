@@ -136,18 +136,19 @@ const handleMasking = ( view, mask ) => {
     }
 
     console.log('START------------------------')
-    console.log(`Prev state: ${view.startState.doc.toString()}`)
+    // console.log(`Prev state: ${view.startState.doc.toString()}`)
     const newValue = view.startState.doc.toString().split('')
     let lastEnd
     view.changes.iterChanges(( fromA, toA, fromB, toB) => {
       const changes = view.state.doc.sliceString(fromB, toB).split('')
-      const end = Math.min( Math.max( toA, toB ), newValue.length )
+      let end = Math.min( Math.max( toA, toB ), newValue.length )
       let maskIndex = Math.min(fromA, fromB)
       lastEnd = changes.length > 0 ? end : maskIndex
       let changeIndex = 0
 
       console.log(`From: ${JSON.stringify(view.startState.doc.sliceString(fromA, toA))} to: ${JSON.stringify(view.state.doc.sliceString(fromB, toB))}`)
       console.log(`Given ${newValue.join('')}, add ${changes.join('')} from index ${maskIndex} to as far as ${end}`)
+      let matchEnd = false
       while ( maskIndex !== end ) {
         let maskChar = mask[maskIndex]
         let newChar = changes[changeIndex];
@@ -159,6 +160,10 @@ const handleMasking = ( view, mask ) => {
               changeIndex += 1
             } else {
               newValue[maskIndex] = '_'
+              if ( !matchEnd ) {
+                matchEnd = true
+                lastEnd = maskIndex
+              }
             }
             break
           case '9':
@@ -167,6 +172,10 @@ const handleMasking = ( view, mask ) => {
               changeIndex += 1
             } else {
               newValue[maskIndex] = '_'
+              if ( !matchEnd ) {
+                matchEnd = true
+                lastEnd = maskIndex
+              }
             }
             break
           case '*':
@@ -175,16 +184,19 @@ const handleMasking = ( view, mask ) => {
               changeIndex += 1
             } else {
               newValue[maskIndex] = '_'
+              if ( !matchEnd ) {
+                matchEnd = true
+                lastEnd = maskIndex
+              }
             }
             break
           default:
             newValue[maskIndex] = maskChar
             break
         }
-
         maskIndex += 1
       }
-      console.log(`Result => ${newValue.join('')}`)
+      // console.log(`Result => ${newValue.join('')}`)
     })
 
     processedValue = true
@@ -208,13 +220,6 @@ const handleMasking = ( view, mask ) => {
   //     //   break;
   //   }
   // }
-
-  // bbb-22 (6) => 99 (5) => aa9-9_ (dont move pointer of text)
-  // aaa-99 (6) => aaa (3) => ___-__
-  // aaa-99 (6) => a9 (1) =>
-  // ___-__ (6) => a___-__ (7) =>
-  // aa_-99 (6) => aaaa_-99 (8) =>
-  // aaa-99 (6) => aaaaa-99 (9) =>
 }
 
 /**
