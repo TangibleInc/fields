@@ -79,6 +79,7 @@ const createInput = (
         if ( config.inputMask ) {
           if ( view.focusChanged ) {
             if ( view.state.doc.toString().includes('_') ) {
+              view.view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: '' } });
             } else if ( view.state.doc.toString().length === 0 && view.view.hasFocus ) {
               handleMasking( view, config.inputMask )
             }
@@ -88,10 +89,7 @@ const createInput = (
           }
         }
 
-        // if( view.docChanged && onChange ) {
-        //   console.log('sent to onChange')
-        //   onChange(view.state.doc.toString())
-        // }
+        if( view.docChanged && onChange ) onChange(view.state.doc.toString())
       }),
 
       /**
@@ -130,13 +128,10 @@ const handleMasking = ( view, mask ) => {
 
   } else {
     if ( view.startState.doc.toString() === '' || processedValue ) {
-      // console.log(`not processing => ${view.startState.doc.toString()} => ${view.state.doc.toString()} ` )
       processedValue = false
       return
     }
 
-    console.log('START------------------------')
-    // console.log(`Prev state: ${view.startState.doc.toString()}`)
     const newValue = view.startState.doc.toString().split('')
     let lastEnd
     view.changes.iterChanges(( fromA, toA, fromB, toB) => {
@@ -146,8 +141,6 @@ const handleMasking = ( view, mask ) => {
       lastEnd = changes.length > 0 ? end : maskIndex
       let changeIndex = 0
 
-      console.log(`From: ${JSON.stringify(view.startState.doc.sliceString(fromA, toA))} to: ${JSON.stringify(view.state.doc.sliceString(fromB, toB))}`)
-      console.log(`Given ${newValue.join('')}, add ${changes.join('')} from index ${maskIndex} to as far as ${end}`)
       let matchEnd = false
       while ( maskIndex !== end ) {
         let maskChar = mask[maskIndex]
@@ -196,7 +189,6 @@ const handleMasking = ( view, mask ) => {
         }
         maskIndex += 1
       }
-      // console.log(`Result => ${newValue.join('')}`)
     })
 
     processedValue = true
@@ -204,22 +196,7 @@ const handleMasking = ( view, mask ) => {
       changes: { from: 0, to: view.state.doc.length, insert: newValue.join('') },
       selection: { anchor: lastEnd, head: lastEnd }
     });
-    console.log('END------------------------')
   }
-
-  //   switch (maskChar) {
-  //     // case '9':
-  //     //   break;
-  //     // case '*':
-  //     //   if (valueChar.match(/[a-zA-Z0-9]/)) {
-  //     //     newValue.push(valueChar);
-  //     //     valueIndex++;
-  //     //   } else {
-  //     //     newValue.push('_');
-  //     //   }
-  //     //   break;
-  //   }
-  // }
 }
 
 /**
