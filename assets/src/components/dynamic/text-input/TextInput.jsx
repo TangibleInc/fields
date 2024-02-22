@@ -14,13 +14,23 @@ const TextInput = forwardRef(({
 }, ref) => {
 
   const editor = useRef()
-  const [value, setValue] = useState(props.value ?? '')
+
+  let initialValue = props.value
+  if ( props.prefix || props.suffix ) {
+    if ( props.prefix && initialValue.startsWith(props.prefix) ) {
+      initialValue = initialValue.slice(props.prefix.length)
+    }
+    if ( props.suffix && initialValue.endsWith(props.suffix) ) {
+      initialValue = initialValue.slice(0, initialValue.length - props.suffix.length)
+    }
+  }
+  const [value, setValue] = useState(initialValue ?? '')
 
   useEffect(() => {
     editor.current = editor.current ?? createInput(
       ref.current,
       value,
-      setValue,
+      value => { setValue( `${props.prefix??''}${value}${props.suffix??''}` ) },
       props.choices,
       getDynamicValueLabel,
       {
