@@ -30,6 +30,21 @@ const TextInput = forwardRef(({
     )
   }, [ref.current])
 
+  useEffect(() => {
+    if ( props.suffix ) {
+      const suffix = document.createElement('span');
+      suffix.textContent = props.suffix;
+      suffix.setAttribute( 'class', 'tf-dynamic-text-input__affix tf-dynamic-text-input__affix--suffix' )
+      ref.current.appendChild(suffix);
+    }
+    if ( props.prefix ) {
+      const prefix = document.createElement('span');
+      prefix.textContent = props.prefix;
+      prefix.setAttribute( 'class', 'tf-dynamic-text-input__affix tf-dynamic-text-input__affix--prefix' )
+      ref.current.insertBefore(prefix, ref.current.children[0]);
+    }
+  }, [])
+
   const getDynamicValueLabel = string => {
     const value = props.dynamic.parse(string)
     return value && value.type 
@@ -74,21 +89,27 @@ const TextInput = forwardRef(({
         buttonType={ 'inside' }
       >
         <input { ...inputProps } type="hidden" value={ value }/>
-        <div ref={ ref } className="tf-dynamic-text-input"></div>
+        <div
+          ref={ ref }
+          className={`tf-dynamic-text-input${ props.prefix ? ' tf-dynamic-text-input--has-prefix' : '' }${ props.suffix ? ' tf-dynamic-text-input--has-suffix' : '' }`}
+        />
       </FieldWrapper> 
     )
   }
 
   return(
     <BaseWrapper
-      config={ props.dynamic ?? '' } 
+      config={ props.dynamic ?? '' }
       onValueSelection={ insertDynamicValue }
       buttonType={ 'inside' }
       readOnly={ props.readOnly ?? false }
       inputMasking={ props.inputMask }
     >
       <input { ...inputProps } type="hidden" value={ value }/>
-      <div ref={ ref } className="tf-dynamic-text-input"></div>
+      <div
+        ref={ ref }
+        className={`tf-dynamic-text-input${ props.prefix ? ' tf-dynamic-text-input--has-prefix' : '' }${ props.suffix ? ' tf-dynamic-text-input--has-suffix' : '' }`}
+      />
     </BaseWrapper>
   )
 })
