@@ -1,21 +1,37 @@
-import {useRef, useState} from 'react'
+import {useRef, useState, useEffect} from 'react'
 import { Description, Label } from '../../base'
 import { FieldWrapper } from '../../dynamic'
 import DateRangePicker from './DateRangePicker'
 import { useDateRangePickerState } from 'react-stately'
 import { useDateRangePicker } from 'react-aria'
+import { formatValue } from './format'
+import { 
+	today, 
+	getLocalTimeZone,
+} from '@internationalized/date'
+import { initJSON } from '../../../utils'
 
 const DateRange = (props) => {
-	const [ value, setValue] = useState(props.value ?? '')
+	const dateToday = today( getLocalTimeZone() )
 
-	//TODO: Add on change!
-	// useEffect(() => props.onChange && props.onChange(value), [value])
+	const [ value, setValue ] = useState( initJSON( props.value ) ?? '')
 
+	useEffect( () => 
+		props.onChange && props.onChange( value ),
+	[ value ] )
+	
 	const state = useDateRangePickerState({
 		...props,
-		value
+		/**
+		 * useDateRangePickerState only accept a CalendarDate instance as a value 
+		 */
+		value: {
+			start: formatValue( props.value.start, dateToday),
+			end:   formatValue( props.value.end, dateToday),
+		}
 	})
-    const ref = useRef(null)
+	
+    const ref = useRef()
 
 	/**
 	 * https://react-spectrum.adobe.com/react-aria/useDateRangePicker.html

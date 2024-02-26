@@ -1,32 +1,46 @@
+import { 
+  forwardRef
+} from 'react'
 import { useDateRangePicker } from 'react-aria'
-import { useDateRangePickerState } from 'react-stately'
-import DateField from './DateField'
 import { Button, Dialog, Popover } from '../../base'
+import DateField from './DateField'
 import Calendar from './calendar/Calendar'
 
-const DateRangePicker = ( props ) => {
-  const state = useDateRangePickerState(props)
-  const ref = React.useRef(null)
+const DateRangePicker = forwardRef(({
+  dateRangePickerProps,
+  state,
+  ...props
+}, ref) => {
+
   const {
     groupProps,
     startFieldProps,
     endFieldProps,
     buttonProps,
     dialogProps,
-    calendarProps
+    calendarProps,
+    inputProps,
   } = useDateRangePicker( props, state, ref )
 
+  const getStringValue = () => (
+    (state.value && state.value.start && state.value.end) ? JSON.stringify({
+      start: state.value.start.toString(),
+      end: state.value.end.toString()
+    }) : ''
+  )
+  
   return (
     <div className="tf-date-field-container">
-      <div {...groupProps} ref={ref} style={{ display: 'flex' }}>
-        <div >
+      <input { ...inputProps } type='hidden' name={ props.name ?? '' } value={ getStringValue() }  />
+      <div {...groupProps} ref={ref} className='tf-date-group'>
           <DateField {...startFieldProps} />
           <span style={{ padding: '0 4px' }}>–</span>
           <DateField {...endFieldProps} />
           {state.isInvalid &&
             <span aria-hidden="true">🚫</span>}
-        </div>
-        <Button {...buttonProps}>🗓</Button>
+        <Button type="action" { ...buttonProps }>
+          🗓
+        </Button>
       </div>
       {state.isOpen &&
         (
@@ -38,6 +52,6 @@ const DateRangePicker = ( props ) => {
         )}
     </div>
   )
-}
+})
 
 export default DateRangePicker
