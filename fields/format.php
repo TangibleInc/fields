@@ -57,6 +57,7 @@ $fields->format_args = function(
       $args['type'] = 'date-picker';
       $args = $fields->format_value($args, 'future_only', 'futureOnly');
       $args = $fields->format_dynamic_types($args, 'replace', ['date']);
+      $args = $fields->format_value($args, 'date_range', 'dateRange');
       break;
 
     case 'number':

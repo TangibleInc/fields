@@ -1,10 +1,11 @@
 import { useRef } from 'react'
-import { useCalendarState } from 'react-stately'
+import { useCalendarState, useRangeCalendarState } from 'react-stately'
 import { createCalendar } from '@internationalized/date'
 
 import { 
   useCalendar, 
-  useLocale 
+  useLocale, 
+  useRangeCalendar
 } from 'react-aria'
 
 import { Button } from '../../../base'
@@ -13,11 +14,16 @@ import CalendarGrid from './CalendarGrid'
 const Calendar = props => {
 
   const { locale } = useLocale()
-  const state = useCalendarState({
-    ...props,
-    locale,
-    createCalendar
-  })
+  const state = props.dateRange ?
+    useRangeCalendarState({
+      ...props,
+      locale,
+      createCalendar
+    }) : useCalendarState({
+      ...props,
+      locale,
+      createCalendar
+    })
 
   const ref = useRef()
   const { 
@@ -25,11 +31,16 @@ const Calendar = props => {
     prevButtonProps,
     nextButtonProps,
     title
-  } = useCalendar(
-    props,
-    state,
-    ref
-  )
+  } = props.dateRange ?
+    useRangeCalendar (
+        props,
+        state,
+        ref
+    ) : useCalendar(
+      props,
+      state,
+      ref
+    )
 
   return(
     <div className="tf-calendar" { ...calendarProps } ref={ ref }>
