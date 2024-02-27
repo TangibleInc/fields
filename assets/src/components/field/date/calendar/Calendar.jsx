@@ -15,18 +15,17 @@ const Calendar = props => {
 
   const { locale } = useLocale()
 
-  const state = props.dateRange ?
-    useRangeCalendarState({
+  const state = props.dateRange 
+  ? useRangeCalendarState({
       ...props,
       locale,
       visibleDuration: { months: props.multiMonth },
-      createCalendar
-    }) :
-    useCalendarState({
+      createCalendar }) 
+  : useCalendarState({
       ...props,
       locale,
       createCalendar
-    })
+  })
 
   const ref = useRef()
   const { 
@@ -34,17 +33,16 @@ const Calendar = props => {
     prevButtonProps,
     nextButtonProps,
     title
-  } = props.dateRange ?
-    useRangeCalendar (
+  } = props.dateRange 
+  ? useRangeCalendar (
+      props,
+      state,
+      ref )
+  : useCalendar(
       props,
       state,
       ref
-    ) :
-    useCalendar(
-      props,
-      state,
-      ref
-    )
+  )
 
   return(
     <div className="tf-calendar" { ...calendarProps } ref={ ref }>
@@ -59,7 +57,7 @@ const Calendar = props => {
       </div>
       <div className="tf-calendar-tables">
         { ( props.multiMonth === 1 || !props.dateRange ) ? (
-            <CalendarGrid state={state} dateRange={props.dateRange} />
+            <CalendarGrid state={state} />
           ) : (
               Array.from({ length: props.multiMonth }, (_, index) => (
                 <CalendarGrid

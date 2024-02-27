@@ -1,24 +1,39 @@
-import {useRef, useState, useEffect} from 'react'
-import { Description, Label } from '../../base'
-import { FieldWrapper } from '../../dynamic'
-import DateRangePicker from './DateRangePicker'
-import { useDateRangePickerState } from 'react-stately'
-import { useDateRangePicker } from 'react-aria'
-import { formatValue } from './format'
+import { 
+	useRef,
+	useState,
+	useEffect
+} from 'react'
+
+import { 
+	Description, 
+	Label 
+} from '../../base'
+
 import { 
 	today, 
 	getLocalTimeZone,
+	CalendarDate
 } from '@internationalized/date'
+
+import DateRangePicker from './DateRangePicker'
+import { FieldWrapper } from '../../dynamic'
+import { useDateRangePickerState } from 'react-stately'
+import { useDateRangePicker } from 'react-aria'
+import { formatValue } from './format'
 import { initJSON } from '../../../utils'
 
 const DateRange = (props) => {
-	const dateToday = today( getLocalTimeZone() )
 
 	const [ value, setValue ] = useState( initJSON( props.value ) ?? '')
 
-	useEffect( () => 
-		props.onChange && props.onChange( value ),
-	[ value ] )
+	useEffect(() => props.onChange && props.onChange(value), [value])
+
+	const hasFutureOnly = props.futureOnly && props.futureOnly === true
+	const dateToday = today(getLocalTimeZone())
+	const minValue = hasFutureOnly 
+		? dateToday 
+		: new CalendarDate('AD', '1', '1', '1') 
+
 	
 	const state = useDateRangePickerState({
 		...props,
@@ -40,7 +55,7 @@ const DateRange = (props) => {
 		labelProps,
 		descriptionProps,
 		...dateRangePickerProps
-    } = useDateRangePicker(props, state, ref)
+    } = useDateRangePicker({...props, minValue: minValue }, state, ref)
 
 	return (
 	<div className="tf-date-picker">
@@ -57,7 +72,9 @@ const DateRange = (props) => {
 			<DateRangePicker
 				ref={ ref }
 				name={ props.name ?? '' }
+				minValue={ minValue }
 				value={ value }
+				hasFutureOnly={ hasFutureOnly }
 				onChange={ setValue }
 				onFocusChange={ props.onFocusChange ?? false }
 				state={ state }

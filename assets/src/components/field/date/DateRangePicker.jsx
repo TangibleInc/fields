@@ -36,10 +36,12 @@ const DateRangePicker = forwardRef(({
   } = useDateRangePicker( props, state, ref )
 
   const getStringValue = () => (
-    (state.value && state.value.start && state.value.end) ? JSON.stringify({
+    (state.value && state.value.start && state.value.end) 
+    ? JSON.stringify({
       start: state.value.start.toString(),
       end: state.value.end.toString()
-    }) : ''
+    }) 
+    : ''
   )
   
   return (

@@ -13,13 +13,14 @@ const CalendarGrid = ({ state, ...props}) => {
   const startDate = state.visibleRange.start.add(props.offset ?? {})
   const endDate = endOfMonth(startDate)
 
-  const { gridProps, headerProps, weekDays } = isDateRange ? useCalendarGrid(
+  const { gridProps, headerProps, weekDays } = isDateRange 
+  ? useCalendarGrid(
     {
       startDate,
       endDate
     },
-    state
-  ) : useCalendarGrid(
+    state ) 
+  : useCalendarGrid(
     props,
     state
   )
