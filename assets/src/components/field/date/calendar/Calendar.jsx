@@ -14,12 +14,15 @@ import CalendarGrid from './CalendarGrid'
 const Calendar = props => {
 
   const { locale } = useLocale()
+
   const state = props.dateRange ?
     useRangeCalendarState({
       ...props,
       locale,
+      visibleDuration: { months: props.multiMonth },
       createCalendar
-    }) : useCalendarState({
+    }) :
+    useCalendarState({
       ...props,
       locale,
       createCalendar
@@ -33,10 +36,11 @@ const Calendar = props => {
     title
   } = props.dateRange ?
     useRangeCalendar (
-        props,
-        state,
-        ref
-    ) : useCalendar(
+      props,
+      state,
+      ref
+    ) :
+    useCalendar(
       props,
       state,
       ref
@@ -53,7 +57,20 @@ const Calendar = props => {
           <Button { ...nextButtonProps }>&gt;</Button>
         </div>
       </div>
-      <CalendarGrid state={ state } />
+      <div className="tf-calendar-tables">
+        { ( props.multiMonth === 1 || !props.dateRange ) ? (
+            <CalendarGrid state={state} dateRange={props.dateRange} />
+          ) : (
+              Array.from({ length: props.multiMonth }, (_, index) => (
+                <CalendarGrid
+                key={index }
+                state={state}
+                dateRange={props.dateRange}
+                offset={{ months: index }}
+                />
+            ))
+          ) }
+      </div>
     </div>
   )
 }

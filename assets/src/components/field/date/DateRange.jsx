@@ -61,6 +61,7 @@ const DateRange = (props) => {
 				onChange={ setValue }
 				onFocusChange={ props.onFocusChange ?? false }
 				state={ state }
+				multiMonth = { props.multiMonth ?? 1 }
 				dateRangePickerProps={{ 
 					...dateRangePickerProps
 				}}

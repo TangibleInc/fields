@@ -1,5 +1,7 @@
 import { 
-  forwardRef
+  forwardRef,
+  useState,
+  useEffect
 } from 'react'
 import { useDateRangePicker } from 'react-aria'
 import { Button, Dialog, Popover } from '../../base'
@@ -11,6 +13,17 @@ const DateRangePicker = forwardRef(({
   state,
   ...props
 }, ref) => {
+
+  const [focusedDate, setFocusedDate] = useState(props.value)
+
+  /**
+     * Make sure focused date is updated when value from input changes
+     * 
+     * @see https://react-spectrum.adobe.com/react-aria/useCalendar.html#controlling-the-focused-date
+     */
+  useEffect(() => {
+    if( props.value !== focusedDate ) setFocusedDate(props.value)
+  }, [props.value])
 
   const {
     groupProps,
@@ -46,7 +59,11 @@ const DateRangePicker = forwardRef(({
         (
           <Popover state={state} triggerRef={ref} placement="bottom start">
             <Dialog {...dialogProps}>
-              <Calendar {...calendarProps } dateRange={ true } />
+              <Calendar
+                {...calendarProps }
+                dateRange={ true }
+                multiMonth={ props.multiMonth }
+              />
             </Dialog>
           </Popover>
         )}

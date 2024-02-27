@@ -58,6 +58,7 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'future_only', 'futureOnly');
       $args = $fields->format_dynamic_types($args, 'replace', ['date']);
       $args = $fields->format_value($args, 'date_range', 'dateRange');
+      $args = $fields->format_value($args, 'multi_month', 'multiMonth');
       break;
 
     case 'number':
