@@ -1,6 +1,5 @@
 import { 
 	useRef,
-	useState,
 	useEffect
 } from 'react'
 
@@ -19,15 +18,20 @@ import DateRangePicker from './DateRangePicker'
 import { FieldWrapper } from '../../dynamic'
 import { useDateRangePickerState } from 'react-stately'
 import { useDateRangePicker } from 'react-aria'
-import { formatValue } from './format'
-import { initJSON } from '../../../utils'
+import { useCalendarContext } from './calendar/DateRangeCalendarContext'
 
 const DateRange = (props) => {
 
-	const [ value, setValue ] = useState( initJSON( props.value ) ?? '')
+	const { dateValue, setDateValue } = useCalendarContext()
 
-	useEffect(() => props.onChange && props.onChange(value), [value])
+	useEffect(() => {
+		props.onChange && props.onChange(dateValue)
+	}, [dateValue])
 
+	useEffect(()=>{
+		if(dateValue !== props.value && typeof props.value === 'object') setDateValue(props.value)
+	},[props.value])
+	
 	const hasFutureOnly = props.futureOnly && props.futureOnly === true
 	const dateToday = today(getLocalTimeZone())
 	const minValue = hasFutureOnly 
@@ -40,10 +44,7 @@ const DateRange = (props) => {
 		/**
 		 * useDateRangePickerState only accept a CalendarDate instance as a value 
 		 */
-		value: {
-			start: formatValue( props.value.start, dateToday),
-			end:   formatValue( props.value.end, dateToday),
-		}
+		value: dateValue,
 	})
 	
     const ref = useRef()
@@ -55,7 +56,7 @@ const DateRange = (props) => {
 		labelProps,
 		descriptionProps,
 		...dateRangePickerProps
-    } = useDateRangePicker({...props, minValue: minValue }, state, ref)
+    } = useDateRangePicker({...props, minValue: minValue}, state, ref)
 
 	return (
 	<div className="tf-date-picker">
@@ -65,17 +66,16 @@ const DateRange = (props) => {
 		</Label> }
 		<FieldWrapper 
 			{ ...props } 
-			value={ value }
-			onValueSelection={ setValue }
+			value={ dateValue }
 			ref={ ref }
 		>
 			<DateRangePicker
 				ref={ ref }
 				name={ props.name ?? '' }
 				minValue={ minValue }
-				value={ value }
+				value={ dateValue }
 				hasFutureOnly={ hasFutureOnly }
-				onChange={ setValue }
+				onChange={ setDateValue }
 				onFocusChange={ props.onFocusChange ?? false }
 				state={ state }
 				multiMonth = { props.multiMonth ?? 1 }

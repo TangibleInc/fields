@@ -3,7 +3,11 @@ import {
   useLocale 
 } from 'react-aria'
 
-import { getWeeksInMonth, endOfMonth } from '@internationalized/date'
+import { 
+  getWeeksInMonth, 
+  endOfMonth 
+} from '@internationalized/date'
+
 import CalendarCell from './CalendarCell'
 
 const CalendarGrid = ({ state, ...props}) => {
