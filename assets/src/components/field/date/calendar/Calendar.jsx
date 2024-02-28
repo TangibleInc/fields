@@ -10,6 +10,7 @@ import { createCalendar } from '@internationalized/date'
 import { Button } from '../../../base'
 import { useCalendarContext } from './DateRangeCalendarContext'
 import CalendarGrid from './CalendarGrid'
+import DateRangePreset from './Preset'
 
 const Calendar = props => {
 
@@ -59,19 +60,26 @@ const Calendar = props => {
           </div>
         </div>
         <div className="tf-calendar-tables">
-          { ( props.multiMonth === 1 || !props.dateRange ) ? (
-              <CalendarGrid state={state} />
-            ) : (
-                Array.from({ length: props.multiMonth }, (_, index) => (
+          { 
+            ( props.multiMonth === 1 || !props.dateRange ) 
+            ? <CalendarGrid state={state} />
+            : Array.from({ length: props.multiMonth }, (_, index) => (
                   <CalendarGrid
-                  key={index }
-                  state={state}
-                  dateRange={props.dateRange}
-                  offset={{ months: index }}
+                    key={index }
+                    state={state}
+                    dateRange={props.dateRange}
+                    offset={{ months: index }}
                   />
-              ))
-            ) }
+              )) 
+          }
         </div>
+        {
+            props.dateRange && (
+              <div className="tf-calendar-presets">
+                <DateRangePreset />
+              </div>
+            )
+        }
       </div>
   )
 }
