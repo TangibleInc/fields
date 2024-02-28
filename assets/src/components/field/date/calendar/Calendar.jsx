@@ -10,7 +10,7 @@ import { createCalendar } from '@internationalized/date'
 import { Button } from '../../../base'
 import { useCalendarContext } from './DateRangeCalendarContext'
 import CalendarGrid from './CalendarGrid'
-import DateRangePreset from './Preset'
+import DateRangePresets from './Preset'
 
 const Calendar = props => {
 
@@ -48,6 +48,10 @@ const Calendar = props => {
       ref
   )
 
+  console.log({
+    props:props
+  })
+
   return(
       <div className="tf-calendar" { ...calendarProps } ref={ ref }>
         <div className="tf-calendar-header">
@@ -74,9 +78,9 @@ const Calendar = props => {
           }
         </div>
         {
-            props.dateRange && (
+            ( props.dateRange && props.datePresets ) && (
               <div className="tf-calendar-presets">
-                <DateRangePreset />
+                <DateRangePresets />
               </div>
             )
         }

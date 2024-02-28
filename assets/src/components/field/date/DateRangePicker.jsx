@@ -68,6 +68,7 @@ const DateRangePicker = forwardRef(({
               <Calendar
                 {...calendarProps }
                 dateRange={ true }
+                datePresets={ props.datePresets ?? false }
                 pageBehavior="single"
                 multiMonth={ props.multiMonth }
                 focusedValue={focusedDate}
