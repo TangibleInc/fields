@@ -10,7 +10,11 @@
   &:has(.cm-content[contenteditable="false"]) {
     border-color: rgba(black, 0.1);
     color: rgba(black, 0.4);
-    background: rgba(white, 0.5)
+    background: rgba(white, 0.5);
+
+    .tf-dynamic-text-input__affix { 
+      border-color: rgba(black, 0.1); 
+    }
   }
 
   &--has-suffix, &--has-prefix {
@@ -28,6 +32,7 @@
   & > .cm-editor {
     width: 100%;
     height: 100%;
+    justify-content: center;
 
     .cm-line,
     .cm-content {
