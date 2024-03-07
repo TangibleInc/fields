@@ -48,10 +48,6 @@ const Calendar = props => {
       ref
   )
 
-  console.log({
-    props:props
-  })
-
   return(
       <div className="tf-calendar" { ...calendarProps } ref={ ref }>
         <div className="tf-calendar-header">
