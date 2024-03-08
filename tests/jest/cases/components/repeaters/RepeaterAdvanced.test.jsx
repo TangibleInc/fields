@@ -70,4 +70,45 @@ describe('Repeater with an advanced layout', () => {
     expect(within(header).queryByText('Test 1')).toBeFalsy()
     expect(within(header).getByText('Test 2')).toBeTruthy()
   })
+
+  it('renders object inside headers', async () => {
+
+    const user = userEvent.setup()
+    const { container } = render(
+      fields.render({
+        type   : 'repeater',
+        layout : 'advanced',
+        fields : [
+          {
+            name  : 'test',
+            label : 'Test 1',
+            type  : 'text'
+          },
+          {
+            name  : 'test2',
+            label : 'Test 2',
+            type  : 'combo-box',
+            choices : {
+              test1 : 'test1',
+              test2 : 'test2'
+            }         
+          }
+        ],
+        headerFields : [
+          'test2'
+        ],
+      })
+    )
+
+    const header = container.querySelector('.tf-repeater-advanced-header')
+
+    expect(within(header).queryByText('Test 1')).toBeFalsy()
+
+    await user.click(document.querySelectorAll('.tf-button-action')[0])
+
+    expect(document.querySelectorAll('.tf-combo-box-popover'))
+
+    await user.click(within(document).getByText('test1'))
+
+  })
 })
