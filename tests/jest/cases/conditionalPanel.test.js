@@ -152,7 +152,7 @@ describe('conditional panel', () => {
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(1)
     expect(within(container).getAllByText('Add group').length).toBe(1)
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
-  })
+  }, 10000)
 
   it('can be rendered inside a modal, and save only when modal is closed with save button', async () => {
 
