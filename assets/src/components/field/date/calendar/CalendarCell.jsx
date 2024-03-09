@@ -24,7 +24,7 @@ const CalendarCell = ({ state, date }) => {
   let classes = 'tf-calendar-cell'
   if( isSelected ) classes += ' ' + 'tf-calendar-cell-selected' 
   if( isDisabled ) classes += ' ' + 'tf-calendar-cell-disabled' 
-  if( isUnavailable ) classes += ' ' + 'tf-calendar-cell-unavailable' 
+  if( isUnavailable ) classes += ' ' + 'tf-calendar-cell-unavailable'
 
   return(
     <td { ...cellProps }>
