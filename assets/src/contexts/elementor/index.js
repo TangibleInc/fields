@@ -6,36 +6,41 @@
  * To detect if we are in dark mode, we will watch if the dark stylesheet is added or
  * removed from the DOM, and add our own class on the body
  */
+
 const initElementor = () => {
+  const darkStyleSheet = document.getElementById('e-theme-ui-dark-css');
+  const lightStyleSheet = document.getElementById('e-theme-ui-light-css');
+
+  const setMode = theme => {
+    // Remove all existing theme classes
+    document.body.classList.remove('tf-elementor-theme-light', 'tf-elementor-theme-dark');
   
-  const styleSheetName = 'elementor-editor-dark-mode-css'
+    // Add the appropriate theme class
+    document.body.classList.add(`tf-elementor-theme-${theme}`);
+  };
+
+  const checkAndSetMode = () => {
+    setMode(darkStyleSheet && darkStyleSheet.media === 'all' ? 'dark' : 'light');
+  };
+
   const observer = new MutationObserver(mutations => {
-
     for (const mutation of mutations) {
+      if (mutation.type !== 'attributes') continue;
 
-      if( mutation.type !== 'childList' ) continue;
+      const isDarkMode = darkStyleSheet && darkStyleSheet.media === 'all';
+      const isLightMode = lightStyleSheet && lightStyleSheet.media === 'all';
 
-      const toDarkMode = mutation.addedNodes.length === 1 && mutation.addedNodes[0].id === styleSheetName
-      const toLightMode = mutation.removedNodes.length === 1 && mutation.removedNodes[0].id === styleSheetName
-
-      if( toDarkMode ) setMode('dark')
-      if( toLightMode ) setMode('light')
+      if (isDarkMode) setMode('dark');
+      if (isLightMode) setMode('light');
     }
-  })
-  
-  observer.observe(document.body, { childList: true })
-  setMode(document.getElementById(styleSheetName) ? 'dark' : 'light')
-}
+  });
 
-const setMode = theme => {
-  if( theme === 'dark' ) {
-    document.body.classList.remove('tf-elementor-theme-light')
-    document.body.classList.add('tf-elementor-theme-dark')
-  }
-  else if( theme === 'light' ) {
-    document.body.classList.remove('tf-elementor-theme-dark')
-    document.body.classList.add('tf-elementor-theme-light')
-  }
-}
+  // Observe changes to the media attribute of the stylesheets
+  observer.observe(darkStyleSheet, { attributes: true, attributeFilter: ['media'] });
+  observer.observe(lightStyleSheet, { attributes: true, attributeFilter: ['media'] });
 
-export { initElementor }
+  // Set initial mode
+  checkAndSetMode();
+};
+
+export { initElementor };
