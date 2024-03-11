@@ -83,12 +83,10 @@ const createInput = (
             } else if ( view.state.doc.toString().length === 0 && view.view.hasFocus ) {
               handleMasking( view, config.inputMask )
             }
-
           } else if ( view.docChanged && view.view.hasFocus ) {
-            handleMasking( view, config.inputMask )
+            if ( handleMasking( view, config.inputMask ) ) return
           }
         }
-
         if( view.docChanged && onChange ) onChange(view.state.doc.toString())
       }),
 
@@ -129,7 +127,7 @@ const handleMasking = ( view, mask ) => {
   } else {
     if ( view.startState.doc.toString() === '' || processedValue ) {
       processedValue = false
-      return
+      return false
     }
 
     const newValue = view.startState.doc.toString().split('')
@@ -172,7 +170,7 @@ const handleMasking = ( view, mask ) => {
             }
             break
           case '*':
-            if ( newChar && valueChar.match(/[a-zA-Z0-9]/) ) {
+            if ( newChar && newChar.match(/[a-zA-Z0-9]/) ) {
               newValue[maskIndex] = newChar
               changeIndex += 1
             } else {
@@ -196,6 +194,7 @@ const handleMasking = ( view, mask ) => {
       changes: { from: 0, to: view.state.doc.length, insert: newValue.join('') },
       selection: { anchor: lastEnd, head: lastEnd }
     });
+    return true
   }
 }
 
