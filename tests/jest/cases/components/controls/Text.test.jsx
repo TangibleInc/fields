@@ -141,17 +141,14 @@ describe('Text component', () => {
       })
     )
 
-    /**
-     * TODO: Make sure prefix/suffix is applied on initial value (?)
-     */
     const input = container.querySelector('.tf-text').querySelector('input')
-    // expect(input.value).toBe('[prefix]field-value[suffix]') -> returns field-value
+    expect(input.value).toBe('[prefix]field-value[suffix]')// -> returns field-value
     
     const user = userEvent.setup()
     await user.type(container.querySelector('.cm-line'), 'write something before the value ')
     expect(input.value).toBe('[prefix]write something before the value field-value[suffix]')
 
-    // Should we test/support prefi and suffix when dynamic values are enabled?
+    // Should we test/support prefix and suffix when dynamic values are enabled?
   })
 
   it('supports the a mask config', async () => {
