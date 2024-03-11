@@ -52,7 +52,7 @@ const Switch = props => {
         <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
-        <label>
+        <label className="tf-switch-label">
           <VisuallyHidden>
             <input 
               { ...fieldProps }

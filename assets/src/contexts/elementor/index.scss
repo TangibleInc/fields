@@ -1,11 +1,13 @@
 .tf-elementor-theme-dark .tf-context-elementor {
   @import './dark.scss';
   @import '../../components/index.scss';
+  @import './components/switch.scss';
 }
 
 .tf-elementor-theme-light .tf-context-elementor {
   @import './light.scss';
   @import '../../components/index.scss';
+  @import './components/switch.scss';
 }
 
 @import '../../lib/prose-mirror/index.scss';
