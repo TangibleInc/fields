@@ -164,11 +164,8 @@ describe('Text component', () => {
       })
     )
 
-    /**
-     * TODO: Make sure mask is applied on initial value (?)
-     */
     input = container.querySelector('.tf-text').querySelector('input')
-    // expect(input.value).toBe('___-___') -> returns aaa/999
+    expect(input.value).toBe('')
     
     act(() => fields.store.setValue('field-name', ''))
 
@@ -176,13 +173,13 @@ describe('Text component', () => {
 
     input = container.querySelector('.tf-text').querySelector('input')
     await user.type(container.querySelector('.cm-line'), '123/abc')
-    // expect(input.value).toBe('123-abc') -> returns 123/abc_ 
+    expect(input.value).toBe('123/abc')
     
     act(() => fields.store.setValue('field-name', ''))
     
     input = container.querySelector('.tf-text').querySelector('input')
     await user.type(container.querySelector('.cm-line'), '123/456')
-    // expect(input.value).toBe('123/___') -> returns 123/6__
+    expect(input.value).toBe('123/___')
   })
 
 })

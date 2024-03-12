@@ -198,6 +198,32 @@ const handleMasking = ( view, mask ) => {
   }
 }
 
+const matchesMask = ( text, mask ) => {
+  if ( text.length !== mask.length ) return false
+
+  for ( let i = 0; i < text.length; i++ ) {
+    let maskChar = mask[i]
+    let textChar = text[i];
+
+    switch ( maskChar ) {
+      case 'a':
+        if ( !textChar.match(/[a-zA-Z]/) ) return false
+        break
+      case '9':
+        if ( !textChar.match(/[0-9]/) ) return false
+        break
+      case '*':
+        if ( !textChar.match(/[a-zA-Z0-9]/) ) return false
+        break
+      default:
+        if ( textChar !== maskChar ) return false
+        break
+    }
+  }
+
+  return true
+}
+
 /**
  * Convert array of item or sections to an object, so that we can easily access the label
  * associated to each value
@@ -248,5 +274,5 @@ class DynamicString extends WidgetType {
 }
 
 export {
-  createInput
+  createInput, matchesMask
 }

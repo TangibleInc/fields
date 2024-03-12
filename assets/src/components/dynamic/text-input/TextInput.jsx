@@ -5,7 +5,7 @@ import {
   forwardRef
 } from 'react'
 
-import { createInput } from '../../../codemirror/'
+import { createInput, matchesMask } from '../../../codemirror/'
 import { BaseWrapper, FieldWrapper } from '..'
 
 const TextInput = forwardRef(({
@@ -20,6 +20,7 @@ const TextInput = forwardRef(({
     if ( props.prefix && !initialValue.startsWith(props.prefix) ) initialValue = props.prefix + initialValue
     if ( props.suffix && !initialValue.endsWith(props.suffix) ) initialValue = initialValue + props.suffix
   }
+  if ( props.inputMask ) initialValue = matchesMask( initialValue, props.inputMask ) ? initialValue : ''
   const [value, setValue] = useState(initialValue)
 
   useEffect(() => {
