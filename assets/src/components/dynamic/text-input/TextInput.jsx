@@ -20,7 +20,11 @@ const TextInput = forwardRef(({
     if ( props.prefix && !initialValue.startsWith(props.prefix) ) initialValue = props.prefix + initialValue
     if ( props.suffix && !initialValue.endsWith(props.suffix) ) initialValue = initialValue + props.suffix
   }
-  if ( props.inputMask ) initialValue = matchesMask( initialValue, props.inputMask ) ? initialValue : ''
+  if ( props.inputMask ) {
+    const start = props.prefix ? props.prefix.length : 0
+    const end = props.suffix ? initialValue.length - props.suffix.length : initialValue.length
+    initialValue = matchesMask( initialValue.slice(start, end), props.inputMask ) ? initialValue : ''
+  }
   const [value, setValue] = useState(initialValue)
 
   useEffect(() => {
