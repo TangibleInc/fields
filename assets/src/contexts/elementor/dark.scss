@@ -4,8 +4,10 @@
 $field-padding-vertical: 0; 
 $field-padding-horizontal: 12px; 
 $field-padding: $field-padding-vertical $field-padding-horizontal;
-$field-border: solid 1px #64666a;
+$field-border: 1px solid #64666a;
 $field-background: #34383c;
+
+$field-editor-border: 2px solid rgba(255, 255, 255, 0.2);
 
 $button-background: #34383c;
 $button-border-color: #64666a;
