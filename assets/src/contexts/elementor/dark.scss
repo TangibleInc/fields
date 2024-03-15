@@ -17,6 +17,12 @@ $button-background--hover: #64666a;
 $button-border-color--hover: #fff;
 $button-color--hover: #fff;
 
+$section-border-width: 1px;
+$section-border-style: solid;
+$section-border-color: #64666a;
+$section-border: $section-border-width $section-border-style $section-border-color;
+$section-background: #34383c;
+
 @import '../default/mixins.scss';
 
 // We only need to defined the mixins we need to overwrite
@@ -47,4 +53,9 @@ $button-color--hover: #fff;
     background: $button-background--hover;
     color: $button-color--hover;
   }
+}
+
+@mixin section {
+  border: $section-border;
+  background: $section-background;
 }
