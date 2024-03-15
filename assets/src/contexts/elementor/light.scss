@@ -7,6 +7,8 @@ $field-padding: $field-padding-vertical $field-padding-horizontal;
 
 $field-editor-border: 2px solid rgba(0, 0, 0, 0.2);
 
+$label-spacer: $global-spacer-xs;
+
 $button-background: #eee;
 $button-background--hover: #e2e2e2;
 $button-border-color--hover: transparent;
@@ -16,10 +18,12 @@ $button-color--hover: $button-color;
 
 // We only need to defined the mixins we need to overwrite
 @mixin label {
+  display: inline-block;
   color: $label-font-color;
   font-size: $label-font-size;
   font-style: $label-font-style;
   font-weight: $label-font-weight;
+  margin-bottom: $label-spacer;
 }
 
 @mixin description {

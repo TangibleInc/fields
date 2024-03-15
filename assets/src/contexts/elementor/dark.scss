@@ -9,6 +9,8 @@ $field-background: #34383c;
 
 $field-editor-border: 2px solid rgba(255, 255, 255, 0.2);
 
+$label-spacer: $global-spacer-xs;
+
 $button-background: #34383c;
 $button-border-color: #64666a;
 $button-border: $button-border-type $button-border-size $button-border-color;
@@ -27,10 +29,12 @@ $section-background: #34383c;
 
 // We only need to defined the mixins we need to overwrite
 @mixin label {
+  display: inline-block;
   color: $label-font-color;
   font-size: $label-font-size;
   font-style: $label-font-style;
   font-weight: $label-font-weight;
+  margin-bottom: $label-spacer;
 }
 
 @mixin description {
