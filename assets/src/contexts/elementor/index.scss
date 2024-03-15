@@ -1,12 +1,16 @@
 .tf-elementor-theme-dark .tf-context-elementor {
   @import './dark.scss';
   @import '../../components/index.scss';
+
+  @import './components/number.scss';
   @import './components/dynamic/text-input.scss';
 }
 
 .tf-elementor-theme-light .tf-context-elementor {
   @import './light.scss';
   @import '../../components/index.scss';
+
+  @import './components/number.scss';
   @import './components/dynamic/text-input.scss';
 }
 

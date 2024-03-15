@@ -10,7 +10,10 @@ $field-background: #34383c;
 $button-background: #34383c;
 $button-border-color: #64666a;
 $button-border: $button-border-type $button-border-size $button-border-color;
-$button-color: white;
+$button-color: #fff;
+$button-background--hover: #64666a;
+$button-border-color--hover: #fff;
+$button-color--hover: #fff;
 
 @import '../default/mixins.scss';
 
@@ -37,4 +40,9 @@ $button-color: white;
   padding: $button-padding;
   height: calc(#{$button-height} - #{$button-border-size *  2}); // Remove border
   cursor: pointer;
+
+  &:hover{
+    background: $button-background--hover;
+    color: $button-color--hover;
+  }
 }
