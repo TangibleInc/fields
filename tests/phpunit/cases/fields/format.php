@@ -140,7 +140,8 @@ class FormatField_TestCase extends WP_UnitTestCase {
         'value_off' => 'valueOff',
       ]],
       'text' => ['text', [
-        'read_only' => 'readOnly'
+        'read_only' => 'readOnly',
+        'input_mask' => 'inputMask',
       ]],
       'repeater' => ['repeater', [
         'use_switch' => 'useSwitch',
