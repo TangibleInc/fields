@@ -142,7 +142,7 @@ describe('Text component', () => {
     )
 
     const input = container.querySelector('.tf-text').querySelector('input')
-    expect(input.value).toBe('[prefix]field-value[suffix]')// -> returns field-value
+    expect(input.value).toBe('[prefix]field-value[suffix]')
     
     const user = userEvent.setup()
     await user.type(container.querySelector('.cm-line'), 'write something before the value ')

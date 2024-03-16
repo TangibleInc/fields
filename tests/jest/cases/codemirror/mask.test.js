@@ -2,14 +2,8 @@ import '../../../../assets/src/index.jsx'
 import { userEvent } from '@testing-library/user-event'
 import { createInput } from '../../../../assets/src/codemirror/index.js'
 
-/**
- * TODO: Fix alphanumeric masks
- */
 describe('codeMirror - Mask', () => {
 
-   /**
-   * Start by common test, field type specific tests are after
-   */
   const masks = [
 
     // Numerical
@@ -46,7 +40,8 @@ describe('codeMirror - Mask', () => {
     [ 'abc/def', 'aaa/aaa', 'abc/def' ],
     [ 'abc/123', 'aaa/aaa', 'abc/___' ],
     
-    // Alphanumeric - Not passing currently
+    // Alphanumeric
+
     [ '0', '***', '0__' ],
     [ '01', '***', '01_' ],
     [ '012', '***', '012' ],
@@ -67,12 +62,14 @@ describe('codeMirror - Mask', () => {
 
     // Mixed
 
-    [ 'a', 'a9', 'a_' ],
-    [ '1', 'a9', '__' ],
-    [ 'a1', 'a9', 'a1' ],
-    [ 'aa', 'a9', 'a_' ],
-    // TODO -> Add mixed with alphanumeric when fixed
-    
+    [ 'a', 'a9*', 'a__' ],
+    [ '1', 'a9*', '___' ],
+    [ 'a1', 'a9*', 'a1_' ],
+    [ 'aa', 'a9*', 'a__' ],
+    [ 'aa', 'a9*', 'a__' ],
+    [ 'a1a', 'a9*', 'a1a' ],
+    [ 'a11', 'a9*', 'a11' ],
+
   ]
 
   test.each(masks)('supports inputMask - Test with params %s, %s, %s', async (value, mask, expected) => {
