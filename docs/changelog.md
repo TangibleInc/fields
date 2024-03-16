@@ -1,3 +1,24 @@
+# 20240314
+
+- Fields:
+    - Conditional panel: Advanced - Add support for label
+    - ComboBox: Improve CSS when used inside a repeater table
+    - Repeater: Advanced - Improve CSS, add support for repeatable and min-length
+    - Repeater: Table - Improve CSS
+    - Value: If fetch callback defined and no value pass, populate field with callback value
+    - Popover: Possibility to define a portalContainer other than body
+    - Editor: Prosemirror - Improve CSS
+    - Text: Prosemirror - Improve CSS
+    - Date picker: Add support for date range values
+- Elements:
+    - Button: Improve CSS, add buttonPressed event, add support for buttonType
+    - Modal: Add element
+    - Add possibility to use elements inside repeaters and field groups
+- Dependent values:
+    - Fix issue when control is dependent and props contains an array
+- Contexts:
+    - Improve support for dark mode in BeaverBuilder
+
 # 20240113
 
 - Fields:
