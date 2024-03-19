@@ -12,7 +12,7 @@ import FieldGroupItem from './FieldGroupItem'
  */
 const FieldGroup = props => {
 
-  const [onChangeCallback, setChangeCallback] = useState(false)
+  const [onChangeCallback, setChangeCallback] = useState([])
   const [fieldUpdateCallback, setFieldUpdateCallback] = useState(false)
 
   const [value, setValue] = useState(
@@ -32,14 +32,16 @@ const FieldGroup = props => {
       [name]: attributeValue
     })
 
-    if( ! onChangeCallback ) return;
+    if( onChangeCallback.length === 0 ) return;
 
     /**
      * Save the callback to use it in the useEffect so that it's executed
      * after state update 
      */
     setFieldUpdateCallback(() => 
-      () => onChangeCallback(name)
+      () => {
+        onChangeCallback.map(callback => callback(name))
+      }
     )
   }
 
@@ -87,7 +89,10 @@ const FieldGroup = props => {
                * when a subfield value change
                */
               watcher: evaluationCallback => {
-                setChangeCallback(() => name => evaluationCallback(name) )
+                setChangeCallback(prevValue => [
+                  ...prevValue,
+                  name => evaluationCallback(name) 
+                ])
               }
             }}
           />
