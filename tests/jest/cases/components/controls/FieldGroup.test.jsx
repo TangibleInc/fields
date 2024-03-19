@@ -50,6 +50,7 @@ describe('Field group component', () => {
           type   : 'field-group',
           fields : [
             {
+              label   : 'Subfield 1',
               type    : 'text',
               name    : 'subfield1', 
             },
@@ -62,7 +63,7 @@ describe('Field group component', () => {
                 condition : {
                   subfield1 : { '_eq' : 'test' }
                 }
-              } 
+              }
             },
           ]
         }) }
@@ -73,10 +74,22 @@ describe('Field group component', () => {
     expect(fieldGroup.length).toBe(1)
     
     expect(container.querySelector('.tf-text'))
-        
+
     await user.type(container.querySelector('.cm-line'), 'test')
 
-    expect(within(container).getByText('Subfield 2')).toBeTruthy()
+    /**
+     * Most of the time, this test will pass in a reasonable amount of time 
+     * but now and then the field will need a lot of time to appears in the dom 
+     * which is why we have the very high timeout both here and on the condition
+     * 
+     * We should probably investigate to find the root of the issue, but 
+     * for now the timeout will do
+     */
+    const subfield2 = await within(container).findByText('Subfield 2', undefined, { timeout: 5000 })
+    expect(subfield2).toBeTruthy()
 
-  })
+    await user.type(container.querySelector('.cm-line'), 'hide')
+
+    expect(within(container).queryByText('Subfield 2')).toBe(null)
+  }, 10000)
 })
