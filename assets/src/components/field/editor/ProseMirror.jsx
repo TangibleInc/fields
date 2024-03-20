@@ -33,8 +33,6 @@ const ProseMirror = (props) => {
     setValue(props.value)
   }, [props.value])
 
-  useEffect(() => props.onChange && props.onChange(value), [value])
-
   useEffect(() => {
     const mySchema = new Schema({
       nodes: addListNodes(schema.spec.nodes, 'paragraph block*', 'block'),
@@ -57,14 +55,18 @@ const ProseMirror = (props) => {
       dispatchTransaction: (transaction) => {
         const newState = editorView.state.apply(transaction)
         editorView.updateState(newState)
-  
-        const rendered = editorView.dom.innerHTML
-        setValue(rendered)
+
+        editorView.dom.onblur = () => {
+          const rendered = editorView.dom.innerHTML;
+          setValue(rendered);
+        };
       },
     })
   
     return () => editorView.destroy()
   }, [])
+
+  useEffect(() => props.onChange && props.onChange(value), [value])
   
   return (
     <div className="tf-editor">

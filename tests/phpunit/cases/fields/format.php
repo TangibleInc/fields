@@ -115,7 +115,10 @@ class FormatField_TestCase extends WP_UnitTestCase {
         'use_modal' => 'useModal'
       ]],
       'date_picker' => ['date_picker', [
-        'future_only' => 'futureOnly'
+        'future_only' => 'futureOnly',
+        'date_range' => 'dateRange',
+        'multi_month' => 'multiMonth',
+        'date_presets' => 'datePresets'
       ]],
       'number' => ['number', [
         'min' => 'minValue',
@@ -137,7 +140,8 @@ class FormatField_TestCase extends WP_UnitTestCase {
         'value_off' => 'valueOff',
       ]],
       'text' => ['text', [
-        'read_only' => 'readOnly'
+        'read_only' => 'readOnly',
+        'input_mask' => 'inputMask',
       ]],
       'repeater' => ['repeater', [
         'use_switch' => 'useSwitch',
