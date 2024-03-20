@@ -57,6 +57,7 @@ describe('Field group component', () => {
               fields  : [
                 {
                   type  : 'text',
+                  label : 'Text label',
                   name  : 'advanced_text'
                 }
               ] 
