@@ -4,7 +4,6 @@ import {
 } from 'react-dom'
 
 import { createContext } from 'react'
-import { initContexts } from './contexts/'
 
 import { 
   triggerEvent,
@@ -91,8 +90,6 @@ const init = () => {
   for( const element in elements ) {
     initItem(element, elements[ element ], 'elements')
   }
-
-  initContexts()
 }
 
 const initItem = (name, props, type) => {  
