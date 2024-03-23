@@ -60,7 +60,6 @@ describe('window.tangibleFields', () => {
     expect(within(container).getByText('Content')).toBeTruthy()
   })
 
-
   it('can trigger and subscribe to events', () => {
     
     expect(typeof fields.event).toBe('function')
