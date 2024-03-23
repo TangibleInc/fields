@@ -1,4 +1,4 @@
-.tf-elementor-theme-dark .tf-context-elementor {
+body.elementor-editor-active:has(#e-theme-ui-dark-css[media="all"]) .tf-context-elementor {
   @import './dark.scss';
   @import '../../components/index.scss';
 
@@ -12,9 +12,10 @@
   @import './components/base/expandable-panel.scss';
   @import './components/base/button.scss';
   @import './components/dynamic/text-input.scss';
+  @import './components/switch.scss';
 }
 
-.tf-elementor-theme-light .tf-context-elementor {
+body.elementor-editor-active:has(#e-theme-ui-dark-css[media="none"]) .tf-context-elementor {
   @import './light.scss';
   @import '../../components/index.scss';
 
@@ -28,6 +29,42 @@
   @import './components/base/expandable-panel.scss';
   @import './components/base/button.scss';
   @import './components/dynamic/text-input.scss';
+  @import './components/switch.scss';
+}
+
+body.elementor-editor-active:has(#e-theme-ui-dark-css[media="(prefers-color-scheme: dark)"]) .tf-context-elementor {
+  @media (prefers-color-scheme: dark) {
+    @import './dark.scss';
+    @import '../../components/index.scss';
+    
+    @import './components/number.scss';
+    @import './components/editor.scss';
+    @import './components/gallery.scss';
+    @import './components/radio.scss';
+    @import './components/dimensions.scss';
+    @import './components/field-group.scss';
+    @import './components/checkbox.scss';
+    @import './components/base/expandable-panel.scss';
+    @import './components/base/button.scss';
+    @import './components/dynamic/text-input.scss';
+    @import './components/switch.scss';
+  }
+  @media (prefers-color-scheme: light) {
+    @import './light.scss';
+    @import '../../components/index.scss';
+    
+    @import './components/number.scss';
+    @import './components/editor.scss';
+    @import './components/gallery.scss';
+    @import './components/radio.scss';
+    @import './components/dimensions.scss';
+    @import './components/field-group.scss';
+    @import './components/checkbox.scss';
+    @import './components/base/expandable-panel.scss';
+    @import './components/base/button.scss';
+    @import './components/dynamic/text-input.scss';
+    @import './components/switch.scss';
+  }
 }
 
 @import '../../lib/prose-mirror/index.scss';

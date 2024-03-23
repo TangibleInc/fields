@@ -18,8 +18,14 @@ const Advanced = ({
 
   const [openSection, setOpenSection] = useState(false)
   const headerColumns = headerFields
-    ? fields.filter(field => headerFields.includes(field.name))
+    ? fields.filter(field => headerFields.includes(field.name) || headerFields.includes(field.name + '.label') )
     : fields
+
+  // This function is here to add future format. 
+  // Maybe we'll need to add more context for the header in the future, and not all of them will have a label.
+  const formatHeaderFieldsObject = (item, columnName) => {
+    return item[columnName].label === '' ? JSON.stringify(item[ columnName ]) : item[columnName].label
+  }
   
   return(
     <div className='tf-repeater-advanced'>
@@ -50,7 +56,7 @@ const Advanced = ({
                       { item[ column.name ] && item[ column.name ] !== '' 
                         ? (
                           typeof item[ column.name ] === 'object' 
-                            ? JSON.stringify(item[ column.name ]) 
+                            ? formatHeaderFieldsObject(item, column.name)
                             : item[ column.name ]
                           )
                         : <i>Empty</i> }
