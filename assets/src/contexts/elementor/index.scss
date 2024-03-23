@@ -1,21 +1,25 @@
 body.elementor-editor-active:has(#e-theme-ui-dark-css[media="all"]) .tf-context-elementor {
   @import './dark.scss';
   @import '../../components/index.scss';
+  @import './components/switch.scss';
 }
 
 body.elementor-editor-active:has(#e-theme-ui-dark-css[media="none"]) .tf-context-elementor {
   @import './light.scss';
   @import '../../components/index.scss';
+  @import './components/switch.scss';
 }
 
 body.elementor-editor-active:has(#e-theme-ui-dark-css[media="(prefers-color-scheme: dark)"]) .tf-context-elementor {
   @media (prefers-color-scheme: dark) {
     @import './dark.scss';
     @import '../../components/index.scss';
+    @import './components/switch.scss';
   }
   @media (prefers-color-scheme: light) {
     @import './light.scss';
     @import '../../components/index.scss';
+    @import './components/switch.scss';
   }
 }
 
