@@ -1,0 +1,12 @@
+.tf-number-button-group {
+    padding: 0;
+
+    .tf-button-number {
+        background: $button-background;
+
+        &:hover {
+            background: $button-background--hover;
+            color: $button-color--hover;
+        }
+    }
+}
