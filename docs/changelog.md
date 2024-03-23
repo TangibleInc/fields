@@ -1,3 +1,12 @@
+# 20240322
+
+- Fields:
+    - Field group: Fix value not being saved when repeater used inside a field group
+    - Field group: Fix issue when multiple visibilty conditions
+    - Repeater: Advanced - Add support async combobox in item preview
+- Contexts:
+    - Various improvment for Elementor context
+
 # 20240314
 
 - Fields:
