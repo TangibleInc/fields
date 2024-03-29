@@ -30,7 +30,14 @@ const replaceFieldValue = (conditions, getValue) => {
       continue;
     }
 
-    const fieldValue = getValue(name)
+    let fieldValue = ''
+    const isPartial = name.includes('.')
+    if ( isPartial ) {
+      const [fieldName, fieldAttribute] = name.split('.')
+      fieldValue = getValue(fieldName)[fieldAttribute] ?? ''
+    } else {
+      fieldValue = getValue(name)
+    }
     formatedConditions[fieldValue] = conditions[name]
   }
 
@@ -41,11 +48,10 @@ const replaceFieldValue = (conditions, getValue) => {
  * Get fields that will affect the visibility of the current conditions
  */
 const getTriggerFields = conditions => {
-  
+
   const fields = []
 
   for( const name in conditions ) {
-    
     if( ['_and', '_or'].includes(name) ) {
 
       for( const part in conditions[name] ) {
@@ -59,7 +65,9 @@ const getTriggerFields = conditions => {
     fields.push(name)
   }
 
-  return fields.flat()
+  return fields.flat().map(
+    name => name.split('.')[0] // . is used when accessing value of an object
+  )
 }
 
 export {
