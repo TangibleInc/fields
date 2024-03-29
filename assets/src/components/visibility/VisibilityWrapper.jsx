@@ -63,8 +63,7 @@ const VisibilityWrapper = ({
     if( data.watcher ) {
       data.watcher(fieldName => {
         // Avoid unnecessary evaluations
-        const result = triggerFields.filter( (name) => name.split('.')[0] === fieldName )
-        if( result.length !== 0 ) evaluateVisibility()
+        if( triggerFields.includes(fieldName) ) evaluateVisibility()
       })
     }
   }, [])

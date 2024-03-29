@@ -48,6 +48,7 @@ const replaceFieldValue = (conditions, getValue) => {
  * Get fields that will affect the visibility of the current conditions
  */
 const getTriggerFields = conditions => {
+
   const fields = []
 
   for( const name in conditions ) {
@@ -64,7 +65,9 @@ const getTriggerFields = conditions => {
     fields.push(name)
   }
 
-  return fields.flat()
+  return fields.flat().map(
+    name => name.split('.')[0] // . is used when accessing value of an object
+  )
 }
 
 export {

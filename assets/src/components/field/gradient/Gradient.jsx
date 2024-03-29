@@ -130,6 +130,7 @@ const Gradient = props => {
                     <div className="tf-gradient-colors">
                       { value.colors?.map((color, i) => (
                         <div 
+                          key={ i }
                           className="tf-gradient-color tf-color-area-thumb"
                           style={{ background: value.colors[i] }} 
                           onClick={ () => setEditColor(i) }
