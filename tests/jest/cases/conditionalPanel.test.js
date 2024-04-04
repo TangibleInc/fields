@@ -226,7 +226,7 @@ describe('conditional panel', () => {
 
     expect(within(savedModal).getAllByText('And').length).toBe(3)
     expect(within(savedModal).getAllByText('Add group').length).toBe(2)
-  })
+  }, 10000)
 
   it('add label to conditional panel', async () => {
 

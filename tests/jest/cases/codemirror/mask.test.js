@@ -81,7 +81,7 @@ describe('codeMirror - Mask', () => {
     const codeMirror = createInput(
       container, 
       '', () => {}, [], '',
-      { inputMask : mask }
+      { inputMask : mask }, ''
     )
 
     codeMirror.contentDOM.focus()

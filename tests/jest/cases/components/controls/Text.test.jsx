@@ -1,7 +1,8 @@
 import '../../../../../assets/src/index.jsx'
 import { 
   act, 
-  render 
+  render,
+  within 
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
 import { 
@@ -180,6 +181,21 @@ describe('Text component', () => {
     input = container.querySelector('.tf-text').querySelector('input')
     await user.type(container.querySelector('.cm-line'), '123/456')
     expect(input.value).toBe('123/___')
+  })
+
+  it('supports placeholder', () => {
+    
+    const { container } = render( 
+      fields.render({
+        name       : 'field-name', 
+        type       : 'text', 
+        label      : 'Label',
+        placeholder: 'Example'
+      })
+    )
+
+    const placeholder = container.querySelector('.cm-placeholder')
+    expect(placeholder.innerHTML).toBe('Example')
   })
 
 })
