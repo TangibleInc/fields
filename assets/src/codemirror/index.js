@@ -3,8 +3,10 @@ import {
   EditorView,
   ViewPlugin,
   MatchDecorator,
-  WidgetType
+  WidgetType,
+  placeholder
 } from '@codemirror/view'
+import { EditorState } from "@codemirror/state";
 
 import { dynamicValueRegex } from '../dynamic-values'
 
@@ -17,12 +19,14 @@ const createInput = (
   onChange = false,
   sections = [],
   getLabel = (match, items) => (items[ match ] ?? match),
-  config = {}
+  config = {},
+  customPlaceholder = ''
 ) => (
   new EditorView({
     doc: initialText,
     parent: element,
     extensions: [
+      placeholder(customPlaceholder),
       /**
        * Needed to display a string like [[this]] as a span element instead
        *

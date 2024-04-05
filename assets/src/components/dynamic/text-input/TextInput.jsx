@@ -41,7 +41,8 @@ const TextInput = forwardRef(({
       {
         readOnly: props.readOnly ?? false,
         inputMask: props.inputMask && props.inputMask !== '' ? props.inputMask : null
-      }
+      },
+      props.placeholder ?? ''
     )
   }, [ref.current])
 
