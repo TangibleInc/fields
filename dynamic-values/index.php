@@ -22,4 +22,5 @@ require_once __DIR__ . '/enqueue.php';
 require_once __DIR__ . '/permissions.php';
 require_once __DIR__ . '/register.php';
 require_once __DIR__ . '/render.php';
+require_once __DIR__ . '/utils.php';
 require_once __DIR__ . '/categories/index.php';
