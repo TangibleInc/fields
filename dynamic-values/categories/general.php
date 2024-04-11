@@ -19,7 +19,7 @@ $fields->register_dynamic_value([
     if ( $settings['date_type'] === 'now' ) { 
         $timestamp = time();
     } else {
-        $timestamp = mktime(date('H'), date('i'), date('s'), $custom_date[1], $custom_date[2], $custom_date[0]);
+        $timestamp = apply_filters( 'general_dynamic_values_date_callback_filter', mktime(date('H'), date('i'), date('s'), $custom_date[1], $custom_date[2], $custom_date[0]), $settings );
     }
 
     if ( $settings['delay'] === 'after' || $settings['delay'] === 'before' ) {
@@ -91,10 +91,10 @@ $fields->register_dynamic_value([
         'name'  => 'date_type',
         'type'  => 'select',
         'label' => 'Date type',
-        'choices' => [
+        'choices' => apply_filters('general_dynamic_values_date_select_type_filter', [ 
             'now'       => 'Now',
-            'custom'    => 'Custom',
-        ]
+            'custom'    => 'Custom'
+        ])
     ],
     [
         'name'  => 'custom_date_picker',
