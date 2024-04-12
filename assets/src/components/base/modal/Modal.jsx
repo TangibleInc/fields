@@ -25,11 +25,11 @@ const Modal = ({ state, children, ...props }) => {
   const { modalProps, underlayProps } = useModalOverlay(props, state, ref)
 
   return (
-    <Overlay>
+    <Overlay portalContainer={ control.portalContainer }>
       <div className={ control.wrapper }>
-        <div className='tf-modal' { ...underlayProps }>
-          <div className='tf-modal-container' ref={ref} {...modalProps}>
-            {children}
+        <div className='tf-modal' { ...underlayProps } style={{ zIndex: 1000000 }}>
+          <div className='tf-modal-container' ref={ ref } { ...modalProps }>
+            { children }
           </div>
         </div>
       </div>

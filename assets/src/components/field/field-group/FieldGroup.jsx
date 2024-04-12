@@ -5,14 +5,14 @@ import {
 } from 'react'
 
 import { initJSON } from '../../../utils'
-import Control from '../../../Control'
+import FieldGroupItem from './FieldGroupItem'
 
 /**
  * Display other field and save all values in a single json object 
  */
 const FieldGroup = props => {
 
-  const [onChangeCallback, setChangeCallback] = useState(false)
+  const [onChangeCallback, setChangeCallback] = useState([])
   const [fieldUpdateCallback, setFieldUpdateCallback] = useState(false)
 
   const [value, setValue] = useState(
@@ -32,21 +32,23 @@ const FieldGroup = props => {
       [name]: attributeValue
     })
 
-    if( ! onChangeCallback ) return;
+    if( onChangeCallback.length === 0 ) return;
 
     /**
      * Save the callback to use it in the useEffect so that it's executed
      * after state update 
      */
     setFieldUpdateCallback(() => 
-      () => onChangeCallback(name)
+      () => {
+        onChangeCallback.map(callback => callback(name))
+      }
     )
   }
 
   useEffect(() => {
     
     props.onChange && props.onChange(value)
-    
+
     if( ! fieldUpdateCallback ) return;
     
     fieldUpdateCallback()
@@ -64,17 +66,12 @@ const FieldGroup = props => {
   return(
     <div className="tf-field-group">
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
-      { fields.map((control, index) => (
+      { fields.map((config, index) => (
         <div key={ index } className="tf-field-group-item">
-          <Control
-            { ...control }
-            value={ value[control.name] ?? '' }
-            controlType={ 'subfield' }
-            onChange={ value => setAttribute(control.name, value) }
-            visibility={{
-              condition : control.condition?.condition ?? false,
-              action    : control.condition?.action ?? 'show',
-            }}
+          <FieldGroupItem
+            values={ value }
+            config={ config }
+            onChange={ value => setAttribute(config.name, value) }
             /**
              * Used by visbility and dependent values to detect changes and access data
              */
@@ -83,7 +80,7 @@ const FieldGroup = props => {
                * The field value can either be from a subvalue or from another field value
                */
               getValue: name => (
-                hasField(name)
+               hasField(name)
                   ? (valueRef.current[name] ?? '')
                   : (props.data.getValue(name) ?? '')
               ),
@@ -92,13 +89,15 @@ const FieldGroup = props => {
                * when a subfield value change
                */
               watcher: evaluationCallback => {
-                setChangeCallback(() => name => evaluationCallback(name) )
+                setChangeCallback(prevValue => [
+                  ...prevValue,
+                  name => evaluationCallback(name) 
+                ])
               }
             }}
           />
         </div>
-        )
-      )}
+        )) }
     </div>
   )
 }

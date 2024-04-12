@@ -4,13 +4,15 @@ import { VisuallyHidden } from 'react-aria'
 const Description = ({ 
   descriptionProps, 
   parent,
-  children
+  children,
+  ...props
 }) => {
   const Wrapper = parent?.descriptionVisuallyHidden ? VisuallyHidden : Fragment
+  const content = props.content ?? children
   return(
     <Wrapper>
       <div className="tf-description" { ...descriptionProps }>
-        { children }
+        { content }
       </div>
     </Wrapper>
   )

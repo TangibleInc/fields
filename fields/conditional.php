@@ -1,5 +1,4 @@
 <?php
-// @todo Move to fields/conditional.php
 
 defined('ABSPATH') or die();
 

@@ -29,6 +29,7 @@ const Control = ({
     ...(props.wrapper ?? {}),
     className: `${props?.wrapper?.class ?? ''} ${control.wrapper}`
   }
+  delete wrapper.class
 
   const [value, setValue] = useState(props.value ?? '')
 
@@ -58,7 +59,7 @@ const Control = ({
     <OverlayProvider { ...wrapper }>
       <VisibilityWrapper visibility={ visibility } data={ data }>
         <RenderWrapper 
-          controlType={ props.controlType ?? 'field' }
+          itemType={ props.itemType ?? 'field' }
           name={ props.name ?? false } 
           setValue={ setValue }
         >
@@ -66,11 +67,11 @@ const Control = ({
           <DependendWrapper 
             refresh={ refreshRender } 
             data={ data } 
-            controlProps={ props } 
+            itemProps={ props } 
           >
-          { controlProps => 
+          { itemProps => 
             <ControlComponent 
-              { ...controlProps } 
+              { ...itemProps } 
               value={ value }
               onChange={ onChange }
               data={ data }

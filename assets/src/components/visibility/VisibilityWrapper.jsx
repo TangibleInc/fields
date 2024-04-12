@@ -47,7 +47,7 @@ const VisibilityWrapper = ({
     addEventListener('valueChange', field => {
 
       // We rely on data.watcher for subfield changes (@see below)
-      if( field.props?.controlType === 'subfield' ) return;
+      if( field.props?.itemType === 'subfield' ) return;
       
       // Avoid unnecessary evaluations
       if( ! triggerFields.includes(field.name) ) return;  

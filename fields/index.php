@@ -4,6 +4,10 @@ defined('ABSPATH') or die();
 
 $fields->registered_fields = [];
 
+require_once __DIR__ . '/conditional.php';
+require_once __DIR__ . '/format.php';
+require_once __DIR__ . '/store.php';
+
 /**
  * Register a field.
  *
@@ -60,9 +64,13 @@ $fields->render_field = function(
 
   $field = array_merge( $field, $args );
 
+  if( ! isset($field['value']) && isset($field['fetch_callback']) ) {
+    $field['value'] = $fields->fetch_value( $name );
+  }
+
   $args = $fields->format_args( $name, $field );
 
-  $fields->enqueue_field( $name, $args );
+  $fields->enqueue_item( $name, 'fields', $args );
 
   if ( ! empty ( $field['render_callback'] ) ) {
     return $field['render_callback']( $args, $field );

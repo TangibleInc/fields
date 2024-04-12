@@ -17,7 +17,7 @@ import {
 } from '../base'
 
 import Layouts from './layout' 
-import Control from '../../Control'
+import Item from './common/Item'
 
 const Repeater = props => {
 
@@ -80,22 +80,18 @@ const Repeater = props => {
   const values = useRef()
   values.current = items
 
-  const getControl = (control, item, i) => (
-    <Control
-      key={ item.key + i} 
-      value={ item[control.name] ?? '' }
+  const renderItem = (config, row, i) => (
+    <Item
+      key={ row.key + i }
+      values={ row }
+      config={ config }
       onChange={ value => dispatch({ 
         type     : 'update',
         item     : i,
-        control  : control.name,
+        control  : config.name,
         value    : value,
-        callback : () => triggerRowCallbackEvents(item.key, control.name)
+        callback : () => triggerRowCallbackEvents(row.key, config.name)
       }) }
-      controlType={ 'subfield' }
-      visibility={{
-        action    : control.condition?.action ?? 'show',
-        condition : control.condition?.condition ?? false
-      }}
       /**
        * Used by visbility and dependent values to detect changes and access data 
        */
@@ -117,17 +113,16 @@ const Repeater = props => {
           prevValue => [ 
             ...prevValue,
             (rowKey, fieldName) => {
-              rowKey === item.key && control.name 
-                ? callback(fieldName, item.key) 
+              rowKey === row.key && config.name 
+                ? callback(fieldName, row.key) 
                 : null
             } 
           ]
         )
       }}
-      { ...control }
     />
   )
-
+  
   /**
    * There are some values we don't want to save (like the bulk action checbox)
    */
@@ -145,39 +140,45 @@ const Repeater = props => {
   return(
     <div className={ `tf-repeater tf-repeater-${layout}`}>
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(getSavedValue()) } />
-      {props.label && <Title level={2} className='tf-repeater-title'>{ props.label }</Title>}
-      <Layout
-        items={ items }
-        fields={ fields }
-        dispatch={ dispatch }
-        rowFields={ rowFields }
-        getControl={ getControl }
-        maxLength = { repeatable ? maxLength : undefined }
-        title={ props.sectionTitle ?? false }
-        useSwitch={ props.useSwitch }
-        useBulk={ props.useBulk }
-        afterRow={ props.afterRow }
-        beforeRow={ props.beforeRow }
-      />
-      { repeatable && (
-        <div className="tf-repeater-actions">
-          <Button 
-            type="action" 
-            onPress={ () => dispatch({ type: 'add' }) } 
-            isDisabled={ maxLength <= items.length }
-          >
-            Add item
-          </Button>
-          <ModalTrigger 
-            title="Confirmation"
-            label="Remove all"
-            isDisabled={ items.length <= 0 }
-            onValidate={ () => dispatch({ type: 'clear' })}
-          >
-            Are you sure you want to clear all item(s)?
-          </ModalTrigger>
-        </div>
-      )}
+      { props.label && 
+        <Title level={2} className='tf-repeater-title'>
+          { props.label }
+        </Title> }
+      <div className={ `tf-repeater-container tf-repeater-${layout}-container` }>
+        <Layout
+          items={ items }
+          fields={ fields }
+          dispatch={ dispatch }
+          rowFields={ rowFields }
+          headerFields={ props.headerFields }
+          renderItem={ renderItem }
+          maxLength = { repeatable ? maxLength : undefined }
+          title={ props.sectionTitle ?? false }
+          useSwitch={ props.useSwitch }
+          useBulk={ props.useBulk }
+          afterRow={ props.afterRow }
+          beforeRow={ props.beforeRow }
+        />
+        { repeatable && (
+          <div className="tf-repeater-actions">
+            <Button 
+              type="action" 
+              onPress={ () => dispatch({ type: 'add' }) } 
+              isDisabled={ maxLength <= items.length }
+            >
+              Add item
+            </Button>
+            <ModalTrigger 
+              title="Confirmation"
+              label="Remove all"
+              isDisabled={ items.length <= 0 }
+              onValidate={ () => dispatch({ type: 'clear' })}
+            >
+              Are you sure you want to clear all item(s)?
+            </ModalTrigger>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

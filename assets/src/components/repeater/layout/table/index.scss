@@ -1,17 +1,46 @@
-.tf-repeater-table {
+.tf-repeater-table-container {
   display: flex;
   flex-direction: column;
-  width: fit-content;
-  padding: 4px;
+  width: 100%;
     
   border: $field-border;
   border-radius: $field-border-radius;
-  background: $field-background;
+  border-color: rgba($field-border-color, 0.5);
+
+  .tf-repeater-actions {
+    width: 100%;
+    padding: 4px;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    padding: $section-padding;
+  }
 
   table {
+    width: 100%;
+    padding: 4px;
+
     th, tr {
       min-height: $field-height;
       padding: 2px;
+    }
+
+    th {
+      height: $field-height;
+      text-align: left;
+    }
+
+    td > div {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .tf-repeater-row-actions {
+    width: 1%;
+    & > div {
+      display: inline-flex;
+      gap: $global-spacer-xs;
     }
   }
   

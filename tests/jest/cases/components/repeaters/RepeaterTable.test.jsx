@@ -12,7 +12,7 @@ describe('Repeater with a table layout', () => {
   commonRepeaterTests('table')
 
   // Remove control with subfields + hidden because no label 
-  const controlTypes = Object.keys(fields.types._types).filter(type => (
+  const controlTypes = Object.keys(fields.types._types['control']).filter(type => (
     ! ['accordion', 'field-group', 'hidden', 'repeater', 'conditional-panel'].includes(type)
   ))
 
@@ -56,5 +56,4 @@ describe('Repeater with a table layout', () => {
     expect(labels.length).toBe(type === 'text-suggestion' ? 2 : 1)
     expect(labels[0].parentNode.getAttribute('style')).toBe(visuallyHiddenStyle)
   })
-  
 })

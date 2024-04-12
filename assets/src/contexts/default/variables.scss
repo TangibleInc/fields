@@ -40,6 +40,7 @@ $field-border-color: $global-theme-gray-30;
 $field-border: $field-border-width $field-border-style $field-border-color;
 $field-border-radius: $global-border-radius;
 $field-background: white;
+$field-background-secondary: #F0F0F0;
 $field-focus-color: $global-theme-color;
 $field-font-size: inherit;
 $field-font-style: inherit;
@@ -71,7 +72,7 @@ $button-border-radius: 4px;
 $button-color: #505050;
 $button-padding: 0 12px;
 $button-height: 32px;
-$button-primary-color: white;
+$button-primary-color: $global-theme-color;
 $button-primary-text: inherit;
 
 $button-background--hover: white;

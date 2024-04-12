@@ -136,15 +136,36 @@ $fields->render_field(
 );
 ```
 
-The `render_field` method returns an html span, like this one:
+The `render_field` method returns an html div, like this one:
 
 ```html
-<div id="field_name-63618923e7118"></div>
+<div id="tangible-field-{{name}}-{{uniqid}}"></div>
 ```
 
 It also enqueue our JavaScript dependencies, which will use this span to render the field on the client side.
 
-## Field types
+## Render elements
+
+The difference between a field and an element is that the element won't have any value.
+
+To render an element, we use `$fields->render_element`. It takes 2 arguments:
+
+```php
+$fields->render_element(
+  'field_name',
+  $args,
+);
+```
+
+The `render_element` method returns an html div, like this one:
+
+```html
+<div id="tangible-element-{{name}}-{{uniqid}}"></div>
+```
+
+It also enqueue our JavaScript dependencies, which will use this span to render the field on the client side.
+
+## References
 
 For the complete list of field types and the associated syntax, see documentation on [this site](https://develop.tangible.one/sites/fields/wp-admin/admin.php?page=tangible-field-example-settings).
 

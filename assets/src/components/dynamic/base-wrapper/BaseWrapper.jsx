@@ -146,8 +146,8 @@ const BaseWrapper = props => {
    * - Inside the input (only used for text currently)
    */
   const buttonType = props.buttonType ?? 'outside'
-  const hasInsert  = buttonType === 'outside' || (! props.remove || props.remove.isDisabled)
-  const hasClear   = buttonType === 'outside' || (props.remove && props.remove.isDisabled === false)
+  const hasInsert  = !( props.readOnly || props.inputMasking ) && (buttonType === 'outside' || (! props.remove || props.remove.isDisabled))
+  const hasClear   = !( props.readOnly || props.inputMasking ) && (buttonType === 'outside' || (props.remove && props.remove.isDisabled === false))
 
   const classes = `tf-dynamic-wrapper tf-dynamic-wrapper-buttons-${buttonType} ${props.className ?? ''}`
 

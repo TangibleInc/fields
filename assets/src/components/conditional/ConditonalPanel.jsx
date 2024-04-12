@@ -77,6 +77,7 @@ const ConditionalPanel = props => {
   return(
     <>
       <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(props.useModal ? savedValue : value) } />
+      <div className="tf-label" >{ props.label ?? '' }</div>
       <Wrapper { ...wrapperProps }>
         <div className="tf-conditional-panel">
           <div className="tf-conditional-panel-container">

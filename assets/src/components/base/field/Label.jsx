@@ -4,13 +4,15 @@ import { VisuallyHidden } from 'react-aria'
 const Label = ({ 
   labelProps, 
   parent,
-  children
+  children,
+  ...props
 }) => {
   const Wrapper = parent?.labelVisuallyHidden ? VisuallyHidden : Fragment
+  const content = props.content ?? children
   return(
     <Wrapper>
       <label className='tf-label' { ...labelProps }>
-        { children }
+        { content }
       </label>
     </Wrapper>
   )

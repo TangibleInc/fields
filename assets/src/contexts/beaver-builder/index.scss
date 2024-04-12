@@ -4,6 +4,10 @@
   @import '../../components/index.scss';
 
   @import './components/calendar.scss';
+  @import './components/editor.scss';
+  @import './components/modal.scss';
+  @import './components/popover.scss';
+  @import './components/dynamic/text-input.scss';
 }
 
 .fl-builder-ui-skin--dark .tf-context-beaver-builder {
@@ -12,6 +16,15 @@
   @import '../../components/index.scss';
 
   @import './components/calendar.scss';
+  @import './components/editor.scss';
+  @import './components/modal.scss';
+  @import './components/popover.scss';
+  @import './components/dynamic/text-input.scss';
+}
+
+.fl-lightbox form[class*="fl-builder-tangible-module-"] table.fl-form-table {
+  max-width: calc(100% - 35px);
+  table-layout: fixed;
 }
 
 @import '../../lib/prose-mirror/index.scss';

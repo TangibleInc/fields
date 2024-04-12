@@ -57,6 +57,9 @@ $fields->format_args = function(
       $args['type'] = 'date-picker';
       $args = $fields->format_value($args, 'future_only', 'futureOnly');
       $args = $fields->format_dynamic_types($args, 'replace', ['date']);
+      $args = $fields->format_value($args, 'date_range', 'dateRange');
+      $args = $fields->format_value($args, 'multi_month', 'multiMonth');
+      $args = $fields->format_value($args, 'date_presets', 'datePresets');
       break;
 
     case 'number':
@@ -101,6 +104,7 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'use_switch', 'useSwitch');
       $args = $fields->format_value($args, 'use_bulk', 'useBulk');
       $args = $fields->format_value($args, 'section_title', 'sectionTitle');
+      $args = $fields->format_value($args, 'header_fields', 'headerFields');
       break;
     
     case 'field_group':
@@ -124,6 +128,7 @@ $fields->format_args = function(
 
     case 'text':
       $args = $fields->format_value($args, 'read_only', 'readOnly');
+      $args = $fields->format_value($args, 'input_mask', 'inputMask');
       $args = $fields->format_dynamic_types($args);
       break;
   }
@@ -151,11 +156,16 @@ $fields->format_groups = function(string $type, array $args) use($fields) : arra
   $args = $fields->format_value($args, 'sub_fields', 'fields'); 
 
   $args['fields'] = array_map(function($args) use($fields) {
-    return $fields->format_args( 
-      $args['name'] ?? '',
-      $args,
-      false
-    );
+    return $fields->is_element( $args['type'] ?? '' )
+      ? $fields->format_element_args( 
+          $args['name'] ?? '', 
+          $args 
+        ) 
+      : $fields->format_args( 
+          $args['name'] ?? '',
+          $args,
+          false
+        );
   }, $args['fields'] ?? []);
 
   return $args;

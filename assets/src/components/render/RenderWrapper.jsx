@@ -18,8 +18,8 @@ import {
  */
 const RenderWrapper = ({ 
   children,
-  controlType, 
-  setValue,
+  itemType, 
+  setValue = false,
   name
 }) => {
 
@@ -30,7 +30,7 @@ const RenderWrapper = ({
   const fieldValueChanged = field => {
     if( ! name || name !== field.name ) return;
     refreshRender()
-    setValue(field.value)
+    if( setValue ) setValue(field.value)
   }
 
   const maybeRerender = fieldName => {
@@ -40,7 +40,7 @@ const RenderWrapper = ({
   useEffect(() => {
 
     // Only support forced refresh for regular field for now (no subfields)
-    if( controlType !== 'field' ) return;
+    if( itemType !== 'field' ) return;
 
     const callbackValuechanged = addEventListener('_refreshFieldValue', fieldValueChanged)
     const callbackRerender = addEventListener('_fieldRerender', maybeRerender)

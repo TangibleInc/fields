@@ -1,0 +1,28 @@
+.tf-editor {
+    .ProseMirror-menubar-wrapper {
+        position: relative;
+        height: auto;
+        overflow: unset;
+        background-color: $field-background;
+        border: $field-editor-border;
+    }
+    .ProseMirror-menubar-spacer {
+        height: auto !important;
+    } 
+    .ProseMirror-menubar {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        background: $field-background;
+        color: $field-font-color;
+        min-height: 60px !important;
+        border-bottom: $field-editor-border;
+    }
+    .ProseMirror.ProseMirror-example-setup-style {
+        overflow: auto;
+        min-height: 60px;
+        max-height: 100px;
+        margin-top: 63px;
+        margin-bottom: 0;
+    }
+}

@@ -43,6 +43,11 @@
   }
 }
 
+.cm-content[contenteditable="false"] .tf-dynamic-text-item {
+  filter: grayscale(1);
+}
+
+
 .tf-dynamic-text-input {
   @include field;
 	padding: 0;

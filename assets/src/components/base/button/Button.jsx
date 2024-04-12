@@ -8,11 +8,16 @@ import {
   VisuallyHidden
 } from 'react-aria'
 
+import { triggerEvent } from '../../../events'
+
 /**
  * @see https://react-spectrum.adobe.com/react-aria/useButton.html
  */
 
-const Button = forwardRef((props, ref) => {
+const Button = forwardRef(({ 
+  children,
+  ...props 
+}, ref) => {
 
   /**
    * Use new ref if no ref forwarded
@@ -20,10 +25,15 @@ const Button = forwardRef((props, ref) => {
   const _ref = useRef()
   const buttonRef = ref ?? _ref
 
-  const { buttonProps } = useButton(props, ref)
-  const { children } = props
+  // Some props names are going to be different when generated from PHP
+  const content = props.content ?? children
+  const buttonType = props.buttonType ?? 'button'
+  const type = props.layout 
+    ? (props.layout ? `tf-button-${props.layout}` : '')
+    : (props.type ? `tf-button-${props.type}` : '')
 
-  const type = props.type ? `tf-button-${props.type}` : ''
+  const { buttonProps } = useButton(props, ref)
+
   const context = props.context ? `tf-button-is-${props.context}` : ''
   const classes = `${type} ${context} ${props.className ?? ''}`
   
@@ -33,13 +43,21 @@ const Button = forwardRef((props, ref) => {
     <CustomTag 
       className={ classes } 
       style={ props.style } 
-      { ...buttonProps } 
+      { ...buttonProps }
+      onClick={ event => {
+        buttonProps.onClick(event)
+        triggerEvent('buttonPressed', {
+          name  : props.name ?? false,
+          props : props,
+          event : event,
+        })
+      }}
       ref={ buttonRef } 
-      type='button'
+      type={ buttonType }
     >
       { props.contentVisuallyHidden
-        ? <VisuallyHidden>{ children }</VisuallyHidden>
-        : children }
+        ? <VisuallyHidden>{ content }</VisuallyHidden>
+        : content }
     </CustomTag>
   )
 })

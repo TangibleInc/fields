@@ -15,16 +15,12 @@
     transform: scale(0.7);
   }
 
-  .tf-context-default {
-
-    .tf-dynamic-text-input {
-      width: unset;
-      min-width: 176px;
-    }
-
-  }
 }
 
 .tf-repeater-block-item-field {
   padding: 1em;
+}
+
+.tf-repeater-block-item-field:has(> div[data-overlay-container="true"]:empty) {
+  display: none;
 }

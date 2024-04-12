@@ -1,0 +1,28 @@
+.ProseMirror-menubar {
+  box-sizing: border-box;
+}
+
+.tf-editor {
+  .ProseMirror-menubar-wrapper {
+    position: relative;
+    height: auto;
+    overflow: unset;
+  }
+
+  .ProseMirror-menubar-spacer {
+    height: auto !important;
+  }
+
+  .ProseMirror-menubar {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+  }
+
+  .ProseMirror.ProseMirror-example-setup-style {
+    overflow: auto;
+    max-height: 100px;
+    margin-top: 63px;
+    margin-bottom: 0;
+  }
+}

@@ -1,0 +1,23 @@
+.tf-dynamic-text-input {
+    $field-width: 100%;
+    width: $field-width;
+    padding: 0;
+
+    >.cm-editor {
+
+        ::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: $button-border-color;
+            border-radius: 5px;
+        }
+    }
+
+    &>.cm-editor {
+        .cm-line {
+            height: 1.5em;
+        }
+    }
+}

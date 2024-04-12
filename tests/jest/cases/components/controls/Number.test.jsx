@@ -1,4 +1,4 @@
-import '../../../../assets/src/index.jsx'
+import '../../../../../assets/src/index.jsx'
 import { within } from '@testing-library/react'
 import { 
   rendersWithMinimal,
@@ -6,7 +6,7 @@ import {
   rendersLabelAndDescription,
   renderHasElement,
   renderHasNotElement
-} from '../../utils/fields.js'
+} from '../../../utils/fields.js'
 
 describe('Number component', () => {
 

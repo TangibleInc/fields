@@ -15,7 +15,7 @@ const Table = ({
   fields,
   dispatch,
   rowFields,
-  getControl,
+  renderItem,
   maxLength,
   useBulk
 }) => (
@@ -54,31 +54,34 @@ const Table = ({
           </td>
           { rowFields.map((control, j) => (
             <td key={ `${item.key}-${j}` }>
-              { getControl(control, item, i) }
+              { renderItem(control, item, i) }
             </td>
           )) }
-          <td>
-            { maxLength !== undefined &&
-              <Button
-                type="action"
-                isDisabled={ maxLength <= items.length }
-                onPress={() => dispatch({ 
-                  type : 'clone',
-                  item : item
-                })}
-              >
-                Clone
-              </Button> }
-          </td>
-          <td>
-            { maxLength !== undefined &&
-              <ModalTrigger 
-                label="Remove"
-                title="Confirmation"
-                onValidate={ () => dispatch({ type : 'remove', item : i })}
-              >
-                Are you sure you want to remove item { i + 1 }?
-              </ModalTrigger> }
+          <td className='tf-repeater-row-actions'>
+            <div>
+              { maxLength !== undefined &&
+                <Button
+                  type="action"
+                  isDisabled={ maxLength <= items.length }
+                  onPress={() => dispatch({ 
+                    type : 'clone',
+                    item : item
+                  })}
+                >
+                  Clone
+                </Button> }
+              { maxLength !== undefined &&
+                <ModalTrigger 
+                  label="Remove"
+                  title="Confirmation"
+                  onValidate={ () => dispatch({ type : 'remove', item : i })}
+                  buttonProps={{
+                    type: 'danger'
+                  }}
+                >
+                  Are you sure you want to remove item { i + 1 }?
+                </ModalTrigger> }
+              </div>
           </td>
         </tr>
       )) }

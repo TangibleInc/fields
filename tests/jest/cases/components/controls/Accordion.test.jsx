@@ -1,4 +1,4 @@
-import '../../../../assets/src/index.jsx'
+import '../../../../../assets/src/index.jsx'
 import userEvent from '@testing-library/user-event'
 import { render } from '@testing-library/react'
 

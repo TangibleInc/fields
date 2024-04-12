@@ -60,3 +60,20 @@ $button-color--focus: $button-color;
     border-color: #e6eaed !important;
   }
 }
+
+$beaver-text-color: black;
+
+.tf-dynamic-text-input > .cm-editor  {
+  & .cm-content {
+    padding: 12px;
+  }
+  & .cm-line {
+    caret-color: black;
+  }
+}
+
+.tf-panel.tf-panel-open {
+  .tf-button-action.tf-panel-header { border-bottom: 1px solid #E6EAED; }
+  .tf-panel-footer { border-top: 1px solid #E6EAED; }
+}
+

@@ -49,6 +49,7 @@ const FieldWrapper = forwardRef(({
         }
       }}
       buttonType={ props.buttonType ?? 'outside' }
+      readOnly={ props.readOnly ?? false }
     >
       { isDynamic
         ? 

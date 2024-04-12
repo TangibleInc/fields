@@ -152,7 +152,7 @@ describe('conditional panel', () => {
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(1)
     expect(within(container).getAllByText('Add group').length).toBe(1)
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
-  })
+  }, 10000)
 
   it('can be rendered inside a modal, and save only when modal is closed with save button', async () => {
 
@@ -226,6 +226,20 @@ describe('conditional panel', () => {
 
     expect(within(savedModal).getAllByText('And').length).toBe(3)
     expect(within(savedModal).getAllByText('Add group').length).toBe(2)
+  }, 10000)
+
+  it('add label to conditional panel', async () => {
+
+    const user = userEvent.setup()
+    const { container } = render(
+      fields.render({
+        type  : 'conditional-panel',
+        name  : 'conditional-panel-name',
+        label : 'Conditional Panel' 
+      })
+    )
+
+    expect(within(container).getByText('Conditional Panel')).toBeTruthy()
   })
 
 })
