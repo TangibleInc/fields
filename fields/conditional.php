@@ -6,7 +6,8 @@ defined('ABSPATH') or die();
  * Evaluates a conditional field.
  */
 $fields->evaluate_conditional = function(
-  array $conditional
+  array $conditional,
+  array $dynamic_value_config = []
 ) use ($fields) {
 
   $result_or = false;
@@ -18,7 +19,7 @@ $fields->evaluate_conditional = function(
           $condition->left_value => [
             $condition->operator => $condition->right_value
           ]
-        ]) && $result_and;
+        ], $dynamic_value_config) && $result_and;
       }
     }
     $result_or = $result_or || $result_and;
@@ -37,9 +38,11 @@ $fields->condition_has_dynamic_value = function($value) use($fields) : bool {
  * See Conditions_TestCase::_test_fields_evaluate_condition_data for examples.
  */
 $fields->evaluate_condition = function(
-  array $condition
+  array $condition,
+  array $dynamic_value_config = []
 ) use ( $fields ) : bool {
   $part_results = [];
+  $dynamic_value_config['action'] = 'evaluate';
 
   if ( empty( $condition ) ) {
     return true;
@@ -47,7 +50,7 @@ $fields->evaluate_condition = function(
 
   foreach ( $condition as $lho => $_parts ) {
     if ( $fields->condition_has_dynamic_value($lho) ) {
-      $lho = $fields->render_value($lho, [ 'action' => 'evaluate' ]);
+      $lho = $fields->render_value($lho, $dynamic_value_config);
     }
 
     // Relations.
@@ -72,7 +75,7 @@ $fields->evaluate_condition = function(
     // Comparison.
     foreach ( $_parts as $op => $rho ) {
       if ( $fields->condition_has_dynamic_value($rho) ) {
-        $rho = $fields->render_value($rho, [ 'action' => 'evaluate' ]);
+        $rho = $fields->render_value($rho, $dynamic_value_config);
       }
       switch ( $op ) {
         case '_eq':
