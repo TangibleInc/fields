@@ -27,6 +27,13 @@ const getAsyncProps = props => {
       const results = props.ajaxAction
         ? await Tangible?.ajax(props.ajaxAction, data)
         : await get(props.searchUrl ?? '', data) 
+
+      if ( results.length === 0 ) {
+        results.push({
+          id : 'noResults',
+          title : 'No results'
+        })
+      } 
       
       const formatedResults = props.mapResults
         ? mapResults(results, props.mapResults)

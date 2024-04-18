@@ -39,12 +39,11 @@ const ListBox = props => {
         ref={ listBoxRef }
         className='tf-list-box'
       >
-        { state.collection.keyMap.size !== 0 ? 
-          [...state.collection].map(item => (
+        {[...state.collection].map(item => (
             item.type === 'section'
               ? <Section key={ item.key ?? item.level } section={ item } state={ state } shouldUseVirtualFocus />
               : <Option key={ item.key ?? item.name } item={ item } state={ state } shouldUseVirtualFocus />
-          )) : <div className='tf-list-box-no-results' >No results</div> }
+          ))}
       </ul>
       <DismissButton onDismiss={ state.close } />
     </>

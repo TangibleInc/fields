@@ -75,7 +75,8 @@ const ComboBox = props => {
     selectedKey: props.isAsync && props.selectedKey?.value 
       ? props.selectedKey.value 
       : (props.selectedKey ?? ''),
-    defaultFilter: contains 
+    defaultFilter: contains,
+    disabledKeys: ['noResults']
   })
 
   const triggerRef = useRef()
@@ -132,6 +133,7 @@ const ComboBox = props => {
               triggerRef={inputRef}
               popoverRef={popoverRef}
               placement="bottom start"
+              isNonModal
               style={{ width: wrapperRef?.current?.offsetWidth }}
               className={ 'tf-combo-box-popover' }
             >
