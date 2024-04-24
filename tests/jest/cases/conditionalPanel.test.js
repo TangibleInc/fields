@@ -2,8 +2,9 @@ import '../../../assets/src/index.jsx'
 import { uniqid } from '../../../assets/src/utils.js'
 import { userEvent } from '@testing-library/user-event'
 import { 
-  render, 
+  render,
   within,
+  screen
 } from '@testing-library/react'
 
 const fields = window.tangibleFields
@@ -230,7 +231,6 @@ describe('conditional panel', () => {
 
   it('add label to conditional panel', async () => {
 
-    const user = userEvent.setup()
     const { container } = render(
       fields.render({
         type  : 'conditional-panel',
@@ -242,4 +242,35 @@ describe('conditional panel', () => {
     expect(within(container).getByText('Conditional Panel')).toBeTruthy()
   }, 10000)
 
+  test.each([
+    {},
+    { value: '' },
+  ])('set correclty the initial value if empty or not set (with %p)', props => {
+
+    const { container } = render(
+      fields.render({
+        type  : 'conditional-panel',
+        name  : 'conditional-panel-name',
+        ...props
+      })
+    )
+
+    const input = container.querySelector('input[name="conditional-panel-name"]')
+
+    expect(input).toBeTruthy()
+
+    const initialValue = JSON.parse(input.value)
+
+    expect(Array.isArray(initialValue)).toBe(true)
+    expect(initialValue.length).toBe(1)
+    expect(initialValue[0].key).toBeTruthy()
+
+    expect(Array.isArray(initialValue[0].data)).toBe(true)
+    expect(initialValue[0].data.length).toBe(1)
+
+    expect(initialValue[0].data[0].key).toBeTruthy()
+    expect(initialValue[0].data[0].left_value).toBe('')
+    expect(initialValue[0].data[0].operator).toBe('_eq')
+    expect(initialValue[0].data[0].right_value).toBe('')
+  })
 })
