@@ -76,7 +76,10 @@ const ComboBox = props => {
       ? props.selectedKey.value 
       : (props.selectedKey ?? ''),
     defaultFilter: contains,
-    disabledKeys: ['noResults']
+    disabledKeys: [ 
+      ...(props.disabledKeys ?? []),
+      '_noResults' 
+    ]
   })
 
   const triggerRef = useRef()

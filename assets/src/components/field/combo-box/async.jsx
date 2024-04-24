@@ -30,7 +30,7 @@ const getAsyncProps = props => {
 
       if ( results.length === 0 ) {
         results.push({
-          id : 'noResults',
+          id    : '_noResults',
           title : 'No results'
         })
       } 
