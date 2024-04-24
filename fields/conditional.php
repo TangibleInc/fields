@@ -41,7 +41,7 @@ $fields->evaluate_condition = function(
 ) use ( $fields ) : bool {
   $part_results = [];
 
-  if ( ( empty( $condition ) ) || empty(key($condition[key($condition)])) ) {
+  if ( empty( $condition ) ) {
     return true;
   }
 

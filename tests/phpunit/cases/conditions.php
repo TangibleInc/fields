@@ -121,7 +121,7 @@ class Conditions_TestCase extends WP_UnitTestCase {
               [
                 'key' => '60be93e414b920',
                 'left_value' => '',
-                'operator' => '',
+                'operator' => '_eq',
                 'right_value' => '',
               ]
             ]
