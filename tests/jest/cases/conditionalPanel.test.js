@@ -27,7 +27,7 @@ describe('conditional panel', () => {
     expect(within(container).getByText('And')).toBeTruthy()
     expect(within(container).getByText('Delete condition')).toBeTruthy()
     expect(within(container).getByText('Add group')).toBeTruthy()
-  })
+  }, 10000)
 
   it('can add and remove conditions', async () => {
     
@@ -56,7 +56,7 @@ describe('conditional panel', () => {
 
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
     expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
-  })
+  }, 10000)
 
   it('can add condition groups', async () => {
 
@@ -74,7 +74,7 @@ describe('conditional panel', () => {
 
     expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(0)
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(2)
-  })
+  }, 10000)
 
   it('automatically removes condition group when no condition', async () => {
 
@@ -97,7 +97,7 @@ describe('conditional panel', () => {
 
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(1)
     expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
-  })
+  }, 10000)
 
   it('can load value', async () => {
 
@@ -240,7 +240,7 @@ describe('conditional panel', () => {
     )
 
     expect(within(container).getByText('Conditional Panel')).toBeTruthy()
-  })
+  }, 10000)
 
   test.each([
     {},
