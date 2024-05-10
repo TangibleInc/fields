@@ -7,6 +7,7 @@ import {
 } from '../../../base'
 
 import { Checkbox, Switch } from '../../../field'
+import { isDependentString } from '../../../dependent/utils'
 import BulkActions from '../../common/BulkActions'
 
 const Block = ({
@@ -17,7 +18,8 @@ const Block = ({
   maxLength,
   title = false,
   useSwitch,
-  useBulk
+  useBulk,
+  name
 }) => {
 
   const [activeItem, setActiveItem] = useState(0)
@@ -98,6 +100,26 @@ const Block = ({
     </>
   )
 
+  /**
+   * In order to support dependent value from the repeater, we have
+   * to render the title as an element so that it's wrapped inside
+   * a new dependent wrapper that can access repeater values
+   */
+  const renderTitle = (item, i) => {
+
+    const text = title ? title : ('Item ' + (i + 1))
+
+    if( ! isDependentString(text) ) return text;
+
+    const element = { 
+      type      : 'wrapper',
+      name      : `_repeater-title-${name}-${item.key}`,
+      content   : title,
+      dependent : true
+    }
+    return renderItem(element, item, i)
+  }
+
   return(
     <div className='tf-repeater-items tf-repeater-block-items'>
       { useBulk && 
@@ -108,7 +130,7 @@ const Block = ({
       { items && items.slice(0, maxLength).map((item, i) => (
         <ExpandablePanel
           key={ item.key ?? i } 
-          title={ title ? title : ('Item ' + (i + 1)) }
+          title={ renderTitle(item, i) }
           footer={ actions(i, item) }
           isOpen={ activeItem === i }
           className="tf-repeater-block-item"

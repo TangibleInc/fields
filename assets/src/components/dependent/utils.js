@@ -155,5 +155,6 @@ const mergeDependentProps = (
 export {
   getDependentFields,
   getDependentValue,
-  mergeDependentProps
+  mergeDependentProps,
+  isDependentString
 }
