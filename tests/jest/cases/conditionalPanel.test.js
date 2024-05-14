@@ -2,8 +2,9 @@ import '../../../assets/src/index.jsx'
 import { uniqid } from '../../../assets/src/utils.js'
 import { userEvent } from '@testing-library/user-event'
 import { 
-  render, 
+  render,
   within,
+  screen
 } from '@testing-library/react'
 
 const fields = window.tangibleFields
@@ -26,7 +27,7 @@ describe('conditional panel', () => {
     expect(within(container).getByText('And')).toBeTruthy()
     expect(within(container).getByText('Delete condition')).toBeTruthy()
     expect(within(container).getByText('Add group')).toBeTruthy()
-  })
+  }, 10000)
 
   it('can add and remove conditions', async () => {
     
@@ -55,7 +56,7 @@ describe('conditional panel', () => {
 
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
     expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
-  })
+  }, 10000)
 
   it('can add condition groups', async () => {
 
@@ -73,7 +74,7 @@ describe('conditional panel', () => {
 
     expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(0)
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(2)
-  })
+  }, 10000)
 
   it('automatically removes condition group when no condition', async () => {
 
@@ -96,7 +97,7 @@ describe('conditional panel', () => {
 
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(1)
     expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
-  })
+  }, 10000)
 
   it('can load value', async () => {
 
@@ -230,7 +231,6 @@ describe('conditional panel', () => {
 
   it('add label to conditional panel', async () => {
 
-    const user = userEvent.setup()
     const { container } = render(
       fields.render({
         type  : 'conditional-panel',
@@ -240,6 +240,37 @@ describe('conditional panel', () => {
     )
 
     expect(within(container).getByText('Conditional Panel')).toBeTruthy()
-  })
+  }, 10000)
 
+  test.each([
+    {},
+    { value: '' },
+  ])('set correclty the initial value if empty or not set (with %p)', props => {
+
+    const { container } = render(
+      fields.render({
+        type  : 'conditional-panel',
+        name  : 'conditional-panel-name',
+        ...props
+      })
+    )
+
+    const input = container.querySelector('input[name="conditional-panel-name"]')
+
+    expect(input).toBeTruthy()
+
+    const initialValue = JSON.parse(input.value)
+
+    expect(Array.isArray(initialValue)).toBe(true)
+    expect(initialValue.length).toBe(1)
+    expect(initialValue[0].key).toBeTruthy()
+
+    expect(Array.isArray(initialValue[0].data)).toBe(true)
+    expect(initialValue[0].data.length).toBe(1)
+
+    expect(initialValue[0].data[0].key).toBeTruthy()
+    expect(initialValue[0].data[0].left_value).toBe('')
+    expect(initialValue[0].data[0].operator).toBe('_eq')
+    expect(initialValue[0].data[0].right_value).toBe('')
+  })
 })

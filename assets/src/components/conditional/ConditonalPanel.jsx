@@ -21,7 +21,7 @@ const ConditionalPanel = props => {
   
   const emptyRow = () => ({ 
     key: uniqid(), 
-    data: [{ key: uniqid() }] 
+    data: [{ key: uniqid(), operator: '_eq' }]
   })
 
   /**
