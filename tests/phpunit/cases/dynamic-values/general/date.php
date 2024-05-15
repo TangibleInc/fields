@@ -1,7 +1,7 @@
 <?php
 
-use Tangible\FieldsPro\Tests\Render;
-use Tangible\FieldsPro\Tests\Date;
+use Tangible\Fields\Tests\Render;
+use Tangible\Fields\Tests\Date;
 
 class DynamicValuesGeneralDate_TestCase extends WP_UnitTestCase {
 

@@ -245,9 +245,9 @@ describe('dependent values feature', () => {
 
     const user = userEvent.setup()
     const field = document.querySelector('.cm-line')
-    await user.type(field, 'Updated - ')
+    await user.type(field, 'Updated|')
 
-    dependentTitle = await within(sectionTitle).findByText( 'Updated - Initial value of field 1')
+    dependentTitle = await within(sectionTitle).findByText( 'Updated|Initial value of field 1')
     expect(dependentTitle).toBeTruthy()
   })
 
