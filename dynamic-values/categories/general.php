@@ -14,87 +14,59 @@ $fields->register_dynamic_value([
   'description' => 'Return a given post meta for a the current or a selected post',
   'callback'    => function($settings, $config) use ($fields) {
 
-    if ( empty($settings['date_type']) ) return '';
-    if ( !empty($settings['custom_date_picker']) ) $custom_date = explode('-', $settings['custom_date_picker']);
-    if ( $settings['date_type'] === 'now' ) { 
-      $timestamp = time();
-    } else {
-      $timestamp = apply_filters('general_dynamic_values_date_callback_filter', mktime(date('H'), date('i'), date('s'), $custom_date[1], $custom_date[2], $custom_date[0]), $settings, $config );
+    $date_type = in_array($settings['date_type'], ['now', 'custom']) 
+      ? $settings['date_type']
+      : 'now';
+
+    if ( $date_type === 'now' ) $date = tangible\date()->now();
+    else {
+      /**
+       * As the custom date will set by the user from the UI, we assume
+       * that it uses site timezone and not UTC
+       */
+      $date = tangible\date( 
+        $settings['custom_date_picker'] ?? 'now',
+        wp_timezone_string()
+      );
     }
 
-    if ( $settings['delay'] === 'after' || $settings['delay'] === 'before' ) {
-        
-      if ( !empty($settings['delay_number']) && !empty($settings['delay_type']) ) {
+    /**
+     * We need this filter because other plugin adds custom values
+     * for $settings['date_type']
+     */
+    $date = apply_filters('tangible_fields_dynamic_value_general_date', $date, $settings, $config);
 
-        $delay = $settings['delay'];
-        $delay_number = $settings['delay_number'];
-        $day = !isset($custom_date) ? date('d') : $custom_date[2];
-        $month = !isset($custom_date) ? date('m') : $custom_date[1];
-        $year = !isset($custom_date) ? date('y') : $custom_date[0];
-
-        switch ($settings['delay_type']) {
-          case 'minute':
-            $timestamp = mktime(date('H'), 
-              $delay === 'after' ? date('i') + $delay_number : date('i') - $delay_number,
-              date('s'), $month, $day, $year
-            );
-            break;
-
-          case 'hour':
-            $timestamp = mktime($delay === 'after' ? date('H') + $delay_number : date('H') - $delay_number, 
-              date('i'), date('s'), $month, $day, $year
-            );
-            break;
-
-          case 'day':
-            $timestamp = mktime(date('H'), 
-              date('i'), date('s'), $month, 
-              $delay === 'after' ? $day + $delay_number : $day - $delay_number
-              , $year
-            );
-            break;
-
-          case 'week':
-            $delay_number = 7 * (int) $delay_number;
-            $timestamp = mktime(date('H'), 
-              date('i'), date('s'), $month, 
-              $delay === 'after' ? $day + $delay_number : $day - $delay_number
-              , $year
-            );
-            break;
-
-          case 'month':
-            $timestamp = mktime(date('H'), 
-              date('i'), date('s'),
-              $delay === 'after' ? $month + $delay_number : $month - $delay_number
-              , $day, $year
-            );
-            break;
-
-          case 'year':
-            $timestamp = mktime(date('H'), 
-              date('i'), date('s'), $month, $day,
-              $delay === 'after' ? $year + $delay_number : $year - $delay_number
-            );
-            break;
-
-          default:
-            break;
-        }
-      }
+    if ( ! in_array( $settings['delay'], ['after', 'before'] ) ) {
+      return $fields->dynamic_values_date_helper['render']($date->timestamp, $settings);
     }
 
-    return $fields->dynamic_values_date_helper['render']($timestamp, $settings);
+    /**
+     * Should we move the delay logic into the helper?
+     */
+
+    $delay_number = (int) ($settings['delay_number'] ?? 0);
+    $delay_type = in_array($settings['delay_type'], [ 'minute', 'hour', 'day', 'week', 'month', 'year' ]) 
+      ? $settings['delay_type']
+      : false;
+
+    if ( empty($delay_number) || empty($delay_type) ) {
+      return $fields->dynamic_values_date_helper['render']($date->timestamp, $settings);
+    }
+
+    if( $settings['delay'] === 'after' )  $date->add( $delay_type, $delay_number );
+    if( $settings['delay'] === 'before' ) $date->sub( $delay_type, $delay_number );
+
+    return $fields->dynamic_values_date_helper['render']($date->timestamp, $settings);
   },
   'fields'  => [
     [
       'name'    => 'date_type',
       'type'    => 'select',
       'label'   => 'Date type',
-      'choices' => apply_filters('general_dynamic_values_date_select_type_filter', [ 
+      'choices' => [ 
         'now'    => 'Now',
         'custom' => 'Custom'
-      ])
+      ]
     ],
     [
       'name'      => 'custom_date_picker',
@@ -121,6 +93,7 @@ $fields->register_dynamic_value([
       'name'      => 'delay_number',
       'type'      => 'number',
       'label'     => 'Number',
+      'min'       => 0,
       'condition' => [
         'action'    => 'show',
         'condition' => [
@@ -155,8 +128,5 @@ $fields->register_dynamic_value([
     ],
     ...$fields->dynamic_values_date_helper['settings']
   ],
-  'permission_callback_store' => function() {
-    return in_array('administrator', wp_get_current_user()->roles ?? []);
-  },
-  'permission_callback_parse' => '__return_true'
+  'permission_callback' => '__return_true'
 ]);
