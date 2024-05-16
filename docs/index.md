@@ -10,7 +10,7 @@ Add module to your composer.json:
 {
   "repositories": [{
     "type": "vcs",
-    "url": "git@bitbucket.org:/tangibleinc/tangible-fields-module.git"
+    "url": "git@github.com:tangibleinc/fields.git"
   }],
   "require": {
     "tangible/fields": "dev-main"

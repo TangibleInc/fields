@@ -41,8 +41,8 @@ $fields->dynamic_values_date_helper = [
 
     if( empty($timestamp) ) return '';
 
-    // @see vendor/tangible/plugin-framework/modules/date/readme.md
-    $date = tangible_date()
+    // @see https://github.com/TangibleInc/framework/tree/main/date
+    $date = tangible\date()
       ->fromTimestamp($timestamp)
       ->setTimezone(
         $settings['date_timezone'] !== 'utc' 
