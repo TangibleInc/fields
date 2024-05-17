@@ -23,8 +23,6 @@ To use the module inside the plugin, you need to update your composer.json. It's
   "minimum-stability": "dev"
 }
 ```
-The reason
-
 
 The module can then be installed in your project using:
 
