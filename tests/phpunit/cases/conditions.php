@@ -17,11 +17,24 @@ class Conditions_TestCase extends WP_UnitTestCase {
   /**
    * @dataProvider _test_fields_evaluate_conditional_data
    */
-  public function test_fields_evaluate_conditional(bool $result, string $conditions) {
-    $this->assertSame($result, tangible_fields()->evaluate_conditional(json_decode($conditions)));
+  public function test_fields_evaluate_conditional(bool $result, string $conditions, array $dynamic_value_config = []) {
+    $this->assertSame($result, tangible_fields()->evaluate_conditional(json_decode($conditions), $dynamic_value_config));
   }
 
   public function _test_fields_evaluate_conditional_data() {
+
+    $fields = tangible_fields();
+    $fields->register_dynamic_value([
+      'name'     => 'test-value-conditional-config',
+      'label'    => 'M',
+      'category' => 'test-category',
+      'callback' => function($settings, $config) {
+        return $config['context']['test'] ?? '';
+      },
+      'permission_callback_store' => '__return_true',
+      'permission_callback_parse' => '__return_true'
+    ]);
+
     return [
 
       'basic nested and modal false'	=> [
@@ -113,6 +126,40 @@ class Conditions_TestCase extends WP_UnitTestCase {
           ],
         ]),
       ],
+      'basic nested with config true'  => [
+        true, json_encode([	
+          [
+            'key' => '60be9330eb99c1',
+            'data' => [ 
+              [
+                'key' => '60be9330ebae1c',
+                'left_value' => '[[test-value-conditional-config]]',
+                'operator' => '_eq',
+                'right_value' => 'middle',
+              ]
+            ]
+          ],
+        ]), [
+          'context' => [
+            'test'  => 'middle'
+          ]
+        ]
+      ],
+      'basic nested with config false'  => [
+        false, json_encode([	
+          [
+            'key' => '60be9330eb99c1',
+            'data' => [ 
+              [
+                'key' => '60be9330ebae1c',
+                'left_value' => '[[test-value-conditional-config]]',
+                'operator' => '_eq',
+                'right_value' => 'middle',
+              ]
+            ]
+          ],
+        ])
+      ],
       'basic nested modal no value true'	=> [
         true, json_encode([	
           [
@@ -127,7 +174,7 @@ class Conditions_TestCase extends WP_UnitTestCase {
             ]
 
           ],
-        ]),
+        ])
       ]
     ];
   }
