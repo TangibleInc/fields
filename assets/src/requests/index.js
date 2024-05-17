@@ -1,4 +1,13 @@
 const post = (url, data) => {
+
+  /**
+   * Simulate request in jest tests 
+   */
+  if( process.env.JEST_WORKER_ID ) {
+    return new Promise(resolve => (
+      resolve(window.tangibleTests.fetchResponse)
+    )) 
+  }
   
   const { api } = TangibleFields
 
@@ -23,6 +32,15 @@ const post = (url, data) => {
 }
 
 const get = (url, data = false) => {
+
+  /**
+   * Simulate request in jest tests
+   */
+  if( process.env.JEST_WORKER_ID ) {
+    return new Promise(resolve => (
+      resolve(window.tangibleTests.fetchResponse)
+    )) 
+  }
 
   const { api } = TangibleFields
 

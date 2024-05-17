@@ -1,7 +1,7 @@
 <?php
 
-use Tangible\FieldsPro\Tests\Render;
-use Tangible\FieldsPro\Tests\Date;
+use Tangible\Fields\Tests\Render;
+use Tangible\Fields\Tests\Date;
 
 class DynamicValuesGeneralDate_TestCase extends WP_UnitTestCase {
 
@@ -21,118 +21,120 @@ class DynamicValuesGeneralDate_TestCase extends WP_UnitTestCase {
   ];
 
   function _delay_after_provider() {
+    $this->_date_set_up(); // Providers run before set_up
     return [
       [  
         [
-          'delay_type'      => 'minute',
-          'delay_number'    => '5',
-          'delay'           => 'after',
-          'current_timestamp'       => mktime(date('H'), date('i') + 5, date('s'), date('m'), date('d'), date('y')),
-          'custom_timestamp' => mktime(date('H'), date('i') + 5, date('s'), 06, 25, 2024)
+          'delay_type'        => 'minute',
+          'delay_number'      => '5',
+          'delay'             => 'after',
+          'current_timestamp' => tangible\date()->now()->addMinutes(5)->timestamp,
+          'custom_timestamp'  => tangible\date('2024-06-25', wp_timezone_string())->addMinutes(5)->timestamp
         ]
       ],
       [ 
         [
-          'delay_type'    => 'hour',
-          'delay_number'  => '10',
-          'delay'         => 'after',
-          'current_timestamp'     => mktime(date('H') + 10, date('i'), date('s'), date('m'), date('d'), date('y')),
-          'custom_timestamp' => mktime(date('H') + 10, date('i'), date('s'), 06, 25, 2024)
+          'delay_type'        => 'hour',
+          'delay_number'      => '10',
+          'delay'             => 'after',
+          'current_timestamp' => tangible\date()->now()->addHours(10)->timestamp,
+          'custom_timestamp'  => tangible\date('2024-06-25', wp_timezone_string())->addHours(10)->timestamp
         ]
       ],
       [ 
         [
-          'delay_type'    => 'day',
-          'delay_number'  => '10',
-          'delay'         => 'after',
-          'current_timestamp'     => mktime(date('H'), date('i'), date('s'), date('m'), date('d') + 10, date('y')),
-          'custom_timestamp' => mktime(date('H'), date('i'), date('s'), 06, 25 + 10, 2024)
+          'delay_type'        => 'day',
+          'delay_number'      => '10',
+          'delay'             => 'after',
+          'current_timestamp' => tangible\date()->now()->addDays(10)->timestamp,
+          'custom_timestamp'  => tangible\date('2024-06-25', wp_timezone_string())->addDays(10)->timestamp
         ]
       ],
       [ 
         [
-          'delay_type'    => 'week',
-          'delay_number'  => '10',
-          'delay'         => 'after',
-          'current_timestamp'     => mktime(date('H'), date('i'), date('s'), date('m'), date('d') + 70, date('y')),
-          'custom_timestamp' => mktime(date('H'), date('i'), date('s'), 06, 25 + 70, 2024)
+          'delay_type'        => 'week',
+          'delay_number'      => '10',
+          'delay'             => 'after',
+          'current_timestamp' => tangible\date()->now()->addWeeks(10)->timestamp,
+          'custom_timestamp'  => tangible\date('2024-06-25', wp_timezone_string())->addWeeks(10)->timestamp
         ]
       ],
       [ 
         [
-          'delay_type'    => 'month',
-          'delay_number'  => '10',
-          'delay'         => 'after',
-          'current_timestamp'     => mktime(date('H'), date('i'), date('s'), date('m') + 10, date('d'), date('y')),
-          'custom_timestamp' => mktime(date('H'), date('i'), date('s'), 06 + 10, 25, 2024)
+          'delay_type'        => 'month',
+          'delay_number'      => '10',
+          'delay'             => 'after',
+          'current_timestamp' => tangible\date()->now()->addMonths(10)->timestamp,
+          'custom_timestamp'  => tangible\date('2024-06-25', wp_timezone_string())->addMonths(10)->timestamp
         ]
       ],
       [ 
         [
-          'delay_type'    => 'year',
-          'delay_number'  => '10',
-          'delay'         => 'after',
-          'current_timestamp'     => mktime(date('H'), date('i'), date('s'), date('m'), date('d'), date('y') + 10),
-          'custom_timestamp' => mktime(date('H'), date('i'), date('s'), 06, 25, 2024 + 10)
+          'delay_type'        => 'year',
+          'delay_number'      => '10',
+          'delay'             => 'after',
+          'current_timestamp' => tangible\date()->now()->addYears(10)->timestamp,
+          'custom_timestamp'  => tangible\date('2024-06-25', wp_timezone_string())->addYears(10)->timestamp
         ]
       ]
     ];
   }
 
   function _delay_before_provider() {
+    $this->_date_set_up(); // Providers run before set_up
     return [
       [  
         [
-          'delay_type'    => 'minute',
-          'delay_number'  => '5',
-          'delay'         => 'before',
-          'current_timestamp'     => mktime(date('H'), date('i') - 5, date('s'), date('m'), date('d'), date('y')),
-          'custom_timestamp' => mktime(date('H'), date('i') - 5, date('s'), 06, 25, 2024)
+          'delay_type'        => 'minute',
+          'delay_number'      => '5',
+          'delay'             => 'before',
+          'current_timestamp' => tangible\date()->now()->subMinutes(5)->timestamp,
+          'custom_timestamp'  => tangible\date('2024-06-25', wp_timezone_string())->subMinutes(5)->timestamp
         ]
       ],
       [ 
         [
-          'delay_type'    => 'hour',
-          'delay_number'  => '10',
-          'delay'         => 'before',
-          'current_timestamp'     => mktime(date('H') - 10, date('i'), date('s'), date('m'), date('d'), date('y')),
-          'custom_timestamp' => mktime(date('H') - 10, date('i'), date('s'), 06, 25, 2024)
+          'delay_type'        => 'hour',
+          'delay_number'      => '10',
+          'delay'             => 'before',
+          'current_timestamp' => tangible\date()->now()->subHours(10)->timestamp,
+          'custom_timestamp'  => tangible\date('2024-06-25', wp_timezone_string())->subHours(10)->timestamp
         ]
       ],
       [ 
         [
-          'delay_type'    => 'day',
-          'delay_number'  => '10',
-          'delay'         => 'before',
-          'current_timestamp'     => mktime(date('H'), date('i'), date('s'), date('m'), date('d') - 10, date('y')),
-          'custom_timestamp' => mktime(date('H'), date('i'), date('s'), 06, 25 - 10, 2024)
+          'delay_type'        => 'day',
+          'delay_number'      => '10',
+          'delay'             => 'before',
+          'current_timestamp' => tangible\date()->now()->subDays(10)->timestamp,
+          'custom_timestamp'  => tangible\date('2024-06-25', wp_timezone_string())->subDays(10)->timestamp
         ]
       ],
       [ 
         [
-          'delay_type'    => 'week',
-          'delay_number'  => '10',
-          'delay'         => 'before',
-          'current_timestamp'     => mktime(date('H'), date('i'), date('s'), date('m'), date('d') - 70, date('y')),
-          'custom_timestamp' => mktime(date('H'), date('i'), date('s'), 06, 25 - 70, 2024)
+          'delay_type'        => 'week',
+          'delay_number'      => '10',
+          'delay'             => 'before',
+          'current_timestamp' => tangible\date()->now()->subWeeks(10)->timestamp,
+          'custom_timestamp'  => tangible\date('2024-06-25', wp_timezone_string())->subWeeks(10)->timestamp
         ]
       ],
       [ 
         [
-          'delay_type'    => 'month',
-          'delay_number'  => '10',
-          'delay'         => 'before',
-          'current_timestamp'     => mktime(date('H'), date('i'), date('s'), date('m') - 10, date('d'), date('y')),
-          'custom_timestamp' => mktime(date('H'), date('i'), date('s'), 06 - 10, 25, 2024)
+          'delay_type'        => 'month',
+          'delay_number'      => '10',
+          'delay'             => 'before',
+          'current_timestamp' => tangible\date()->now()->subMonths(10)->timestamp,
+          'custom_timestamp'  => tangible\date('2024-06-25', wp_timezone_string())->subMonths(10)->timestamp
         ]
       ],
       [ 
         [
-          'delay_type'    => 'year',
-          'delay_number'  => '10',
-          'delay'         => 'before',
-          'current_timestamp'     => mktime(date('H'), date('i'), date('s'), date('m'), date('d'), date('y') - 10),
-          'custom_timestamp' => mktime(date('H'), date('i'), date('s'), 06, 25, 2024 - 10)
+          'delay_type'        => 'year',
+          'delay_number'      => '10',
+          'delay'             => 'before',
+          'current_timestamp' => tangible\date()->now()->subYears(10)->timestamp,
+          'custom_timestamp'  => tangible\date('2024-06-25', wp_timezone_string())->subYears(10)->timestamp
         ]
       ]
     ];
@@ -151,7 +153,7 @@ class DynamicValuesGeneralDate_TestCase extends WP_UnitTestCase {
   function test_general_dynamic_values_default_date() {
     
     $this->_date_test_default_format(
-      time(),
+      tangible\date()->now()->timestamp,
       function() {
         return $this->_render_value([
           'date_type' => 'now',
@@ -166,7 +168,7 @@ class DynamicValuesGeneralDate_TestCase extends WP_UnitTestCase {
   function test_general_dynamic_values_default_date_format( $format ) {
 
     $this->_date_test_custom_format(
-      time(),
+      tangible\date()->now()->timestamp,
       $format,
       function($args) {
         return $this->_render_value([
@@ -182,7 +184,7 @@ class DynamicValuesGeneralDate_TestCase extends WP_UnitTestCase {
   function test_general_dynamic_values_default_date_timezone( $format ) {
 
     $this->_date_test_timezone(
-      time(),
+      tangible\date()->now()->timestamp,
       $format,
       function($args) {
         return $this->_render_value([
@@ -207,7 +209,7 @@ class DynamicValuesGeneralDate_TestCase extends WP_UnitTestCase {
       $settings['current_timestamp'],
       function($args) {
         return $this->_render_value([
-          'date_type'     => 'now'
+          'date_type' => 'now'
         ] + $args);
       },
       $current_settings
@@ -229,7 +231,7 @@ class DynamicValuesGeneralDate_TestCase extends WP_UnitTestCase {
       $settings['current_timestamp'],
       function($args) {
         return $this->_render_value([
-          'date_type'     => 'now',
+          'date_type' => 'now',
         ] + $args);
       },
       $current_settings
@@ -238,13 +240,11 @@ class DynamicValuesGeneralDate_TestCase extends WP_UnitTestCase {
 
   function test_general_dynamic_values_custom_date() {
 
-    $current_timestamp = mktime(date('H'), date('i'), date('s'), 06, 25, 2024);
-    
     $this->_date_test_default_format(
-      $current_timestamp,
+      tangible\date('2024-06-25', wp_timezone_string())->timestamp,
       function() {
         return $this->_render_value([
-          'date_type' => 'custom',
+          'date_type'           => 'custom',
           'custom_date_picker'  => '2024-06-25'
         ]);
       }
@@ -256,15 +256,13 @@ class DynamicValuesGeneralDate_TestCase extends WP_UnitTestCase {
    */
   function test_general_dynamic_values_custom_date_format( $format ) {
     
-    $current_timestamp = mktime(date('H'), date('i'), date('s'), 06, 25, 2024);
-
     $this->_date_test_custom_format(
-      $current_timestamp,
+      tangible\date('2024-06-25', wp_timezone_string())->timestamp,
       $format,
       function($args) {
         return $this->_render_value([
-          'date_type' => 'custom',
-          'custom_date_picker'  => '2024-06-25'
+          'date_type'          => 'custom',
+          'custom_date_picker' => '2024-06-25'
         ] + $args);
       }
     );
@@ -275,15 +273,13 @@ class DynamicValuesGeneralDate_TestCase extends WP_UnitTestCase {
    */
   function test_general_dynamic_values_custom_date_timezone( $format ) {
     
-    $current_timestamp = mktime(date('H'), date('i'), date('s'), 06, 25, 2024);
-
     $this->_date_test_timezone(
-      $current_timestamp,
+      tangible\date('2024-06-25', wp_timezone_string())->timestamp,
       $format,
       function($args) {
         return $this->_render_value([
-          'date_type' => 'custom',
-          'custom_date_picker'  => '2024-06-25'
+          'date_type'          => 'custom',
+          'custom_date_picker' => '2024-06-25'
         ] + $args);
       }
     );
@@ -304,8 +300,8 @@ class DynamicValuesGeneralDate_TestCase extends WP_UnitTestCase {
       $settings['custom_timestamp'],
       function($args) {
         return $this->_render_value([
-          'date_type' => 'custom',
-          'custom_date_picker'  => '2024-06-25',
+          'date_type'          => 'custom',
+          'custom_date_picker' => '2024-06-25',
         ] + $args);
       },
       $current_settings
@@ -327,8 +323,8 @@ class DynamicValuesGeneralDate_TestCase extends WP_UnitTestCase {
       $settings['custom_timestamp'],
       function($args) {
         return $this->_render_value([
-          'date_type' => 'custom',
-          'custom_date_picker'  => '2024-06-25'
+          'date_type'          => 'custom',
+          'custom_date_picker' => '2024-06-25'
         ] + $args);
       },
       $current_settings

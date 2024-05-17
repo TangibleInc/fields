@@ -158,6 +158,7 @@ const Repeater = props => {
           useBulk={ props.useBulk }
           afterRow={ props.afterRow }
           beforeRow={ props.beforeRow }
+          name={ props.name ?? '' }
         />
         { repeatable && (
           <div className="tf-repeater-actions">

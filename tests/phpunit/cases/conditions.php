@@ -159,6 +159,22 @@ class Conditions_TestCase extends WP_UnitTestCase {
             ]
           ],
         ])
+      ],
+      'basic nested modal no value true'	=> [
+        true, json_encode([	
+          [
+            'key' => '60be9330eb99c0',
+            'data' => [  
+              [
+                'key' => '60be93e414b920',
+                'left_value' => '',
+                'operator' => '_eq',
+                'right_value' => '',
+              ]
+            ]
+
+          ],
+        ])
       ]
     ];
   }

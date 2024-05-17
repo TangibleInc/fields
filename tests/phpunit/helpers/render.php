@@ -1,6 +1,6 @@
 <?php
 
-namespace Tangible\FieldsPro\Tests;
+namespace Tangible\Fields\Tests;
 
 trait Render {
 

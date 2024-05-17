@@ -24,7 +24,7 @@ class Enqueue_TestCase extends WP_UnitTestCase {
    */
 	public function test_items_enqueue(string $type, array $args) {
 		global $wp_version;
-    	$this->assertEmpty(tangible_fields()->enqueued[ $type ], "There should not be enqueued $type yet");
+    $this->assertEmpty(tangible_fields()->enqueued[ $type ], "There should not be enqueued $type yet");
 		$this->assertFalse(tangible_fields()->is_enqueued);
 
 		tangible_fields()->maybe_enqueue_scripts();

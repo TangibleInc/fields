@@ -3,7 +3,7 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "git@bitbucket.org:/tangibleinc/tangible-plugin-framework.git"
+      "url": "git@github.com:tangibleinc/framework.git"
     }
   ],
   "require-dev": {
@@ -11,7 +11,7 @@
     "yoast/phpunit-polyfills": "^1.0"
   },
   "require": {
-    "tangible/plugin-framework": "dev-variant/without-updater"
+    "tangible/framework": "dev-main"
   },
   "config": {
     "allow-plugins": {

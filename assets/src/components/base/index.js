@@ -8,10 +8,11 @@ import Modal from './modal/Modal'
 import ModalTrigger from './modal/ModalTrigger'
 import Notice from './notice/Notice'
 import Option from './list-box/Option'
+import Popover from './popover/Popover'
 import RenderChoices from './list-box/RenderChoices'
 import Section from './list-box/Section'
-import Popover from './popover/Popover'
 import Title from './title/Title'
+import Wrapper from './wrapper/Wrapper'
 
 export {
   Button,
@@ -24,8 +25,9 @@ export {
   ModalTrigger,
   Notice,
   Option,
+  Popover,
   RenderChoices,
   Section,
-  Popover,
-  Title
+  Title,
+  Wrapper
 }

@@ -1,12 +1,13 @@
 <?php
 
-namespace Tangible\FieldsPro\Tests;
+namespace Tangible\Fields\Tests;
+
+use tangible;
 
 trait Date {
 
   private string $default_format;
   private string $default_timezone;
-
 
   /**
    * Needs to be call durint test set_up method
@@ -32,7 +33,7 @@ trait Date {
 
   function _date_test_default_format($expected_timestamp, $render_value, $settings = []) {
 
-    $expected_result = tangible_date()
+    $expected_result = tangible\date()
       ->fromTimestamp($expected_timestamp)
       ->setTimezone($this->default_timezone)
       ->format($this->default_format);
@@ -45,7 +46,7 @@ trait Date {
 
   function _date_test_custom_format($expected_timestamp, $format, $render_value) {
 
-    $expected_result = tangible_date()
+    $expected_result = tangible\date()
       ->fromTimestamp($expected_timestamp)
       ->setTimezone($this->default_timezone)
       ->format($this->default_format);
@@ -68,7 +69,7 @@ trait Date {
       'custom_date_format' => $format,
     ]);
 
-    $expected_result = tangible_date()
+    $expected_result = tangible\date()
       ->fromTimestamp($expected_timestamp)
       ->setTimezone($this->default_timezone)
       ->format($format);
@@ -79,7 +80,7 @@ trait Date {
 
   function _date_test_timezone($expected_timestamp, $format, $render_value) {
 
-    $expected_result = tangible_date()
+    $expected_result = tangible\date()
       ->fromTimestamp($expected_timestamp)
       ->setTimezone($this->default_timezone)
       ->format($this->default_format);
@@ -90,7 +91,7 @@ trait Date {
 
     $this->assertEquals($expected_result, $result, 'date should use site timezone');
 
-    $expected_result = tangible_date()
+    $expected_result = tangible\date()
       ->fromTimestamp($expected_timestamp)
       ->setTimezone('utc')
       ->format($this->default_format);
@@ -101,7 +102,7 @@ trait Date {
 
     $this->assertEquals($expected_result, $result, 'date should use UTC');
 
-    $expected_result = tangible_date()
+    $expected_result = tangible\date()
       ->fromTimestamp($expected_timestamp)
       ->setTimezone('utc')
       ->format($format);

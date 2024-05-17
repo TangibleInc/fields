@@ -13,7 +13,7 @@ $module_path = defined('FIELDS_IS_PLUGIN')
   ? __DIR__ . '/vendor/tangible/'
   : __DIR__ . '/../'; 
 
-require_once $module_path . 'plugin-framework/index.php';
+require_once $module_path . 'framework/index.php';
 
 new class extends stdClass {
 

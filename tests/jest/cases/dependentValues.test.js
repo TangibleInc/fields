@@ -1,9 +1,10 @@
 import '../../../assets/src/index.jsx'
 import { 
-  render, 
-  within, 
+  render,
+  within,
   act
 } from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
 
 const fields = window.tangibleFields
 
@@ -170,6 +171,84 @@ describe('dependent values feature', () => {
     
     // TODO: Add test when multiple rows and after update but needs to understand why re-render not complete in tests first
 
+  })
+
+  it('works for repeater sectionTitle with a subvalue', async () => {
+
+    render(
+      fields.render({
+        label        : 'Label',
+        name         : 'repeater-field',
+        type         : 'repeater',
+        layout       : 'block',
+        sectionTitle : '{{subfield-1}}',
+        value        : [
+          { 'key': 1, 'subfield-1' : 'Initial value of the repeater subfield 1' },
+        ],
+        fields       : [
+          {
+            label       : 'Subfield 1',
+            type        : 'text',
+            name        : 'subfield-1' 
+          }
+        ]
+      })
+    )
+
+    const itemsContainer = document.querySelector(`.tf-repeater-items`)
+    expect(itemsContainer.childNodes.length).toBe(1)
+
+    const sectionTitle = itemsContainer.childNodes[0].querySelector('.tf-panel-header-title')
+
+    let dependentTitle = await within(sectionTitle).findByText('Initial value of the repeater subfield 1')
+    expect(dependentTitle).toBeTruthy()
+
+    const user = userEvent.setup()
+    const field = itemsContainer.childNodes[0].querySelector('.cm-line')
+    await user.type(field, 'Updated - ')
+
+    dependentTitle = await within(sectionTitle).findByText( 'Updated - Initial value of the repeater subfield 1')
+    expect(dependentTitle).toBeTruthy()
+  })
+
+  it('works for repeater sectionTitle with a regular value', async () => {
+
+    render(
+      <>
+        { fields.render({
+          label   : 'Field 1',
+          type    : 'text',
+          value   : 'Initial value of field 1',
+          name    : 'field-1' 
+        }) }
+        { fields.render({
+          label        : 'Label',
+          name         : 'repeater-field',
+          type         : 'repeater',
+          layout       : 'block',
+          sectionTitle : '{{field-1}}',
+          fields       : [],
+          value        : [
+            { 'key': 1, 'subfield-1' : 'Initial value of the repeater subfield 1' },
+          ],
+        }) }
+      </>
+    )
+
+    const itemsContainer = document.querySelector(`.tf-repeater-items`)
+    expect(itemsContainer.childNodes.length).toBe(1)
+
+    const sectionTitle = itemsContainer.childNodes[0].querySelector('.tf-panel-header-title')
+
+    let dependentTitle = await within(sectionTitle).findByText('Initial value of field 1')
+    expect(dependentTitle).toBeTruthy()
+
+    const user = userEvent.setup()
+    const field = document.querySelector('.cm-line')
+    await user.type(field, 'Updated|')
+
+    dependentTitle = await within(sectionTitle).findByText( 'Updated|Initial value of field 1')
+    expect(dependentTitle).toBeTruthy()
   })
 
   it('works for field groups', async () => {
