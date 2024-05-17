@@ -4,20 +4,27 @@ Not ready to be used yet, just a proof of concept for now.
 
 ## Use in a plugin
 
-Add module to your composer.json:
-
+To use the module inside the plugin, you need to update your composer.json. It's required to add the framework in the repositories list as well even if your project dosen't use it directly, because it's used by the fields module and [repositories needs to be defined at the root](https://getcomposer.org/doc/04-schema.md#repositories):
 ```json
 {
-  "repositories": [{
-    "type": "vcs",
-    "url": "git@github.com:tangibleinc/fields.git"
-  }],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:tangibleinc/fields.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:tangibleinc/framework.git"
+    }
+  ],
   "require": {
     "tangible/fields": "dev-main"
   },
   "minimum-stability": "dev"
 }
 ```
+The reason
+
 
 The module can then be installed in your project using:
 
