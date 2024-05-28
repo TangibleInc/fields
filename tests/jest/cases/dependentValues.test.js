@@ -207,6 +207,12 @@ describe('dependent values feature', () => {
     const field = itemsContainer.childNodes[0].querySelector('.cm-line')
     await user.type(field, 'Updated - ')
 
+    /**
+     * Sometimes this test fail because the last character we type won't be updated, but 
+     * it seems to be an issue with user.type and not with what we test
+     *
+     * That would be nice to find a workaround or a fix
+     */
     dependentTitle = await within(sectionTitle).findByText( 'Updated - Initial value of the repeater subfield 1')
     expect(dependentTitle).toBeTruthy()
   })

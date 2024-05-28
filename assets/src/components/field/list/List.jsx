@@ -1,6 +1,7 @@
 import { 
   useState,
-  useRef
+  useRef,
+  useEffect
 } from 'react'
 
 import { useField } from 'react-aria'
@@ -24,6 +25,10 @@ const List = props => {
   const [items, setItems] = useState(
     initJSON( props.value ?? '[]', [] )
   )
+
+  useEffect(() => {
+    props.onChange ? props.onChange(items) : '' 
+  }, [items])
 
   const [selected, setSelected] = useState('')
   const refresh = useRef(0)
@@ -60,7 +65,6 @@ const List = props => {
         ...items.slice(i + 1)
       ])
     })
-
   }
 
   const getItemText = item => (
@@ -69,9 +73,13 @@ const List = props => {
       : item.label
   )
 
+  if ( props.isAsync ) {
+    console.warn('Async mode is not supported yet for the list field')
+  }
+
   return(
     <div className="tf-list">
-      <input type="hidden" value={ JSON.stringify(items) } { ...fieldProps } />
+      <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(items) } { ...fieldProps } />
       <div className="tf-list-container">
         <div className="tf-list-items">
           <div className="tf-list-header">
@@ -94,13 +102,14 @@ const List = props => {
                     type="icon-trash" 
                     onPress={ () => removeItem(i) } 
                   /> }
-                <Button 
-                  type="icon-eye" 
-                  onPress={ () => updateItem(i, '_enabled', ! item._enabled  ) } 
-                  style={ ! item._enabled 
-                    ? { opacity: 0.5, filter: 'grayscale(60%)' } 
-                    : {} } 
-                />
+                { props.useVisibility && 
+                  <Button 
+                    type="icon-eye" 
+                    onPress={ () => updateItem(i, '_enabled', ! item._enabled  ) } 
+                    style={ ! item._enabled 
+                      ? { opacity: 0.5, filter: 'grayscale(60%)' } 
+                      : {} } 
+                  /> }
               </div>
             </div>
           )) }
@@ -109,6 +118,7 @@ const List = props => {
         <div className='tf-list-search'>
           <ComboBox 
             { ...props }
+            name={ null }
             key={ refresh.current } 
             value={ selected }
             description={ false }

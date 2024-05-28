@@ -82,6 +82,8 @@ $fields->format_args = function(
       break;
       
     case 'list':
+      $args = $fields->format_value($args, 'use_visibility', 'useVisibility');
+      // Fallthrough
     case 'combo_box':
     case 'text_suggestion':
       // We use kebab-case for control types in js

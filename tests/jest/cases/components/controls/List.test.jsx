@@ -1,15 +1,14 @@
 import '../../../../../assets/src/index.jsx'
-import userEvent from '@testing-library/user-event'
 import { 
-  within,
   render,
-  screen 
+  screen,
+  within
 } from '@testing-library/react'
 import { 
   rendersWithMinimal,
-  rendersWithoutLabelThrowWarning,
-  rendersLabelAndDescription
+  rendersWithoutLabelThrowWarning
 } from '../../../utils/fields.js'
+import { userEvent } from '@testing-library/user-event'
 
 const fields = window.tangibleFields
 
@@ -50,13 +49,13 @@ describe('List component', () => {
       }
     ))
   
-  
     const items = container.getElementsByClassName(`tf-list-item`)
     expect(items.length).toEqual(0)
   })
 
-  it('can add and remove items', () => {
+  it('uses initial value and deletes', async () => {
 
+    const user = userEvent.setup()
     const { container } = render(
       fields.render({
         type        : 'list',
@@ -65,13 +64,83 @@ describe('List component', () => {
         choices     : {
           test1 : 'Test1', 
           test2 : 'Test2', 
-          test3 : 'Test3' 
-        }
+          test3 : 'Test3'
+        },
+        value       : JSON.stringify([
+          { value: 'test1', _canDelete: true },
+          { value: 'test2', _canDelete: false }
+        ]) 
       }
     ))
   
-    const items = container.getElementsByClassName(`tf-list-item`)
-    expect(items.length).toEqual(0)
+    let items = container.getElementsByClassName(`tf-list-item`)
+    expect(items.length).toEqual(2)
+
+    // Only one has _canDelete
+    let deleteButtons = document.getElementsByClassName(`tf-button-icon-trash`) 
+    expect(deleteButtons.length).toEqual(1)
+
+    // Not used if unspecified
+    let visibilityButtons = document.getElementsByClassName(`tf-button-icon-eye`) 
+    expect(visibilityButtons.length).toEqual(0)
+
+    await user.click(within(container).getByText('▼'))
+    
+    // Already selected items should be disabled
+    expect(document.getElementsByClassName(`tf-list-box-option`).length).toEqual(3)
+    expect(document.getElementsByClassName(`tf-list-box-option-disabled`).length).toEqual(2)
+
+    await user.click(deleteButtons[0])
+
+    items = container.getElementsByClassName(`tf-list-item`)
+    expect(items.length).toEqual(1)
+
+    deleteButtons = document.getElementsByClassName(`tf-button-icon-trash`) 
+    expect(deleteButtons.length).toEqual(0)
+
+    await user.click(within(container).getByText('▼'))
+
+    expect(document.getElementsByClassName(`tf-list-box-option`).length).toEqual(3)
+    expect(document.getElementsByClassName(`tf-list-box-option-disabled`).length).toEqual(1)
+  })
+
+  it('supports visibility button', async () => {
+
+    const user = userEvent.setup()
+    const { container } = render(
+      fields.render({
+        type          : 'list',
+        label         : `Label for list`,
+        description   : `Description for list`,
+        useVisibility : true,
+        choices     : {
+          test1 : 'Test1', 
+          test2 : 'Test2', 
+          test3 : 'Test3'
+        },
+        value       : JSON.stringify([
+          { value: 'test1', _canDelete: true, _enabled: false },
+          { value: 'test2', _canDelete: false, _enabled: true }
+        ]) 
+      }
+    ))
+
+    let items = container.getElementsByClassName(`tf-list-item`)
+    expect(items.length).toEqual(2)
+
+    let visibilityButtons = document.getElementsByClassName(`tf-button-icon-eye`) 
+    expect(visibilityButtons.length).toEqual(2)
+
+    expect(visibilityButtons[0].style.opacity).toEqual('0.5')
+    expect(visibilityButtons[1].style.opacity).not.toEqual('0.5')
+
+    await user.click(visibilityButtons[1])
+
+    expect(visibilityButtons[1].style.opacity).toEqual('0.5')
+    
+    await user.click(visibilityButtons[1])
+
+    expect(visibilityButtons[1].style.opacity).not.toEqual('0.5')
   })
 
 })

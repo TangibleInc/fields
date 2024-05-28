@@ -160,7 +160,8 @@ class FormatField_TestCase extends WP_UnitTestCase {
         'async_args' => 'asyncArgs',
         'search_url' => 'searchUrl',
         'ajax_action' => 'ajaxAction',
-        'map_results' => 'mapResults'
+        'map_results' => 'mapResults',
+        'use_visibility' => 'useVisibility'
       ]]
     ];
   }
