@@ -65,22 +65,22 @@ class FormatField_TestCase extends WP_UnitTestCase {
 
   public function _test_format_args_types_data() {
     return [
-      'unknown' => ['unknown', 'unknown'],
-      'button_group' => ['alignment_matrix', 'alignment-matrix'],
-      'button_group' => ['button_group', 'button-group'],
-      'color_picker' => ['color_picker', 'color-picker'],
+      'unknown'           => ['unknown', 'unknown'],
+      'button_group'      => ['alignment_matrix', 'alignment-matrix'],
+      'button_group'      => ['button_group', 'button-group'],
+      'color_picker'      => ['color_picker', 'color-picker'],
       'conditional_panel' => ['conditional_panel', 'conditional-panel'],
-      'date_picker' => ['date_picker', 'date-picker'],
-      'number' => ['number', 'number'],
-      'simple_dimension' => ['simple_dimension', 'simple-dimension'],
-      'wysiwyg' => ['wysiwyg', 'wysiwyg'],
-      'gallery' => ['gallery', 'gallery'],
-      'combo_box' => ['combo_box', 'combo-box'],
-      'text_suggestion' => ['text_suggestion', 'text-suggestion'],
-      'file' => ['file', 'file'],
-      'repeater' => ['repeater', 'repeater'],
-      'field_group' => ['field_group', 'field-group'],
-      'switch' => ['switch', 'switch'],
+      'date_picker'       => ['date_picker', 'date-picker'],
+      'number'            => ['number', 'number'],
+      'simple_dimension'  => ['simple_dimension', 'simple-dimension'],
+      'wysiwyg'           => ['wysiwyg', 'wysiwyg'],
+      'gallery'           => ['gallery', 'gallery'],
+      'combo_box'         => ['combo_box', 'combo-box'],
+      'text_suggestion'   => ['text_suggestion', 'text-suggestion'],
+      'file'              => ['file', 'file'],
+      'repeater'          => ['repeater', 'repeater'],
+      'field_group'       => ['field_group', 'field-group'],
+      'switch'            => ['switch', 'switch'],
     ];
   }
 
@@ -155,7 +155,7 @@ class FormatField_TestCase extends WP_UnitTestCase {
       'select' => ['select', [
         'read_only' => 'isDisabled'
       ]],
-      'list' => ['list' => [
+      'list' => ['list', [
         'is_async' => 'isAsync',
         'async_args' => 'asyncArgs',
         'search_url' => 'searchUrl',
