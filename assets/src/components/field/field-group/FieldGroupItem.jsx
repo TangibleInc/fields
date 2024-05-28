@@ -27,8 +27,8 @@ const FieldGroupItem = ({
         condition : config.condition?.condition ?? false
       }}
       data={ data }
-      { ...controlProps }
       { ...config }
+      { ...controlProps }
     />
   )
 }

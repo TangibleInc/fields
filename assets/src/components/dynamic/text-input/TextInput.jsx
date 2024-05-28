@@ -5,7 +5,7 @@ import {
   forwardRef
 } from 'react'
 
-import { createInput } from '../../../codemirror/'
+import { createInput, matchesMask } from '../../../codemirror/'
 import { BaseWrapper, FieldWrapper } from '..'
 
 const TextInput = forwardRef(({
@@ -14,18 +14,52 @@ const TextInput = forwardRef(({
 }, ref) => {
 
   const editor = useRef()
-  const [value, setValue] = useState(props.value ?? '')
+
+  let initialValue = props.value ?? ''
+  if ( props.prefix || props.suffix ) {
+    if ( props.prefix && !initialValue.startsWith(props.prefix) ) initialValue = props.prefix + initialValue
+    if ( props.suffix && !initialValue.endsWith(props.suffix) ) initialValue = initialValue + props.suffix
+  }
+  if ( props.inputMask ) {
+    const start = props.prefix ? props.prefix.length : 0
+    const end = props.suffix ? initialValue.length - props.suffix.length : initialValue.length
+    initialValue = matchesMask( initialValue.slice(start, end), props.inputMask ) ? initialValue : ''
+  }
+  const [value, setValue] = useState(initialValue)
 
   useEffect(() => {
+    let editorValue = value
+    if ( props.prefix ) editorValue = editorValue.slice(props.prefix.length)
+    if ( props.suffix ) editorValue = editorValue.slice(0, editorValue.length - props.suffix.length)
+
     editor.current = editor.current ?? createInput(
       ref.current,
-      value, 
-      setValue,
+      editorValue,
+      value => { setValue( `${props.prefix??''}${value}${props.suffix??''}` ) },
       props.choices,
       getDynamicValueLabel,
-      { readOnly: props.readOnly ?? false }
+      {
+        readOnly: props.readOnly ?? false,
+        inputMask: props.inputMask && props.inputMask !== '' ? props.inputMask : null
+      },
+      props.placeholder ?? ''
     )
   }, [ref.current])
+
+  useEffect(() => {
+    if ( props.suffix ) {
+      const suffix = document.createElement('span');
+      suffix.textContent = props.suffix;
+      suffix.setAttribute( 'class', 'tf-dynamic-text-input__affix tf-dynamic-text-input__affix--suffix' )
+      ref.current.appendChild(suffix);
+    }
+    if ( props.prefix ) {
+      const prefix = document.createElement('span');
+      prefix.textContent = props.prefix;
+      prefix.setAttribute( 'class', 'tf-dynamic-text-input__affix tf-dynamic-text-input__affix--prefix' )
+      ref.current.insertBefore(prefix, ref.current.children[0]);
+    }
+  }, [])
 
   const getDynamicValueLabel = string => {
     const value = props.dynamic.parse(string)
@@ -54,7 +88,7 @@ const TextInput = forwardRef(({
    * - Replace - Only one dynamic value that fully replace the previous field value (no regular text) 
    */
 
-  if( props.dynamic && props.dynamic.getMode() === 'replace' ) {
+  if( !props.inputMask && props.dynamic && props.dynamic.getMode() === 'replace' ) {
     return(
       <FieldWrapper
         { ...props }
@@ -71,20 +105,27 @@ const TextInput = forwardRef(({
         buttonType={ 'inside' }
       >
         <input { ...inputProps } type="hidden" value={ value }/>
-        <div ref={ ref } className="tf-dynamic-text-input"></div>
+        <div
+          ref={ ref }
+          className={`tf-dynamic-text-input${ props.prefix ? ' tf-dynamic-text-input--has-prefix' : '' }${ props.suffix ? ' tf-dynamic-text-input--has-suffix' : '' }`}
+        />
       </FieldWrapper> 
     )
   }
-  
+
   return(
     <BaseWrapper
-      config={ props.dynamic ?? '' } 
+      config={ props.dynamic ?? '' }
       onValueSelection={ insertDynamicValue }
       buttonType={ 'inside' }
       readOnly={ props.readOnly ?? false }
+      inputMasking={ props.inputMask }
     >
       <input { ...inputProps } type="hidden" value={ value }/>
-      <div ref={ ref } className="tf-dynamic-text-input"></div>
+      <div
+        ref={ ref }
+        className={`tf-dynamic-text-input${ props.prefix ? ' tf-dynamic-text-input--has-prefix' : '' }${ props.suffix ? ' tf-dynamic-text-input--has-suffix' : '' }`}
+      />
     </BaseWrapper>
   )
 })

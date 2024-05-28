@@ -64,6 +64,10 @@ $fields->render_field = function(
 
   $field = array_merge( $field, $args );
 
+  if( ! isset($field['value']) && isset($field['fetch_callback']) ) {
+    $field['value'] = $fields->fetch_value( $name );
+  }
+
   $args = $fields->format_args( $name, $field );
 
   $fields->enqueue_item( $name, 'fields', $args );

@@ -29,6 +29,8 @@ $fields->register_dynamic_value = function(array $dynamic_value) use($fields) : 
     );
   }, $dynamic_value['fields'] ?? []);
 
+  $dynamic_value = apply_filters('tangible_fields_dynamic_value', $dynamic_value);
+
   $fields->dynamic_values[ $name ] = $dynamic_value;
   $fields->set_dynamic_value_category($name, $dynamic_value['category'] ?? '');
 };

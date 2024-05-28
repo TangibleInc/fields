@@ -175,6 +175,9 @@ $fields->_store_callbacks = [
   'options' => function ($prefix = 'tf_') {
     return [
       'store_callback' => function ($name, $value) use ($prefix) {
+        if ( $value === get_option( "{$prefix}{$name}" ) ) {
+          return true;
+        }
         if ( is_null( $value ) ) {
           return delete_option( "{$prefix}{$name}" );
         }

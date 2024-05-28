@@ -1,0 +1,9 @@
+.tf-dimensions-number-groups{
+    max-width: 250px;
+
+    .tf-number-field{
+        > input{
+            padding: 0 6px;
+        }
+    }
+}

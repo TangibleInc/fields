@@ -1,0 +1,16 @@
+.tf-gallery__controls{
+    min-height: $field-height;
+}
+
+.tf-gallery-preview{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tf-gallery-item{
+    width: 75px;
+    height: 75px;
+}
+.tf-gallery-buttons{
+    margin-top: $field-padding-horizontal;
+}

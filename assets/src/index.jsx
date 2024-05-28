@@ -4,7 +4,6 @@ import {
 } from 'react-dom'
 
 import { createContext } from 'react'
-import { initContexts } from './contexts/'
 
 import { 
   triggerEvent,
@@ -31,9 +30,10 @@ const renderComponent = (props, type = 'field') => (
 
 const renderField = props => (
   <ControlContext.Provider value={{
-    name     : props.context ?? 'default',
-    wrapper  : `tf-context-${props.context ?? 'default'}`,
-    getValue : store.getValue.bind(store) 
+    name            : props.context ?? 'default',
+    wrapper         : `tf-context-${props.context ?? 'default'}`,
+    getValue        : store.getValue.bind(store),
+    portalContainer : props.portalContainer ?? document.body
   }}>
     <Control 
       { ...props } 
@@ -56,7 +56,8 @@ const renderElement = props => (
   <ControlContext.Provider value={{
     name     : props.context ?? 'default',
     wrapper  : `tf-context-${props.context ?? 'default'}`,
-    getValue : store.getValue.bind(store) 
+    getValue : store.getValue.bind(store),
+    portalContainer : props.portalContainer ?? document.body
   }}>
     <Element 
       { ...props } 
@@ -89,8 +90,6 @@ const init = () => {
   for( const element in elements ) {
     initItem(element, elements[ element ], 'elements')
   }
-
-  initContexts()
 }
 
 const initItem = (name, props, type) => {  

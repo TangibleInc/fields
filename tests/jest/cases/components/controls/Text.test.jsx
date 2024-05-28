@@ -1,5 +1,11 @@
 import '../../../../../assets/src/index.jsx'
 import { 
+  act, 
+  render,
+  within 
+} from '@testing-library/react'
+import { userEvent } from '@testing-library/user-event'
+import { 
   rendersWithMinimal,
   rendersWithoutLabelThrowWarning,
   rendersLabelAndDescription,
@@ -94,6 +100,102 @@ describe('Text component', () => {
     renderHasNotElement(config, container => container.querySelector('.cm-content[contenteditable="false"]'))
     renderHasElement(config, container => container.querySelector('.tf-dynamic-value-input'))
     renderHasNotElement(config, container => container.querySelector('.tf-dynamic-wrapper-clear'))
+  })
+
+  it('can display prefix and suffix', () => {
+
+    const config = { 
+      type  : 'text', 
+      label : 'Label' 
+    }
+
+    renderHasNotElement(config, container => container.querySelector('.tf-dynamic-text-input__affix--prefix'))
+    renderHasNotElement(config, container => container.querySelector('.tf-dynamic-text-input__affix--suffix'))
+
+    config.prefix = 'prefix value'
+
+    renderHasElement(config, container => container.querySelector('.tf-dynamic-text-input__affix--prefix'))
+    renderHasNotElement(config, container => container.querySelector('.tf-dynamic-text-input__affix--suffix'))
+
+    delete config.prefix
+    config.suffix = 'suffix value'
+
+    renderHasNotElement(config, container => container.querySelector('.tf-dynamic-text-input__affix--prefix'))
+    renderHasElement(config, container => container.querySelector('.tf-dynamic-text-input__affix--suffix'))
+
+    config.prefix = 'prefix value'
+
+    renderHasElement(config, container => container.querySelector('.tf-dynamic-text-input__affix--suffix'))
+    renderHasElement(config, container => container.querySelector('.tf-dynamic-text-input__affix--prefix'))
+  })
+
+  it('adds the suffix and the prefix in the hidden input', async () => {
+
+    const { container } = render( 
+      fields.render({
+        name   : 'field-name', 
+        type   : 'text', 
+        label  : 'Label',
+        prefix : '[prefix]',
+        suffix : '[suffix]',
+        value  : 'field-value' 
+      })
+    )
+
+    const input = container.querySelector('.tf-text').querySelector('input')
+    expect(input.value).toBe('[prefix]field-value[suffix]')
+    
+    const user = userEvent.setup()
+    await user.type(container.querySelector('.cm-line'), 'write something before the value ')
+    expect(input.value).toBe('[prefix]write something before the value field-value[suffix]')
+
+    // Should we test/support prefix and suffix when dynamic values are enabled?
+  })
+
+  it('supports the a mask config', async () => {
+
+    let input
+    const { container } = render( 
+      fields.render({
+        name       : 'field-name', 
+        type       : 'text', 
+        label      : 'Label',
+        inputMask  : '999/aaa',
+        value      : 'aaa/999'
+      })
+    )
+
+    input = container.querySelector('.tf-text').querySelector('input')
+    expect(input.value).toBe('')
+    
+    act(() => fields.store.setValue('field-name', ''))
+
+    const user = userEvent.setup()
+
+    input = container.querySelector('.tf-text').querySelector('input')
+    await user.type(container.querySelector('.cm-line'), '123/abc')
+    expect(input.value).toBe('123/abc')
+    
+    act(() => fields.store.setValue('field-name', ''))
+    
+    input = container.querySelector('.tf-text').querySelector('input')
+    await user.type(container.querySelector('.cm-line'), '123/456')
+    expect(input.value).toBe('123/___')
+  })
+
+  it('supports placeholder', () => {
+    
+    const { container } = render( 
+      fields.render({
+        name       : 'field-name', 
+        type       : 'text', 
+        label      : 'Label',
+        placeholder: 'Example'
+      })
+    )
+
+    const placeholder = container.querySelector('.cm-placeholder')
+    expect(placeholder.innerHTML).toBe('Example')
   })
 
 })

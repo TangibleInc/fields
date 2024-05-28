@@ -35,9 +35,9 @@ function Popover({
   const control = useContext(ControlContext)
 
   return (
-    <Overlay>
+    <Overlay portalContainer={ control.portalContainer }>
       <div className={ control.wrapper }>
-        <div {...underlayProps} className="tf-underlay" />
+      {! props.isNonModal && <div {...underlayProps} className="tf-underlay" />}
         <div        
           {...popoverProps}
           ref={popoverRef}
@@ -49,12 +49,12 @@ function Popover({
           }}
           className={ `tf-popover ${className}` }
         >
-          {children} 
-          <DismissButton onDismiss={state.close} />
+          { children } 
+          <DismissButton onDismiss={ state.close } />
         </div>
       </div>
     </Overlay>
-  );
+  )
 }
 
 export default Popover;

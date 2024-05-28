@@ -16,6 +16,9 @@ $_PLUGIN_ENTRYPOINT = __DIR__ . '/../../plugin.php';
 require_once $_WORDPRESS_TESTS_DIR . '/includes/functions.php';
 
 tests_add_filter('muplugins_loaded', function() use ($_PLUGIN_ENTRYPOINT) {
+
+	require_once __DIR__ . '/helpers/index.php';
+
 	require $_PLUGIN_ENTRYPOINT;
 });
 

@@ -9,12 +9,18 @@ if ( ! function_exists( 'tangible_fields' ) ) :
   }
 endif;
 
+$module_path = defined('FIELDS_IS_PLUGIN')
+  ? __DIR__ . '/vendor/tangible/'
+  : __DIR__ . '/../'; 
+
+require_once $module_path . 'framework/index.php';
+
 new class extends stdClass {
 
   public $name = 'tangible_fields';
 
   // Remember to update the version - Expected format: YYYYMMDD
-  public $version = '20240113';
+  public $version = '20240322';
 
   function __construct() {
 

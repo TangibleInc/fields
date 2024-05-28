@@ -23,6 +23,7 @@ class Enqueue_TestCase extends WP_UnitTestCase {
    * @dataProvider _test_items_enqueue_data
    */
 	public function test_items_enqueue(string $type, array $args) {
+		global $wp_version;
     $this->assertEmpty(tangible_fields()->enqueued[ $type ], "There should not be enqueued $type yet");
 		$this->assertFalse(tangible_fields()->is_enqueued);
 
@@ -44,7 +45,11 @@ class Enqueue_TestCase extends WP_UnitTestCase {
 		$this->assertEquals('tangible-fields-default', wp_styles()->query('tangible-fields-default')->handle);
 		$this->assertEquals('tangible-fields', wp_scripts()->query('tangible-fields')->handle);
 
-		$data = wp_scripts()->print_inline_script('tangible-fields', 'before', false);
+		if ( version_compare($wp_version, '6.3', '>') ) {
+			$data = wp_scripts()->get_inline_script_data('tangible-fields', 'before', false);
+		} else {
+			$data = wp_scripts()->print_inline_script('tangible-fields', 'before', false);
+		}
 		$this->assertGreaterThan(0, preg_match('#^var TangibleFields = (.+?);$#', $data, $matches), 'wp_add_inline_script does not have TangibleFields');
 		$data = json_decode($matches[1], true);
 
@@ -61,6 +66,7 @@ class Enqueue_TestCase extends WP_UnitTestCase {
    * @dataProvider _test_items_enqueue_data
    */
 	public function test_fields_enqueue_conditions(string $type, array $args) {
+		global $wp_version;
 		tangible_fields()->enqueue_item('test', $type, $args);
 
     $args['condition'] = [
@@ -75,7 +81,12 @@ class Enqueue_TestCase extends WP_UnitTestCase {
 		tangible_fields()->enqueue_item('field', $type, $args);
 
 		tangible_fields()->maybe_enqueue_scripts();
-		preg_match('#^var TangibleFields = (.+?);$#', wp_scripts()->print_inline_script('tangible-fields', 'before', false), $matches);
+
+		if ( version_compare($wp_version, '6.3', '>') ) {
+			preg_match('#^var TangibleFields = (.+?);$#', wp_scripts()->get_inline_script_data('tangible-fields', 'before', false), $matches);
+		} else {
+			preg_match('#^var TangibleFields = (.+?);$#', wp_scripts()->print_inline_script('tangible-fields', 'before', false), $matches);
+		}
 		$data = json_decode($matches[1], true);
 
 		$this->assertArrayNotHasKey('condition', $data[ $type ]['test']);

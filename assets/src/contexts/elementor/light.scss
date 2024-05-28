@@ -5,14 +5,25 @@ $field-padding-vertical: 0;
 $field-padding-horizontal: 12px; 
 $field-padding: $field-padding-vertical $field-padding-horizontal;
 
+$field-editor-border: 2px solid rgba(0, 0, 0, 0.2);
+
+$label-spacer: $global-spacer-xs;
+
+$button-background: #eee;
+$button-background--hover: #e2e2e2;
+$button-border-color--hover: transparent;
+$button-color--hover: $button-color;
+
 @import '../default/mixins.scss';
 
 // We only need to defined the mixins we need to overwrite
 @mixin label {
+  display: inline-block;
   color: $label-font-color;
   font-size: $label-font-size;
   font-style: $label-font-style;
   font-weight: $label-font-weight;
+  margin-bottom: $label-spacer;
 }
 
 @mixin description {
@@ -30,4 +41,9 @@ $field-padding: $field-padding-vertical $field-padding-horizontal;
   padding: $button-padding;
   height: calc(#{$button-height} - #{$button-border-size *  2}); // Remove border
   cursor: pointer;
+
+  &:hover{
+    background: $button-background--hover;
+    color: $button-color--hover;
+  }
 }

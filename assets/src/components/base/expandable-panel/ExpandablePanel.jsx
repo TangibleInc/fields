@@ -1,6 +1,7 @@
 import { 
   useState, 
-  useEffect 
+  useEffect,
+  isValidElement 
 } from 'react'
 
 import { Button } from '../'
@@ -47,7 +48,9 @@ const ExpandablePanel = props => {
             : null }
           { props.title 
             ? <div className="tf-panel-header-title">
-                <strong>{ props.title }</strong>
+                { ! isValidElement(props.title) 
+                  ? <strong>{ props.title }</strong>
+                  : props.title }
               </div>
             : null }
         </div>
