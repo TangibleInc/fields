@@ -112,7 +112,8 @@ class FormatField_TestCase extends WP_UnitTestCase {
         'enable_opacity' => 'hasAlpha',
       ]],
       'conditional_panel' => ['conditional_panel', [
-        'use_modal' => 'useModal'
+        'use_modal' => 'useModal',
+        'dynamic_categories' => 'dynamicCategories'
       ]],
       'date_picker' => ['date_picker', [
         'future_only' => 'futureOnly',
