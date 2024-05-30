@@ -200,7 +200,7 @@ $fields->format_dynamic_types = function(
     'color', 
     'number'
   ]
-) : array {
+) use ($fields): array {
 
   if( empty($args['dynamic']) ) {
     $args['dynamic'] = false;
@@ -214,10 +214,16 @@ $fields->format_dynamic_types = function(
   $types = ! empty($args['dynamic']['types'])
     ? [ ...array_intersect($args['dynamic']['types'], $default_types) ]
     : $default_types;
+
+  $default_categories = array_keys($fields->dynamic_values_categories);
+  $categories = ! empty($args['dynamic']['categories'])
+    ? [ ...array_intersect($args['dynamic']['categories'], $default_categories) ]
+    : $default_categories;
   
   $args['dynamic'] = [
     'types' => $types,
-    'mode'  => $mode
+    'mode'  => $mode,
+    'categories' => $categories
   ];
 
   return $args;

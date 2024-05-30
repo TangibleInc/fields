@@ -29,15 +29,16 @@ const getDynamicStrings = string => (
  * @see ../components/dynamics/ 
  */
 const dynamicValuesAPI = (value, setValue, config) => ({
-  getTypes  : () => config.types,
-  getMode   : () => config.mode,
-  getList   : () => dynamics.values,
-  getAll    : () => getDynamicStrings(value).map(stringToDynamicValue),
-  getLabel  : type => dynamics.values[type] ? dynamics.values[type].label : type,
-  stringify : dynamicValueToString,
-  parse     : stringToDynamicValue,
-  hasValues : () => getDynamicStrings(value).length !== 0,
-  setValue  : value => setValue(value) 
+  getTypes        : () => config.types,
+  getMode         : () => config.mode,
+  getCategories   : () => config.categories,
+  getList         : () => dynamics.values,
+  getAll          : () => getDynamicStrings(value).map(stringToDynamicValue),
+  getLabel        : type => dynamics.values[type] ? dynamics.values[type].label : type,
+  stringify       : dynamicValueToString,
+  parse           : stringToDynamicValue,
+  hasValues       : () => getDynamicStrings(value).length !== 0,
+  setValue        : value => setValue(value)
 }) 
 
 export { 

@@ -6,7 +6,8 @@ export default function getField( categories, operators ) {
       'name'    : 'left_value',
       'dynamic' : {
         'mode'  : 'replace',
-        'types' : [ 'text', 'date', 'color', 'number' ]
+        'types' : [ 'text', 'date', 'color', 'number' ],
+        'categories' : categories
       },
       'labelVisuallyHidden' : true
     },

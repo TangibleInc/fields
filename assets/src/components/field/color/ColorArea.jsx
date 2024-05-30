@@ -29,7 +29,7 @@ const ColorArea = props => {
   }, state)
 
   const { focusProps } = useFocusRing()
-    
+
   return(
     <div 
       className="tf-color-area"
@@ -39,7 +39,7 @@ const ColorArea = props => {
     >
       <div 
         className="tf-color-area-gradient"
-        style={ gradientProps.style } 
+        style={ gradientProps?.style }
         { ...gradientProps } 
       />
       <div
