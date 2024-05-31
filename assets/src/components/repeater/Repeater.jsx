@@ -84,7 +84,12 @@ const Repeater = props => {
     <Item
       key={ row.key + i }
       values={ row }
-      config={ config }
+      config={ 
+        {
+          ...config, 
+          repeaterRow: i
+        } 
+      }
       onChange={ value => dispatch({ 
         type     : 'update',
         item     : i,
