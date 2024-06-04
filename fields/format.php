@@ -51,7 +51,6 @@ $fields->format_args = function(
     case 'conditional_panel':
       $args['type'] = 'conditional-panel';
       $args = $fields->format_value($args, 'use_modal', 'useModal');
-      $args = $fields->format_value($args, 'dynamic_categories', 'dynamicCategories');
       break;
     
     case 'date_picker':

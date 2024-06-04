@@ -88,7 +88,7 @@ const ConditionalPanel = props => {
                     canDelete={ value.length !== 1 || group.data.length !== 1 }
                     value={ group.data } 
                     onChange={ value => updateGroup(value, i) }
-                    dynamicCategories={props.dynamicCategories}
+                    dynamic={props.dynamic}
                     operators={props.operators}
                   />
                   <div className="tf-conditional-group-actions">

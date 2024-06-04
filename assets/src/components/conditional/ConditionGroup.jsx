@@ -24,7 +24,7 @@ const ConditionGroup = props => {
     <div className="tf-conditional-panel-conditions">
       <Repeater 
         { ...props }
-        fields={ getField(props.dynamicCategories, props.operators) }
+        fields={ getField(props.dynamic, props.operators) }
         type={ 'repeater' }
         layout={ 'bare' }
         afterRow={ afterRow }
