@@ -29,9 +29,9 @@ const getDynamicStrings = string => (
  * @see ../components/dynamics/ 
  */
 const dynamicValuesAPI = (value, setValue, config) => ({
-  getTypes        : () => config.types,
+  getTypes        : () => config.types ?? [ 'text', 'date', 'color', 'number' ],
   getMode         : () => config.mode,
-  getCategories   : () => config.categories,
+  getCategories   : () => config.categories ?? Object.keys(dynamics.categories),
   getList         : () => dynamics.values,
   getAll          : () => getDynamicStrings(value).map(stringToDynamicValue),
   getLabel        : type => dynamics.values[type] ? dynamics.values[type].label : type,

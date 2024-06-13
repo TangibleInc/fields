@@ -101,7 +101,7 @@ const BaseWrapper = props => {
   const choices = useMemo(() => {
 
     const allowedTypes = props.config.getTypes()
-    const categoryKeys = props.config.getCategories() ?? Object.keys(dynamics.categories)
+    const categoryKeys = props.config.getCategories()
 
     const categories = categoryKeys.map(categoryKey => {
       
