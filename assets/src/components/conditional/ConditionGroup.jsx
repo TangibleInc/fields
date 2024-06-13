@@ -1,6 +1,5 @@
 import Repeater from '../repeater/Repeater'
 import { Button } from '../base'
-import getField from './condition-fields'
 
 const ConditionGroup = props => {
 
@@ -24,7 +23,6 @@ const ConditionGroup = props => {
     <div className="tf-conditional-panel-conditions">
       <Repeater 
         { ...props }
-        fields={ getField(props.dynamic, props.operators) }
         type={ 'repeater' }
         layout={ 'bare' }
         afterRow={ afterRow }

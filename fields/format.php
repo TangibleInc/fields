@@ -50,9 +50,10 @@ $fields->format_args = function(
 
     case 'conditional_panel':
       $args['type'] = 'conditional-panel';
+      $args = $fields->format_groups($type, $args);
       $args = $fields->format_value($args, 'use_modal', 'useModal');
       break;
-    
+
     case 'date_picker':
       $args['type'] = 'date-picker';
       $args = $fields->format_value($args, 'future_only', 'futureOnly');

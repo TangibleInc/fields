@@ -15,13 +15,15 @@ import {
   ModalTrigger
 } from '../base/'
 
+import getDefaultFields from './condition-fields'
 import ConditionGroup from './ConditionGroup'
 
 const ConditionalPanel = props => {
-  
-  const emptyRow = () => ({ 
+
+  const emptyRow = () => ({
     key: uniqid(), 
-    data: [{ key: uniqid(), operator: '_eq' }]
+    // data: [{ key: uniqid(), operator: '_eq' }]
+    data: [{ key: uniqid() }]
   })
 
   /**
@@ -35,6 +37,7 @@ const ConditionalPanel = props => {
   const [value, setValue] = useState( initialValue() )
 
   useEffect(() => {
+    console.log(value)
     props.onChange && props.onChange(props.useModal ? savedValue : value)
   }, [props.useModal ? savedValue : value])
 
@@ -88,8 +91,10 @@ const ConditionalPanel = props => {
                     canDelete={ value.length !== 1 || group.data.length !== 1 }
                     value={ group.data } 
                     onChange={ value => updateGroup(value, i) }
-                    dynamic={props.dynamic}
-                    operators={props.operators}
+                    fields={ props.fields && props.fields.length > 0
+                      ? props.fields
+                      : getDefaultFields(props.dynamic, props.operators)
+                    }
                   />
                   <div className="tf-conditional-group-actions">
                     <strong>Or</strong>

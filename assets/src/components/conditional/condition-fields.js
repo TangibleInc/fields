@@ -1,4 +1,4 @@
-export default function getField( dynamic, operators ) {
+export default function getDefaultFields( dynamic, operators ) {
   return [
     {
       'label'   : 'Text',
