@@ -1,3 +1,25 @@
+# 20240614
+
+- Dynamic values:
+    - Date: Implement new dynamic value
+- Fetch/Store:
+    - Options: Store callback - Fix return when value not updated
+- Fields:
+    - ComboBox: Async mode - Show message in dropdown when no results
+    - List: Implement new field type
+    - Repeater: Pass current row index as a props of every child fields
+    - Repeater: Section title - Fix dependent value when value comes from a repeater child field
+    - Text: Fix placeholder
+- Tests:
+    - ComboBox: Improve tests
+    - Field group: Improve tests
+    - List: Start tests
+    - Repeater: Improve tests
+- Visibility conditions:
+    - Add support for attributes when value is an object
+- Conditional logic:
+    - Add possibility to use a custom dynamic value config when evaluating conditional rules
+
 # 20240322
 
 - Fields:
