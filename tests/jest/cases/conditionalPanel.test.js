@@ -273,4 +273,48 @@ describe('conditional panel', () => {
     expect(initialValue[0].data[0].operator).toBe('_eq')
     expect(initialValue[0].data[0].right_value).toBe('')
   })
+
+  it('renders with custom subfields defined', () => {
+
+    const { container } = render(
+      fields.render({
+        type  : 'conditional-panel',
+        name  : 'conditional-panel-name',
+        fields : [
+          {
+            'label': 'Text',
+            'type': 'date-picker',
+            'name': 'date',
+            'labelVisuallyHidden': true
+          },
+          {
+            'label': 'Operator',
+            'type': 'select',
+            'name': 'select',
+            'choices': {
+              '_eq': 'Is',
+              '_neq': 'Is not',
+              '_lt': 'Less than',
+            },
+            'labelVisuallyHidden': true,
+          },
+          {
+            'label': 'Color',
+            'type': 'color-picker',
+            'name': 'color',
+            'labelVisuallyHidden': true,
+          },
+        ]
+      }
+      )
+    )
+
+    expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
+
+    const rowField = document.querySelectorAll('.tf-repeater-bare-row .tf-repeater-bare-item-field')
+    expect(rowField[0].querySelector('.tf-date-picker')).toBeTruthy()
+    expect(rowField[1].querySelector('.tf-select')).toBeTruthy()
+    expect(rowField[2].querySelector('.tf-color')).toBeTruthy()
+
+  }, 10000)
 })
