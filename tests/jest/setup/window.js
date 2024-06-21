@@ -12,18 +12,26 @@ window.TangibleFields = {
   },
   fields: [],
   dynamics: {
-    categories: [
-      {
+    categories: {
+      'test-category': {
         label: 'Test category',
         name: 'test-category',
         values: [
           'test-value-no-settings',
           'test-value-settings'
         ]
-      }
-    ],
-    values: [
-      {
+      },
+      'test-category-2': {
+        label: 'Test category 2',
+        name: 'test-category-2',
+        values: [
+          'test-value-2-no-settings',
+          'test-value-2-settings'
+        ]
+      },
+    },
+    values: {
+      'test-value-no-settings': {
         category: 'test-category',
         name: 'test-value-no-settings',
         label: 'Test value no settings',
@@ -31,7 +39,7 @@ window.TangibleFields = {
         description: 'Test value no settings description',
         fields: [],
       },
-      {
+      'test-value-settings': {
         category: 'test-category',
         name: 'test-value-settings',
         label: 'Test value settings',
@@ -44,8 +52,30 @@ window.TangibleFields = {
             label: 'Dynamic value setting',
           }
         ],
+      },
+      'test-value-2-no-settings': {
+        category: 'test-category-2',
+        name: 'test-value-2-no-settings',
+        label: 'Test value 2 no settings',
+        type: 'text',
+        description: 'Test value 2 no settings description',
+        fields: [],
+      },
+      'test-value-2-settings': {
+        category: 'test-category-2',
+        name: 'test-value-2-settings',
+        label: 'Test value 2 settings',
+        type: 'number',
+        description: 'Test value settings description',
+        fields: [
+          {
+            type: 'number',
+            name: 'dynamic-value-setting',
+            label: 'Dynamic value setting',
+          }
+        ],
       }
-    ]
+    }
   },
   mimetypes: {},
 }

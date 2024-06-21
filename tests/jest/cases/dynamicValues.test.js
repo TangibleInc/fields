@@ -2,7 +2,8 @@ import '../../../assets/src/index.jsx'
 import { userEvent } from '@testing-library/user-event'
 import { 
   render, 
-  within, 
+  within,
+  screen
 } from '@testing-library/react'
 
 const fields = window.tangibleFields
@@ -96,6 +97,104 @@ describe('dynamic values feature', () => {
     await user.click(within(container).getByText('Insert'))
     
     expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeTruthy()
+  })
+
+  test.each(controlTypes)('%p type filters options by category', async type => {
+
+    const choices = {
+      'test-value-no-settings' : 'Test value no settings',
+      'test-value-settings' : 'Test value settings',
+    }
+    const absentChoices = {
+      'test-value-2-no-settings' : 'Test value 2 no settings',
+      'test-value-2-settings' : 'Test value 2 settings'
+    }
+    const user = userEvent.setup()
+    const { container } = render(
+      <>
+        { fields.render({
+          label   : 'Label name',
+          type    : type,
+          name    : 'name',
+          dynamic: {
+            categories: [ 'test-category' ]
+          }
+        }) }
+        <div>Test click outside</div>
+      </>
+    )
+
+    expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeFalsy()
+
+    await user.click(document.querySelector('button.tf-dynamic-wrapper-insert'))
+
+    expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeTruthy()
+
+    Object.keys(choices).forEach( name => {
+      const item = within(document).getByText( choices[ name ] )
+      // screen.debug(item)
+
+      expect(item.getAttribute('data-key')).toBe( name )
+    })
+
+    Object.keys(absentChoices).forEach( name => {
+      expect(within(document).queryByText( absentChoices[ name ] )).toBe(null)
+    })
+
+    await user.click(within(container).getByText('Test click outside'))
+
+    Object.keys(choices).forEach( name => {
+      expect(within(document).queryByText( choices[ name ] )).toBe(null)
+    })
+  })
+
+  it('can filter dynamic options by type', async () => {
+
+    let choices = {
+      'test-value-2-settings' : 'Test value 2 settings',
+    }
+    const absentChoices = {
+      'test-value-no-settings' : 'Test value no settings',
+      'test-value-settings' : 'Test value settings',
+      'test-value-2-no-settings' : 'Test value 2 no settings',
+    }
+    const user = userEvent.setup()
+    const { container } = render(
+      <>
+        { fields.render({
+          label   : 'Label name',
+          type    : 'text',
+          name    : 'name',
+          dynamic: {
+            types: [ 'number' ],
+          }
+        }) }
+        <div>Test click outside</div>
+      </>
+    )
+
+    expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeFalsy()
+
+    await user.click(document.querySelector('button.tf-dynamic-wrapper-insert'))
+
+    expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeTruthy()
+
+    Object.keys(choices).forEach( name => {
+      const item = within(document).getByText( choices[ name ] )
+      // screen.debug(item)
+
+      expect(item.getAttribute('data-key')).toBe( name )
+    })
+
+    Object.keys(absentChoices).forEach( name => {
+      expect(within(document).queryByText( absentChoices[ name ] )).toBe(null)
+    })
+
+    await user.click(within(container).getByText('Test click outside'))
+
+    Object.keys(choices).forEach( name => {
+      expect(within(document).queryByText( choices[ name ] )).toBe(null)
+    })
   })
 
   /**

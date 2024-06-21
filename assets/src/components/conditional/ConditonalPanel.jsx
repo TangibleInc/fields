@@ -20,11 +20,12 @@ import ConditionGroup from './ConditionGroup'
 
 const ConditionalPanel = props => {
 
-  const emptyRow = () => ({
-    key: uniqid(), 
-    // data: [{ key: uniqid(), operator: '_eq' }]
-    data: [{ key: uniqid() }]
-  })
+  const emptyRow = () => {
+    const res = { key: uniqid(), data: [{ key: uniqid() }] }
+    if ( !props.fields || props.fields.length === 0 ) res.data[0].operator = '_eq'
+
+    return res
+  }
 
   /**
    * If no modal, saved value is not used
@@ -37,7 +38,6 @@ const ConditionalPanel = props => {
   const [value, setValue] = useState( initialValue() )
 
   useEffect(() => {
-    console.log(value)
     props.onChange && props.onChange(props.useModal ? savedValue : value)
   }, [props.useModal ? savedValue : value])
 
