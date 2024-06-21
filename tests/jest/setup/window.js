@@ -12,8 +12,8 @@ window.TangibleFields = {
   },
   fields: [],
   dynamics: {
-    categories: [
-      {
+    categories: {
+      'test-category': {
         label: 'Test category',
         name: 'test-category',
         values: [
@@ -21,9 +21,9 @@ window.TangibleFields = {
           'test-value-settings'
         ]
       }
-    ],
-    values: [
-      {
+    },
+    values: {
+      'test-value-no-settings': {
         category: 'test-category',
         name: 'test-value-no-settings',
         label: 'Test value no settings',
@@ -31,7 +31,7 @@ window.TangibleFields = {
         description: 'Test value no settings description',
         fields: [],
       },
-      {
+      'test-value-settings': {
         category: 'test-category',
         name: 'test-value-settings',
         label: 'Test value settings',
@@ -45,7 +45,7 @@ window.TangibleFields = {
           }
         ],
       }
-    ]
+    }
   },
   mimetypes: {},
 }
