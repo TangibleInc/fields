@@ -28,7 +28,21 @@ const getDynamicStrings = string => (
  * @see ../Control.jsx 
  * @see ../components/dynamics/ 
  */
-const dynamicValuesAPI = (value, setValue, config) => ({
+const dynamicValuesAPI = (value, setValue, fieldType, config) => ({
+  // getTypes        : () => {
+  //   if ( config.types ) return [ 'text', 'date', 'color', 'number' ].filter(value => config.types.includes(value))
+  //   if ( [ 'date', 'color', 'number' ].includes(fieldType) ) return [ fieldType ]
+  //   return [ 'text', 'date', 'color', 'number' ]
+  // },
+  // getMode         : () => {
+  //   if ( config.mode ) return config.mode
+  //   if ( [ 'date', 'color', 'number' ].includes(fieldType) ) return 'replace'
+  //   return 'insert'
+  // },
+  // getCategories   : () => {
+  //   if ( config.categories ) return Object.keys(dynamics.categories).filter(value => config.categories.includes(value))
+  //   return Object.keys(dynamics.categories)
+  // },
   getTypes        : () => config.types ?? [ 'text', 'date', 'color', 'number' ],
   getMode         : () => config.mode,
   getCategories   : () => config.categories ?? Object.keys(dynamics.categories),

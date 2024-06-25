@@ -54,7 +54,7 @@ const Control = ({
       })
     })
   }
-  
+
   return (
     <OverlayProvider { ...wrapper }>
       <VisibilityWrapper visibility={ visibility } data={ data }>
@@ -76,7 +76,7 @@ const Control = ({
               onChange={ onChange }
               data={ data }
               dynamic={ props.dynamic 
-                ? dynamicValuesAPI(value, setValue, props.dynamic) 
+                ? dynamicValuesAPI(value, setValue, props.type, props.dynamic)
                 : false 
               }
             /> }
