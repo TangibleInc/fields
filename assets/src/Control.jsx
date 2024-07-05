@@ -76,7 +76,7 @@ const Control = ({
               onChange={ onChange }
               data={ data }
               dynamic={ props.dynamic 
-                ? dynamicValuesAPI(value, setValue, props.type, props.dynamic)
+                ? dynamicValuesAPI(value, setValue, props.dynamic)
                 : false 
               }
             /> }

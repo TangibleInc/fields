@@ -5,8 +5,8 @@ export default function getDefaultFields( dynamic, operators ) {
       'type'    : 'text',
       'name'    : 'left_value',
       'dynamic' : {
-        'mode'  : dynamic.getMode ? dynamic.getMode() : 'replace',
-        'types' : dynamic.getTypes ? dynamic.getTypes() : [ 'text', 'date', 'color', 'number' ],
+        'mode'       : dynamic.getMode ? dynamic.getMode() : 'replace',
+        'types'      : dynamic.getTypes ? dynamic.getTypes() : [ 'text', 'date', 'color', 'number' ],
         'categories' : dynamic.getCategories ? dynamic.getCategories() : Object.keys(TangibleFields.dynamics.categories)
       },
       'labelVisuallyHidden' : true
@@ -35,8 +35,8 @@ export default function getDefaultFields( dynamic, operators ) {
       'type'    : 'text',
       'name'    : 'right_value',
       'dynamic' : {
-        'mode'  : dynamic.getMode ? dynamic.getMode() : 'replace',
-        'types' : dynamic.getTypes ? dynamic.getTypes() : [ 'text', 'date', 'color', 'number' ],
+        'mode'       : dynamic.getMode ? dynamic.getMode() : 'replace',
+        'types'      : dynamic.getTypes ? dynamic.getTypes() : [ 'text', 'date', 'color', 'number' ],
         'categories' : dynamic.getCategories ? dynamic.getCategories() : Object.keys(TangibleFields.dynamics.categories)
       },
       'labelVisuallyHidden' : true

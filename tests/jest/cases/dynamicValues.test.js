@@ -2,8 +2,7 @@ import '../../../assets/src/index.jsx'
 import { userEvent } from '@testing-library/user-event'
 import { 
   render, 
-  within,
-  screen
+  within
 } from '@testing-library/react'
 
 const fields = window.tangibleFields
@@ -132,8 +131,6 @@ describe('dynamic values feature', () => {
 
     Object.keys(choices).forEach( name => {
       const item = within(document).getByText( choices[ name ] )
-      // screen.debug(item)
-
       expect(item.getAttribute('data-key')).toBe( name )
     })
 
@@ -181,8 +178,6 @@ describe('dynamic values feature', () => {
 
     Object.keys(choices).forEach( name => {
       const item = within(document).getByText( choices[ name ] )
-      // screen.debug(item)
-
       expect(item.getAttribute('data-key')).toBe( name )
     })
 
