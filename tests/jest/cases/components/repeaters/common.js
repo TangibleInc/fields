@@ -309,6 +309,44 @@ const commonRepeaterTests = layout => {
     expect(container.querySelector('.tf-text'))
     expect(within(items).getByText('Test 2')).toBeTruthy()
   })
+
+  it('passes the row index as a props in subfields', async () => {
+
+    const user = userEvent.setup()
+    const { container } = render(
+      fields.render({
+        type   : 'repeater',
+        layout : layout,
+        name   : 'test',
+        fields     : [
+          {
+            name  : 'test2',
+            label : 'Test 1',
+            type  : 'text'
+          }
+        ],
+      })
+    )
+
+    let hasProps = false
+    fields.event('valueChange', ({ props }) => {
+
+      if( props.itemType !== 'subtype' && props.name !== 'test2' ) {
+        return;
+      }
+
+      hasProps = props.repeaterRow === 0
+    })
+
+    // Needs to open panel to see fields
+    if( layout === 'advanced' ) {
+      await user.click(container.querySelector('.tf-button-repeater-overview-open'))
+    }
+
+    await user.type(container.querySelector('.cm-line'), 'a')
+
+    expect(hasProps).toBe(true)
+  })
 }
 
 export { commonRepeaterTests }

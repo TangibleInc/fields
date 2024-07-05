@@ -28,7 +28,7 @@ window.TangibleFields = {
           'test-value-2-no-settings',
           'test-value-2-settings'
         ]
-      },
+      }
     },
     values: {
       'test-value-no-settings': {
