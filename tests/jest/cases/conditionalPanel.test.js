@@ -3,8 +3,7 @@ import { uniqid } from '../../../assets/src/utils.js'
 import { userEvent } from '@testing-library/user-event'
 import { 
   render,
-  within,
-  screen
+  within
 } from '@testing-library/react'
 
 const fields = window.tangibleFields
@@ -27,7 +26,7 @@ describe('conditional panel', () => {
     expect(within(container).getByText('And')).toBeTruthy()
     expect(within(container).getByText('Delete condition')).toBeTruthy()
     expect(within(container).getByText('Add group')).toBeTruthy()
-  }, 10000)
+  })
 
   it('can add and remove conditions', async () => {
     
@@ -56,7 +55,7 @@ describe('conditional panel', () => {
 
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
     expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
-  }, 10000)
+  })
 
   it('can add condition groups', async () => {
 
@@ -74,7 +73,7 @@ describe('conditional panel', () => {
 
     expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(0)
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(2)
-  }, 10000)
+  })
 
   it('automatically removes condition group when no condition', async () => {
 
@@ -97,7 +96,7 @@ describe('conditional panel', () => {
 
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(1)
     expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
-  }, 10000)
+  })
 
   it('can load value', async () => {
 
@@ -153,7 +152,7 @@ describe('conditional panel', () => {
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(1)
     expect(within(container).getAllByText('Add group').length).toBe(1)
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
-  }, 10000)
+  })
 
   it('can be rendered inside a modal, and save only when modal is closed with save button', async () => {
 
@@ -227,7 +226,7 @@ describe('conditional panel', () => {
 
     expect(within(savedModal).getAllByText('And').length).toBe(3)
     expect(within(savedModal).getAllByText('Add group').length).toBe(2)
-  }, 10000)
+  })
 
   it('add label to conditional panel', async () => {
 
@@ -240,7 +239,7 @@ describe('conditional panel', () => {
     )
 
     expect(within(container).getByText('Conditional Panel')).toBeTruthy()
-  }, 10000)
+  })
 
   test.each([
     {},

@@ -3,6 +3,7 @@ module.exports = {
   setupFiles: [
     './setup/window.js',
     './setup/range.js',
-    './setup/request.js'
+    './setup/request.js',
+    './setup/timeout.js'
   ]
 }

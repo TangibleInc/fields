@@ -8,7 +8,7 @@
     "dev": "roll dev",
     "build": "roll build",
     "format": "roll format",
-    "jest:test": "jest --config=tests/jest/jest.config.js --silent=false test",
+    "jest:test": "jest --config=tests/jest/jest.config.js --silent=false --maxWorkers=1 test",
     "-- Local environment --": "https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env",
     "env": "wp-env",
     "env:start": "wp-env start",
