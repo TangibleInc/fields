@@ -1,4 +1,4 @@
-import { 
+import {
   useEffect,
   useState,
   useContext
@@ -20,9 +20,9 @@ const Control = ({
 }) => {
 
   /**
-   * @see renderField() in ./src/index.jsx 
+   * @see renderField() in ./src/index.jsx
    */
-  const { ControlContext } = tangibleFields 
+  const { ControlContext } = tangibleFields
   const control = useContext(ControlContext)
 
   const wrapper = {
@@ -58,26 +58,26 @@ const Control = ({
   return (
     <OverlayProvider { ...wrapper }>
       <VisibilityWrapper visibility={ visibility } data={ data }>
-        <RenderWrapper 
+        <RenderWrapper
           itemType={ props.itemType ?? 'field' }
-          name={ props.name ?? false } 
+          name={ props.name ?? false }
           setValue={ setValue }
         >
-        { refreshRender => 
-          <DependendWrapper 
-            refresh={ refreshRender } 
-            data={ data } 
-            itemProps={ props } 
+        { refreshRender =>
+          <DependendWrapper
+            refresh={ refreshRender }
+            data={ data }
+            itemProps={ props }
           >
-          { itemProps => 
-            <ControlComponent 
-              { ...itemProps } 
+          { itemProps =>
+            <ControlComponent
+              { ...itemProps }
               value={ value }
               onChange={ onChange }
               data={ data }
-              dynamic={ props.dynamic 
-                ? dynamicValuesAPI(value, setValue, props.dynamic)
-                : false 
+              dynamic={ props.dynamic
+                ? dynamicValuesAPI(value, setValue, props)
+                : false
               }
             /> }
           </DependendWrapper> }

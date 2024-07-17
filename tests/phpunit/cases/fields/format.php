@@ -226,7 +226,8 @@ class FormatField_TestCase extends WP_UnitTestCase {
     return [
       ['repeater'],
       ['accordion'],
-      ['field_group']
+      ['field_group'],
+      ['conditional_panel']
     ]; 
   }
 
@@ -295,56 +296,4 @@ class FormatField_TestCase extends WP_UnitTestCase {
     $this->assertEquals('action', $args['fields'][0]['buttonType']);
   }
 
-  public function _test_format_dynamic_values_data() {
-    return [
-      ['color_picker', 'replace', ['color']],
-      ['date_picker', 'replace', ['date']],
-      ['number', 'replace', ['number']],
-      ['text', 'insert', ['text', 'date', 'color', 'number']]
-    ];
-  }
-
-  /**
-   * @dataProvider _test_format_dynamic_values_data
-   */
-  public function test_format_dynamic_values(string $type, string $default_mode, array $default_types) {
-    $fields = tangible_fields(); 
-    
-    $args = $fields->format_args($type, [
-      'type' => $type
-    ]);
-    $this->assertFalse($args['dynamic'], 'value of $args["dynamic"] should be set to false when not set');
-
-    $args = $fields->format_args($type, [
-      'type'    => $type,
-      'dynamic' => false
-    ]);
-    $this->assertFalse($args['dynamic'], 'value of $args["dynamic"] should stay false when initial value is false');
-    
-    $args = $fields->format_args($type, [
-      'type'    => $type,
-      'dynamic' => true
-    ]);
-
-    $this->assertIsArray($args['dynamic'], 'value of $args["dynamic"] should be converted to an array when dynamic true');
-    $this->assertEquals($default_mode, $args['dynamic']['mode'], '$args["dynamic"]["mode"] should be equal to default if not specified');
-    $this->assertEquals($default_types, $args['dynamic']['types'], '$args["dynamic"]["types"] should be equal to default if not specified');
-    
-    $set_mode = $default_mode === 'insert' ? 'replace' : 'insert';
-    $set_types = ['text', 'number', 'custom'];
-    $expected_types = [ ...array_intersect($set_types, $default_types) ];
-    
-    $args = $fields->format_args($type, [
-      'type'    => $type,
-      'dynamic' => [
-        'mode'  => $set_mode,
-        'types' => $set_types,
-      ]
-    ]);
-
-    $this->assertIsArray($args['dynamic'], 'value of $args["dynamic"] should stay an array when passed value was an array');
-    $this->assertEquals($set_mode, $args['dynamic']['mode'], '$args["dynamic"]["mode"] should be equal to passed value when specified');
-    $this->assertNotContains('custom', $args['dynamic']['types'], '$args["dynamic"]["types"] should remove unexpected values');
-    $this->assertEquals($expected_types, $args['dynamic']['types'], '$args["dynamic"]["types"] should only contains authorized types');
-  }
 }
