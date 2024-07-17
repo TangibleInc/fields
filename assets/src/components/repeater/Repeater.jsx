@@ -23,7 +23,8 @@ const Repeater = props => {
 
   const fields = props.fields ?? []
 
-  const layout = props.layout ?? 'table'
+  const hasLayout = Object.keys(Layouts).includes( props?.layout )
+  const layout = hasLayout ? props.layout : 'table'
   const Layout = Layouts[ layout ]
 
   const repeatable = props.repeatable ?? true
