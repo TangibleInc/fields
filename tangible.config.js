@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   build: [
 
     /**
@@ -9,7 +9,7 @@ module.exports = {
       dest: 'assets/build/index.min.js',
       react: 'wp'
     },
-    
+
     /**
      * Style: One stylesheet per context
      */
@@ -29,6 +29,6 @@ module.exports = {
       src: 'assets/src/contexts/beaver-builder/index.scss',
       dest: 'assets/build/beaver-builder/index.min.css'
     }
-    
+
   ]
 }

@@ -1,6 +1,7 @@
 {
   "name": "tangible-fields",
   "description": "",
+  "type": "module",
   "tangible": {
     "deployType": "module"
   },
