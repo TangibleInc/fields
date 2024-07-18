@@ -1,39 +1,46 @@
-import { 
-  useState, 
+import {
+  useState,
   useEffect,
+  useMemo,
   Fragment
 } from 'react'
 
-import { 
-  uniqid, 
+import {
+  uniqid,
   initJSON,
   deepCopy
 } from '../../utils'
 
-import { 
-  Button, 
+import {
+  Button,
   ModalTrigger
 } from '../base/'
 
-import getDefaultFields from './condition-fields'
+import {
+  getFields,
+  getInitialOperator
+} from './condition-fields'
+
 import ConditionGroup from './ConditionGroup'
 
 const ConditionalPanel = props => {
 
-  const emptyRow = () => {
-    const res = { key: uniqid(), data: [{ key: uniqid() }] }
-    if ( !props.fields || props.fields.length === 0 ) res.data[0].operator = '_eq'
-
-    return res
-  }
+  const fields = useMemo(() => getFields(props), [])
+  const emptyRow = () => ({
+    key: uniqid(),
+    data: [{
+      key      : uniqid(),
+      operator : getInitialOperator(fields)
+    }]
+  })
 
   /**
    * If no modal, saved value is not used
-   * 
+   *
    * When we use the modal however, we need both state as change can be discared when
    * closing the modal
    */
-  const initialValue = () => initJSON(props.value ?? '', [ emptyRow() ]) 
+  const initialValue = () => initJSON(props.value ?? '', [ emptyRow() ])
   const [savedValue, setSavedValue] = useState( initialValue() )
   const [value, setValue] = useState( initialValue() )
 
@@ -63,9 +70,9 @@ const ConditionalPanel = props => {
   }
 
   const Wrapper = props.useModal ? ModalTrigger : Fragment
-  const wrapperProps = props.useModal 
-    ? { 
-        title       : 'Conditional rules', 
+  const wrapperProps = props.useModal
+    ? {
+        title       : 'Conditional rules',
         label       : 'Open conditional panel',
         confirmText : 'Save',
         onCancel    : () => {
@@ -74,7 +81,7 @@ const ConditionalPanel = props => {
         onValidate  : () => {
           setSavedValue([ ...deepCopy(value) ])
         },
-      } 
+      }
     : {}
 
   return(
@@ -87,14 +94,11 @@ const ConditionalPanel = props => {
             <div className="tf-conditional-groups">
               { value.map((group, i) => (
                 <div key={ group.key } className="tf-conditional-group">
-                  <ConditionGroup 
+                  <ConditionGroup
                     canDelete={ value.length !== 1 || group.data.length !== 1 }
-                    value={ group.data } 
+                    value={ group.data }
                     onChange={ value => updateGroup(value, i) }
-                    fields={ props.fields && props.fields.length > 0
-                      ? props.fields
-                      : getDefaultFields(props.dynamic, props.operators)
-                    }
+                    fields={ fields }
                   />
                   <div className="tf-conditional-group-actions">
                     <strong>Or</strong>

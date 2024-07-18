@@ -1,9 +1,6 @@
 import '../../../../assets/src/index.jsx'
 import { userEvent } from '@testing-library/user-event'
-import {
-  defaultConfig,
-  allowedTypes
-} from '../../../../assets/src/dynamic-values/index.js'
+import { allowedTypes } from '../../../../assets/src/dynamic-values/index.js'
 import {
   render,
   within
@@ -20,9 +17,13 @@ describe('dynamic values feature - render', () => {
 
   /**
    * Start by common test, field type specific tests are after
+   *
+   * We remove conditional panel because we won't render the dynamic
+   * values directly in that case, but pass the config to child fields
    */
+  const testTypes = allowedTypes.filter(type => type !== 'conditional-panel')
 
-  test.each(allowedTypes)('%p type do not render dynamic values UI if not specified', type => {
+  test.each(testTypes)('%p type do not render dynamic values UI if not specified', type => {
 
     const { container } = render(
       fields.render({
@@ -36,7 +37,7 @@ describe('dynamic values feature - render', () => {
     expect(within(container).queryByText('Clear')).toBeFalsy()
   })
 
-  test.each(allowedTypes)('%p type do not render dynamic values UI if dynamic is false', type => {
+  test.each(testTypes)('%p type do not render dynamic values UI if dynamic is false', type => {
 
     const { container } = render(
       fields.render({
@@ -51,7 +52,7 @@ describe('dynamic values feature - render', () => {
     expect(within(container).queryByText('Clear')).toBeFalsy()
   })
 
-  test.each(allowedTypes)('%p type does render dynamic values UI if dynamic is true', type => {
+  test.each(testTypes)('%p type does render dynamic values UI if dynamic is true', type => {
 
     const { container } = render(
       fields.render({
@@ -71,7 +72,7 @@ describe('dynamic values feature - render', () => {
     else expect(within(container).getByText('Clear')).toBeTruthy()
   })
 
-  test.each(allowedTypes)('%p type open dynamic value combobox when clicking on insert button', async type => {
+  test.each(testTypes)('%p type open dynamic value combobox when clicking on insert button', async type => {
 
     const user = userEvent.setup()
     const { container } = render(
@@ -101,7 +102,7 @@ describe('dynamic values feature - render', () => {
     expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeTruthy()
   })
 
-  test.each(allowedTypes)('%p type filters options by category', async type => {
+  test.each(testTypes)('%p type filters options by category', async type => {
 
     const choices = {
       'test-value-no-settings' : 'Test value no settings',
@@ -120,7 +121,7 @@ describe('dynamic values feature - render', () => {
           name    : 'name',
           dynamic : {
             categories : [ 'test-category' ],
-            types      : allowedTypes
+            types      : testTypes
           }
         }) }
         <div>Test click outside</div>

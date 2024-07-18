@@ -1,7 +1,7 @@
 import '../../../assets/src/index.jsx'
 import { uniqid } from '../../../assets/src/utils.js'
 import { userEvent } from '@testing-library/user-event'
-import { 
+import {
   render,
   within
 } from '@testing-library/react'
@@ -9,32 +9,32 @@ import {
 const fields = window.tangibleFields
 
 describe('conditional panel', () => {
-  
+
   it('renders', () => {
 
     const { container } = render(
       fields.render({
         type  : 'conditional-panel',
-        name  : 'conditional-panel-name' 
+        name  : 'conditional-panel-name'
       })
     )
 
     expect(document.querySelectorAll('.tf-conditional-panel').length).toBe(1)
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
     expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
-    
+
     expect(within(container).getByText('And')).toBeTruthy()
     expect(within(container).getByText('Delete condition')).toBeTruthy()
     expect(within(container).getByText('Add group')).toBeTruthy()
   })
 
   it('can add and remove conditions', async () => {
-    
+
     const user = userEvent.setup()
     const { container } = render(
       fields.render({
         type  : 'conditional-panel',
-        name  : 'conditional-panel-name' 
+        name  : 'conditional-panel-name'
       })
     )
 
@@ -63,7 +63,7 @@ describe('conditional panel', () => {
     const { container } = render(
       fields.render({
         type  : 'conditional-panel',
-        name  : 'conditional-panel-name' 
+        name  : 'conditional-panel-name'
       })
     )
 
@@ -81,7 +81,7 @@ describe('conditional panel', () => {
     const { container } = render(
       fields.render({
         type  : 'conditional-panel',
-        name  : 'conditional-panel-name' 
+        name  : 'conditional-panel-name'
       })
     )
 
@@ -106,28 +106,28 @@ describe('conditional panel', () => {
         type  : 'conditional-panel',
         name  : 'conditional-panel-name',
         value : [
-          { 
-            key: uniqid(), 
+          {
+            key: uniqid(),
             data: [
               { key: uniqid() }
-            ] 
+            ]
           },
-          { 
-            key: uniqid(), 
+          {
+            key: uniqid(),
             data: [
               { key: uniqid() },
               { key: uniqid() }
-            ] 
+            ]
           },
-          { 
-            key: uniqid(), 
+          {
+            key: uniqid(),
             data: [
               { key: uniqid() },
               { key: uniqid() },
               { key: uniqid() }
-            ] 
+            ]
           },
-        ] 
+        ]
       })
     )
 
@@ -160,7 +160,7 @@ describe('conditional panel', () => {
     const { container } = render(
       fields.render({
         type     : 'conditional-panel',
-        name     : 'conditional-panel-name', 
+        name     : 'conditional-panel-name',
         useModal : true
       })
     )
@@ -170,19 +170,19 @@ describe('conditional panel', () => {
     expect(document.querySelectorAll('.tf-conditional-panel').length).toBe(0)
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(0)
     expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(0)
-    
+
     expect(within(container).queryByText('And')).toBeFalsy()
     expect(within(container).queryByText('Delete condition')).toBeFalsy()
     expect(within(container).queryByText('Add group')).toBeFalsy()
-    
+
     await user.click(within(container).getByText('Open conditional panel'))
-    
+
     expect(document.querySelectorAll('.tf-conditional-panel').length).toBe(1)
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
     expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
-    
+
     const cancelModal = document.querySelector('.tf-modal-container')
-    
+
     expect(within(cancelModal).getByText('And')).toBeTruthy()
     expect(within(cancelModal).getByText('Delete condition')).toBeTruthy()
     expect(within(cancelModal).getByText('Add group')).toBeTruthy()
@@ -234,7 +234,7 @@ describe('conditional panel', () => {
       fields.render({
         type  : 'conditional-panel',
         name  : 'conditional-panel-name',
-        label : 'Conditional Panel' 
+        label : 'Conditional Panel'
       })
     )
 
@@ -242,9 +242,24 @@ describe('conditional panel', () => {
   })
 
   test.each([
-    {},
-    { value: '' },
-  ])('set correclty the initial value if empty or not set (with %p)', props => {
+    { props: {} },
+    { props: { value: '' } },
+    {
+      props: { operators : { 'custom'  : 'Custom', 'custom2' : 'Custom 2' } },
+      defaultOperator: 'custom'
+    },
+    {
+      props: {
+        value: '',
+        operators : { 'custom'  : 'Custom', 'custom2' : 'Custom 2'
+        }
+      },
+      defaultOperator: 'custom'
+    }
+  ])('set correclty the initial value if empty or not set (with %p)', ({
+    props,
+    defaultOperator = '_eq'
+  }) => {
 
     const { container } = render(
       fields.render({
@@ -269,8 +284,67 @@ describe('conditional panel', () => {
 
     expect(initialValue[0].data[0].key).toBeTruthy()
     expect(initialValue[0].data[0].left_value).toBe('')
-    expect(initialValue[0].data[0].operator).toBe('_eq')
+    expect(initialValue[0].data[0].operator).toBe(defaultOperator)
     expect(initialValue[0].data[0].right_value).toBe('')
+  })
+
+  test.each([
+    {
+      customFields: [],
+      defaultOperator: '_eq'
+    },
+    {
+      customFields: [
+        { name: 'operator', type: 'text' }
+      ],
+      defaultOperator: ''
+    },
+    {
+      customFields: [
+        { name: 'operator', type: 'select', choices: {} }
+      ],
+      defaultOperator: ''
+    },
+    {
+      customFields: [
+        { name: 'operator', type: 'select', choices: { custom: 'Custom', custom2: 'Custom2' } }
+      ],
+      defaultOperator: 'custom'
+    },
+    {
+      customFields: [
+        { name: 'no-operator-field' }
+      ],
+      defaultOperator: ''
+    },
+  ])('attemps to get custom field operator first value as default (with %p)', ({
+    customFields,
+    defaultOperator
+  }) => {
+
+    const { container } = render(
+      fields.render({
+        type   : 'conditional-panel',
+        name   : 'conditional-panel-name',
+        fields : customFields
+      })
+    )
+
+    const input = container.querySelector('input[name="conditional-panel-name"]')
+
+    expect(input).toBeTruthy()
+
+    const initialValue = JSON.parse(input.value)
+
+    expect(Array.isArray(initialValue)).toBe(true)
+    expect(initialValue.length).toBe(1)
+    expect(initialValue[0].key).toBeTruthy()
+
+    expect(Array.isArray(initialValue[0].data)).toBe(true)
+    expect(initialValue[0].data.length).toBe(1)
+
+    expect(initialValue[0].data[0].key).toBeTruthy()
+    expect(initialValue[0].data[0].operator).toBe(defaultOperator)
   })
 
   it('renders with custom subfields defined', () => {

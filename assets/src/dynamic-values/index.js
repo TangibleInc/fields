@@ -10,6 +10,7 @@ const { dynamics } = TangibleFields
  */
 const allowedTypes = [
   'color-picker',
+  'conditional-panel',
   'date-picker',
   'number',
   'text'
@@ -40,6 +41,19 @@ const defaultConfig = {
     mode : {
       default   : 'replace',
       supported : [ 'replace' ]
+    },
+    types : [ 'color' ]
+  },
+  'conditional-panel': {
+    mode : {
+      default   : 'replace',
+      supported : [ 'replace', 'insert' ],
+      types : [
+        'text',
+        'date',
+        'color',
+        'number'
+      ]
     },
     types : [ 'color' ]
   },
