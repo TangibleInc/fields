@@ -99,9 +99,9 @@ const BaseWrapper = props => {
    * Create an array usable by a combobox list that contains the dynamic values available
    */
   const choices = useMemo(() => {
-    
+
     const allowedTypes = props.config.getTypes()
-    const categoryKeys = Object.keys(dynamics.categories)
+    const categoryKeys = props.config.getCategories()
 
     const categories = categoryKeys.map(categoryKey => {
       

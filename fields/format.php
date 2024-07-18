@@ -45,18 +45,17 @@ $fields->format_args = function(
     case 'color_picker':
       $args['type'] = 'color-picker';
       $args = $fields->format_value($args, 'enable_opacity', 'hasAlpha');
-      $args = $fields->format_dynamic_types($args, 'replace', ['color']);
       break;
 
     case 'conditional_panel':
       $args['type'] = 'conditional-panel';
+      $args = $fields->format_groups($type, $args);
       $args = $fields->format_value($args, 'use_modal', 'useModal');
       break;
-    
+
     case 'date_picker':
       $args['type'] = 'date-picker';
       $args = $fields->format_value($args, 'future_only', 'futureOnly');
-      $args = $fields->format_dynamic_types($args, 'replace', ['date']);
       $args = $fields->format_value($args, 'date_range', 'dateRange');
       $args = $fields->format_value($args, 'multi_month', 'multiMonth');
       $args = $fields->format_value($args, 'date_presets', 'datePresets');
@@ -66,7 +65,6 @@ $fields->format_args = function(
       $args['value'] = !empty( $args['value'] ) ? $args['value'] : $args['min'] ?? 0;
       $args = $fields->format_value($args, 'min', 'minValue');
       $args = $fields->format_value($args, 'max', 'maxValue');
-      $args = $fields->format_dynamic_types($args, 'replace', ['number']);
       break;
 
     case 'simple_dimension':
@@ -133,7 +131,6 @@ $fields->format_args = function(
     case 'text':
       $args = $fields->format_value($args, 'read_only', 'readOnly');
       $args = $fields->format_value($args, 'input_mask', 'inputMask');
-      $args = $fields->format_dynamic_types($args);
       break;
   }
 
@@ -186,38 +183,6 @@ $fields->format_value = function(
   $args[$new_name] = $args[$old_name];
    
   unset($args[$old_name]);
-
-  return $args;
-};
-
-$fields->format_dynamic_types = function(
-  array $args, 
-  string $default_mode = 'insert',
-  array $default_types = [
-    'text', 
-    'date', 
-    'color', 
-    'number'
-  ]
-) : array {
-
-  if( empty($args['dynamic']) ) {
-    $args['dynamic'] = false;
-    return $args;
-  }
-
-  /**
-   * If dynamic value but no config, default all types + insert mode
-   */
-  $mode = $args['dynamic']['mode'] ?? $default_mode;
-  $types = ! empty($args['dynamic']['types'])
-    ? [ ...array_intersect($args['dynamic']['types'], $default_types) ]
-    : $default_types;
-  
-  $args['dynamic'] = [
-    'types' => $types,
-    'mode'  => $mode
-  ];
 
   return $args;
 };
