@@ -245,13 +245,20 @@ describe('conditional panel', () => {
     { props: {} },
     { props: { value: '' } },
     {
-      props: { operators : { 'custom'  : 'Custom', 'custom2' : 'Custom 2' } },
+      props: {
+        operators : {
+          'custom'  : 'Custom',
+          'custom2' : 'Custom 2'
+        }
+      },
       defaultOperator: 'custom'
     },
     {
       props: {
         value: '',
-        operators : { 'custom'  : 'Custom', 'custom2' : 'Custom 2'
+        operators : {
+          'custom' : 'Custom',
+          'custom2' : 'Custom 2'
         }
       },
       defaultOperator: 'custom'
@@ -295,25 +302,45 @@ describe('conditional panel', () => {
     },
     {
       customFields: [
-        { name: 'operator', type: 'text' }
+        {
+          label : 'Operator',
+          name  : 'operator',
+          type  : 'text'
+        }
       ],
       defaultOperator: ''
     },
     {
       customFields: [
-        { name: 'operator', type: 'select', choices: {} }
+        {
+          label   : 'Operator',
+          name    : 'operator',
+          type    : 'select',
+          choices : {}
+        }
       ],
       defaultOperator: ''
     },
     {
       customFields: [
-        { name: 'operator', type: 'select', choices: { custom: 'Custom', custom2: 'Custom2' } }
+        {
+          label   : 'Operator',
+          name    : 'operator',
+          type    : 'select',
+          choices : {
+            custom  : 'Custom',
+            custom2 : 'Custom2'
+          }
+        }
       ],
       defaultOperator: 'custom'
     },
     {
       customFields: [
-        { name: 'no-operator-field' }
+        {
+          label : 'Not an operator field',
+          name  : 'no-operator-field',
+        }
       ],
       defaultOperator: ''
     },
