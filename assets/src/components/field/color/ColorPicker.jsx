@@ -1,12 +1,12 @@
-import { 
+import {
   useState,
-  useEffect 
+  useEffect
 } from 'react'
 
 import { Dialog } from '../../base'
 
-import { 
-  useFocusWithin, 
+import {
+  useFocusWithin,
   FocusScope
 } from 'react-aria'
 
@@ -19,7 +19,7 @@ const ColorPicker = props => {
 
   const [color, setColor] = useState(
     parseColor(
-      props.value && props.value !== '' 
+      props.value && props.value !== ''
         ? props.value
         : 'rgba(255, 255, 255, 1)'
     ).toHSB()
@@ -36,7 +36,7 @@ const ColorPicker = props => {
   useEffect(() => {
     setInputColor(props.value)
   },[props.value])
-  
+
   useEffect(() => {
     props.onChange && props.onChange(color)
   },[color])
@@ -65,7 +65,7 @@ const ColorPicker = props => {
           />
           <div className="tf-color-input">
             <label>Color</label>
-            <input 
+            <input
               type="text"
               value={ inputColor }
               onChange={ e => {
@@ -75,7 +75,7 @@ const ColorPicker = props => {
                 props.onChange(e.target.value)
               }}
               />
-          </div>          
+          </div>
           <div className="tf-color-sliders">
             <ColorSlider
               channel={ xChannel }

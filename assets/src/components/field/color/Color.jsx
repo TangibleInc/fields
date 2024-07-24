@@ -1,14 +1,14 @@
-import { 
+import {
   useRef,
   useState,
-  useEffect 
+  useEffect
 } from 'react'
 
 import { useColorField } from '@react-aria/color'
 import { useColorFieldState } from '@react-stately/color'
 import { FieldWrapper } from '../../dynamic/'
 
-import { 
+import {
   Description,
   Label
 } from '../../base'
@@ -16,20 +16,32 @@ import {
 import ColorField from './ColorField'
 
 /**
- * @see https://react-spectrum.adobe.com/react-aria/useColorField.html 
+ * @see https://react-spectrum.adobe.com/react-aria/useColorField.html
  */
 
 const Color = props =>{
 
+  /**
+   * If value is initially unset or empty, components will change from uncontrolled to
+   * controlled when the value will change and it will throw a warning
+   *
+   * To avoid any issues, we use #FFFFFF as a default value
+   */
+  const formatedProps = ({
+    ...props,
+    value: props.value && props.value !== ''
+      ? props.value : '#FFFFFF'
+  })
+
   const ref = useRef()
-  const state = useColorFieldState(props)
+  const state = useColorFieldState(formatedProps)
   const {
     labelProps,
     inputProps,
     descriptionProps
-  } = useColorField(props, state, ref)
+  } = useColorField(formatedProps, state, ref)
 
-  const [value, setValue] = useState(props.value ?? '')
+  const [value, setValue] = useState(formatedProps.value ?? '')
   useEffect(() => props.onChange && props.onChange(value), [value])
 
   return(
@@ -38,20 +50,20 @@ const Color = props =>{
         <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
-      <FieldWrapper 
-        { ...props }
-        value={ value } 
+      <FieldWrapper
+        { ...formatedProps }
+        value={ value }
         onValueSelection={ setValue }
-        inputProps={ inputProps } 
+        inputProps={ inputProps }
         ref={ ref }
       >
-        <ColorField 
-          { ...props }
+        <ColorField
+          { ...formatedProps }
           value={ value }
           onChange={ props.onChange }
           state={ state }
-          inputProps={ inputProps } 
-          ref={ ref } 
+          inputProps={ inputProps }
+          ref={ ref }
         />
       </FieldWrapper>
       { props.description &&

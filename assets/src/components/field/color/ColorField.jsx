@@ -1,8 +1,8 @@
-import { 
+import {
   useEffect,
   useRef,
   useState,
-  forwardRef 
+  forwardRef
 } from 'react'
 
 import { Popover } from '../../base'
@@ -17,13 +17,13 @@ const ColorField = forwardRef(({
   const [open, isOpen] = useState(false)
   const format = props.format ?? 'hexa'
   const wrapperRef = useRef()
-  
+
   const onChange = value => {
 
     const stringValue = value.toString ? value.toString(format) : ''
     state.setInputValue(stringValue)
-    
-    if( props.onChange ) props.onChange(stringValue) 
+
+    if( props.onChange ) props.onChange(stringValue)
   }
 
   /**
@@ -35,22 +35,22 @@ const ColorField = forwardRef(({
 
   return(
     <div className="tf-color-container" ref={ wrapperRef }>
-      <input ref={ ref } { ...inputProps } 
+      <input ref={ ref } { ...inputProps }
         onClick={() => isOpen(true)}
         value={ state.inputValue ?? '' }
       />
-      { open && 
+      { open &&
         <Popover
-          state={{ isOpen: open, close: () => isOpen(false) }} 
+          state={{ isOpen: open, close: () => isOpen(false) }}
           triggerRef={ref}
           placement="bottom start"
           style={{ width: wrapperRef?.current?.offsetWidth }}
           className="tf-color-popover"
         >
-          <ColorPicker 
+          <ColorPicker
             value={ state.colorValue?.toString(format) }
-            onChange={ onChange } 
-            hasAlpha={ props.hasAlpha ?? true } 
+            onChange={ onChange }
+            hasAlpha={ props.hasAlpha ?? true }
             onFocusChange={ isFocus => isOpen(isFocus) }
           />
         </Popover> }
