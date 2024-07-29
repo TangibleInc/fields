@@ -1,12 +1,23 @@
 .tf-dynamic-text-input {
   width: unset;
   min-width: calc(#{$field-width} - #{$field-padding-horizontal * 2});
-  height: 48px;
+  min-height: 36px;
+
 
   & > .cm-editor{
+    padding: 0;
+
+    ::-webkit-scrollbar {
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: $scrollbar-color;
+      border-radius: 5px;
+    }
     .cm-line {
       height: 1.5em;
-  }
+    }
   } 
 
 }
