@@ -1,15 +1,14 @@
 .tf-dynamic-text-input {
   width: calc(100% - 18px);
   box-sizing: content-box;
+  min-height: 36px;
+  height: auto;
+  padding: 0 8px;
 }
 
 .tf-dynamic-wrapper-popover-field .tf-dynamic-text-input {
   box-sizing: border-box;
   height: $field-height;
-}
-
-.tf-dynamic-text-input > .cm-editor .cm-content {
-  padding: 6px 8px;
 }
 
 .tf-dynamic-text-input .cm-editor {
@@ -22,4 +21,16 @@
 
 .tf-conditional-panel-conditions .tf-dynamic-text-input {
   min-width: 200px;
+}
+
+.tf-dynamic-text-input > .cm-editor {
+  padding: 4px 8px 0;
+  ::-webkit-scrollbar {
+      height: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+      background: #bac0ca;
+      border-radius: 5px;
+  }
 }
