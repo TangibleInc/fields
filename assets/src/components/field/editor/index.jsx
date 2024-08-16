@@ -1,8 +1,8 @@
-import ProseMirror from './ProseMirror.jsx'
+import ProseMirror from './prosemirror/Editor'
 import TinyMce from './TinyMce.jsx'
 
 export default props => {
-  
+
   const { editor } = props
 
   if (editor === 'tinymce') {
@@ -10,5 +10,4 @@ export default props => {
   } else {
     return <ProseMirror {...props} />
   }
-  
 }

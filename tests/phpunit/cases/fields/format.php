@@ -88,7 +88,7 @@ class FormatField_TestCase extends WP_UnitTestCase {
    * @dataProvider _test_format_args_type_attributes_data
    */
   public function test_format_args_type_attributes(string $type, array $expected) {
-    $args = tangible_fields()->format_args('test', 
+    $args = tangible_fields()->format_args('test',
       [ 'type' => $type ]
       + $expected
     );
@@ -162,6 +162,9 @@ class FormatField_TestCase extends WP_UnitTestCase {
         'ajax_action' => 'ajaxAction',
         'map_results' => 'mapResults',
         'use_visibility' => 'useVisibility'
+      ]],
+      'wysiwyg' =>  ['wysiwyg', [
+        'raw_view' => 'rawView'
       ]]
     ];
   }
@@ -196,7 +199,7 @@ class FormatField_TestCase extends WP_UnitTestCase {
     $this->assertGreaterThan(0, did_action('wp_enqueue_media'), 'wp_enqueue_media was not called');
   }
 
-  public function test_format_args_file_ensure_wp_enqueue_media() {    
+  public function test_format_args_file_ensure_wp_enqueue_media() {
     $args = tangible_fields()->format_args('test', [
       'type'     => 'file',
       'wp_media' => false
@@ -228,7 +231,7 @@ class FormatField_TestCase extends WP_UnitTestCase {
       ['accordion'],
       ['field_group'],
       ['conditional_panel']
-    ]; 
+    ];
   }
 
   /**
@@ -258,13 +261,13 @@ class FormatField_TestCase extends WP_UnitTestCase {
       'type'       => $type,
       'sub_fields' => [
         [
-          'name' => 'one', 
-          'type' => 'color_picker', 
+          'name' => 'one',
+          'type' => 'color_picker',
           'enable_opacity' => true
         ],
         [
-          'name' => 'two', 
-          'type' => 'field_group', 
+          'name' => 'two',
+          'type' => 'field_group',
           'title' => $_expected = 'This title should overwrite the label and still exist'
         ],
       ],
@@ -285,8 +288,8 @@ class FormatField_TestCase extends WP_UnitTestCase {
     $args = tangible_fields()->format_groups($type, [
       'type'   => $type,
       'fields' => [
-        [ 
-          'type' => 'button', 
+        [
+          'type' => 'button',
           'button_type' => 'action'
         ]
       ]

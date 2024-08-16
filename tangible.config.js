@@ -1,3 +1,5 @@
+import { visualizer } from 'rollup-plugin-visualizer'
+
 export default {
   build: [
 
@@ -7,7 +9,12 @@ export default {
     {
       src: 'assets/src/index.jsx',
       dest: 'assets/build/index.min.js',
-      react: 'wp'
+      react: 'wp',
+      rollupPlugins: [
+        visualizer({
+          filename: '.rollup-plugin-visualizer.html',
+        })
+      ],
     },
 
     /**

@@ -4,7 +4,7 @@ defined('ABSPATH') or die();
 
 /**
  * Store the $args of every registered field
- * 
+ *
  * It will be passed to JS in order to init our react fields
  */
 $fields->enqueued = [
@@ -19,42 +19,41 @@ $fields->enqueue_item = function(
   string $type,
   array $args
 ) use($fields) : void {
-  
+
   $args['context'] = $fields->current_context;
-  
+
   $fields->enqueued[ $type ][ $name ] = $args;
 };
 
 $fields->enqueue = function(array $config = []) use($fields) {
 
   if( ! empty($config['context']) && is_array($config['context']) ) {
-    $fields->enqueued_contexts = [ 
-      ...$fields->enqueued_contexts, 
-      ...$config['context'] 
+    $fields->enqueued_contexts = [
+      ...$fields->enqueued_contexts,
+      ...$config['context']
     ];
   }
 
-  $contexts = ! empty($fields->enqueued_contexts) 
-    ? $fields->enqueued_contexts 
+  $contexts = ! empty($fields->enqueued_contexts)
+    ? $fields->enqueued_contexts
     : ['default'];
 
   foreach( $contexts as $context ) {
 
-    wp_enqueue_style( 
-      'tangible-fields-' . $context, 
-      plugins_url( '/assets', __FILE__ ) . '/build/' . $context . '/index.min.css', 
-      [], 
-      $fields->version 
+    wp_enqueue_style(
+      'tangible-fields-' . $context,
+      plugins_url( '/assets', __FILE__ ) . '/build/' . $context . '/index.min.css',
+      [],
+      $fields->version
     );
-
   }
 
-  wp_enqueue_script( 
-    'tangible-fields', 
-    plugins_url( '/assets', __FILE__ ) . '/build/index.min.js', 
-    [ 'wp-element' ], 
-    $fields->version, 
-    true 
+  wp_enqueue_script(
+    'tangible-fields',
+    plugins_url( '/assets', __FILE__ ) . '/build/index.min.js',
+    [ 'wp-element' ],
+    $fields->version,
+    true
   );
 
   $data = [
@@ -81,7 +80,7 @@ $fields->maybe_enqueue_scripts = function() use($fields) : void {
 
   if( $has_registrations || $fields->is_enqueued ) {
     return;
-  } 
+  }
 
   $fields->enqueue();
 };

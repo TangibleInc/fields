@@ -7,8 +7,8 @@ const fields = window.tangibleFields
 describe('Field group component', () => {
 
   it('renders with elements inside fields', () => {
-    
-    const { container } = render( 
+
+    const { container } = render(
       <>
         { fields.render({
           name   : 'field-group-name',
@@ -17,12 +17,12 @@ describe('Field group component', () => {
             {
               type    : 'description',
               content : 'Test 1',
-              name    : 'subfield1', 
+              name    : 'subfield1',
             },
             {
               label   : 'Subfield 2',
               type    : 'text',
-              name    : 'subfield2' 
+              name    : 'subfield2'
             },
           ]
         }) }
@@ -31,10 +31,10 @@ describe('Field group component', () => {
 
     const fieldGroup = container.querySelectorAll('.tf-field-group')
     expect(fieldGroup.length).toBe(1)
-    
+
     expect(container.querySelector('.tf-description'))
     expect(within(container).getByText('Test 1')).toBeTruthy()
-    
+
     expect(container.querySelector('.tf-text'))
     expect(within(container).getByText('Subfield 2')).toBeTruthy()
 
@@ -43,7 +43,7 @@ describe('Field group component', () => {
   it('renders with repeater inside field', async () => {
 
     const user = userEvent.setup()
-    const { container } = render( 
+    const { container } = render(
       <>
         { fields.render({
           name   : 'field-group-name',
@@ -60,13 +60,13 @@ describe('Field group component', () => {
                   label : 'Text label',
                   name  : 'advanced_text'
                 }
-              ] 
+              ]
             }
           ]
         }) }
       </>
-    ) 
-    
+    )
+
     const fieldGroup = container.querySelectorAll('.tf-field-group')
     expect(fieldGroup.length).toBe(1)
 
@@ -86,7 +86,7 @@ describe('Field group component', () => {
   it('renders with visibility condition inside fields', async () => {
 
     const user = userEvent.setup()
-    const { container } = render( 
+    const { container } = render(
       <>
         { fields.render({
           name   : 'field-group-name',
@@ -95,7 +95,7 @@ describe('Field group component', () => {
             {
               label   : 'Subfield 1',
               type    : 'text',
-              name    : 'subfield1', 
+              name    : 'subfield1',
             },
             {
               label   : 'Subfield 2',
@@ -115,17 +115,17 @@ describe('Field group component', () => {
 
     const fieldGroup = container.querySelectorAll('.tf-field-group')
     expect(fieldGroup.length).toBe(1)
-    
+
     expect(container.querySelector('.tf-text'))
 
     await user.type(container.querySelector('.cm-line'), 'test')
 
     /**
-     * Most of the time, this test will pass in a reasonable amount of time 
-     * but now and then the field will need a lot of time to appears in the dom 
+     * Most of the time, this test will pass in a reasonable amount of time
+     * but now and then the field will need a lot of time to appears in the dom
      * which is why we have the very high timeout both here and on the condition
-     * 
-     * We should probably investigate to find the root of the issue, but 
+     *
+     * We should probably investigate to find the root of the issue, but
      * for now the timeout will do
      */
     const subfield2 = await within(container).findByText('Subfield 2', undefined, { timeout: 5000 })

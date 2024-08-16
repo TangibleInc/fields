@@ -6,6 +6,7 @@ node_modules
 .env-*
 .DS_Store
 .idea/
+.rollup-plugin-visualizer.html
 
 # Allow symlinked local packages - always use latest commit on composer/npm/yarn update
 composer.lock

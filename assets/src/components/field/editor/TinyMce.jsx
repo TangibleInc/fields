@@ -1,14 +1,14 @@
-import { 
+import {
   useEffect,
-  useRef, 
+  useRef,
   useState
 } from 'react'
 
 import { useTextField } from 'react-aria'
 
-import { 
-  Label, 
-  Description 
+import {
+  Label,
+  Description
 } from '../../base'
 
 const TinyMce = props => {
@@ -39,8 +39,7 @@ const TinyMce = props => {
         target: ref.current,
         // Customize editor options: https://www.tiny.cloud/docs/general-configuration-guide/basic-setup/
         setup: function (editor) {
-            editor.on('input', () => setValue(editor.getContent()))
-          //editor.on('ExecCommand', () => setValue(editor.getContent()))
+          editor.on('input', () => setValue(editor.getContent()))
         }
       })
     })
@@ -56,9 +55,9 @@ const TinyMce = props => {
           {props.label}
         </Label>}
       <textarea ref={ref} {...inputProps}>{value}</textarea>
-      {props.description &&
+      { props.description &&
         <Description descriptionProps={ descriptionProps } parent={ props }>
-          {props.description}
+          { props.description }
         </Description>}
     </div>
   )

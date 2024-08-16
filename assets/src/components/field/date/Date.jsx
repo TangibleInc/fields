@@ -1,16 +1,16 @@
-import { 
-  useRef, 
+import {
+  useRef,
   useState,
   useEffect
 } from 'react'
 
-import { 
-  today, 
+import {
+  today,
   getLocalTimeZone,
   CalendarDate
 } from '@internationalized/date'
 
-import { 
+import {
   Label,
   Description
 } from '../../base'
@@ -26,20 +26,20 @@ const Date = props => {
   const [value, setValue] = useState(props.value ?? '')
 
   useEffect(() => props.onChange && props.onChange(value), [value])
-  
+
   const hasFutureOnly = props.futureOnly && props.futureOnly === true
   const dateToday = today(getLocalTimeZone())
-  const minValue = hasFutureOnly 
-    ? dateToday 
-    : new CalendarDate('AD', '1', '1', '1') 
-        
+  const minValue = hasFutureOnly
+    ? dateToday
+    : new CalendarDate('AD', '1', '1', '1')
+
   /**
    * @see https://react-spectrum.adobe.com/react-stately/useDatePickerState.html
    */
   const state = useDatePickerState({
     ...props,
     /**
-     * useDatePickerState only accept a CalendarDate instance as a value 
+     * useDatePickerState only accept a CalendarDate instance as a value
      */
     value: formatValue(props.value, dateToday),
   })
@@ -54,19 +54,19 @@ const Date = props => {
     inputProps,
     ...datePickerProps
   } = useDatePicker({...props, minValue: minValue }, state, ref)
-  
+
   return(
     <div className="tf-date-picker">
       { props.label &&
         <Label labelProps={ labelProps } parent={ props }>
           { props.label }
         </Label> }
-      <FieldWrapper 
-        { ...props } 
+      <FieldWrapper
+        { ...props }
         value={ value }
         onValueSelection={ setValue }
-        ref={ ref } 
-        inputProps={ datePickerProps.inputProps } 
+        ref={ ref }
+        inputProps={ datePickerProps.inputProps }
       >
         <DatePicker
           ref={ ref }
@@ -78,9 +78,9 @@ const Date = props => {
           dynamic={ props.dynamic ?? false }
           hasFutureOnly={ hasFutureOnly }
           state={ state }
-          datePickerProps={{ 
-            inputProps, 
-            ...datePickerProps 
+          datePickerProps={{
+            inputProps,
+            ...datePickerProps
           }}
         />
       </FieldWrapper>

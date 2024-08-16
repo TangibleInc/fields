@@ -6,8 +6,8 @@ const fields = window.tangibleFields
 
 /**
  * Run common tests that must succeed for all repeater types
- * 
- * TODO: 
+ *
+ * TODO:
  * - Tests with initial value
  * - Test clone button (check key is different)
  */
@@ -40,12 +40,12 @@ const commonRepeaterTests = layout => {
         type   : 'repeater',
         layout : layout,
         fields : [
-          { 
+          {
             type  : 'text',
             label : 'Label text',
             name  : 'text-field'
           },
-          { 
+          {
             type  : 'number',
             label : 'Label number',
             name  : 'number-field'
@@ -58,7 +58,7 @@ const commonRepeaterTests = layout => {
     if( layout === 'advanced' ) {
       await user.click(container.querySelector('.tf-button-repeater-overview-open'))
     }
-    
+
     expect(document.getElementsByClassName('tf-text').length).toBe(1)
     expect(document.getElementsByClassName('tf-number').length).toBe(1)
   })
@@ -72,12 +72,12 @@ const commonRepeaterTests = layout => {
         layout : layout,
         value  : '[]',
         fields : [
-          { 
+          {
             type  : 'text',
             label : 'Label text',
             name  : 'text-field'
           },
-          { 
+          {
             type  : 'number',
             label : 'Label number',
             name  : 'number-field'
@@ -104,7 +104,7 @@ const commonRepeaterTests = layout => {
         name   : 'test-repeater',
         layout : layout,
         fields : [
-          { 
+          {
             type  : 'text',
             label : 'Label text',
             name  : 'text-field'
@@ -115,7 +115,7 @@ const commonRepeaterTests = layout => {
 
     expect(document.querySelector(`.tf-repeater-items`)).toBeTruthy()
     expect(document.querySelector(`.tf-repeater-${layout}-items`)).toBeTruthy()
-    
+
     const itemsContainer = document.querySelector(`.tf-repeater-items`)
 
     expect(itemsContainer.children.length).toBe(1)
@@ -125,9 +125,9 @@ const commonRepeaterTests = layout => {
     await user.click(within(container).getByText('Add item'))
 
     expect(itemsContainer.children.length).toBe(4)
-    
+
     const repeater = fields.store.getRepeater('test-repeater')
-    const initialRowKeys = [ 
+    const initialRowKeys = [
       repeater.getRow(0).key,
       repeater.getRow(1).key,
       repeater.getRow(2).key,
@@ -135,7 +135,7 @@ const commonRepeaterTests = layout => {
     ]
 
     // Confirmation popup - Cancel
-    
+
     expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
     await user.click(within(itemsContainer.children[2]).getByText(removeText))
     expect(document.querySelector(`.tf-modal-container`)).toBeTruthy()
@@ -153,8 +153,8 @@ const commonRepeaterTests = layout => {
     expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
 
     expect(itemsContainer.children.length).toBe(3)
-    
-    const currentsRowKeys = [ 
+
+    const currentsRowKeys = [
       repeater.getRow(0).key,
       repeater.getRow(1).key,
       repeater.getRow(2).key
@@ -219,7 +219,7 @@ const commonRepeaterTests = layout => {
   })
 
   it('supports maxlength property', async () => {
-    
+
     const user = userEvent.setup()
     const { container } = render(
       fields.render({
@@ -240,7 +240,7 @@ const commonRepeaterTests = layout => {
         ],
       })
     )
-    
+
     let addButton, cloneButton
 
     addButton = within(container).getByText('Add item')
@@ -255,7 +255,7 @@ const commonRepeaterTests = layout => {
 
     addButton = within(container).getByText('Add item')
     expect(addButton).toBeDisabled()
-    
+
     if( layout !== 'bare' ) {
       cloneButton  = within(container).getAllByText(cloneText)
       expect(cloneButton[0]).toBeDisabled()
@@ -305,7 +305,7 @@ const commonRepeaterTests = layout => {
     const items = container.querySelector('.tf-repeater-items')
     expect(container.querySelector('.tf-description'))
     expect(within(items).getByText('Test 1')).toBeTruthy()
-    
+
     expect(container.querySelector('.tf-text'))
     expect(within(items).getByText('Test 2')).toBeTruthy()
   })

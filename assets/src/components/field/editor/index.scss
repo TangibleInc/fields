@@ -11,3 +11,14 @@
   line-height: 1.2;
   outline: none;
 }
+
+.tf-editor .tf-editor-view-toggle {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding-bottom: 5px;
+
+  .tf-button-group {
+    width: fit-content;
+  }
+}

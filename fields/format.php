@@ -3,20 +3,20 @@
 defined('ABSPATH') or die();
 
 /**
- * For each control type, convert $args to props expected the react component 
+ * For each control type, convert $args to props expected the react component
  * associated
- * 
+ *
  * @see ./assets/src/types.js
  */
 $fields->format_args = function(
-  string $name, 
-  array $args, 
+  string $name,
+  array $args,
   bool $element = true
 ) use($fields) : array {
 
   $type = $args['type'] ?? '';
 
-  if( $element ) {  
+  if( $element ) {
     $args['element'] = uniqid( 'tangible-field-' . $name .'-' );
   }
 
@@ -24,23 +24,26 @@ $fields->format_args = function(
   if( ! empty($args['instructions']) ) {
     $args['description'] = $args['instructions'];
   }
-  
+
   switch($type) {
 
     // We use kebab-case for control types in js
-    
-    case 'alignment_matrix': 
+
+    case 'alignment_matrix':
       $args['type'] = 'alignment-matrix';
       break;
 
-    case 'border': 
+    case 'border':
       $args = $fields->format_value($args, 'enable_opacity', 'hasAlpha');
       break;
-      
+
     case 'button_group':
       $args['type'] = 'button-group';
       $args = $fields->format_value($args, 'read_only', 'isDisabled');
       break;
+
+    case 'code':
+        break;
 
     case 'color_picker':
       $args['type'] = 'color-picker';
@@ -73,12 +76,13 @@ $fields->format_args = function(
 
     case 'wysiwyg':
       if( isset($args['editor']) && $args['editor'] === 'tinymce' ) wp_enqueue_editor();
+      $args = $fields->format_value($args, 'raw_view', 'rawView');
       break;
-    
+
     case 'gallery':
       wp_enqueue_media();
       break;
-      
+
     case 'list':
       $args = $fields->format_value($args, 'use_visibility', 'useVisibility');
       // Fallthrough
@@ -93,13 +97,13 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'search_url', 'searchUrl');
       $args = $fields->format_value($args, 'ajax_action', 'ajaxAction');
       break;
-    
+
     case 'file':
       if( !isset( $args['wp_media'] ) || $args['wp_media'] ) wp_enqueue_media();
       $args = $fields->format_value($args, 'mime_types', 'mimeTypes');
       $args = $fields->format_value($args, 'max_upload', 'maxUpload');
       break;
-    
+
     case 'repeater':
       if( empty($args['value']) ) $args['value'] = '';
       $args = $fields->format_groups($type, $args);
@@ -108,7 +112,7 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'section_title', 'sectionTitle');
       $args = $fields->format_value($args, 'header_fields', 'headerFields');
       break;
-    
+
     case 'field_group':
       $args['type'] = 'field-group';
       $args = $fields->format_groups($type, $args);
@@ -125,7 +129,7 @@ $fields->format_args = function(
 
     case 'switch':
       $args = $fields->format_value($args, 'value_on', 'valueOn');
-      $args = $fields->format_value($args, 'value_off', 'valueOff');        
+      $args = $fields->format_value($args, 'value_off', 'valueOff');
       break;
 
     case 'text':
@@ -151,18 +155,18 @@ $fields->format_args = function(
 $fields->format_groups = function(string $type, array $args) use($fields) : array {
 
   // Title can be an alias of label (to be compatible with ACF)
-  if( ! empty($args['title']) ) $args['label'] = $args['title']; 
-  
+  if( ! empty($args['title']) ) $args['label'] = $args['title'];
+
   // Alias to be compatible with ACF
-  $args = $fields->format_value($args, 'sub_fields', 'fields'); 
+  $args = $fields->format_value($args, 'sub_fields', 'fields');
 
   $args['fields'] = array_map(function($args) use($fields) {
     return $fields->is_element( $args['type'] ?? '' )
-      ? $fields->format_element_args( 
-          $args['name'] ?? '', 
-          $args 
-        ) 
-      : $fields->format_args( 
+      ? $fields->format_element_args(
+          $args['name'] ?? '',
+          $args
+        )
+      : $fields->format_args(
           $args['name'] ?? '',
           $args,
           false
@@ -177,11 +181,11 @@ $fields->format_value = function(
   string $old_name,
   string $new_name
 ) use($fields) : array {
-  
+
   if( ! isset($args[ $old_name ]) ) return $args;
-  
+
   $args[$new_name] = $args[$old_name];
-   
+
   unset($args[$old_name]);
 
   return $args;

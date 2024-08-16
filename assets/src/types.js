@@ -7,6 +7,7 @@ import {
   Border,
   ButtonGroup,
   Checkbox,
+  Code,
   Color,
   ComboBox,
   Date,
@@ -28,7 +29,7 @@ import {
   TextArea
 } from './components/field/'
 
-import { 
+import {
   Button,
   Label,
   Description,
@@ -42,6 +43,7 @@ const controls = {
   'border'            : Border,
   'button-group'      : ButtonGroup,
   'checkbox'          : Checkbox,
+  'code'              : Code,
   'color-picker'      : Color,
   'conditional-panel' : ConditionalPanel,
   'combo-box'         : ComboBox,
@@ -62,6 +64,7 @@ const controls = {
   'text'              : Text,
   'text-suggestion'   : DynamicText,
   'wysiwyg'           : Editor,
+  'editor'            : Editor, // alias of wysiwyg
   'textarea'          : TextArea
 }
 
@@ -75,7 +78,7 @@ const elements = {
 
 export default {
   _types : {
-    control : controls, 
+    control : controls,
     element : elements
   },
   get(name, type = 'control') {

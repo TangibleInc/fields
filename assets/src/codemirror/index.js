@@ -6,7 +6,6 @@ import {
   WidgetType,
   placeholder
 } from '@codemirror/view'
-import { EditorState } from "@codemirror/state";
 
 import { dynamicValueRegex } from '../dynamic-values'
 

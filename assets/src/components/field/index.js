@@ -3,6 +3,7 @@ import AlignmentMatrix from './alignment-matrix/AlignmentMatrix'
 import Border from './border/Border'
 import ButtonGroup from './button-group/ButtonGroup'
 import Checkbox from './checkbox/Checkbox'
+import Code from './code/Code'
 import Color from './color/Color'
 import ComboBox from './combo-box/'
 import Date from './date/'
@@ -29,6 +30,7 @@ export {
   Border,
   ButtonGroup,
   Checkbox,
+  Code,
   Color,
   ComboBox,
   Date,
