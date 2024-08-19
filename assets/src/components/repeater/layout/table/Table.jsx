@@ -4,8 +4,8 @@ import BulkActions from '../../common/BulkActions'
 
 /**
  * TODO: Implement useTable hook
- *  
- * @see https://react-spectrum.adobe.com/react-aria/useTable.html 
+ *
+ * @see https://react-spectrum.adobe.com/react-aria/useTable.html
  */
 
 const bulkOptions = { 'deletion': 'Delete' }
@@ -20,15 +20,15 @@ const Table = ({
   useBulk
 }) => (
   <div>
-  { useBulk && 
+  { useBulk &&
     <BulkActions
       actions={ bulkOptions }
       dispatch={ dispatch }
-    /> } 
+    /> }
   <table>
     <thead>
       <tr>
-        <th></th>
+        { useBulk && <th></th> }
         { fields.map((field, h) => (
           <th key={ h }>{ field.label ?? '' }</th>
         )) }
@@ -38,20 +38,20 @@ const Table = ({
     <tbody className='tf-repeater-items tf-repeater-table-items'>
       { items && items.slice(0, maxLength).map((item, i) => (
         <tr key={ item.key ?? i }>
-          <td key={ `${item.key}-enable` }>
-            { useBulk && 
+          { useBulk &&
+            <td key={ `${item.key}-enable` }>
               <div onClick={ e => e.stopPropagation() }>
-                <Checkbox 
+                <Checkbox
                   value={ item._bulkCheckbox }
-                  onChange={ value => dispatch({ 
+                  onChange={ value => dispatch({
                     type    : 'update',
                     item    : i,
                     control : '_bulkCheckbox',
                     value   : value
-                  }) } 
+                  }) }
                 />
-              </div> }
-          </td>
+              </div>
+            </td> }
           { rowFields.map((control, j) => (
             <td key={ `${item.key}-${j}` }>
               { renderItem(control, item, i) }
@@ -63,7 +63,7 @@ const Table = ({
                 <Button
                   type="action"
                   isDisabled={ maxLength <= items.length }
-                  onPress={() => dispatch({ 
+                  onPress={() => dispatch({
                     type : 'clone',
                     item : item
                   })}
@@ -71,7 +71,7 @@ const Table = ({
                   Clone
                 </Button> }
               { maxLength !== undefined &&
-                <ModalTrigger 
+                <ModalTrigger
                   label="Remove"
                   title="Confirmation"
                   onValidate={ () => dispatch({ type : 'remove', item : i })}
