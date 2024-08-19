@@ -18,6 +18,7 @@
   table {
     width: 100%;
     padding: 4px;
+    padding-top: 0;
 
     th, tr {
       min-height: $field-height;
@@ -33,6 +34,10 @@
       width: 100%;
       display: flex;
       justify-content: center;
+
+      & > div {
+        width: 100%;
+      }
     }
   }
 
