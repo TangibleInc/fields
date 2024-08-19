@@ -21,10 +21,6 @@
     "env:clean": "wp-env clean all"
   },
   "dependencies": {
-    "@codemirror/view": "^6.4.0",
-    "@react-aria/color": "^3.0.0-beta.17",
-    "react-aria": "^3.20.0",
-    "react-stately": "^3.18.0",
     "@codemirror/autocomplete": "^6.17.0",
     "@codemirror/basic-setup": "^0.20.0",
     "@codemirror/commands": "^6.6.0",
@@ -32,18 +28,22 @@
     "@codemirror/language": "^6.10.2",
     "@codemirror/search": "^6.5.6",
     "@codemirror/state": "^6.4.1",
+    "@codemirror/view": "^6.4.0",
+    "@react-aria/color": "^3.0.0-beta.17",
     "prosemirror-example-setup": "^1.2.2",
     "prosemirror-menu": "^1.2.4",
     "prosemirror-model": "^1.19.1",
     "prosemirror-schema-basic": "^1.2.2",
     "prosemirror-schema-list": "^1.2.3",
     "prosemirror-state": "^1.4.3",
-    "prosemirror-view": "^1.31.3"
+    "prosemirror-view": "^1.31.3",
+    "react-aria": "^3.20.0",
+    "react-stately": "^3.18.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.20",
     "@babel/preset-react": "^7.22.15",
-    "@tangible/roller": "^1.4.7",
+    "@tangible/roller": "^2.0.5",
     "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^15.0.0",
     "@testing-library/user-event": "^14.5.1",
