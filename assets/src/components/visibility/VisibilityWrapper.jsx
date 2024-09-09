@@ -50,7 +50,7 @@ const VisibilityWrapper = ({
       if( field.props?.itemType === 'subfield' ) return;
       
       // Avoid unnecessary evaluations
-      if( ! triggerFields.includes(field.name) ) return;  
+      if( ! triggerFields.includes(field.name) ) return;
       
       setTimeout(evaluateVisibility)
     })
@@ -66,6 +66,11 @@ const VisibilityWrapper = ({
         if( triggerFields.includes(fieldName) ) evaluateVisibility()
       })
     }
+
+    /**
+     * Global event to manually re-evaluate all the visibility conditions
+     */
+    addEventListener('evaluateVisibility', () => evaluateVisibility())
   }, [])
   
   /**

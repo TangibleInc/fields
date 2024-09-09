@@ -30,18 +30,31 @@ const replaceFieldValue = (conditions, getValue) => {
       continue;
     }
 
-    let fieldValue = ''
     const isPartial = name.includes('.')
-    if ( isPartial ) {
-      const [fieldName, fieldAttribute] = name.split('.')
-      fieldValue = getValue(fieldName)[fieldAttribute] ?? ''
-    } else {
-      fieldValue = getValue(name)
-    }
+    const fieldValue = isPartial
+      ? getPartialValue(name, getValue)
+      : getValue(name)
+
     formatedConditions[fieldValue] = conditions[name]
   }
 
   return formatedConditions
+}
+
+const getPartialValue = (name, getValue) => {
+
+  const [fieldName, fieldAttribute] = name.split('.')
+  let value = getValue(fieldName)
+
+  /**
+   * Object can still be JSON in some cases
+   */
+  if ( typeof value === 'string' ) {
+    try { value = JSON.parse(value) }
+    catch { return '' }
+  }
+  
+  return value[ fieldAttribute ] ?? ''
 }
 
 /**

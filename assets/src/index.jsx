@@ -82,38 +82,49 @@ const renderElement = props => (
 const init = () => {
 
   const { fields, elements } = TangibleFields
-
+  const items = []
+  
   for( const field in fields ) {
-    initItem(field, fields[ field ], 'fields')
+    items.push( initItem(field, fields[ field ], 'fields') )
   }
 
   for( const element in elements ) {
-    initItem(element, elements[ element ], 'elements')
+    items.push( initItem(element, elements[ element ], 'elements') )
   }
-}
-
-const initItem = (name, props, type) => {  
-
-  const element = document.getElementById(props.element)
-
-  if( ! element ) return;
-
-  const component = type === 'fields' 
-    ? renderField({ name, ...props })
-    : renderElement({ name, ...props })
 
   /**
-   * React 18 is used since WP 6.2 (createRoot() need to be used instead of render())
+   * Re-trigger visibility evaluation after all fields has been initialized
    */
-  createRoot
-    ? createRoot(element).render(component)
-    : render(component, element)
-  
-  triggerEvent(
-    type === 'fields' ? 'initField' :'initElement', 
-    { name, props }
-  )
+  Promise.all(items).then(() => triggerEvent('ready', {}))
 }
+
+const initItem = (name, props, type) => (
+  new Promise(resolve => {
+
+    const element = document.getElementById(props.element)
+
+    if( ! element ) return resolve();
+
+    const afterInitialization = () => {
+      resolve()
+      triggerEvent(
+        type === 'fields' ? 'initField' :'initElement', 
+        { name, props }
+      )
+    }
+
+    const component = type === 'fields' 
+      ? renderField({ name, afterInitialization, ...props })
+      : renderElement({ name, afterInitialization, ...props })
+
+    /**
+     * React 18 is used since WP 6.2 (createRoot() need to be used instead of render())
+     */
+    createRoot
+      ? createRoot(element).render(component)
+      : render(component, element)
+  })
+)
 
 /**
  * Make tangibleFields accessible from other scripts

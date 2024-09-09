@@ -1,5 +1,8 @@
-import { useContext } from 'react'
 import { OverlayProvider } from 'react-aria'
+import { 
+  useContext,
+  useEffect
+} from 'react'
 
 import types from './types.js'
 import DependendWrapper from './components/dependent/DependendWrapper'
@@ -12,6 +15,7 @@ import RenderWrapper from './components/render/RenderWrapper.jsx'
 const Element = ({
   visibility,
   data,
+  afterInitialization = false,
   ...props
 }) => {
 
@@ -27,6 +31,10 @@ const Element = ({
   }
   delete wrapper.class
   
+  useEffect(() => {
+    if ( afterInitialization ) afterInitialization() // Not set for subfields
+  }, [])
+
   const ElementComponent = types.get(props.type ?? false, 'element')
   if (!ElementComponent) return <></>;
 

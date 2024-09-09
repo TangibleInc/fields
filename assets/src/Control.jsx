@@ -16,6 +16,7 @@ import VisibilityWrapper from './components/visibility/VisibilityWrapper'
 const Control = ({
   visibility,
   data,
+  afterInitialization = false,
   ...props
 }) => {
 
@@ -39,6 +40,10 @@ const Control = ({
 
   const ControlComponent = types.get(props.type ?? 'text')
 
+  useEffect(() => {
+    if ( afterInitialization ) afterInitialization() // Not set for subfields
+  }, [])
+  
   if (!ControlComponent) return <></>;
 
   const onChange = newValue => {
