@@ -104,6 +104,10 @@
 
 .tf-multiple-combobox {
   position: relative;
+
+  & > .tf-label {
+    display: flex;
+  }
 }
 
 .tf-multiple-combobox-values {
@@ -118,6 +122,10 @@
   border-radius: $field-border-radius;
   flex-wrap: wrap;
   gap: $global-spacer-sm;
+}
+
+.tf-multiple-combobox[data-enabled="false"] .tf-multiple-combobox-values {
+  opacity: 0.5;
 }
 
 .tf-combo-box-popover.tf-popover {

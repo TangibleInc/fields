@@ -1,6 +1,7 @@
 import '../../../../../assets/src/index.jsx'
 import { 
   render,
+  screen,
   within
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
@@ -155,5 +156,42 @@ describe('ComboBox component', () => {
     expect(item.getAttribute('data-key')).toBe('_noResults')
     expect(item.getAttribute('aria-disabled')).toBe('true')
     expect(item.classList.contains('tf-list-box-option-disabled')).toBe(true)
+  })
+
+  test.each([
+    'single',
+    'multiple',
+  ])('supports readOnly (%p)', async type => {
+
+    const choices = {
+      value1 : 'Value 1',
+      value2 : 'Value 2',
+      value3 : 'Value 3'
+    }
+
+    const { container } = render(
+      fields.render({
+        name     : 'field-name',
+        type     : 'combo-box',
+        label    : 'Label',
+        choices  : choices,
+        multiple : type === 'multiple',
+        readOnly : true
+      })
+    )
+
+    const button = type === 'multiple'
+        ? within(container).getByText('Add')
+        : within(container).getByText('▼').parentElement
+
+    expect(button.hasAttribute('disabled')).toBe(true)
+
+    if ( type === 'single' ) {
+      const input = screen.getByRole('combobox')
+      expect(input.hasAttribute('readonly')).toBe(true)
+    }
+    else {
+      expect(within(container).queryByText('x')).toBeFalsy()
+    }
   })
 })

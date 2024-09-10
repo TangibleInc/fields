@@ -120,17 +120,21 @@ const ComboBox = props => {
         </Label> }
       <FocusScope autoFocus={ props.autoFocus } restoreFocus>
         <div className="tf-combo-box-text" ref={ wrapperRef }>
-          <input { ...inputProps } ref={ inputRef } />
-          {/* add changeTag="span" to change the button to span element */}
-
+          <input { ...inputProps } ref={ inputRef } readOnly={ props.readOnly } />
           { props.showButton &&  
-            <Button type="action" ref={ triggerRef } preventFocusOnPress={ true } { ...buttonProps }>
+            <Button 
+              type="action" 
+              ref={ triggerRef }
+              preventFocusOnPress={ true } 
+              { ...buttonProps }
+              isDisabled={ props.readOnly }
+            >
               <span aria-hidden="true">
                 ▼
               </span>
             </Button> }
 
-          { state.isOpen && 
+          { state.isOpen && ! props.readOnly &&
             <Popover
               state={state}
               triggerRef={inputRef}

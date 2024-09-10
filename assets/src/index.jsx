@@ -93,7 +93,7 @@ const init = () => {
   }
 
   /**
-   * Re-trigger visibility evaluation after all fields has been initialized
+   * After all fields and elements are initialized
    */
   Promise.all(items).then(() => triggerEvent('ready', {}))
 }

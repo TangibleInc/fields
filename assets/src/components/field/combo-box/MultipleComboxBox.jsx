@@ -88,7 +88,7 @@ const MultipleComboBox = props => {
   )
   
   return(
-    <div className="tf-multiple-combobox">
+    <div className="tf-multiple-combobox" data-enabled={ ! props.readOnly }>
       { props.label &&
         <Label labelProps={ labelProps } parent={ props }>
           { props.label }
@@ -101,12 +101,13 @@ const MultipleComboBox = props => {
               (value, i) => (
                 <span key={ value.key ?? i } className="tf-combo-box-item">
                   <span>{ props.isAsync ? value.label : props.choices[value] ?? '' }</span>
-                  <Button onPress={ () => remove(i) }>x</Button>
+                  { props.readOnly !== true && 
+                    <Button onPress={ () => remove(i) }>x</Button> }
                 </span>
               )
             ) }
         </div>
-        <Button type="action" ref={ triggerRef } { ...triggerProps }>
+        <Button type="action" ref={ triggerRef } { ...triggerProps } isDisabled={ props.readOnly }>
           Add
         </Button>
         { state.isOpen && (

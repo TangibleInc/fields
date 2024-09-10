@@ -77,7 +77,9 @@ export default props => {
         placeholder={ props.placeholder }
         description={ props.description ?? false }
         selectedKey={ value } 
-        onSelectionChange={ setValue }
+        onSelectionChange={ value => props.isAsync && typeof value !== 'object'
+          ? { value }
+          : setValue }
         onFocusChange={ props.onFocusChange ?? false }
         autoFocus={ props.autoFocus ?? false }
         isAsync={ props.isAsync ?? false }
@@ -86,6 +88,7 @@ export default props => {
         labelVisuallyHidden={ props.labelVisuallyHidden ?? false }
         descriptionVisuallyHidden={ props.descriptionVisuallyHidden ?? false }
         disabledKeys={ props.disabledKeys ?? [] }
+        readOnly={ props.readOnly ?? false }
         { ...itemProps }
       >
         { RenderChoices }
