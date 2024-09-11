@@ -108,7 +108,7 @@ const initItem = (name, props, type) => (
     const afterInitialization = () => {
       resolve()
       triggerEvent(
-        type === 'fields' ? 'initField' :'initElement', 
+        type === 'fields' ? 'initField' : 'initElement', 
         { name, props }
       )
     }

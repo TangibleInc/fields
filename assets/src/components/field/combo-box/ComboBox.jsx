@@ -49,7 +49,7 @@ const ComboBox = props => {
     }
 
     const option = getOption(value, props.items)
-
+    
     props.onSelectionChange(option)
     if( ! props.multiple ) state.setInputValue(option.label)
   }
@@ -78,7 +78,7 @@ const ComboBox = props => {
     defaultFilter: contains,
     disabledKeys: [ 
       ...(props.disabledKeys ?? []),
-      '_noResults' 
+      '_noResults'
     ]
   })
 
@@ -133,7 +133,6 @@ const ComboBox = props => {
                 ▼
               </span>
             </Button> }
-
           { state.isOpen && ! props.readOnly &&
             <Popover
               state={state}
@@ -145,6 +144,7 @@ const ComboBox = props => {
               className={ 'tf-combo-box-popover' }
             >
               <ListBox
+                loadingState={ props.loadingState ?? 'idle' }
                 listBoxRef={ listBoxRef }
                 state={ state }
                 items={ props.items }

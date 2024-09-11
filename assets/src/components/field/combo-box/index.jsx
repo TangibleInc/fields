@@ -32,8 +32,6 @@ export default props => {
       : props.value ?? false
   )
 
-  useEffect(() => props.onChange && props.onChange(value), [value])
-
   /**
    * getAsyncProps init the useAsyncList() hook
    * 
@@ -44,7 +42,10 @@ export default props => {
     : {
       defaultItems: getOptions(props.choices ?? {})
     }
-  
+
+  useEffect(() => props.onChange && props.onChange(value), [value])
+  useEffect(() => props.onChange && props.onChange(value), [itemProps.selectedKeys])
+
   if( props.multiple ) {
     return(
       <>
@@ -77,9 +78,7 @@ export default props => {
         placeholder={ props.placeholder }
         description={ props.description ?? false }
         selectedKey={ value } 
-        onSelectionChange={ value => props.isAsync && typeof value !== 'object'
-          ? { value }
-          : setValue }
+        onSelectionChange={ setValue }
         onFocusChange={ props.onFocusChange ?? false }
         autoFocus={ props.autoFocus ?? false }
         isAsync={ props.isAsync ?? false }
