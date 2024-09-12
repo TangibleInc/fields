@@ -53,9 +53,10 @@ const Control = ({
     // The timeout make sure the event is dispatched after the state changed
     setTimeout(() => {
       triggerEvent('valueChange', {
-        name: props.name ?? false,
-        props: props,
-        value: newValue,
+        name          : props.name ?? false,
+        props         : props,
+        value         : newValue,
+        previousValue : value
       })
     })
   }
