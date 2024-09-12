@@ -2,12 +2,20 @@
   @include field;
 }
 
+.tf-number .tf-label {
+  display: flex;
+}
+
 .tf-number-field {
   display: flex;
   width: $field-width;
   flex-direction: row;
   flex-wrap: nowrap;
   position: relative;
+}
+
+.tf-number[data-enabled="false"] .tf-number-field {
+  opacity: 0.5;
 }
 
 .tf-number-button-group {

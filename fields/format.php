@@ -68,6 +68,7 @@ $fields->format_args = function(
       $args['value'] = !empty( $args['value'] ) ? $args['value'] : $args['min'] ?? 0;
       $args = $fields->format_value($args, 'min', 'minValue');
       $args = $fields->format_value($args, 'max', 'maxValue');
+      $args = $fields->format_value($args, 'read_only', 'readOnly');
       break;
 
     case 'simple_dimension':

@@ -1,5 +1,8 @@
 import '../../../../../assets/src/index.jsx'
-import { within } from '@testing-library/react'
+import { 
+  render, 
+  within 
+} from '@testing-library/react'
 import { 
   rendersWithMinimal,
   rendersWithoutLabelThrowWarning,
@@ -7,6 +10,8 @@ import {
   renderHasElement,
   renderHasNotElement
 } from '../../../utils/fields.js'
+
+const fields = window.tangibleFields
 
 describe('Number component', () => {
 
@@ -27,4 +32,27 @@ describe('Number component', () => {
     renderHasNotElement({ ...config, hasButtons: false }, container => within(container).queryByText('+'))
     renderHasNotElement({ ...config, hasButtons: false }, container => within(container).queryByText('-'))
   })
+
+  test.each([
+    { props: {},                   result: false },
+    { props: { readOnly : true },  result: true },
+    { props: { readOnly : false }, result: false }
+  ])('supports readOnly (%p)', async args => {
+
+    const { container } = render( 
+      fields.render({
+        name     : 'field-name', 
+        type     : 'number', 
+        label    : 'Label',
+        ...args.props
+      })
+    )
+
+    const input = container.querySelector('.tf-number').querySelector('input')
+    expect( input.hasAttribute('disabled') ).toBe(args.result)
+
+    expect( within(container).getByText('+').hasAttribute('disabled') ).toBe(args.result)
+    expect( within(container).getByText('-').hasAttribute('disabled') ).toBe(args.result)
+  })
+
 })
