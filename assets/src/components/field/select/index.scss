@@ -4,6 +4,10 @@
   position: relative;
   display: inline-block;
   
+  & > .tf-label {
+    display: flex;
+  }
+
   &__value {
     text-overflow: ellipsis;
     white-space: nowrap;
