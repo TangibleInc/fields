@@ -1,0 +1,68 @@
+$tf-tooltip-bg-color: #e6e6e6;
+
+.tf-tooltip-trigger {
+  &-content{
+    position: relative;
+    width: fit-content;
+    cursor: context-menu;
+  }
+}
+
+.tf-tooltip{
+  z-index: 1;
+  position: absolute;
+  display: inline-block;
+  cursor: default;
+  visibility: hidden;
+  max-width: 150px;
+  width: max-content;
+
+  &-top { bottom: 100%; left: 50%; margin-bottom: 10px; transform: translateX(-50%); }
+  &-bottom { top: 100%; left: 50%; margin-top: 10px; transform: translateX(-50%); }
+  &-start { top: 50%; right: 100%; margin-right: 10px; transform: translateY(-50%); }
+  &-end { top: 50%; left: 100%; margin-left: 10px; transform: translateY(-50%); }
+  
+  &-content{
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    padding: 6px 12px;
+    border-radius: 3px;
+    color: #0e0d0df1;
+    background-color: $tf-tooltip-bg-color;
+    word-break: normal;
+
+    &::after{
+      content: " ";
+      position: absolute;
+      border-width: 5px;
+      border-style: solid;
+    }
+    
+    &-top::after{
+      top: 100%; left: 50%; margin-left: -5px;
+      border-color: $tf-tooltip-bg-color transparent transparent transparent;
+    }
+
+    &-bottom::after{
+      bottom: 100%; left: 50%; margin-left: -5px;
+      border-color: transparent transparent $tf-tooltip-bg-color transparent;
+    }
+
+    &-start::after{
+      top: 50%; left: 100%; margin-top: -5px;
+      border-color: transparent transparent transparent $tf-tooltip-bg-color;
+    }
+
+    &-end::after{
+      top: 50%; right: 100%; margin-top: -5px;
+      border-color: transparent $tf-tooltip-bg-color transparent transparent;
+    }
+
+  }
+
+}
+
+.tf-tooltip-trigger-content:hover .tf-tooltip {
+  visibility: visible;
+}

@@ -13,6 +13,8 @@ import RenderChoices from './list-box/RenderChoices'
 import Section from './list-box/Section'
 import Title from './title/Title'
 import Wrapper from './wrapper/Wrapper'
+import Tooltip from './tooltip/Tooltip'
+import TooltipTrigger from './tooltip/TooltipTrigger'
 
 export {
   Button,
@@ -29,5 +31,7 @@ export {
   RenderChoices,
   Section,
   Title,
-  Wrapper
+  Wrapper,
+  Tooltip,
+  TooltipTrigger
 }
