@@ -4,10 +4,17 @@ import Button from '../button/Button'
 
 const TooltipTrigger = props => {
 
+  const layout = props.layout ?? 'button'
+  const label = props.label ?? 'Open tooltip'
+
   return (
     <div className='tf-tooltip-trigger'>
       <div className='tf-tooltip-trigger-content'>
-        <Button>{ props.label ?? 'Open tooltip' }</Button>
+        {
+          layout === 'button'
+          ? <Button>{ label }</Button>
+          : <span>{ label }</span>
+        }
         <Tooltip { ...props }/>
       </div>
     </div>
