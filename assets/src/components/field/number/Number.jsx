@@ -37,9 +37,10 @@ const NumberComponent = props => {
   useEffect(() => props.onChange && props.onChange(value), [value])
 
   const hasButtons = props.hasButtons ?? true
+  const isDisabled = props.readOnly ?? false
 
   return(
-    <div className='tf-number'>
+    <div className='tf-number' data-enabled={ ! props.readOnly }>
       { props.label &&
         <Label labelProps={ labelProps } parent={ props }>
           { props.label }
@@ -57,10 +58,11 @@ const NumberComponent = props => {
             value={ Number.isInteger(state.numberValue) ? state.numberValue : 0 } 
             ref={ inputRef } 
             name={ props.name ?? '' }
+            disabled={ isDisabled }
           />
           { hasButtons && <div className='tf-number-button-group'>
-            <Button type="number" { ...incrementButtonProps }>+</Button>
-            <Button type="number" { ...decrementButtonProps }>-</Button>
+            <Button type="number" { ...incrementButtonProps } isDisabled={ isDisabled }>+</Button>
+            <Button type="number" { ...decrementButtonProps } isDisabled={ isDisabled }>-</Button>
           </div> }
         </FieldWrapper>
       </div>

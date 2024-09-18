@@ -48,9 +48,11 @@ const getAsyncProps = props => {
   })
 
   return {
-    items: list.items,
-    inputValue: list.filterText,
-    onInputChange: list.setFilterText,
+    items         : list.items,
+    inputValue    : list.filterText,
+    onInputChange : list.setFilterText,
+    selectedKeys  : props.value.value ?? '',
+    loadingState  : list.loadingState
   }
 }
 

@@ -123,6 +123,7 @@ class FormatField_TestCase extends WP_UnitTestCase {
       'number' => ['number', [
         'min' => 'minValue',
         'max' => 'maxValue',
+        'read_only' => 'readOnly'
       ]],
       'combo_box' => ['combo_box', [
         'is_async' => 'isAsync',
