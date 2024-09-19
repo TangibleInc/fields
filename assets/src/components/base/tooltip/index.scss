@@ -1,4 +1,5 @@
 $tf-tooltip-bg-color: #e6e6e6;
+$tf-tooltip-color: #0e0d0df1;
 
 .tf-tooltip-trigger {
   &-content{
@@ -15,48 +16,57 @@ $tf-tooltip-bg-color: #e6e6e6;
   cursor: default;
   visibility: hidden;
   max-width: 150px;
-  width: max-content;
+  width: max-content;  
 
-  &-top { bottom: 100%; left: 50%; margin-bottom: 10px; transform: translateX(-50%); }
-  &-bottom { top: 100%; left: 50%; margin-top: 10px; transform: translateX(-50%); }
-  &-start { top: 50%; right: 100%; margin-right: 10px; transform: translateY(-50%); }
-  &-end { top: 50%; left: 100%; margin-left: 10px; transform: translateY(-50%); }
+  &-top { bottom: 100%; left: 50%; margin-bottom: 12px; transform: translateX(-50%); }
+  &-bottom { top: 100%; left: 50%; margin-top: 12px; transform: translateX(-50%); }
+  &-start { top: 50%; right: 100%; margin-right: 12px; transform: translateY(-50%); }
+  &-end { top: 50%; left: 100%; margin-left: 12px; transform: translateY(-50%); }
   
   &-content{
     font-size: 12px;
-    font-weight: 500;
     text-align: center;
     padding: 6px 12px;
     border-radius: 3px;
-    color: #0e0d0df1;
-    background-color: $tf-tooltip-bg-color;
     word-break: normal;
+
+    &.light{
+      color: $tf-tooltip-color;
+      background-color: $tf-tooltip-bg-color;
+      --tf-tooltip-after-color: #{$tf-tooltip-bg-color};
+    }
+
+    &.dark{
+      background-color: $tf-tooltip-color;
+      color: $tf-tooltip-bg-color;
+      --tf-tooltip-after-color: #{$tf-tooltip-color};
+    }
 
     &::after{
       content: " ";
       position: absolute;
-      border-width: 5px;
+      border-width: 7px;
       border-style: solid;
     }
     
     &-top::after{
-      top: 100%; left: 50%; margin-left: -5px;
-      border-color: $tf-tooltip-bg-color transparent transparent transparent;
+      top: 100%; left: 50%; margin-left: -7px;
+      border-color: var(--tf-tooltip-after-color, transparent) transparent transparent transparent;
     }
 
     &-bottom::after{
-      bottom: 100%; left: 50%; margin-left: -5px;
-      border-color: transparent transparent $tf-tooltip-bg-color transparent;
+      bottom: 100%; left: 50%; margin-left: -7px;
+      border-color: transparent transparent var(--tf-tooltip-after-color, transparent) transparent;
     }
 
     &-start::after{
-      top: 50%; left: 100%; margin-top: -5px;
-      border-color: transparent transparent transparent $tf-tooltip-bg-color;
+      top: 50%; left: 100%; margin-top: -7px;
+      border-color: transparent transparent transparent var(--tf-tooltip-after-color, transparent);
     }
 
     &-end::after{
-      top: 50%; right: 100%; margin-top: -5px;
-      border-color: transparent $tf-tooltip-bg-color transparent transparent;
+      top: 50%; right: 100%; margin-top: -7px;
+      border-color: transparent var(--tf-tooltip-after-color, transparent) transparent transparent;
     }
 
   }
