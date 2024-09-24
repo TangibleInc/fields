@@ -1,0 +1,33 @@
+import '../../../../../assets/src/index.jsx'
+import { renderHasElement } from '../../../utils/elements.js'
+
+describe('Tooltip component', () => {
+
+  it('renders', () => {
+    renderHasElement({ type: 'tooltip' }, container => container.getElementsByClassName('tf-tooltip-trigger')[0])
+  })
+
+  it('use the button layout by default with type=action', () => {
+    renderHasElement({ 
+      type   : 'tooltip',
+    }, container => container.querySelector('.tf-button-action'))
+  })
+
+  it('supports the layout parameter set to button, and uses type=action by default', () => {
+    renderHasElement({ 
+      type   : 'tooltip',
+      layout : 'button'
+    }, container => container.querySelector('.tf-button-action'))
+  })
+
+  it('supports the buttonProps parameter', () => {
+    renderHasElement({ 
+      type        : 'tooltip',
+      layout      : 'button',
+      buttonProps : {
+        type : 'primary'
+      }
+    }, container => container.querySelector('.tf-button-primary'))
+  })
+
+})

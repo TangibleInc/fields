@@ -94,10 +94,15 @@ $fields->format_element_args = function(
     case 'modal':
       $args = $fields->format_value($args, 'cancel_text', 'cancelText');
       $args = $fields->format_value($args, 'confirm_text', 'confirmText');
+      $args = $fields->format_value($args, 'button_props', 'buttonProps');
       break;
-
+      
     case 'button':
       $args = $fields->format_value($args, 'button_type', 'buttonType');
+      break;
+    
+    case 'tooltip':
+      $args = $fields->format_value($args, 'button_props', 'buttonProps');
       break;
   }
 

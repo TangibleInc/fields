@@ -1,4 +1,3 @@
-import React from 'react'
 import Tooltip from './Tooltip'
 import Button from '../button/Button'
 
@@ -12,8 +11,14 @@ const TooltipTrigger = props => {
       <div className='tf-tooltip-trigger-content'>
         {
           layout === 'button'
-          ? <Button>{ label }</Button>
-          : <span>{ label }</span>
+            ? <Button
+                type="action"
+                isDisabled={ props.isDisabled }
+                { ...(props.buttonProps ?? {}) }
+              >
+                { label }
+              </Button>
+            : <span>{ label }</span>
         }
         <Tooltip { ...props }/>
       </div>
