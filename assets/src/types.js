@@ -34,7 +34,8 @@ import {
   Label,
   Description,
   ModalTrigger,
-  Wrapper
+  Wrapper,
+  TooltipTrigger,
 } from './components/base'
 
 const controls = {
@@ -73,7 +74,8 @@ const elements = {
   'description'       : Description,
   'label'             : Label,
   'modal'             : ModalTrigger,
-  'wrapper'           : Wrapper
+  'wrapper'           : Wrapper,
+  'tooltip'           : TooltipTrigger
 }
 
 export default {

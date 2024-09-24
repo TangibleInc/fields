@@ -13,10 +13,14 @@ class FormatElement_TestCase extends WP_UnitTestCase {
       // type, [from => to, from => to...]
       'modal' => ['modal', [
         'cancel_text' => 'cancelText',
-        'confirm_text' => 'confirmText'
+        'confirm_text' => 'confirmText',
+        'button_props' => 'buttonProps'
       ]],
       'button' => ['button', [
         'button_type' => 'buttonType'
+      ]],
+      'tooltip' => ['tooltip', [
+        'button_props' => 'buttonProps'
       ]]
     ];
   }
