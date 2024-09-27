@@ -20,7 +20,7 @@ new class extends stdClass {
   public $name = 'tangible_fields';
 
   // Remember to update the version - Expected format: YYYYMMDD
-  public $version = '20240614';
+  public $version = '20240927';
 
   function __construct() {
 
