@@ -1,3 +1,5 @@
+/artifacts
+/publish
 /vendor
 node_modules
 *.log

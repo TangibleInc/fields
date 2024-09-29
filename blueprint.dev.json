@@ -1,0 +1,9 @@
+{
+  "landingPage": "/wp-admin/admin.php?page=tangible-field-example",
+  "steps": [
+    {
+      "step": "activatePlugin",
+      "pluginPath": "/var/www/html/wp-content/plugins/e2e-plugin"
+    }
+  ]
+}

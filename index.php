@@ -9,12 +9,6 @@ if ( ! function_exists( 'tangible_fields' ) ) :
   }
 endif;
 
-$module_path = defined('FIELDS_IS_PLUGIN')
-  ? __DIR__ . '/vendor/tangible/'
-  : __DIR__ . '/../'; 
-
-require_once $module_path . 'framework/index.php';
-
 new class extends stdClass {
 
   public $name = 'tangible_fields';
@@ -50,7 +44,15 @@ new class extends stdClass {
   function load() {
 
     remove_all_filters( $this->name ); // First one to load wins
+
+    if (!class_exists('tangible\\framework')) {
+      $module_path = defined('TANGIBLE_FIELDS_IS_PLUGIN')
+        ? __DIR__ . '/vendor/tangible/'
+        : __DIR__ . '/../'; 
     
+      require_once $module_path . 'framework/index.php';
+    }
+
     $fields = $this;
     tangible_fields( $fields );
 

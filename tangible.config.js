@@ -50,4 +50,34 @@ export default {
       dest: 'assets/build/example.min.css',
     },
   ],
+  /**
+   * Dependencies for production are installed in `vendor/tangible`, which is included
+   * in the published zip package. Those for development are in `tangible-dev`, which
+   * is excluded from the archive.
+   * 
+   * In the file `.wp-env.json`, these folders are mounted to the virtual file system
+   * for local development and testing.
+   */
+  install: [
+    {
+      git: 'git@github.com:tangibleinc/framework',
+      dest: 'vendor/tangible/framework',
+      branch: 'main',
+    },
+  ],
+  installDev: [
+    {
+      zip: 'https://downloads.wordpress.org/plugin/beaver-builder-lite-version.latest-stable.zip',
+      dest: 'vendor/tangible-dev/beaver-builder-lite-version'
+    },
+    {
+      zip: 'https://downloads.wordpress.org/plugin/elementor.latest-stable.zip',
+      dest: 'vendor/tangible-dev/elementor'
+    },
+    {
+      git: 'git@github.com:tangibleinc/fields-pro',
+      dest: 'vendor/tangible-dev/fields-pro',
+      branch: 'main',
+    },
+  ] 
 }
