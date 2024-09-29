@@ -50,6 +50,28 @@ export default {
       dest: 'assets/build/example.min.css',
     },
   ],
+  archive: {
+    root: 'tangible-fields',
+    src: [
+      '*.php',
+      'assets/**',
+      'dynamic-values/**',
+      'elements/**',
+      'example/**',
+      'fields/**',
+      'vendor/tangible/**',
+      'readme.txt'
+    ],
+    dest: 'publish/tangible-fields.zip',
+    exclude: [
+      'assets/src',
+      '**/tests',
+      '**/*.scss',
+      '**/*.jsx',
+      '**/*.ts',
+      '**/*.tsx'
+    ],
+  },
   /**
    * Dependencies for production are installed in `vendor/tangible`, which is included
    * in the published zip package. Those for development are in `tangible-dev`, which

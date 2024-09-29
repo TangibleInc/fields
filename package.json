@@ -9,6 +9,7 @@
     "dev": "roll dev",
     "build": "roll build",
     "format": "roll format",
+    "archive": "roll archive",
     "start": "concurrently --raw 'roll dev' 'wp-now start --blueprint=blueprint.dev.json'",
     "postinstall": "roll install",
     "install:dev": "roll install --dev",
