@@ -24,7 +24,12 @@
     "env:test:8.2": "WP_ENV_PHP_VERSION=8.2 wp-env start && npm run env:test",
     "env:stop": "wp-env stop",
     "env:destroy": "wp-env destroy",
-    "env:clean": "wp-env clean all"
+    "env:clean": "wp-env clean all",
+    "-- End-to-end testing --": "https://playwright.dev/",
+    "e2e": "playwright test --config tests/e2e/playwright.config.js",
+    "e2e:install": "playwright install chromium",
+    "e2e:debug": "npm run e2e -- --debug",
+    "e2e:ui": "npm run e2e -- --ui"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.17.0",
@@ -35,7 +40,9 @@
     "@codemirror/search": "^6.5.6",
     "@codemirror/state": "^6.4.1",
     "@codemirror/view": "^6.4.0",
+    "@playwright/test": "^1.47.2",
     "@react-aria/color": "^3.0.0-beta.17",
+    "@wordpress/e2e-test-utils-playwright": "^1.8.0",
     "concurrently": "^9.0.1",
     "prosemirror-example-setup": "^1.2.2",
     "prosemirror-menu": "^1.2.4",
