@@ -35,7 +35,19 @@ export default {
     {
       src: 'assets/src/contexts/beaver-builder/index.scss',
       dest: 'assets/build/beaver-builder/index.min.css'
-    }
+    },
 
-  ]
+    /**
+     * Example
+     */
+    {
+      src: 'assets/src/example/index.js',
+      dest: 'assets/build/example.min.js',
+      react: 'wp',
+    },
+    {
+      src: 'assets/src/example/index.scss',
+      dest: 'assets/build/example.min.css',
+    },
+  ],
 }
