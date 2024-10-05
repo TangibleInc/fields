@@ -29,7 +29,7 @@ In this example, the value of `$field_html` will be something like this:
 
 The module keeps track of which field name/configuration is associated to which `') ?>` thanks to the id and passes all data (div id + field configuration) to the frontend. The appropriate React component is then initialized inside the correct `<div>` based on this.
 
-Each field type is linked to a react component. You can see which field type is associated with which component in the [types.js file](https://bitbucket.org/tangibleinc/tangible-fields-module/src/main/assets/src/types.js).
+Each field type is linked to a react component. You can see which field type is associated with which component in the [types.js file](https://github.com/tangibleinc/tangible-fields-module/tree/main/assets/src/types.js).
 
 When a field is initialized, the associated config is passed to the component as react props.
 
@@ -37,7 +37,7 @@ To generate the JS/CSS build file, we use an internal tool called Tangible Rolle
 
 #### Getting started
 
-An easy way to work on the Tangible Fields module is to work from the [documentation repository](https://bitbucket.org/tangibleinc/tangible-fields-example/src/main/), which is a wordpress plugin that uses the Tangible Fields as a composer dependency.
+An easy way to work on the Tangible Fields module is to work from the [documentation repository](https://github.com/tangibleinc/tangible-fields-example/), which is a wordpress plugin that uses the Tangible Fields as a composer dependency.
 
 One advantage of working from this plugin is that all the possible fields are already included in the documentation as example, an can be used for testing.
 

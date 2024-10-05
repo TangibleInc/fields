@@ -191,7 +191,7 @@ $fields->register_field('field-name', [
 
 ```php
 /**
-* @see https://bitbucket.org/tangibleinc/tangible-fields-module/src/main/store.php
+* @see https://github.com/tangibleinc/tangible-fields-module/tree/main/store.php
 */
 $fields->register_field('field-name', [
   ...$args,

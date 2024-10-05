@@ -46,7 +46,7 @@ $fields = tangible_fields();
 Prerequisites: [Git](https://git-scm.com/), [Node](https://nodejs.org/en/) (version 18 and above)
 
 ```sh
-git clone git@bitbucket.org:tangibleinc/tangible-fields.git
+git clone git@github.com:tangibleinc/tangible-fields.git
 cd tangible-fields
 ```
 

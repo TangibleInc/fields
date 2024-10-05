@@ -43,7 +43,7 @@ $plugin->render_registation_message = function() {
     * Your field must be registered, otherwise you won't be able to use fetch/store_value 
     * See the "Registration" section for more details 
     * 
-    * @see https://bitbucket.org/tangibleinc/tangible-fields-module/src/main/store.php
+    * @see https://github.com/tangibleinc/tangible-fields-module/tree/main/store.php
     */
   <?php
 };

@@ -8,7 +8,7 @@ use tangible\ajax;
  * Test action copied from tangible-blocks, just added it so that we have an 
  * example of ajax action from our module to use
  * 
- * @see https://bitbucket.org/tangibleinc/blocks/src/main/includes/block/controls/aliases/post-select.php
+ * @see https://github.com/tangibleinc/blocks/tree/main/includes/block/controls/aliases/post-select.php
  */
 
 ajax\enqueue();
