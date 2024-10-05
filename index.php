@@ -9,28 +9,11 @@ if ( ! function_exists( 'tangible_fields' ) ) :
   }
 endif;
 
-new class extends stdClass {
+(include __DIR__ . '/module-loader.php')(new class extends StdClass {
 
   public $name = 'tangible_fields';
-
   // Remember to update the version - Expected format: YYYYMMDD
   public $version = '20240614';
-
-  function __construct() {
-
-    $name     = $this->name;
-    $priority = 99999999 - absint( $this->version );
-
-    remove_all_filters( $name, $priority );
-    add_action( $name, [ $this, 'load' ], $priority );
-
-    $ensure_action = function() use ( $name ) {
-      if ( ! did_action( $name ) ) do_action( $name );
-    };
-
-    add_action('plugins_loaded', $ensure_action, 0);
-    add_action('after_setup_theme', $ensure_action, 0);
-  }
 
   // Dynamic methods
   function __call( $method = '', $args = [] ) {
@@ -42,8 +25,6 @@ new class extends stdClass {
   }
   
   function load() {
-
-    remove_all_filters( $this->name ); // First one to load wins
 
     if (!class_exists('tangible\\framework')) {
       $module_path = defined('TANGIBLE_FIELDS_IS_PLUGIN')
@@ -65,4 +46,4 @@ new class extends stdClass {
     do_action('tangible_fields_loaded', $fields);
   }
 
-};
+});
