@@ -1,0 +1,84 @@
+.tangible-field-example-settings {
+
+  pre {
+    background: #22272e;
+  }
+  
+ .tangible-plugin-settings-tab { 
+    max-width: 100%; 
+  }
+
+  .tangible-settings-row { 
+    padding: 10px 0px; 
+  }
+
+  .tf-example-container { 
+    display: flex; 
+  }
+
+  .tf-example-field > ul,
+  .tf-dynamic-value-content-js ul { 
+    list-style: circle; 
+    padding: 10px;
+
+    ul {
+      list-style: square; 
+      padding: 5px;
+      padding-left: 40px;
+    }
+  }
+
+  .tf-example-list { 
+    width: 20%; 
+    padding-top: 20px; 
+  }
+
+  .tf-example-field { 
+    width: 80%; 
+  }
+
+  .tf-context-select-container {
+    padding: 20px 0px;
+  }
+
+  .tf-dynamic-value-content-js {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tf-dynamic-value-description {
+    padding-bottom: 10px;
+  }
+
+  .tf-dynamic-value-list {
+    display: flex;
+  }
+
+  .tf-dynamic-value-list-sidebar {
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tf-dynamic-value-list-content {
+    display: flex; 
+    flex-direction: column;
+  }
+
+  .tf-dynamic-value-trigger-js {
+    cursor: pointer;
+  }
+
+  .tangible-settings-code-preview {
+    display: flex;
+    gap: 20px;
+    flex-wrap: nowrap;
+
+    & > pre {
+      flex: 1;
+    }
+  }
+}
+
+

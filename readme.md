@@ -1,6 +1,6 @@
-# Tangible Field module
+# Tangible Fields
 
-Not ready to be used yet, just a proof of concept for now.
+React-based form fields library 
 
 ## Use in a plugin
 
@@ -43,7 +43,14 @@ $fields = tangible_fields();
 
 ## Develop
 
-Install depedencies:
+Prerequisites: [Git](https://git-scm.com/), [Node](https://nodejs.org/en/) (version 18 and above)
+
+```sh
+git clone git@github.com:tangibleinc/tangible-fields.git
+cd tangible-fields
+```
+
+Install dependencies:
 
 ```sh
 composer install & npm ci
@@ -65,6 +72,44 @@ Format to code standard
 
 ```sh
 npm run format
+```
+
+## Local test site
+
+Start a local test site using [`wp-now`](https://github.com/WordPress/playground-tools/blob/trunk/packages/wp-now/README.md).
+
+```sh
+npm run start
+```
+
+For convenience, this also concurrently builds for development and watches files to rebuild.
+
+### Dev dependencies
+
+Install dev dependencies such as third-party plugins. This is optional.
+
+```sh
+npm run install:dev
+```
+
+To keep them updated, run:
+
+```sh
+npm run update:dev
+```
+
+### Customize environment
+
+Create a file named `.wp-env.override.json` to customize the WordPress environment. This file is listed in `.gitignore` so it's local to your setup.
+
+Mainly it's useful for mounting local folders into the virtual file system. For example, to link another plugin in the parent directory:
+
+```json
+{
+  "mappings": {
+    "wp-content/plugins/example-plugin": "../example-plugin"
+  }
+}
 ```
 
 ## Tests
@@ -128,6 +173,14 @@ We rely on Jest to test the frontend side of the module:
 ```
 npm install
 npm run jest:test
+```
+
+### Playwright
+
+End-to-end tests with [Playwright](https://playwright.dev/).
+
+```sh
+npm run e2e
 ```
 
 ## Render fields

@@ -1,0 +1,29 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - "*.*.*"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Install
+        run: npm install
+      - name: Archive
+        run: npm run archive
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: publish/tangible-fields.zip

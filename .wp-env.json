@@ -1,5 +1,11 @@
 {
   "core": "WordPress/WordPress",
   "phpVersion": "8.2",
-  "plugins": ["."]
+  "plugins": ["."],
+  "mappings": {
+    "wp-content/plugins/beaver-builder-lite-version": "./vendor/tangible-dev/beaver-builder-lite-version",
+    "wp-content/plugins/e2e-plugin": "./vendor/tangible/framework/env/e2e-plugin",
+    "wp-content/plugins/elementor": "./vendor/tangible-dev/elementor",
+    "wp-content/plugins/tangible-fields-pro": "./vendor/tangible-dev/fields-pro"
+  }
 }
