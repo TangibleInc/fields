@@ -11,7 +11,7 @@ const Label = ({
   const content = props.content ?? children
   return(
     <Wrapper>
-      <label className='tf-label' { ...labelProps }>
+      <label className='tf-label' { ...labelProps } htmlFor={ parent?.name ?? '' }>
         { content }
       </label>
     </Wrapper>

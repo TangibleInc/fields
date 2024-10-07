@@ -55,7 +55,7 @@ const Checkbox = props => {
   return(
     <div className="tf-checkbox">
       <Label labelProps={ labelProps } parent={{ ...props, labelVisuallyHidden: false }}>
-        <input { ...inputProps } ref={ ref } />
+        <input { ...inputProps } ref={ ref } id={ props.name ?? '' } />
         <input type="hidden" name={ props.name ?? '' } value={ state.isSelected ? '1' : '0' } />
         <LabelWrapper>
           { props.label ?? '' }
