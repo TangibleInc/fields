@@ -13,6 +13,7 @@ import { RenderChoices } from '../../base'
 
 import ComboBox from './ComboBox'
 import MultipleComboBox from './MultipleComboxBox'
+import ComboBoxCheckboxLayout from './ComboBoxCheckboxLayout'
 
 /**
  * Export used when initialized from a php function, or inside a repeater
@@ -45,6 +46,24 @@ export default props => {
 
   useEffect(() => props.onChange && props.onChange(value), [value])
   useEffect(() => props.onChange && props.onChange(value), [itemProps.selectedKeys])
+  
+  if( props?.layout === 'checkbox'){
+    return(
+      <>
+        <input 
+          type="hidden" 
+          name={ props.name ?? '' } 
+          value={ props.isAsync ? JSON.stringify(value) : value } 
+        />
+        <ComboBoxCheckboxLayout 
+          { ...props }
+          onChange={ values => setValue(props.isAsync ? values : values.join(',')) }
+          value={ value }
+          { ...itemProps }
+        />
+      </>
+    )
+  }
 
   if( props.multiple ) {
     return(

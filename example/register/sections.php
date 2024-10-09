@@ -119,7 +119,8 @@ $documentation->register_section('fields', [
       'fields'=> [
         'combobox_async_rest'     => [ 'json' => true ],
         'combobox_async_ajax'     => [ 'json' => true ],
-        'combobox_async_multiple' => [ 'json' => true ]
+        'combobox_async_multiple' => [ 'json' => true ],
+        'combobox_async_checkbox' => [ 'json' => true ]
       ]
     ],
     'date_picker' => [
