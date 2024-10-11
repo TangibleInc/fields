@@ -2,11 +2,13 @@ import { useRef } from 'react'
 
 import { 
   useListBox,
-  DismissButton
+  DismissButton,
+  useGridList
 } from 'react-aria'
 
 import Option from './Option'
 import Section from './Section'
+import { useListState } from 'react-stately'
 
 /**
  * <ListBox label='Alignment' selectionMode='single'>
@@ -21,9 +23,13 @@ import Section from './Section'
 const ListBox = props => {
 
   const ref = useRef()
-  const { listBoxRef = ref, state } = props
+  const listBoxRef = props.listBoxRef || ref
+
+  const isCheckbox = props?.type === 'checkbox'
+  const state = isCheckbox ? useListState(props) : props.state
 
   const { listBoxProps } = useListBox(props, state, listBoxRef)
+  let { gridProps } = useGridList(props, state, ref)
 
   /**
    * Hidden <DismissButton> component at the end to allow screen reader 
@@ -31,13 +37,13 @@ const ListBox = props => {
    * 
    * @see https://react-spectrum.adobe.com/react-aria/DismissButton.html
    */
-
+ 
   return(
     <>
       <ul
-        { ...listBoxProps }
+        { ...(isCheckbox ? gridProps : listBoxProps) }
         ref={ listBoxRef }
-        className='tf-list-box'
+        className={`tf-list-box ${isCheckbox && 'tf-list-checkbox'}`}
       >
         { ['loading', 'filtering'].includes(props?.loadingState)
           ? <Option 
@@ -50,7 +56,7 @@ const ListBox = props => {
               shouldUseVirtualFocus 
             />
           : [...state.collection].map(item => (
-            item.type === 'section'
+              item.type === 'section'
               ? <Section 
                   key={ item.key ?? item.level } 
                   section={ item } 
@@ -61,8 +67,9 @@ const ListBox = props => {
                   key={ item.key ?? item.name } 
                   item={ item } 
                   state={ state } 
+                  hasCheckbox={ isCheckbox }  
                   shouldUseVirtualFocus 
-                />
+              />
             )) }
       </ul>
       <DismissButton onDismiss={ state.close } />

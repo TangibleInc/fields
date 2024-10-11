@@ -1,10 +1,11 @@
 import { 
+    useState,
     useRef, 
     useEffect 
 } from 'react'
   
 import { 
-    Item, 
+    Item,
     useComboBoxState 
 } from 'react-stately'
 
@@ -16,9 +17,10 @@ import {
 import { 
     Label,
     Description,
+    ListBox,
+    ExpandablePanel,
 } from '../../base'
 
-import CheckboxListBox from '../../base/list-box/CheckboxListBox'
   
 const ComboBoxCheckboxLayout = props => {
 
@@ -30,11 +32,13 @@ const ComboBoxCheckboxLayout = props => {
      * 
      * Otherwise, it's a comma separated string with each value
      */
-    const [values, setValues] = React.useState(
+    const [values, setValues] = useState(
         props.value && Array.isArray(props.value)
         ? props.value
         : (props.value && ! props.isAsync ? props.value.split(',') : [])
     )
+
+    const [searchValue, setSearchValue ] = useState('')
 
     /**
      * Needed to filter item results according to input value
@@ -42,6 +46,11 @@ const ComboBoxCheckboxLayout = props => {
      * @see https://react-spectrum.adobe.com/react-aria/useFilter.html
      */
     const { contains } = useFilter({ sensitivity: 'base' })
+
+    const matchedItems = props.items.filter((item) =>
+        contains( item.label, searchValue )
+    )
+
     const state = useComboBoxState({ 
         ...props, 
         defaultFilter: contains,
@@ -50,7 +59,7 @@ const ComboBoxCheckboxLayout = props => {
             '_noResults'
         ]
     })
-
+    
     const inputRef   = useRef()
     const listBoxRef = useRef()
     const wrapperRef = useRef()
@@ -66,12 +75,13 @@ const ComboBoxCheckboxLayout = props => {
         menuTrigger: 'input'
     }, state)
 
+    useEffect(() => props.onChange && props.onChange(values), [values.length])
 
-    inputProps.name = '' // We're using input as search box for items, so we're not going to save it there
+    inputProps.name = '' // We're using input as search box for items, and it will not need name attribute.
 
     // State for selected items
     const initialSelectedKeys = new Set(values.map( item => item.value))
-    const [selected, setSelected] = React.useState(initialSelectedKeys)
+    const [selected, setSelected] = useState(initialSelectedKeys)
     const selectionMode = props.multiple ? 'multiple' : 'single'
    
     const handleSelectionChange = (keys) => {
@@ -87,26 +97,70 @@ const ComboBoxCheckboxLayout = props => {
         setValues(selectedItems)
     }
 
-    useEffect(() => props.onChange && props.onChange(values), [values.length])
-    
+     const handleSelectAllChange = (e) => {
+        const checked = e.target.checked
+        const allKeys = matchedItems.map(item => item.value)
+        
+        if (checked) {
+            setSelected(new Set(allKeys))
+            setValues(matchedItems)
+            return
+        }
+         
+        setSelected(new Set())
+        setValues([])
+    }
+
+    const headerLeft = <div className='tf-combo-box-text tf-combo-box-text-search' ref={ wrapperRef }>
+        <input
+            { ...inputProps }
+            ref={ inputRef }
+            type="search"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onClick={(e) => {
+                e.stopPropagation() 
+                inputRef.current.focus()
+            }}
+        />
+    </div> 
+
     return(
         <div className="tf-combo-box">
             { props.label &&
             <Label labelProps={ labelProps } parent={ props }>
                 { props.label }
             </Label> }
-            <div className="tf-combo-box-text" ref={ wrapperRef }>
-                <input { ...inputProps } ref={ inputRef } readOnly={ props.readOnly } />
-            </div>
-            <CheckboxListBox 
-                selectionMode={ selectionMode }
-                items={ props.items }
-                ref={ listBoxRef }
-                selectedKeys={Array.from(selected)}
-                onSelectionChange={handleSelectionChange}
-            >
-                {(item) => <Item key={item.value}>{item.label}</Item>}
-            </CheckboxListBox>
+
+            <ExpandablePanel
+                key={ props.name ?? '' } 
+                isOpen={ true }
+                className="tf-repeater-block-item"
+                headerLeft={ headerLeft }
+                hasSearchBox={ true }
+            > 
+                { !searchValue && (
+                    <label className='tf-list-box-option tf-list-box-option-has-checkbox'>
+                        <input 
+                            type="checkbox"
+                            onChange={ handleSelectAllChange } 
+                            checked={ matchedItems.length > 0 && matchedItems.every(item => selected.has( item.value )) }
+                        />
+                        Select All
+                    </label>
+                )}
+                <ListBox 
+                    selectionMode={ selectionMode }
+                    items={ matchedItems }
+                    ref={ listBoxRef }
+                    selectedKeys={Array.from(selected)}
+                    onSelectionChange={handleSelectionChange}
+                    type={ 'checkbox' }
+                >
+                    {(item) => <Item key={item.value}>{item.label}</Item>}
+                </ListBox>
+            </ExpandablePanel>
+
             { props.description &&
             <Description descriptionProps={ descriptionProps } parent={ props }>
                 { props.description }

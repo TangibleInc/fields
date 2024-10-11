@@ -36,6 +36,8 @@ const ExpandablePanel = props => {
   classes += props.className ? ` ${props.className}` : ''
   classes += props.class ? ` ${props.class}` : ''
   classes += ! props.footer ? ' tf-panel-no-footer' : ''
+  classes += ! props.footer ? ' tf-panel-no-footer' : ''
+  classes += props?.hasSearchBox ? ' tf-panel-search-box' : ''
   
   return ( 
     <div className={ classes } data-status={ showItem ? 'open' : 'closed' }>

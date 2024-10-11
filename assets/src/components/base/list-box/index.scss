@@ -19,10 +19,21 @@
   border-radius: 2px;
   margin: 0 5px;
 	gap: $global-spacer-sm;
-
+  align-items: center;
+  
   &:not(.tf-list-box-option-selected,.tf-list-box-option-disabled):hover {
     color: $field-focus-color;
   }
+  
+  &.tf-list-box-option-has-checkbox{
+    margin: 2px 0;   
+  }
+
+}
+
+label.tf-list-box-option {
+  padding: 0 9px;
+  padding-top: 5px;
 }
 
 .tf-list-box-option-selected,
@@ -37,6 +48,12 @@
   &::after {
     content: "\2713";
     margin-left: auto;
+  }
+
+  &.tf-list-box-option-has-checkbox {
+    &::after {
+      content: "";
+    }
   }
 }
 
