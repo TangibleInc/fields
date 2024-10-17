@@ -1,7 +1,8 @@
 import { 
     useState,
     useRef, 
-    useEffect 
+    useEffect,
+    useCallback
 } from 'react'
   
 import { 
@@ -19,6 +20,7 @@ import {
     Description,
     ListBox,
     ExpandablePanel,
+    Button,
 } from '../../base'
 
   
@@ -37,8 +39,16 @@ const ComboBoxCheckboxLayout = props => {
         ? props.value
         : (props.value && ! props.isAsync ? props.value.split(',') : [])
     )
+        
+    const inputRef   = useRef()
+    const listBoxRef = useRef()
+    const wrapperRef = useRef()
+    const accordionRef = useRef()
 
     const [searchValue, setSearchValue ] = useState('')
+    const [selectionLabel, setSelectionLabel] = useState('')
+    const [ isConfirmed, setIsConfirmed ] = useState( false )
+    const [isOpen, setIsOpen] = useState(false)
 
     /**
      * Needed to filter item results according to input value
@@ -59,10 +69,6 @@ const ComboBoxCheckboxLayout = props => {
             '_noResults'
         ]
     })
-    
-    const inputRef   = useRef()
-    const listBoxRef = useRef()
-    const wrapperRef = useRef()
 
     const {
         inputProps,
@@ -75,7 +81,9 @@ const ComboBoxCheckboxLayout = props => {
         menuTrigger: 'input'
     }, state)
 
-    useEffect(() => props.onChange && props.onChange(values), [values.length])
+    useEffect(() => {
+        props.onChange && props.onChange(values)
+    }, [values.length])
 
     inputProps.name = '' // We're using input as search box for items, and it will not need name attribute.
 
@@ -111,19 +119,92 @@ const ComboBoxCheckboxLayout = props => {
         setValues([])
     }
 
-    const headerLeft = <div className='tf-combo-box-text tf-combo-box-text-search' ref={ wrapperRef }>
-        <input
-            { ...inputProps }
-            ref={ inputRef }
-            type="search"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            onClick={(e) => {
-                e.stopPropagation() 
-                inputRef.current.focus()
-            }}
-        />
-    </div> 
+    const headerLeft = useCallback(() => {
+        
+        const commonValidation =  !isConfirmed && isOpen
+
+        const children = commonValidation ? (
+            <input
+                {...inputProps}
+                ref={inputRef}
+                type="search"
+                value={searchValue}
+                onChange={(e) => {
+                    setSearchValue(e.target.value)
+                }}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    inputRef.current.focus();
+                }}
+            />
+        ) : (
+            values.length === 0 ? (
+                <span>{props.placeholder ?? 'No item selected'}</span>
+            ) : (
+                values.map((value, i) => (
+                    <span key={value.key ?? i} className="tf-combo-box-item">
+                        <span>{props.isAsync ? value.label : props.choices[value] ?? ''}</span>
+                        {props.readOnly !== true && (
+                            <Button onPress={() => remove(i)}>x</Button>
+                        )}
+                    </span>
+                ))
+            )
+        )
+
+        return (
+            <div
+                className={ commonValidation ? 'tf-combo-box-text tf-combo-box-text-search' : "tf-multiple-combobox-values tf-multiple-combobox-values-full-width" }
+                ref={wrapperRef}
+            >
+                { children }
+            </div>
+        )
+    }, [ isConfirmed, searchValue, isOpen, values ])
+
+    useEffect(() => {
+        props.onChange && props.onChange(values)
+        setSelected( new Set(values.map( item => item.value)) )
+    }, [values.length])
+
+    useEffect(() => {
+        const selectedCount = selected.size
+        setSelectionLabel(`${selectedCount} selected`)
+    }, [ selected ])
+
+    const remove = i => {
+        setValues([
+          ...values.slice(0, i),
+          ...values.slice(i + 1)
+        ])
+    }
+   
+    
+    const handleSelectConfirmation = ( action = false ) => {
+  
+        if( !action ){
+            setSelected(new Set())
+            setValues([])
+        }
+
+        setIsConfirmed( false )
+        setIsOpen( false )
+    }
+
+    const handleClickOutside = (event) => {
+        if (accordionRef.current && !accordionRef.current.contains(event.target)) {
+            if( !isConfirmed ) setIsConfirmed( true )
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside)
+        
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside)
+            setIsConfirmed( false )
+        }
+    }, [])
 
     return(
         <div className="tf-combo-box">
@@ -132,39 +213,65 @@ const ComboBoxCheckboxLayout = props => {
                 { props.label }
             </Label> }
 
+            { props.description &&
+            <Description descriptionProps={ descriptionProps } parent={ props } key={Object.keys( selected ).length}>
+                { props.description }
+                <Button 
+                    type="text-action"
+                    isDisabled={ !Object.keys( selected ).length }>
+                    { selectionLabel }
+                </Button>
+            </Description> }
+
             <ExpandablePanel
+                ref={ accordionRef }
                 key={ props.name ?? '' } 
-                isOpen={ true }
                 className="tf-repeater-block-item"
-                headerLeft={ headerLeft }
+                headerLeft={ headerLeft() }
                 hasSearchBox={ true }
+                isOpen ={ isOpen }
+                onPress={()=>setIsOpen((prev) => !prev)}
             > 
-                { !searchValue && (
+                { isOpen && !isConfirmed && ( 
                     <label className='tf-list-box-option tf-list-box-option-has-checkbox'>
                         <input 
                             type="checkbox"
-                            onChange={ handleSelectAllChange } 
-                            checked={ matchedItems.length > 0 && matchedItems.every(item => selected.has( item.value )) }
+                            onChange={handleSelectAllChange}
+                            checked={matchedItems.length > 0 && matchedItems.every(item => selected.has(item.value))}
                         />
                         Select All
-                    </label>
-                )}
-                <ListBox 
-                    selectionMode={ selectionMode }
-                    items={ matchedItems }
-                    ref={ listBoxRef }
-                    selectedKeys={Array.from(selected)}
-                    onSelectionChange={handleSelectionChange}
-                    type={ 'checkbox' }
-                >
-                    {(item) => <Item key={item.value}>{item.label}</Item>}
-                </ListBox>
+                </label> )}
+                {
+                    isOpen && !isConfirmed ?
+                    ( <ListBox 
+                        selectionMode={ selectionMode }
+                        items={ matchedItems }
+                        ref={ listBoxRef }
+                        selectedKeys={Array.from(selected)}
+                        onSelectionChange={handleSelectionChange}
+                        type={ 'checkbox' }
+                    >
+                        {(item) => <Item key={item.value}>{item.label}</Item>}
+                    </ListBox> ) 
+                    : (
+                    <div style={{ display:'flex', justifyContent:'space-between' }}>
+                        <span>Are you sure? </span>
+                        <div style={{ display: 'flex', gap:'.5rem' }}>
+                        <Button type='danger'
+                            onClick={()=>handleSelectConfirmation(false)}>
+                            Cancel
+                        </Button>
+                        <Button type='action'
+                                onClick={()=>handleSelectConfirmation(true)}>
+                            Confirm Selected
+                        </Button>
+                        </div>
+                    </div>
+                    )
+                }
+               
             </ExpandablePanel>
 
-            { props.description &&
-            <Description descriptionProps={ descriptionProps } parent={ props }>
-                { props.description }
-            </Description> }
         </div>
     )
 }

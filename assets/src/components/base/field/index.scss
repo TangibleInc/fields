@@ -4,4 +4,9 @@
 
 .tf-description {
   @include description;
+  
+  &.tf-description-multiple-children {
+    display: flex;
+    justify-content: space-between;
+  }
 }

@@ -1,7 +1,8 @@
 import { 
   useState, 
   useEffect,
-  isValidElement 
+  isValidElement,
+  forwardRef 
 } from 'react'
 
 import { Button } from '../'
@@ -15,7 +16,7 @@ import { Button } from '../'
  * 
  * Maybe we can't use a <Button /> for the panel header 
  */
-const ExpandablePanel = props => {
+const ExpandablePanel = forwardRef((props, ref) => {
 
   const [showItem, setShowItem] = useState(true)
 
@@ -40,8 +41,8 @@ const ExpandablePanel = props => {
   classes += props?.hasSearchBox ? ' tf-panel-search-box' : ''
   
   return ( 
-    <div className={ classes } data-status={ showItem ? 'open' : 'closed' }>
-      <Button className="tf-panel-header" type="action" onClick={ toggle }>
+    <div ref={ref} className={ classes } data-status={ showItem ? 'open' : 'closed' }>
+      <Button className="tf-panel-header" type="action" onClick={ props?.onPress ?? toggle }>
         <div className="tf-panel-header-left">
           { props.headerLeft 
             ? <div className="tf-panel-header-before-title">
@@ -77,6 +78,6 @@ const ExpandablePanel = props => {
         : null }
     </div>
   )
-}
+})
 
 export default ExpandablePanel

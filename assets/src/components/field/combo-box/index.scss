@@ -122,6 +122,11 @@
   border-radius: $field-border-radius;
   flex-wrap: wrap;
   gap: $global-spacer-sm;
+
+  &.tf-multiple-combobox-values-full-width{
+    width: 100%;
+    border:none;
+  }
 }
 
 .tf-multiple-combobox[data-enabled="false"] .tf-multiple-combobox-values {
