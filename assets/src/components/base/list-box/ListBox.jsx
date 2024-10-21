@@ -25,11 +25,15 @@ const ListBox = props => {
   const ref = useRef()
   const listBoxRef = props.listBoxRef || ref
 
-  const isCheckbox = props?.type === 'checkbox'
+  const isCheckbox = props?.type === 'checkbox' || props?.type === 'view-mode'
   const state = isCheckbox ? useListState(props) : props.state
 
   const { listBoxProps } = useListBox(props, state, listBoxRef)
   let { gridProps } = useGridList(props, state, ref)
+
+  let classes = 'tf-list-box'
+
+  if( props?.type === 'view-mode' ) classes += ' tf-list-box-view-selected'
 
   /**
    * Hidden <DismissButton> component at the end to allow screen reader 
@@ -43,7 +47,7 @@ const ListBox = props => {
       <ul
         { ...(isCheckbox ? gridProps : listBoxProps) }
         ref={ listBoxRef }
-        className={`tf-list-box ${isCheckbox && 'tf-list-checkbox'}`}
+        className={ classes }
       >
         { ['loading', 'filtering'].includes(props?.loadingState)
           ? <Option 
@@ -67,7 +71,6 @@ const ListBox = props => {
                   key={ item.key ?? item.name } 
                   item={ item } 
                   state={ state } 
-                  hasCheckbox={ isCheckbox }  
                   shouldUseVirtualFocus 
               />
             )) }

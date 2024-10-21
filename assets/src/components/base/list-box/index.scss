@@ -9,6 +9,11 @@
   background: $field-background;
 }
 
+.tf-list-box-view-selected{
+  display: flex !important;
+  flex-direction: column;
+}
+
 .tf-list-box-option {
   font-size: 13px;
   display: flex;
@@ -38,12 +43,8 @@ label.tf-list-box-option {
 
 .tf-list-box-option-selected,
 .tf-list-box-option-selected.tf-list-box-option-selected {
-  color: $field-background;
-  background-color: $field-focus-color;
-  
-  &:hover {
-    color: $field-background;
-  }
+  color:  $field-focus-color;
+  background-color: $global-theme-color-lighter-05;
 
   &::after {
     content: "\2713";
@@ -52,8 +53,15 @@ label.tf-list-box-option {
 
   &.tf-list-box-option-has-checkbox {
     &::after {
-      content: "";
+      content: none;
     }
+  }
+
+  &.tf-list-box-option-view-mode{
+    display: flex !important;
+    justify-content: space-between !important;
+    align-content: center;
+    cursor: pointer;
   }
 }
 

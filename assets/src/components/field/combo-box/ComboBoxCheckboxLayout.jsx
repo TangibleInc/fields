@@ -2,7 +2,8 @@ import {
     useState,
     useRef, 
     useEffect,
-    useCallback
+    useCallback,
+    useMemo
 } from 'react'
   
 import { 
@@ -22,6 +23,8 @@ import {
     ExpandablePanel,
     Button,
 } from '../../base'
+import { getAsyncProps } from './async'
+import { getOptions } from '../../../utils'
 
   
 const ComboBoxCheckboxLayout = props => {
@@ -39,16 +42,31 @@ const ComboBoxCheckboxLayout = props => {
         ? props.value
         : (props.value && ! props.isAsync ? props.value.split(',') : [])
     )
-        
+
+    const itemProps = { ...(props.isAsync
+        ? getAsyncProps(props)
+        : {
+          defaultItems: getOptions(props.choices ?? {})
+        })
+    }
+
+    const [oldValues, setOldValues] = useState( values )
+    const [searchValue, setSearchValue ] = useState('')
+    const [selectionLabel, setSelectionLabel] = useState('')
+    const [view, setView] = useState({
+        isOpen: false,
+        isViewMode: false,
+        isConfirmed: false
+    })
+
+    const initialSelectedKeys = new Set(values.map( item => item.value))
+    const [selected, setSelected] = useState(initialSelectedKeys)
+    const selectionMode = props.multiple ? 'multiple' : 'single'
+
     const inputRef   = useRef()
     const listBoxRef = useRef()
     const wrapperRef = useRef()
     const accordionRef = useRef()
-
-    const [searchValue, setSearchValue ] = useState('')
-    const [selectionLabel, setSelectionLabel] = useState('')
-    const [ isConfirmed, setIsConfirmed ] = useState( false )
-    const [isOpen, setIsOpen] = useState(false)
 
     /**
      * Needed to filter item results according to input value
@@ -57,9 +75,16 @@ const ComboBoxCheckboxLayout = props => {
      */
     const { contains } = useFilter({ sensitivity: 'base' })
 
-    const matchedItems = props.items.filter((item) =>
-        contains( item.label, searchValue )
-    )
+    const matchedItems = useMemo(() => {
+        return view.isViewMode 
+            ? values.filter((item) => contains(item.label, searchValue )) 
+            : (itemProps.items ?? []).filter((item) => contains(item.label, searchValue ))
+    }, [view.isViewMode, searchValue, values, itemProps.items, contains])
+
+    console.log({
+        matchedItems: matchedItems,
+        view: view
+    })
 
     const state = useComboBoxState({ 
         ...props, 
@@ -73,7 +98,8 @@ const ComboBoxCheckboxLayout = props => {
     const {
         inputProps,
         labelProps,
-        descriptionProps
+        descriptionProps,
+        listBoxProps
     } = useComboBox({
         ...props,
         inputRef,
@@ -84,13 +110,6 @@ const ComboBoxCheckboxLayout = props => {
     useEffect(() => {
         props.onChange && props.onChange(values)
     }, [values.length])
-
-    inputProps.name = '' // We're using input as search box for items, and it will not need name attribute.
-
-    // State for selected items
-    const initialSelectedKeys = new Set(values.map( item => item.value))
-    const [selected, setSelected] = useState(initialSelectedKeys)
-    const selectionMode = props.multiple ? 'multiple' : 'single'
    
     const handleSelectionChange = (keys) => {
         const keysArray = Array.isArray(keys) ? keys : Array.from(keys)
@@ -105,7 +124,7 @@ const ComboBoxCheckboxLayout = props => {
         setValues(selectedItems)
     }
 
-     const handleSelectAllChange = (e) => {
+    const handleSelectAllChange = (e) => {
         const checked = e.target.checked
         const allKeys = matchedItems.map(item => item.value)
         
@@ -121,8 +140,8 @@ const ComboBoxCheckboxLayout = props => {
 
     const headerLeft = useCallback(() => {
         
-        const commonValidation =  !isConfirmed && isOpen
-
+        const commonValidation = view.isOpen
+       
         const children = commonValidation ? (
             <input
                 {...inputProps}
@@ -132,6 +151,7 @@ const ComboBoxCheckboxLayout = props => {
                 onChange={(e) => {
                     setSearchValue(e.target.value)
                 }}
+                name={''}
                 onClick={(e) => {
                     e.stopPropagation();
                     inputRef.current.focus();
@@ -160,51 +180,117 @@ const ComboBoxCheckboxLayout = props => {
                 { children }
             </div>
         )
-    }, [ isConfirmed, searchValue, isOpen, values ])
+    }, [ view, searchValue, values ])
 
     useEffect(() => {
-        props.onChange && props.onChange(values)
-        setSelected( new Set(values.map( item => item.value)) )
-    }, [values.length])
+        if (props.onChange) {
+            props.onChange(values) 
+        }
+
+        setSelected(new Set(values.map(item => item.value)))
+        
+        if (values.length === 0) {
+            setView({
+                isOpen: false,
+                isConfirmed: false,
+                isViewMode: false
+            });
+        }
+    }, [ values ])
 
     useEffect(() => {
         const selectedCount = selected.size
-        setSelectionLabel(`${selectedCount} selected`)
-    }, [ selected ])
+        setSelectionLabel(`View Selected (${selectedCount})`)
 
-    const remove = i => {
+        if( view.isViewMode ){
+            setView(prev=>({
+                 ...prev,
+                 isOpen: true,
+            }))
+
+            setSelectionLabel(`Selected (${selectedCount})`)
+         }
+
+    }, [ selected, view.isViewMode ])
+
+    const remove = ( i, fromList = false ) => {
+        if (fromList) {
+            setValues(prevValues => {
+                const index = prevValues.findIndex(item => item.value === i);
+                if (index !== -1) {
+                    return prevValues.filter(item => item.value !== i); // Remove by value
+                }
+                return prevValues // Return unchanged values if item not found
+            })
+
+            return
+        }
+
         setValues([
           ...values.slice(0, i),
           ...values.slice(i + 1)
         ])
     }
    
-    
     const handleSelectConfirmation = ( action = false ) => {
   
         if( !action ){
-            setSelected(new Set())
-            setValues([])
+            setSelected( new Set(oldValues.map( item => item.value)) )
+            setValues(oldValues.map(item => ({
+                ...item,         
+                [item.value]: item.label 
+            })))
         }
 
-        setIsConfirmed( false )
-        setIsOpen( false )
-    }
+        setView(prev=>({
+            ...prev,
+            isConfirmed: false,
+            isOpen: false,
+            isViewMode: false
+        }))
 
-    const handleClickOutside = (event) => {
-        if (accordionRef.current && !accordionRef.current.contains(event.target)) {
-            if( !isConfirmed ) setIsConfirmed( true )
-        }
+        setSearchValue('')
+        setOldValues( values )
     }
 
     useEffect(() => {
-        document.addEventListener("mousedown", handleClickOutside)
-        
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside)
-            setIsConfirmed( false )
+        if (view.isOpen && inputRef.current ) {
+            document.addEventListener('mousedown', onClickOutside)
+            inputRef.current.focus()
         }
-    }, [])
+
+        if( view.isOpen && wrapperRef.current ){
+            document.addEventListener('mousedown', onClickOutside)
+        }
+    
+        return () => {
+          document.removeEventListener('mousedown', onClickOutside)
+        }
+
+    }, [view.isOpen])
+    
+    const onClickOutside = event => {
+        const tempRef = accordionRef.current ?? false
+    
+        if ( ! tempRef ) return;
+        if ( tempRef.contains(event.target) ) {
+          return;
+        }
+        
+        if( view.isConfirmed ) setView(prev=>({
+            ...prev,
+            isConfirmed: false,
+            isViewMode: false,
+            isOpen: false
+        }))
+        
+        if( !view.isConfirmed ) setView(prev=>({
+            ...prev,
+            isViewMode: true,
+        }))
+    }
+
+    useEffect(() => props.onChange && props.onChange(values), [itemProps.selectedKeys])
 
     return(
         <div className="tf-combo-box">
@@ -214,12 +300,14 @@ const ComboBoxCheckboxLayout = props => {
             </Label> }
 
             { props.description &&
-            <Description descriptionProps={ descriptionProps } parent={ props } key={Object.keys( selected ).length}>
+            <Description descriptionProps={ descriptionProps } parent={ props }>
                 { props.description }
                 <Button 
-                    type="text-action"
-                    isDisabled={ !Object.keys( selected ).length }>
-                    { selectionLabel }
+                        type="text-action"
+                        isDisabled={  !selected.size }
+                        onClick={()=>setView(prev=> ({...prev, isViewMode: !prev.isViewMode}))}
+                        >
+                        { selectionLabel }
                 </Button>
             </Description> }
 
@@ -229,10 +317,10 @@ const ComboBoxCheckboxLayout = props => {
                 className="tf-repeater-block-item"
                 headerLeft={ headerLeft() }
                 hasSearchBox={ true }
-                isOpen ={ isOpen }
-                onPress={()=>setIsOpen((prev) => !prev)}
+                isOpen ={ view.isOpen }
+                onPress={()=>setView((prev) =>({...prev, isOpen: !prev.isOpen}))}
             > 
-                { isOpen && !isConfirmed && ( 
+                { view.isOpen && !view.isConfirmed && !searchValue && !view.isViewMode && ( 
                     <label className='tf-list-box-option tf-list-box-option-has-checkbox'>
                         <input 
                             type="checkbox"
@@ -242,7 +330,7 @@ const ComboBoxCheckboxLayout = props => {
                         Select All
                 </label> )}
                 {
-                    isOpen && !isConfirmed ?
+                    view.isOpen && !view.isConfirmed && !view.isViewMode ?
                     ( <ListBox 
                         selectionMode={ selectionMode }
                         items={ matchedItems }
@@ -250,24 +338,46 @@ const ComboBoxCheckboxLayout = props => {
                         selectedKeys={Array.from(selected)}
                         onSelectionChange={handleSelectionChange}
                         type={ 'checkbox' }
+                        focusWithinProps
+                        shouldUseVirtualFocus
+                        {...listBoxProps}
                     >
-                        {(item) => <Item key={item.value}>{item.label}</Item>}
+                        {(item) => <Item key={item.value} hasCheckBox={true}>{item.label}</Item>}
                     </ListBox> ) 
-                    : (
-                    <div style={{ display:'flex', justifyContent:'space-between' }}>
-                        <span>Are you sure? </span>
-                        <div style={{ display: 'flex', gap:'.5rem' }}>
-                        <Button type='danger'
-                            onClick={()=>handleSelectConfirmation(false)}>
-                            Cancel
-                        </Button>
-                        <Button type='action'
-                                onClick={()=>handleSelectConfirmation(true)}>
-                            Confirm Selected
-                        </Button>
-                        </div>
-                    </div>
-                    )
+                    :( <>
+                        <ListBox 
+                            selectionMode={ selectionMode }
+                            items={ matchedItems }
+                            ref={ listBoxRef }
+                            selectedKeys={Array.from(values.map(item => item.value))}
+                            type={ 'view-mode' }
+                            focusWithinProps
+                            shouldUseVirtualFocus
+                        >
+                            {(item) => (
+                                <Item key={item.value} isViewMode={true} >
+                                    {item.label}
+                                    <Button onPress={() => remove(item.value, true)}>x</Button>
+                                </Item>
+                            )}
+                        </ListBox>
+                        {
+                            searchValue === '' && (
+                                <div style={{ display:'flex', justifyContent:'space-between' }}>
+                                    <span>Are you sure? </span>
+                                    <div style={{ display: 'flex', gap:'.5rem' }}>
+                                    <Button type='danger'
+                                        onClick={()=>handleSelectConfirmation(false)}>
+                                        Cancel
+                                    </Button>
+                                    <Button type='action'
+                                            onClick={()=>handleSelectConfirmation(true)}>
+                                        Confirm Selected
+                                    </Button>
+                                    </div>
+                                </div> )
+                            }
+                    </> ) 
                 }
                
             </ExpandablePanel>

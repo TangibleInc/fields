@@ -7,7 +7,7 @@ import {
 } from 'react-aria'
 import ListCheckbox from './ListCheckbox'
 
-const Option = ({ item, state, hasCheckbox }) => {
+const Option = ({ item, state }) => {
   
   const ref = useRef()
   const { 
@@ -24,15 +24,16 @@ const Option = ({ item, state, hasCheckbox }) => {
   if( isSelected ) classes = classes += ' tf-list-box-option-selected'
   if( isDisabled ) classes = classes += ' tf-list-box-option-disabled'
   if( isFocused ) classes = classes += ' tf-list-box-option-focus'
-  if( hasCheckbox ) classes = classes += ' tf-list-box-option-has-checkbox'
+  if( item?.props?.isViewMode ) classes = classes += ' tf-combo-box-item tf-list-box-option-view-mode'
+  if( item?.props?.hasCheckBox || item?.props?.isViewMode ) classes = classes += ' tf-list-box-option-has-checkbox '
   
   return(
     <li
-      { ...mergeProps(optionProps, focusProps) }
+      { ...( !item?.props?.isViewMode && mergeProps(optionProps, focusProps)) }
       ref={ ref }
       className={ classes }
     >
-      {hasCheckbox && <ListCheckbox item={item} state={state} />}
+      { item?.props?.hasCheckBox && !item?.props?.isViewMode && <ListCheckbox item={item} state={state} />}
       { item.rendered }
     </li>
   )
