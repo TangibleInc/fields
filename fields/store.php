@@ -3,7 +3,8 @@
 defined('ABSPATH') or die();
 
 $fields->fetch_value = function (
-  string $name
+  string $name,
+  array $args = []
 ) use ($fields) {
   if ( ! $field = $fields->get_field( $name ) ) {
     return new WP_Error( 'tf-unknown-field', sprintf( __( 'Unknown field %1$s' ), $name ) );
@@ -19,12 +20,13 @@ $fields->fetch_value = function (
     }
   }
 
-  return $field['fetch_callback']($name);
+  return $field['fetch_callback']($name, $args);
 };
 
 $fields->store_value = function (
   string $name,
-  $value
+  $value,
+  array $args = []
 ) use ($fields) {
   if ( ! $field = $fields->get_field( $name ) ) {
     return new WP_Error( 'tf-unknown-field', sprintf( __( 'Unknown field %1$s' ), $name ) );
@@ -52,7 +54,7 @@ $fields->store_value = function (
     $value = $fields->strip_unauthorized_dynamic_values($value, 'store');
   }
   
-  if ( ! $field['store_callback']($name, $value) ) {
+  if ( ! $field['store_callback']($name, $value, $args) ) {
     return new WP_Error( 'tf-error', sprintf( __( 'Could not save value for %1$s' ), $name ) );
   }
 
