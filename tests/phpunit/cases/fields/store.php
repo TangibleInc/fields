@@ -420,4 +420,55 @@ class Store_TestCase extends TF_UnitTestCase {
 
     unset($_GET['name']);
   }
+
+  public function test_fields_fetch_and_store_with_args() {
+
+    $fields = tangible_fields();
+    $data = [
+      1 => [ 'value-1' => 'initial-value-item-1' ],
+      2 => [ 'value-1' => 'initial-value-item-2' ],
+    ];
+
+    $fields->register_field('value-1', [
+      'store_callback' => function( string $name, $value, array $args = [] ) use( &$data ) : bool {
+        if( empty( $args['id'] ) ) return false;
+        $data[ $args['id'] ][ $name ] = $value;
+        return true;
+      },
+      'fetch_callback' => function( string $name, array $args = [] ) use( &$data ) {
+        if( empty( $args['id'] ) ) return false;
+        return $data[ $args['id'] ][ $name ] ?? false;
+      },
+      'permission_callback_fetch' => '__return_true',
+      'permission_callback_store' => '__return_true'
+    ] );
+
+    $this->assertEquals(
+      'initial-value-item-1',
+      $fields->fetch_value( 'value-1', [ 'id' => 1 ] )
+    );
+
+    $this->assertEquals(
+      'initial-value-item-2',
+      $fields->fetch_value( 'value-1', [ 'id' => 2 ] )
+    );
+
+    $this->assertEquals(
+      false,
+      $fields->fetch_value( 'value-1', [ 'id' => 3 ] )
+    );
+
+    $fields->store_value( 'value-1', 'updated-value-item-1', [ 'id' => 1 ] );
+    $fields->store_value( 'value-1', 'updated-value-item-2', [ 'id' => 2 ] );
+
+    $this->assertEquals(
+      'updated-value-item-1',
+      $fields->fetch_value( 'value-1', [ 'id' => 1 ] )
+    );
+
+    $this->assertEquals(
+      'updated-value-item-2',
+      $fields->fetch_value( 'value-1', [ 'id' => 2 ] )
+    );
+  }
 }

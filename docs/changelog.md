@@ -1,3 +1,35 @@
+# 20240927
+
+- Dependent attribues:
+    - Add possibility to define a callback to format the dependent value before using it as a prop
+- Dynamic values:
+    - Format: Move formating logic from PHP to JS
+- Dev:
+    - Update npm dependencies and switch to ES module
+    - Improve `initField` and `initElement` events
+    - Add `ready` event
+    - Pass previous value in `valueChange` event
+- Elements:
+    - Tooltip: New elements
+- Fields:
+    - Code editor: New field
+    - Color picker: Prevent componenent to change from uncontrolled to controlled
+    - Conditional panel: Add possibility to overwrite default configuration
+    - ComboBox: Add support for `read_only`, add loading state in listbox when async
+    - Number: Add support for `read_only`
+    - Repeater: Set default layout to table and avoid error if set layout does not exists
+    - Repeater: Table - Remove empty column at the start of the row and improve style
+    - Select: Improve style
+    - WYSIWYG: Add "raw" view that gives possibility to modify the html directly
+- Tests:
+    - Conditional panel: Improve tests
+    - ComboBox: Improve tests
+    - Dynamic values: Improve tests and fix test data not formated correctly
+    - Jest: Increase default timeout and run tests with one worker only
+    - Tooltip: Start tests
+- Visibility conditions:
+    - Read partial value even if value is a JSON string
+
 # 20240614
 
 - Dynamic values:
