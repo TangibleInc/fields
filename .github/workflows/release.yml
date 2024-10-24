@@ -1,29 +1,41 @@
-name: Deploy
-
-on:
-  push:
-    tags:
-      - "*.*.*"
-
+name: Release
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
+  contents: write
+on: push
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          node-version: 20
-      - name: Install
-        run: npm install
-      - name: Archive
-        run: npm run archive
-      - name: Release
+          fetch-depth: 0
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install dependencies
+        run: bun install
+      - name: Create archive
+        run: bunx roll archive -y
+      - name: Install pipeline
+        run: mkdir -p publish && cd publish && git clone https://github.com/tangibleinc/pipeline
+      - name: Add latest tag as needed
+        uses: EndBug/latest-tag@latest
+        if: ${{ ! startsWith(github.ref, 'refs/tags/') }}
+      - name: Before release script
+        run: bun run publish/pipeline/before-release.ts
+      - name: Release tag
         uses: softprops/action-gh-release@v2
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
         with:
-          files: publish/tangible-fields.zip
+          body_path: publish/release.md
+          files: publish/*.zip
+      - name: Release preview at latest commit
+        uses: softprops/action-gh-release@v2
+        if: ${{ ! startsWith(github.ref, 'refs/tags/') }}
+        with:
+          body_path: publish/release.md
+          files: publish/*.zip
+          tag_name: latest
+          make_latest: true
+      - name: After release script
+        run: bun run publish/pipeline/after-release.ts
