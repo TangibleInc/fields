@@ -26,13 +26,8 @@ endif;
   
   function load() {
 
-    if (!class_exists('tangible\\framework')) {
-      $module_path = defined('TANGIBLE_FIELDS_IS_PLUGIN')
-        ? __DIR__ . '/vendor/tangible/'
-        : __DIR__ . '/../'; 
-    
-      require_once $module_path . 'framework/index.php';
-    }
+    // Parent plugin is expected to load framework
+    if (!class_exists('tangible\\framework')) return;
 
     $fields = $this;
     tangible_fields( $fields );
