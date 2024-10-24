@@ -86,6 +86,11 @@ export default {
       dest: 'vendor/tangible/framework',
       branch: 'main',
     },
+    {
+      git: 'git@github.com:tangibleinc/updater',
+      dest: 'vendor/tangible/updater',
+      branch: 'main',
+    },
   ],
   installDev: [
     {
@@ -95,11 +100,6 @@ export default {
     {
       zip: 'https://downloads.wordpress.org/plugin/elementor.latest-stable.zip',
       dest: 'vendor/tangible-dev/elementor'
-    },
-    {
-      git: 'git@github.com:tangibleinc/fields-pro',
-      dest: 'vendor/tangible-dev/fields-pro',
-      branch: 'main',
     },
   ] 
 }
