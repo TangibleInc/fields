@@ -4,6 +4,10 @@
     {
       "type": "vcs",
       "url": "git@github.com:tangibleinc/framework.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:tangibleinc/updater.git"
     }
   ],
   "require-dev": {
@@ -11,7 +15,8 @@
     "yoast/phpunit-polyfills": "^1.0"
   },
   "require": {
-    "tangible/framework": "dev-main"
+    "tangible/framework": "dev-main",
+    "tangible/updater": "dev-main"
   },
   "config": {
     "allow-plugins": {

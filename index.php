@@ -13,7 +13,7 @@ endif;
 
   public $name = 'tangible_fields';
   // Remember to update the version - Expected format: YYYYMMDD
-  public $version = '20240927';
+  public $version = '20241024';
 
   // Dynamic methods
   function __call( $method = '', $args = [] ) {
@@ -26,13 +26,8 @@ endif;
   
   function load() {
 
-    if (!class_exists('tangible\\framework')) {
-      $module_path = defined('TANGIBLE_FIELDS_IS_PLUGIN')
-        ? __DIR__ . '/vendor/tangible/'
-        : __DIR__ . '/../'; 
-    
-      require_once $module_path . 'framework/index.php';
-    }
+    // Parent plugin is expected to load framework
+    if (!class_exists('tangible\\framework')) return;
 
     $fields = $this;
     tangible_fields( $fields );
