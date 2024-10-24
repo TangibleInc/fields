@@ -15,6 +15,7 @@
     "install:dev": "roll install --dev",
     "update": "roll update",
     "update:dev": "roll update --dev",
+    "version": "node version.js",
     "jest:test": "jest --config=tests/jest/jest.config.js --silent=false --maxWorkers=1 test",
     "-- Local environment --": "https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env",
     "env": "wp-env",
