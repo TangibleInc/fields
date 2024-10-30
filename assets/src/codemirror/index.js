@@ -7,6 +7,7 @@ import {
   placeholder
 } from '@codemirror/view'
 
+import { EditorState } from '@codemirror/state'
 import { dynamicValueRegex } from '../dynamic-values'
 
 /**
@@ -108,8 +109,10 @@ const createInput = (
 
       /**
        * Readonly mode
+       * @see https://codemirror.net/docs/ref/#state.EditorState.readOnly
        * @see https://discuss.codemirror.net/t/codemirror-6-readonly-view/2333
        */
+      EditorState.readOnly.of(config.readOnly ?? false),
       EditorView.contentAttributes.of({
         contenteditable: ! (config.readOnly ?? false)
       }),
