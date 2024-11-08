@@ -1,5 +1,5 @@
 import '../../../../../assets/src/index.jsx'
-import { 
+import {
   render,
   screen,
   within
@@ -39,7 +39,7 @@ describe('ComboBox component', () => {
           label    : 'Label',
           choices  : choices,
           multiple : type === 'multiple'
-        }) }    
+        }) }
         <span>Click me to unfocus</span>
       </>
     )
@@ -48,10 +48,10 @@ describe('ComboBox component', () => {
       expect(within(document).queryByText( choices[ value ] )).toBe(null)
     }
 
-    await user.click( 
+    await user.click(
       type === 'multiple'
         ? within(container).getByText('Add')
-        : within(container).getByText('▼') 
+        : within(container).getByText('▼')
     )
 
     for( const value in choices ) {
@@ -70,7 +70,7 @@ describe('ComboBox component', () => {
     'single',
     'multiple',
   ])('displays options in async mode when popover is open (%p)', async type => {
-    
+
     /**
      * Used to simulate async response
      */
@@ -101,10 +101,10 @@ describe('ComboBox component', () => {
       }
     )
 
-    await user.click( 
+    await user.click(
       type === 'multiple'
         ? within(container).getByText('Add')
-        : within(container).getByText('▼') 
+        : within(container).getByText('▼')
     )
 
     window.tangibleTests.fetchResponse.forEach(
@@ -132,7 +132,7 @@ describe('ComboBox component', () => {
      * Used to simulate async response
      */
     window.tangibleTests.fetchResponse = []
-    
+
     const user = userEvent.setup()
     const { container } = render(
       fields.render({
@@ -145,10 +145,10 @@ describe('ComboBox component', () => {
       })
     )
 
-    await user.click( 
+    await user.click(
       type === 'multiple'
         ? within(container).getByText('Add')
-        : within(container).getByText('▼') 
+        : within(container).getByText('▼')
     )
 
     const item = within(document).getByText('No results')
@@ -193,5 +193,54 @@ describe('ComboBox component', () => {
     else {
       expect(within(container).queryByText('x')).toBeFalsy()
     }
+  })
+
+  test.each([
+    'single',
+    'multiple',
+  ])('if response is an object, convert it to an array in async mode (%p)', async type => {
+
+    /**
+     * Used to simulate async response
+     */
+    window.tangibleTests.fetchResponse = {
+      0  : { id: 'value1', title: 'Value 1' },
+      11 : { id: 'value2', title: 'Value 2' },
+      28 : { id: 'value3', title: 'Value 3' },
+    }
+
+    const user = userEvent.setup()
+    const { container } = render(
+      <>
+        { fields.render({
+          name      : 'field-name',
+          type      : 'combo-box',
+          label     : 'Label',
+          isAsync   : true,
+          searchUrl : 'https://search.com/endpoint',
+          multiple  : type === 'multiple'
+        }) }
+        <span>Click me to unfocus</span>
+      </>
+    )
+
+    Object.values(window.tangibleTests.fetchResponse).forEach(
+      result => {
+        expect(within(document).queryByText( result.title )).toBe(null)
+      }
+    )
+
+    await user.click(
+      type === 'multiple'
+        ? within(container).getByText('Add')
+        : within(container).getByText('▼')
+    )
+
+    Object.values(window.tangibleTests.fetchResponse).forEach(
+      result => {
+        const item = within(document).getByText( result.title )
+        expect(item.getAttribute('data-key')).toBe( result.id )
+      }
+    )
   })
 })
