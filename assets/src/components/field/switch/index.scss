@@ -8,8 +8,8 @@
 .tf-switch-element-selected {
   position: relative;
   display: inline-block;
-  width: $field-height * 2;
   height: $field-height;
+  aspect-ratio: 2 / 1;
 }
 
 .tf-switch-element span,
@@ -22,14 +22,14 @@
   bottom: 0;
   background-color: #ccc;
   transition: .4s;
-  border-radius: $field-height;
+  border-radius: 100vh;
 
   &::before {
     border-radius: 50%;
     position: absolute;
     content: '';
-    height: $field-height - 8px;
-    width: $field-height - 8px;
+    height: calc(100% - 8px);
+    width: calc(50% - 8px);
     left: 4px;
     bottom: 4px;
     background-color: $field-background;
@@ -45,6 +45,6 @@
   }
 
   &::before {
-    transform: translateX($field-height);
+    transform: translateX( calc(100% + 8px) );
   }
 }
