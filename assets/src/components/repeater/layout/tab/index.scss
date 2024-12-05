@@ -128,12 +128,25 @@
   /**
    * Field specific tweaks
    */
-  .tf-repeater-tab-item-field .tf-switch-label {
-    height: $field-height;
+  .tf-repeater-tab-item-field > div[class*='tf-context-'] > .tf-switch {
+    display: flex;
+    gap: $global-spacer-sm;
 
-    .tf-switch-element,
-    .tf-switch-element-selected {
-      height: 20px;
+    .tf-switch-label {
+      width: fit-content;
+      height: $field-height;
+
+      .tf-switch-element,
+      .tf-switch-element-selected {
+        height: 20px;
+      }
+    }
+  }
+
+  .tf-repeater-tab-item-field > div[class*='tf-context-'] > .tf-radio-group {
+    .tf-radio-group-container {
+      flex-direction: row;
+      gap: 10px;
     }
   }
 }
