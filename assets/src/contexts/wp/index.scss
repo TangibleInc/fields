@@ -46,8 +46,10 @@ $button-color--hover: $global-theme-color-darker-10;
 
 .tf-context-wp {
   @import '../../components/index.scss';
-  @import './components/text-input.scss'; // wp context specific rules
+  // wp context specific rules
+  @import './components/text-input.scss';
   @import './components/file.scss';
+  @import './components/button.scss';
 }
 
 @import '../../lib/prose-mirror/index.scss';

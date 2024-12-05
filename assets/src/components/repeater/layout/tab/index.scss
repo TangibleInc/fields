@@ -1,0 +1,96 @@
+.tf-repeater-tab-container {
+  background-color: $field-background;
+  width: 100%;
+  border: $field-border;
+  border-radius: $field-border-radius;
+  border-color: rgba($field-border-color, 0.5);
+}
+
+.tf-repeater-tab-header {
+  display: flex;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: $field-border;
+  border-bottom-color: rgba($field-border-color, 0.5);
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.tf-repeater-tab-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.tf-repeater-tab-icon-actions {
+  display: flex;
+  align-items: center;
+
+  button {
+    min-width: fit-content;
+  }
+}
+
+.tf-repeater-tab-items {
+  display: flex;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  gap: $global-spacer-sm;
+  background-color: $field-background;
+  margin: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-width: fit-content;
+}
+
+.tf-repeater-tab-icon-actions button,
+.tf-repeater-tab-add-item,
+.tf-repeater-tab-item {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: fit-content;
+  height: $field-height;
+  padding: $section-padding;
+  @include label;
+  margin-bottom: 0;
+
+  &[data-open="true"]::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: $button-primary-color;
+  }
+
+  button {
+    white-space: nowrap;
+  }
+}
+
+.tf-repeater-tab-add-item {
+  min-width: max-content;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.tf-repeater-tab-content {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: $field-background;
+
+  padding-left: $advanced-item-index-width;
+  padding-right: $advanced-item-index-width;
+  padding-top: calc($advanced-item-index-width / 2);
+  padding-bottom: calc($advanced-item-index-width / 2);
+
+  .tf-repeater-tab-item-field {
+    padding: $section-padding;
+  }
+}

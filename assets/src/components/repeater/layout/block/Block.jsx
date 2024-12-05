@@ -7,7 +7,8 @@ import {
 } from '../../../base'
 
 import { Checkbox, Switch } from '../../../field'
-import { isDependentString } from '../../../dependent/utils'
+import { renderTitle } from '../../common/helpers'
+
 import BulkActions from '../../common/BulkActions'
 
 const Block = ({
@@ -19,7 +20,8 @@ const Block = ({
   title = false,
   useSwitch,
   useBulk,
-  name
+  name,
+  renderFooterActions
 }) => {
 
   const [activeItem, setActiveItem] = useState(0)
@@ -100,53 +102,36 @@ const Block = ({
     </>
   )
 
-  /**
-   * In order to support dependent value from the repeater, we have
-   * to render the title as an element so that it's wrapped inside
-   * a new dependent wrapper that can access repeater values
-   */
-  const renderTitle = (item, i) => {
-
-    const text = title ? title : ('Item ' + (i + 1))
-
-    if( ! isDependentString(text) ) return text;
-
-    const element = { 
-      type      : 'wrapper',
-      name      : `_repeater-title-${name}-${item.key}`,
-      content   : title,
-      dependent : true
-    }
-    return renderItem(element, item, i)
-  }
-
   return(
-    <div className='tf-repeater-items tf-repeater-block-items'>
-      { useBulk && 
-        <BulkActions
-          actions={ bulkOptions }
-          dispatch={ dispatch }
-        /> }
-      { items && items.slice(0, maxLength).map((item, i) => (
-        <ExpandablePanel
-          key={ item.key ?? i } 
-          title={ renderTitle(item, i) }
-          footer={ actions(i, item) }
-          isOpen={ activeItem === i }
-          className="tf-repeater-block-item"
-          onChange={ visible => visible 
-            ? (activeItem !== i ? setActiveItem(i) : null)
-            : (activeItem === i ? setActiveItem(false) : null) }
-          headerLeft={ getHeaderLeft(item, i) }
-        > 
-          { rowFields.map(control => ( 
-            <div key={ control.name ?? i } className="tf-repeater-block-item-field">
-              { renderItem(control, item, i) }
-            </div>
-          )) } 
-        </ExpandablePanel>
-      )) }
-    </div>
+    <>
+      <div className='tf-repeater-items tf-repeater-block-items'>
+        { useBulk && 
+          <BulkActions
+            actions={ bulkOptions }
+            dispatch={ dispatch }
+          /> }
+        { items && items.slice(0, maxLength).map((item, i) => (
+          <ExpandablePanel
+            key={ item.key ?? i } 
+            title={ renderTitle(item, i, title, name, renderItem) }
+            footer={ actions(i, item) }
+            isOpen={ activeItem === i }
+            className="tf-repeater-block-item"
+            onChange={ visible => visible 
+              ? (activeItem !== i ? setActiveItem(i) : null)
+              : (activeItem === i ? setActiveItem(false) : null) }
+            headerLeft={ getHeaderLeft(item, i) }
+          > 
+            { rowFields.map(control => ( 
+              <div key={ control.name ?? i } className="tf-repeater-block-item-field">
+                { renderItem(control, item, i) }
+              </div>
+            )) } 
+          </ExpandablePanel>
+        )) }
+      </div>
+      { renderFooterActions() }
+    </>
   )
 }
 

@@ -301,6 +301,13 @@ $documentation->register_section('repeater', [
         'repeater_block_bulk_switch_title'  => [ 'json' => true ]
       ]
     ],
+    'tab' => [
+      'title' => 'Tab',
+      'path'  => 'repeater/tab',
+      'fields'=> [
+        'repeater_tab' => [ 'json' => true ]
+      ]
+    ],
     'table' => [
       'title' => 'Table',
       'path'  => 'repeater/table',

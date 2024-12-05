@@ -141,6 +141,32 @@ const Repeater = props => {
     )
   )
 
+  /**
+   * Default function to render footer action, this has to be called
+   * by the layout (which can use a different render for it) 
+   */
+  const renderFooterActions = () => (
+    repeatable && (
+      <div className="tf-repeater-actions">
+        <Button 
+          type="action" 
+          onPress={ () => dispatch({ type: 'add' }) } 
+          isDisabled={ maxLength <= items.length }
+        >
+          Add item
+        </Button>
+        <ModalTrigger 
+          title="Confirmation"
+          label="Remove all"
+          isDisabled={ items.length <= 0 }
+          onValidate={ () => dispatch({ type: 'clear' })}
+        >
+          Are you sure you want to clear all item(s)?
+        </ModalTrigger>
+      </div>
+    )
+  )
+
   useEffect(() => props.onChange && props.onChange( getSavedValue() ), [items])
 
   return(
@@ -165,26 +191,8 @@ const Repeater = props => {
           afterRow={ props.afterRow }
           beforeRow={ props.beforeRow }
           name={ props.name ?? '' }
+          renderFooterActions={ renderFooterActions }
         />
-        { repeatable && (
-          <div className="tf-repeater-actions">
-            <Button 
-              type="action" 
-              onPress={ () => dispatch({ type: 'add' }) } 
-              isDisabled={ maxLength <= items.length }
-            >
-              Add item
-            </Button>
-            <ModalTrigger 
-              title="Confirmation"
-              label="Remove all"
-              isDisabled={ items.length <= 0 }
-              onValidate={ () => dispatch({ type: 'clear' })}
-            >
-              Are you sure you want to clear all item(s)?
-            </ModalTrigger>
-          </div>
-        )}
       </div>
     </div>
   )
