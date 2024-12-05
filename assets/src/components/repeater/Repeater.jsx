@@ -34,12 +34,16 @@ const Repeater = props => {
 
     const rowField = Object.assign({}, field)
     
+    /**
+     * Label/description sometimes not visibile dependeing of the layout,
+     * but still needs to be set for accesibility 
+     */
     if( layout === 'table' ) {
-      /**
-       * As label/description is not visibile in table cell but still needs to be set for accesibility 
-       */
       rowField.labelVisuallyHidden = true
       rowField.descriptionVisuallyHidden = true
+    }
+    else if( layout === 'tab' ) {
+      rowField.labelVisuallyHidden = true
     }
     
     delete rowField.value
@@ -192,6 +196,7 @@ const Repeater = props => {
           beforeRow={ props.beforeRow }
           name={ props.name ?? '' }
           renderFooterActions={ renderFooterActions }
+          parent={ props }
         />
       </div>
     </div>

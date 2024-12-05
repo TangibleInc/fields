@@ -94,3 +94,32 @@
     padding: $section-padding;
   }
 }
+
+.tf-repeater-tab-row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+
+  .tf-repeater-tab-row-title {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .tf-repeater-tab-item-field {
+    padding-top: 0;
+  }
+
+  .tf-repeater-tab-row-title-section {
+    max-width: 100%;
+  }
+
+  .tf-repeater-tab-item-field {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+
+    & > div[class*='tf-context-'] {
+      width: 100%;
+    }
+  }
+}

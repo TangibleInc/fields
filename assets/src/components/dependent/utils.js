@@ -50,6 +50,16 @@ const getDependentFields = props => {
 
   const fields = {}
 
+  const forbiddenAttributes = [
+    /**
+     * Special case this repeater attribute, it needs to be evaluated
+     * later under a different name
+     * 
+     * @see renderTitle() ./assets/src/components/repeater/common/helpers
+     */
+    'sectionTitle'
+  ]
+
   /**
    * By default when prop.dependent is true, the value returned is going to be
    * the associated raw field value
@@ -65,6 +75,8 @@ const getDependentFields = props => {
   const callback = props.dependent?.callback ?? false
 
   for( const name in props ) {
+
+    if ( forbiddenAttributes.includes( name ) ) continue;
 
     const value = props[name]
 

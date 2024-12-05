@@ -21,7 +21,8 @@ const Block = ({
   useSwitch,
   useBulk,
   name,
-  renderFooterActions
+  renderFooterActions,
+  parent
 }) => {
 
   const [activeItem, setActiveItem] = useState(0)
@@ -113,7 +114,7 @@ const Block = ({
         { items && items.slice(0, maxLength).map((item, i) => (
           <ExpandablePanel
             key={ item.key ?? i } 
-            title={ renderTitle(item, i, title, name, renderItem) }
+            title={ renderTitle(item, i, title, name, renderItem, parent) }
             footer={ actions(i, item) }
             isOpen={ activeItem === i }
             className="tf-repeater-block-item"

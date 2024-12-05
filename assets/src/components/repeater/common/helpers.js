@@ -5,7 +5,7 @@ import { isDependentString } from '../../dependent/utils'
  * to render the title as an element so that it's wrapped inside
  * a new dependent wrapper that can access repeater values
  */
-const renderTitle = (item, i, title, name, renderItem) => {
+const renderTitle = (item, i, title, name, renderItem, parent) => {
 
   const text = title ? title : ('Item ' + (i + 1))
 
@@ -15,7 +15,7 @@ const renderTitle = (item, i, title, name, renderItem) => {
     type      : 'wrapper',
     name      : `_repeater-title-${name}-${item.key}`,
     content   : title,
-    dependent : true
+    dependent : parent.dependent ?? true
   }
 
   return renderItem(element, item, i)

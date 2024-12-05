@@ -11,7 +11,8 @@ const Tab = ({
   name,
   title = false,
   beforeRow = false,
-  afterRow = false
+  afterRow = false,
+  parent
 }) => {
 
   const [activeItem, setActiveItem] = useState(0)
@@ -27,7 +28,7 @@ const Tab = ({
               data-open={ activeItem == i }
             >
               <Button type={ 'text-action' } onPress={ () => setActiveItem(i) }>
-                { renderTitle(item, i, title, name, renderItem) }
+                { renderTitle(item, i, title, name, renderItem, parent) }
               </Button>
             </div>
           )) }
@@ -62,16 +63,26 @@ const Tab = ({
         </div>
       </div>
       { items[ activeItem ] && 
-        <div className='tf-repeater-tab-content'>
-          <div key={ items[ activeItem ].key ?? activeItem } className='tf-repeater-tab-row'>
-            { beforeRow && beforeRow(items[ activeItem ], activeItem, dispatch) }
-            { rowFields.map(control => (
-              <div key={ control.name ?? activeItem } className="tf-repeater-tab-item-field">
-                { renderItem(control, items[ activeItem ], activeItem) }
-              </div>
-            )) }
-            { afterRow && afterRow(items[ activeItem ], activeItem, dispatch) }
-          </div>
+        <div key={ items[ activeItem ].key ?? activeItem } className='tf-repeater-tab-content'>
+          { rowFields.map(control => (
+            <div key={ control.name } className='tf-repeater-tab-row'>
+              { beforeRow && beforeRow(items[ activeItem ], activeItem, dispatch) }
+              { control.type === 'title'
+                ? <div className='tf-repeater-tab-row-title tf-repeater-tab-row-title-section'>
+                    { renderItem(control, items[ activeItem ], activeItem) }
+                  </div>
+                : <> 
+                  <div className='tf-repeater-tab-row-title'>
+                      <span className='tf-label'>
+                        { control.label ?? '' }
+                      </span>
+                    </div>
+                    <div  className="tf-repeater-tab-item-field">
+                      { renderItem(control, items[ activeItem ], activeItem) }
+                    </div>
+                  </> }
+              { afterRow && afterRow(items[ activeItem ], activeItem, dispatch) }
+            </div> )) }
         </div> }
     </div>
   )

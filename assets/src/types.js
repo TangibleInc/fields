@@ -35,6 +35,7 @@ import {
   Description,
   ModalTrigger,
   Wrapper,
+  Title,
   TooltipTrigger,
 } from './components/base'
 
@@ -75,7 +76,8 @@ const elements = {
   'label'             : Label,
   'modal'             : ModalTrigger,
   'wrapper'           : Wrapper,
-  'tooltip'           : TooltipTrigger
+  'tooltip'           : TooltipTrigger,
+  'title'             : Title
 }
 
 export default {
