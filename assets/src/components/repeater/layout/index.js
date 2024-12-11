@@ -4,10 +4,10 @@ import Block from './block/Block'
 import Table from './table/Table'
 import Tab from './tab/Tab'
 
-export default {
-  advanced : Advanced,
-  bare     : Bare,
-  block    : Block,
-  table    : Table,
-  tab      : Tab
+export {
+  Advanced,
+  Bare,
+  Block,
+  Table,
+  Tab
 }

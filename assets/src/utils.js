@@ -1,3 +1,8 @@
+import { 
+  repeaterDispatcher, 
+  initDispatcher
+} from './components/repeater/dispatcher'
+
 const uniqid = () => {
   const sec = Date.now() * 1000 + Math.random() * 1000
   return sec.toString(16).replace(/\./g, '').padEnd(14, '0')
@@ -80,11 +85,17 @@ const deepCopy = object => (
   JSON.parse(JSON.stringify(object))
 )
 
+const getRepeaterHelpers = () => ({
+  dispatcher : repeaterDispatcher, 
+  init       : initDispatcher
+})
+
 export { 
   areSameObjects,
   uniqid,
   getOptions,
   getOption,
+  getRepeaterHelpers,
   initJSON,
   initSet,
   deepCopy

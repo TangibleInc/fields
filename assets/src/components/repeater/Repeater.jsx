@@ -16,16 +16,15 @@ import {
   ModalTrigger 
 } from '../base'
 
-import Layouts from './layout' 
+import types from '../../types.js'
 import Item from './common/Item'
 
 const Repeater = props => {
 
   const fields = props.fields ?? []
 
-  const hasLayout = Object.keys(Layouts).includes( props?.layout )
-  const layout = hasLayout ? props.layout : 'table'
-  const Layout = Layouts[ layout ]
+  const layout = props.layout ?? 'table'
+  const Layout = types.get(layout, 'repeater')
 
   const repeatable = props.repeatable ?? true
   const maxLength = props.maxlength ?? Infinity

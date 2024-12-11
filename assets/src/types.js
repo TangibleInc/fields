@@ -39,6 +39,14 @@ import {
   TooltipTrigger,
 } from './components/base'
 
+import {
+  Advanced,
+  Bare,
+  Block,
+  Table,
+  Tab
+} from './components/repeater/layout'
+
 const controls = {
   'accordion'         : Accordion,
   'alignment-matrix'  : AlignmentMatrix,
@@ -80,13 +88,22 @@ const elements = {
   'title'             : Title
 }
 
+const repeaters = {
+  'advanced'          : Advanced,
+  'bare'              : Bare,
+  'block'             : Block,
+  'table'             : Table,
+  'tab'               : Tab
+}
+
 export default {
   _types : {
-    control : controls,
-    element : elements
+    control   : controls,
+    element   : elements,
+    repeater  : repeaters
   },
   get(name, type = 'control') {
-    return this._types[ type ]?.[ name ] ?? false
+    return this._types[ type ]?.[ name ] ?? (type === 'repeater' ? 'table' : false)
   },
   add(name, Component, type = 'control') {
     this._types[ type ][ name ] = Component
