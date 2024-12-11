@@ -121,8 +121,14 @@
     & > div[class*='tf-context-'] {
       width: 100%;
     }
+  }
 
-    
+  /**
+   * Make sure we hide label for fields with visibility condition set
+   * to hide
+   */
+  &:has(> .tf-repeater-tab-item-field > div[class*='tf-context-']:empty) {
+    display: none;
   }
 
   /**
