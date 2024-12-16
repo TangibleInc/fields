@@ -47,7 +47,7 @@ Prerequisites: [Git](https://git-scm.com/), [Node](https://nodejs.org/en/) (vers
 
 ```sh
 git clone git@github.com:tangibleinc/fields.git
-cd tangible-fields
+cd fields
 ```
 
 Install dependencies:
