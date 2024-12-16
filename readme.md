@@ -46,7 +46,7 @@ $fields = tangible_fields();
 Prerequisites: [Git](https://git-scm.com/), [Node](https://nodejs.org/en/) (version 18 and above)
 
 ```sh
-git clone git@github.com:tangibleinc/tangible-fields.git
+git clone git@github.com:tangibleinc/fields.git
 cd tangible-fields
 ```
 
@@ -124,7 +124,7 @@ This module comes with a suite of unit and integration tests.
 
 You will need a copy of https://github.com/WordPress/wordpress-develop.git available. You can run `git clone https://github.com/WordPress/wordpress-develop.git` in this directory as this is where the bootstrap script expects it to be by default (the `WORDPRESS_DEVELOP_DIR` environment variable overrides this path).
 
-Bootstrap the WordPress development environment by running `npm i; npm run dev:build`. Then copy wp-tests-config-sample.php to wp-tests-config.php inside the wordpress-develop directory and set the database credentials as needed. **WARNING!** This database is **dropped** everytime the tests run. Do not use a production database.
+Bootstrap the WordPress development environment by running `npm i; npm run build:dev`. Then copy wp-tests-config-sample.php to wp-tests-config.php inside the wordpress-develop directory and set the database credentials as needed. **WARNING!** This database is **dropped** everytime the tests run. Do not use a production database.
 
 Run `vendor/bin/phpunit` to launch the tests and hope for all green ;)
 
