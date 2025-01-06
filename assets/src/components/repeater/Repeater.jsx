@@ -1,19 +1,19 @@
-import { 
-  useEffect, 
+import {
+  useEffect,
   useReducer,
   useState,
   useRef
 } from 'react'
 
-import { 
-  repeaterDispatcher, 
-  initDispatcher 
+import {
+  repeaterDispatcher,
+  initDispatcher
 } from './dispatcher.js'
 
-import { 
-  Button, 
-  Title, 
-  ModalTrigger 
+import {
+  Button,
+  Title,
+  ModalTrigger
 } from '../base'
 
 import types from '../../types.js'
@@ -22,8 +22,9 @@ import Item from './common/Item'
 const Repeater = props => {
 
   const fields = props.fields ?? []
-
-  const layout = props.layout ?? 'table'
+  const layout = props.layout && Object.keys(types._types.repeater).includes( props.layout )
+    ? props.layout
+    : 'table'
   const Layout = types.get(layout, 'repeater')
 
   const repeatable = props.repeatable ?? true
@@ -32,10 +33,10 @@ const Repeater = props => {
   const rowFields = fields.map(field => {
 
     const rowField = Object.assign({}, field)
-    
+
     /**
      * Label/description sometimes not visibile dependeing of the layout,
-     * but still needs to be set for accesibility 
+     * but still needs to be set for accesibility
      */
     if( layout === 'table' ) {
       rowField.labelVisuallyHidden = true
@@ -44,18 +45,18 @@ const Repeater = props => {
     else if( layout === 'tab' ) {
       rowField.labelVisuallyHidden = true
     }
-    
+
     delete rowField.value
     delete rowField.onChange
-    
+
     return rowField
   })
-  
+
   const emptyItem = {}
   fields.forEach(field => emptyItem[ field.name ] = '')
 
   const [items, dispatch] = useReducer(
-    repeaterDispatcher(emptyItem, maxLength), 
+    repeaterDispatcher(emptyItem, maxLength),
     props.value ?? '',
     initDispatcher
   )
@@ -88,13 +89,13 @@ const Repeater = props => {
     <Item
       key={ row.key + i }
       values={ row }
-      config={ 
+      config={
         {
-          ...config, 
+          ...config,
           repeaterRow: i
-        } 
+        }
       }
-      onChange={ value => dispatch({ 
+      onChange={ value => dispatch({
         type     : 'update',
         item     : i,
         control  : config.name,
@@ -102,7 +103,7 @@ const Repeater = props => {
         callback : () => triggerRowCallbackEvents(row.key, config.name)
       }) }
       /**
-       * Used by visbility and dependent values to detect changes and access data 
+       * Used by visbility and dependent values to detect changes and access data
        */
       data={{
         /**
@@ -110,7 +111,7 @@ const Repeater = props => {
          */
         getValue: name => (
           hasField(name)
-            ? (values.current[i][name] ?? '') 
+            ? (values.current[i][name] ?? '')
             : (props.data.getValue(name ?? ''))
         ),
         /**
@@ -119,26 +120,26 @@ const Repeater = props => {
          * @todo Avoid multiple definition (currently no way to remove watch from child which not ideal)
          */
         watcher: callback => setChangeCallback(
-          prevValue => [ 
+          prevValue => [
             ...prevValue,
             (rowKey, fieldName) => {
-              rowKey === row.key && config.name 
-                ? callback(fieldName, row.key) 
+              rowKey === row.key && config.name
+                ? callback(fieldName, row.key)
                 : null
-            } 
+            }
           ]
         )
       }}
     />
   )
-  
+
   /**
    * There are some values we don't want to save (like the bulk action checbox)
    */
   const getSavedValue = () => (
     items.map(
       ({
-        _bulkCheckbox, 
+        _bulkCheckbox,
         ...item
       }) => item
     )
@@ -146,19 +147,19 @@ const Repeater = props => {
 
   /**
    * Default function to render footer action, this has to be called
-   * by the layout (which can use a different render for it) 
+   * by the layout (which can use a different render for it)
    */
   const renderFooterActions = () => (
     repeatable && (
       <div className="tf-repeater-actions">
-        <Button 
-          type="action" 
-          onPress={ () => dispatch({ type: 'add' }) } 
+        <Button
+          type="action"
+          onPress={ () => dispatch({ type: 'add' }) }
           isDisabled={ maxLength <= items.length }
         >
           Add item
         </Button>
-        <ModalTrigger 
+        <ModalTrigger
           title="Confirmation"
           label="Remove all"
           isDisabled={ items.length <= 0 }
@@ -175,7 +176,7 @@ const Repeater = props => {
   return(
     <div className={ `tf-repeater tf-repeater-${layout}`}>
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(getSavedValue()) } />
-      { props.label && 
+      { props.label &&
         <Title level={2} className='tf-repeater-title'>
           { props.label }
         </Title> }
