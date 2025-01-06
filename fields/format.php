@@ -149,7 +149,7 @@ $fields->format_args = function(
   }
 
   if ( ! empty($args['dependent']) && is_array($args['dependent'])  ) {
-    $args = $fields->format_value($args['dependent'], 'callback_data', 'callbackData');
+    $args['dependent'] = $fields->format_value($args['dependent'], 'callback_data', 'callbackData');
   }
 
   return $args;
