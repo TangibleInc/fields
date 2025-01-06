@@ -301,4 +301,13 @@ class FormatField_TestCase extends WP_UnitTestCase {
     $this->assertEquals('action', $args['fields'][0]['buttonType']);
   }
 
+  public function test_format_args_dependent() {
+    $args = tangible_fields()->format_args('text', [
+      'dependent' => [
+        'callback_data' => [ 'data_name' => 'data_value' ]
+      ]
+    ]);
+    $this->assertNotEmpty($args['dependent']['callbackData']);
+  }
+
 }

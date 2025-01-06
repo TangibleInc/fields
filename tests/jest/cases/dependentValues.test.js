@@ -703,4 +703,51 @@ describe('dependent values feature', () => {
       container => container.querySelector('.cm-content[contenteditable="false"]').toBeFalsy()
     })
 
+  it('works supports callback + callbackData', async () => {
+
+    const { container } = render(
+        <>
+          { fields.render({
+            label       : 'Field 1',
+            type        : 'text',
+            value       : 'Initial value of field 1',
+            name        : 'test-field-1'
+          }) }
+          <div className="tested-element">
+            { fields.render({
+              label       : '{{test-field-1}}',
+              type        : 'text',
+              readOnly    : '{{test-field-1}}',
+              dependent   : {
+                callback      : 'callback-name',
+                callbackData  : {
+                  customData : 'value from callbackData'
+                }
+              }
+            }) }
+          </div>
+        </>
+      )
+
+      let hasCustomValue = false
+      tangibleFields.fields.dependent.registerCallback(
+        'callback-name',
+        ({ attribute, value, customData }) => {
+          hasCustomValue = customData === 'value from callbackData'
+          return value
+        }
+      )
+
+      const dependentField = document.getElementsByClassName('tested-element')[0]
+      expect(dependentField).toBeTruthy()
+      expect(hasCustomValue).toBe(false)
+
+      act(() => {
+        fields.store.setValue('test-field-1', 'Updated value field 1 - text field disabled')
+      })
+
+      await within(dependentField).findByText('Updated value field 1 - text field disabled')
+
+      expect(hasCustomValue).toBe(true)
+    })
 })

@@ -8,8 +8,10 @@
  * __isWrapped indicate that we need to apply on (or multiple) dependent value inside an object of the
  * field, on a specific attribute
  *
- * __callback indicate the we need to apply a callback to format the dependent value before
+ * __callback indicate that we need to apply a callback to format the dependent value before
  * using it
+ *
+ * __callbackData indicate that if we have a callback, we need to pass some custom values when calling it
  *
  * Example of returned structure:
  * {
@@ -39,6 +41,20 @@
  *              attribute
  *          }) => return 'something'
  *      },
+ *
+ *      // Dependent attribute with callback + callbackData
+ *      'readOnly' : {
+ *          __returnedType : 'full',
+ *          __callback     : ({
+ *              value,
+ *              attribute
+ *          }) => return 'something',
+ *          __callbackData : {
+ *              customName  : customValue,
+ *              customName2 : customValue2
+ *          }
+ *      },
+ *
  *   },
  *  'trigger-field-name-2': {
  *      // ...
@@ -54,7 +70,7 @@ const getDependentFields = props => {
     /**
      * Special case this repeater attribute, it needs to be evaluated
      * later under a different name
-     * 
+     *
      * @see renderTitle() ./assets/src/components/repeater/common/helpers
      */
     'sectionTitle'
@@ -71,8 +87,11 @@ const getDependentFields = props => {
    * - as a function
    * - as a string, which is needed in case the field is registered in PHP. In that case
    *   we need to be able to register the callback separatly (@see tangibleFields.fields).
+   *
+   * It is possible to pass custom data to a callback, by using props.dependent.callbackData
    */
   const callback = props.dependent?.callback ?? false
+  const callbackData = props.dependent?.callbackData ?? false
 
   for( const name in props ) {
 
@@ -98,7 +117,7 @@ const getDependentFields = props => {
 
     if( typeof value !== 'string' ) continue;
 
-    const triggerField = getDependentValue(value, callback)
+    const triggerField = getDependentValue(value, callback, callbackData)
     if( ! triggerField ) continue;
 
     if( ! fields[ triggerField.name ] ) fields[ triggerField.name ] = {}
@@ -109,7 +128,7 @@ const getDependentFields = props => {
 }
 
 const isDependentString = string => string.startsWith('{{') && string.endsWith('}}')
-const getDependentValue = (string, callback) => {
+const getDependentValue = (string, callback, callbackData) => {
 
   if( ! isDependentString(string) ) return false;
 
@@ -120,7 +139,8 @@ const getDependentValue = (string, callback) => {
     name   : dependentString,
     config : {
       __returnedType  : 'full',
-      __callback      : callback
+      __callback      : callback,
+      __callbackData  : callbackData
     }
   }
 
@@ -133,7 +153,8 @@ const getDependentValue = (string, callback) => {
     config : {
       __returnedType      : 'partial',
       __returnedAttribute : attribute,
-      __callback          : callback
+      __callback          : callback,
+      __callbackData      : callbackData
     }
   }
 }
@@ -161,7 +182,7 @@ const getFieldValue = (attribute, config, getValue) => {
   }
 
   return callback
-    ? callback({ attribute, value })
+    ? callback({ attribute, value, ...(config.__callbackData ?? {}) })
     : value
 }
 

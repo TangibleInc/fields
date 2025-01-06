@@ -148,6 +148,10 @@ $fields->format_args = function(
     $args = $fields->format_value($args, 'label_visually_hidden', 'labelVisuallyHidden');
   }
 
+  if ( ! empty($args['dependent']) && is_array($args['dependent'])  ) {
+    $args = $fields->format_value($args['dependent'], 'callback_data', 'callbackData');
+  }
+
   return $args;
 };
 

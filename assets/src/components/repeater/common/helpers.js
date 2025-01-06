@@ -11,11 +11,20 @@ const renderTitle = (item, i, title, name, renderItem, parent) => {
 
   if( ! isDependentString(text) ) return text;
 
-  const element = { 
+  const element = {
     type      : 'wrapper',
     name      : `_repeater-title-${name}-${item.key}`,
     content   : title,
-    dependent : parent.dependent ?? true
+    dependent : {
+      callbackData: {
+        repeater: {
+          props : parent,
+          item  : item,
+          index : i
+        }
+      },
+      ...(parent.dependent ? parent.dependent : {})
+    }
   }
 
   return renderItem(element, item, i)
