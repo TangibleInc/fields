@@ -68,7 +68,7 @@ const getDependentFields = props => {
 
   const forbiddenAttributes = [
     /**
-     * Special case this repeater attribute, it needs to be evaluated
+     * Special case for this repeater attribute, it needs to be evaluated
      * later under a different name
      *
      * @see renderTitle() ./assets/src/components/repeater/common/helpers
@@ -85,10 +85,10 @@ const getDependentFields = props => {
    *
    * The callback can be defined either:
    * - as a function
-   * - as a string, which is needed in case the field is registered in PHP. In that case
-   *   we need to be able to register the callback separatly (@see tangibleFields.fields).
+   * - as a string, which is the only option when the field is registered from PHP. When
+   *   that's the case the callback is registered separatly (@see tangibleFields.fields).
    *
-   * It is possible to pass custom data to a callback, by using props.dependent.callbackData
+   * It is possible to pass custom data to a callback, by using callbackData
    */
   const callback = props.dependent?.callback ?? false
   const callbackData = props.dependent?.callbackData ?? false
@@ -117,17 +117,37 @@ const getDependentFields = props => {
 
     if( typeof value !== 'string' ) continue;
 
-    const triggerField = getDependentValue(value, callback, callbackData)
-    if( ! triggerField ) continue;
+    // A string can contain multiple dependent attributes
+    for( const dependentString of getDependentStrings(value) ) {
 
-    if( ! fields[ triggerField.name ] ) fields[ triggerField.name ] = {}
-    fields[ triggerField.name ][ name ] = triggerField.config
+      const triggerField = getDependentValue(dependentString, callback, callbackData)
+      if( ! triggerField ) continue;
+
+      if( ! fields[ triggerField.name ] ) fields[ triggerField.name ] = {}
+      fields[ triggerField.name ][ name ] = triggerField.config
+    }
+
   }
 
   return fields
 }
 
-const isDependentString = string => string.startsWith('{{') && string.endsWith('}}')
+const dependentAttributeRegex = (delimiters = true) => delimiters
+    ? /(\{\{.+?}\})/g
+    : /\{\{(.+?)}\}/g
+const isDependentString = string => getDependentStrings(string).length > 0
+const getDependentStrings = (string, delimiters = true) => (
+  typeof string === 'string'
+    ? Array.from(
+        string.matchAll( dependentAttributeRegex(delimiters) ),
+        match => match[1]
+      )
+    : []
+)
+
+/**
+ * Return the configuration for a given dependent string
+ */
 const getDependentValue = (string, callback, callbackData) => {
 
   if( ! isDependentString(string) ) return false;
@@ -162,7 +182,7 @@ const getDependentValue = (string, callback, callbackData) => {
 /**
  * Get raw field value, and apply callback (if any set)
  */
-const getFieldValue = (attribute, config, getValue) => {
+const getFieldValue = (attribute, config, getValue, fieldName, initialValue) => {
 
   const value = config.__returnedType === 'partial'
     ? getValue()?.[ config.__returnedAttribute ]
@@ -181,9 +201,24 @@ const getFieldValue = (attribute, config, getValue) => {
     callback = callbacks[ callback ] ?? false
   }
 
-  return callback
+  const renderedValue = callback
     ? callback({ attribute, value, ...(config.__callbackData ?? {}) })
     : value
+
+  /**
+   * renderedValue might not be a string anymore if a callback is set
+   * initialValue might not be a string if:
+   * - multiple dependent string for this value
+   * - and a callback is set
+   */
+  return typeof renderedValue === 'string' && typeof initialValue === 'string'
+    ? initialValue.replace(
+        config.__returnedType === 'partial'
+          ? `{{${fieldName}.${config.__returnedAttribute}}}`
+          : `{{${fieldName}}}`,
+          renderedValue
+      )
+    : renderedValue
 }
 
 const mergeDependentProps = (
@@ -215,7 +250,9 @@ const mergeDependentProps = (
           const subattributeValue = getFieldValue(
             subattributeName,
             config[ subattributeName ],
-            () => getValue(fieldName)
+            () => getValue(fieldName),
+            fieldName,
+            mergedProps[ attributeName ][ subattributeName ]
           )
 
           /**
@@ -230,10 +267,12 @@ const mergeDependentProps = (
         continue;
       }
 
-      mergedProps[attributeName] = getFieldValue(
+      mergedProps[ attributeName ] = getFieldValue(
         attributeName,
         config,
-        () => getValue(fieldName)
+        () => getValue(fieldName),
+        fieldName,
+        mergedProps[ attributeName ]
       )
     }
   }

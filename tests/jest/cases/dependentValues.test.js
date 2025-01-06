@@ -122,6 +122,49 @@ describe('dependent values feature', () => {
     expect(updatedDescription.getAttribute('class')).toBe('tf-description')
   })
 
+  it('supports multiple dependent attibute inside the same string', async () => {
+
+    render(
+      <>
+        { fields.render({
+          label       : 'Field 1',
+          type        : 'text',
+          value       : '1',
+          name        : 'test-field-1'
+        }) }
+        <div className="tested-element">
+          { fields.render({
+            label       : 'First value is {{test-field-1}} and third value is {{test-field-3}}',
+            type        : 'text',
+            dependent   : true,
+          }) }
+        </div>
+        { fields.render({
+          label       : 'Field 2',
+          type        : 'text',
+          value       : '3',
+          name        : 'test-field-3'
+        }) }
+      </>
+    )
+
+    const dependentField = document.getElementsByClassName('tested-element')[0]
+    expect(dependentField).toBeTruthy()
+
+    const initialLabel = within(dependentField).getByText('First value is 1 and third value is 3')
+    expect(initialLabel).toBeTruthy()
+    expect(initialLabel.getAttribute('class')).toBe('tf-label')
+
+    act(() => {
+      fields.store.setValue('test-field-1', '1-1')
+      fields.store.setValue('test-field-3', '3-3')
+    })
+
+    const updatedLabel = await within(dependentField).findByText('First value is 1-1 and third value is 3-3')
+    expect(updatedLabel).toBeTruthy()
+    expect(updatedLabel.getAttribute('class')).toBe('tf-label')
+  })
+
   it('works for repeater fields', async () => {
 
     render(

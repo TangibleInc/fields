@@ -1,17 +1,17 @@
-import { 
+import {
   useMemo,
   useEffect,
   useCallback
 } from 'react'
 
-import { 
+import {
   addEventListener,
   removeEventListener
 } from '../../events'
 
-import { 
+import {
   getDependentFields,
-  mergeDependentProps 
+  mergeDependentProps
 } from './utils'
 
 const DependendWrapper = ({
@@ -20,7 +20,7 @@ const DependendWrapper = ({
   data,
   children
 }) => {
-  
+
   const childProps =  Object.assign({}, itemProps)
 
   delete childProps.value
@@ -52,7 +52,7 @@ const DependendWrapper = ({
 
     maybeUpdateProps(field.name)
   }, [])
-  
+
   useEffect(() => {
     const callback = addEventListener('valueChange', dependentWatcher)
     return () => removeEventListener('valueChange', callback)
@@ -60,7 +60,7 @@ const DependendWrapper = ({
 
   /**
    * The data watcher is an additional callback we can use to watch changes
-   *  
+   *
    * It is currently used to watch changes in subfields (repeaters, field-groups)
    */
   useEffect(() => {
@@ -78,7 +78,7 @@ const DependendWrapper = ({
       data.getValue
     )
   ), [])
-  
+
   return children(formatedProps)
 }
 
