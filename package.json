@@ -1,7 +1,7 @@
 {
   "name": "tangible-fields",
   "description": "",
-  "version": "2024.10.24",
+  "version": "2025.01.07",
   "type": "module",
   "tangible": {
     "deployType": "module"

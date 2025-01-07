@@ -1,10 +1,44 @@
+# 20250107
+
+- Dependent attributes
+    - Add possibility to add multiple dependent string on the same attribtue
+    - Add possibility to add dependent attribute inside a string
+    - Add support for callbackData
+    - Fix issue when formating dependent attributes
+- Development:
+    - Add archive command to create zip package
+    - Add E2E testing with Playwright and wp-now
+    - Add GitHub release workflow for version tag
+    - Add local site environment with wp-now
+    - Add NPM script "version" to update module version
+    - Documentation: Move documentation from the [fields-example](https://github.com/TangibleInc/fields-example) plugin to the example folder
+    - Document local test site and installing dev dependencies such as third-party plugins
+    - Load Framework and Updater when running as plugin
+    - Load Updater module when running as plugin
+    - Move to devDependencies: @playwright/test, @wordpress/e2e-test-utils-playwright, concurrently
+    - Update dependencies
+    - Update URLs from Bitbucket to GitHub
+    - Use standard module loader
+- Fields:
+    - Combobox: Async - Attempt to convert response to an array if it's an object
+    - Checkbox: Make label clickable
+    - Fetch/Store: Add possibility to pass an optional array
+    - Repeater: Add possibility to override string for the add button
+    - Repeater: Add possibility to register repeater layout from outisde of fields and give access to dispatcher
+    - Repeater: Add Tab layout
+    - Repeater: Fix default layout not being set correctly
+    - Switch: Style - Use aspect ratio to change size easily
+    - Text: Improve readonly mode
+- Tests:
+    - Checkbox: Add tests
+
 # 20240927
 
 - Dependent attribues:
     - Add possibility to define a callback to format the dependent value before using it as a prop
 - Dynamic values:
     - Format: Move formating logic from PHP to JS
-- Dev:
+- Development:
     - Update npm dependencies and switch to ES module
     - Improve `initField` and `initElement` events
     - Add `ready` event
