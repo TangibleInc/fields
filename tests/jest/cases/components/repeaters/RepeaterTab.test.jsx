@@ -2,10 +2,6 @@ import '../../../../../assets/src/index.jsx'
 import { commonRepeaterTests } from './common.js'
 import { within } from '@testing-library/react'
 
-/**
- * TODO: Add repeater specific test + check if common test are passing
- * for the right reasons
- */
 describe('Repeater with a tab layout', () => {
 
   /**
