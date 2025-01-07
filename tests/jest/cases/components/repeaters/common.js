@@ -11,10 +11,15 @@ const fields = window.tangibleFields
  * - Tests with initial value
  * - Test clone button (check key is different)
  */
-const commonRepeaterTests = layout => {
+const commonRepeaterTests = (layout, args = {}) => {
 
-  const cloneText = layout !== 'advanced' ? 'Clone' : 'Duplicate'
-  const removeText = layout !== 'advanced' ? 'Remove' : 'Delete'
+  const config = {
+    addText       : 'Add item',
+    cloneText     : 'Clone',
+    removeText    : 'Remove',
+    removeElement : false,
+    ...args
+  }
 
   it('contains the wrapper classes', () => {
 
@@ -120,9 +125,9 @@ const commonRepeaterTests = layout => {
 
     expect(itemsContainer.children.length).toBe(1)
 
-    await user.click(within(container).getByText('Add item'))
-    await user.click(within(container).getByText('Add item'))
-    await user.click(within(container).getByText('Add item'))
+    await user.click(within(container).getByText(config.addText))
+    await user.click(within(container).getByText(config.addText))
+    await user.click(within(container).getByText(config.addText))
 
     expect(itemsContainer.children.length).toBe(4)
 
@@ -134,10 +139,16 @@ const commonRepeaterTests = layout => {
       repeater.getRow(3).key
     ]
 
+    const removeElement = async index => (
+      config.removeElement
+        ? config.removeElement(index, { itemsContainer, user, document }, config)
+        : user.click(within(itemsContainer.children[index]).getByText(config.removeText))
+    )
+
     // Confirmation popup - Cancel
 
     expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
-    await user.click(within(itemsContainer.children[2]).getByText(removeText))
+    await removeElement(2)
     expect(document.querySelector(`.tf-modal-container`)).toBeTruthy()
     await user.click(within(document.querySelector(`.tf-modal-container`)).getByText('Cancel'))
     expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
@@ -147,9 +158,9 @@ const commonRepeaterTests = layout => {
     // Confirmation popup - Delete second item
 
     expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
-    await user.click(within(itemsContainer.children[1]).getByText(removeText))
+    await removeElement(1)
     expect(document.querySelector(`.tf-modal-container`)).toBeTruthy()
-    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText(removeText))
+    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText(config.removeText))
     expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
 
     expect(itemsContainer.children.length).toBe(3)
@@ -165,6 +176,9 @@ const commonRepeaterTests = layout => {
     expect(currentsRowKeys[2]).toBe(initialRowKeys[3])
 
     expect(itemsContainer.children.length).toBe(3)
+
+    // Remove all is not supported by the tab layout (for now?)
+    if ( layout === 'tab' ) return;
 
     // Confirmation popup - Cancel
 
@@ -213,7 +227,7 @@ const commonRepeaterTests = layout => {
     expect(within(container).queryByText('Edit')).toBeFalsy()
     expect(within(container).queryByText('Remove')).toBeFalsy()
     expect(within(container).queryByText('Delete')).toBeFalsy()
-    expect(within(container).queryByText('Add item')).toBeFalsy()
+    expect(within(container).queryByText(config.addText)).toBeFalsy()
     expect(within(container).queryByText('Remove all')).toBeFalsy()
     expect(within(container).queryByText('Clone')).toBeFalsy()
   })
@@ -243,33 +257,33 @@ const commonRepeaterTests = layout => {
 
     let addButton, cloneButton
 
-    addButton = within(container).getByText('Add item')
+    addButton = within(container).getByText(config.addText)
     expect(addButton).not.toBeDisabled()
 
     if( layout !== 'bare' ) {
-      cloneButton  = within(container).getByText(cloneText)
+      cloneButton  = within(container).getByText(config.cloneText)
       expect(cloneButton).not.toBeDisabled()
     }
 
-    await user.click(within(container).getByText('Add item'))
+    await user.click(within(container).getByText(config.addText))
 
-    addButton = within(container).getByText('Add item')
+    addButton = within(container).getByText(config.addText)
     expect(addButton).toBeDisabled()
 
     if( layout !== 'bare' ) {
-      cloneButton  = within(container).getAllByText(cloneText)
+      cloneButton  = within(container).getAllByText(config.cloneText)
       expect(cloneButton[0]).toBeDisabled()
       expect(cloneButton[1]).toBeDisabled()
     }
 
-    await user.click(within(container).getAllByText(removeText)[0])
-    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText(removeText)) // Confirmation popup
+    await user.click(within(container).getAllByText(config.removeText)[0])
+    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText(config.removeText)) // Confirmation popup
 
-    addButton = within(container).getByText('Add item')
+    addButton = within(container).getByText(config.addText)
     expect(addButton).not.toBeDisabled()
 
     if( layout !== 'bare' ) {
-      cloneButton  = within(container).getByText(cloneText)
+      cloneButton  = within(container).getByText(config.cloneText)
       expect(cloneButton).not.toBeDisabled()
     }
   })
@@ -301,13 +315,29 @@ const commonRepeaterTests = layout => {
     if( layout === 'advanced' ) {
       await user.click(container.querySelector('.tf-button-repeater-overview-open'))
     }
+    else if( layout === 'tab' ) {
+      await user.click(within(container).getByText('Item 1'))
+    }
 
-    const items = container.querySelector('.tf-repeater-items')
+    const items = container.querySelector(
+      layout !== 'tab'
+        ? '.tf-repeater-items'
+        : '.tf-repeater-tab-content'
+    )
+
     expect(container.querySelector('.tf-description'))
-    expect(within(items).getByText('Test 1')).toBeTruthy()
+    expect(
+      layout !== 'tab'
+        ? within(items).getByText('Test 1')
+        : within(items).getAllByText('Test 1') // label + visually hidden
+    ).toBeTruthy()
 
     expect(container.querySelector('.tf-text'))
-    expect(within(items).getByText('Test 2')).toBeTruthy()
+    expect(
+      layout !== 'tab'
+        ? within(items).getByText('Test 2')
+        : within(items).getAllByText('Test 2') // label + visually hidden
+    ).toBeTruthy()
   })
 
   it('passes the row index as a props in subfields', async () => {

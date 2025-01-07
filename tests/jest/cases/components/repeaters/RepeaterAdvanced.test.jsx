@@ -5,11 +5,14 @@ import { within, render } from '@testing-library/react'
 const fields = window.tangibleFields
 
 describe('Repeater with an advanced layout', () => {
-  
+
   /**
    * Common tests that must work regardless of the layout used
    */
-  commonRepeaterTests('advanced')
+  commonRepeaterTests('advanced', {
+    cloneText   : 'Duplicate',
+    removeText  : 'Delete'
+  })
 
   it('renders all field labels in the headers by default', () => {
 
@@ -112,7 +115,7 @@ describe('Repeater with an advanced layout', () => {
     expect(within(header).queryByText('Test 3')).toBeTruthy()
 
     const itemOverview = container.querySelector('.tf-repeater-advanced-overview')
-    
+
     expect(within(itemOverview).queryByText('test')).toBeTruthy()
     expect(within(itemOverview).queryByText('Name 1')).toBeTruthy()
 

@@ -35,13 +35,14 @@ const Tab = ({
         </div>
         <div className='tf-repeater-tab-actions'>
           <div className='tf-repeater-tab-add-item'>
-            <Button
-              type={ 'text-primary' }
-              onPress={ () => dispatch({ type: 'add' }) }
-              isDisabled={ maxLength <= items.length }
-            >
-              + Add Item
-            </Button>
+            { maxLength !== undefined &&
+              <Button
+                type={ 'text-primary' }
+                onPress={ () => dispatch({ type: 'add' }) }
+                isDisabled={ maxLength <= items.length }
+              >
+                + Add Item
+              </Button> }
           </div>
           <div className='tf-repeater-tab-icon-actions'>
             { maxLength !== undefined &&
