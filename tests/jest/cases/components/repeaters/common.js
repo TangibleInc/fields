@@ -270,8 +270,13 @@ const commonRepeaterTests = (layout, args = {}) => {
     addButton = within(container).getByText(config.addText)
     expect(addButton).toBeDisabled()
 
-    if( layout !== 'bare' ) {
-      cloneButton  = within(container).getAllByText(config.cloneText)
+    if( layout === 'tab' ) {
+      cloneButton = within(container).getByText(config.cloneText)
+      cloneButton = cloneButton.parentNode // Child element because visually hidden
+      expect(cloneButton).toBeDisabled()
+    }
+    else if( layout !== 'bare' ) {
+      cloneButton = within(container).getAllByText(config.cloneText)
       expect(cloneButton[0]).toBeDisabled()
       expect(cloneButton[1]).toBeDisabled()
     }

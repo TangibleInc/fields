@@ -46,6 +46,18 @@ const Tab = ({
           </div>
           <div className='tf-repeater-tab-icon-actions'>
             { maxLength !== undefined &&
+              <Button
+                type="icon-clone"
+                contentVisuallyHidden={ true }
+                isDisabled={ maxLength <= items.length }
+                onPress={() => dispatch({
+                  type : 'clone',
+                  item : items[ activeItem ]
+                })}
+              >
+                Clone
+              </Button> }
+            { maxLength !== undefined &&
               <ModalTrigger
                 label="Remove"
                 title="Confirmation"
