@@ -18,6 +18,7 @@ import {
 
 import types from '../../types.js'
 import Item from './common/Item'
+import strings from './strings.js'
 
 const Repeater = props => {
 
@@ -145,6 +146,12 @@ const Repeater = props => {
     )
   )
 
+  const string = name => ({
+    ...strings.common,
+    ...(strings.layoutOveride[ layout ] ?? {}),
+    ...(props.strings ?? {})
+  }[name] ?? name)
+
   /**
    * Default function to render footer action, this has to be called
    * by the layout (which can use a different render for it)
@@ -157,7 +164,7 @@ const Repeater = props => {
           onPress={ () => dispatch({ type: 'add' }) }
           isDisabled={ maxLength <= items.length }
         >
-          Add item
+          { string('add') }
         </Button>
         <ModalTrigger
           title="Confirmation"
@@ -197,6 +204,7 @@ const Repeater = props => {
           name={ props.name ?? '' }
           renderFooterActions={ renderFooterActions }
           parent={ props }
+          string={ string }
         />
       </div>
     </div>

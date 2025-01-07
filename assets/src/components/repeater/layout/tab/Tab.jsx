@@ -12,7 +12,8 @@ const Tab = ({
   title = false,
   beforeRow = false,
   afterRow = false,
-  parent
+  parent,
+  string
 }) => {
 
   const [activeItem, setActiveItem] = useState(0)
@@ -41,7 +42,7 @@ const Tab = ({
                 onPress={ () => dispatch({ type: 'add' }) }
                 isDisabled={ maxLength <= items.length }
               >
-                + Add Item
+                { string('add') }
               </Button> }
           </div>
           <div className='tf-repeater-tab-icon-actions'>

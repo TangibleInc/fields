@@ -353,7 +353,7 @@ const commonRepeaterTests = (layout, args = {}) => {
         type   : 'repeater',
         layout : layout,
         name   : 'test',
-        fields     : [
+        fields : [
           {
             name  : 'test2',
             label : 'Test 1',
@@ -381,6 +381,30 @@ const commonRepeaterTests = (layout, args = {}) => {
     await user.type(container.querySelector('.cm-line'), 'a')
 
     expect(hasProps).toBe(true)
+  })
+
+  it('support custom strings', async () => {
+
+    const { container } = render(
+      fields.render({
+        type    : 'repeater',
+        layout  : layout,
+        name    : 'test',
+        strings : {
+          add    : 'add custom text'
+        },
+        fields  : [
+          {
+            name  : 'test2',
+            label : 'Test 1',
+            type  : 'text'
+          }
+        ],
+      })
+    )
+
+    expect(within(container).queryByText(config.addText)).toBeFalsy()
+    expect(within(container).getByText('add custom text')).toBeTruthy()
   })
 }
 
