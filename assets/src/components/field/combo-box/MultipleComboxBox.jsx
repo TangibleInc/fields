@@ -5,27 +5,33 @@ import {
 } from 'react'
 
 import { 
-  useOverlayTrigger, 
-  useTextField, 
-  DismissButton 
+  useFilter,
+  useComboBox
 } from 'react-aria'
 
-import { useOverlayTriggerState } from 'react-stately'
-import { getOptions } from '../../../utils'
-import { getAsyncProps } from './async'
-
 import { 
-  Button,
-  Label,
-  Description 
-} from '../../base'
+  onSelectionChange,
+  getSelectedKey,
+  getDisabledKeys,
+  setInputValue
+} from './common'
 
-import ComboBox from './ComboBox'
+import { useComboBoxState } from 'react-stately'
+import { getLayout } from './layout'
 
 /**
- * Wrapper we add around the ComboBox component when we need to support multiple values 
+ * Very similar to <ComboBox />, but with an additional state to handle multiple values
+ * 
+ * We might be able to merge both into a single component at some point, but so far it
+ * has been easier to keep them separated
  */
 const MultipleComboBox = props => {
+
+  const buttonRef  = useRef()
+  const inputRef   = useRef()
+  const listBoxRef = useRef()
+  const popoverRef = useRef()
+  const wrapperRef = useRef()
 
   /**
    * The value is different according to if we get the item list in async mode or not
@@ -41,31 +47,37 @@ const MultipleComboBox = props => {
       : (props.value && ! props.isAsync ? props.value.split(',') : [])
   )
 
-  const itemProps = { ...(props.isAsync
-    ? getAsyncProps(props)
-    : {
-      defaultItems: getOptions(props.choices ?? {})
-    })
-  }
-
-  const input = useRef(null)
-  const triggerRef = useRef(null)
-  const overlayRef = useRef(null)
-
-  const { 
-    labelProps, 
-    inputProps, 
-    descriptionProps,  
-  } = useTextField(props, input)
-
-  const state = useOverlayTriggerState({})
-  const { triggerProps, overlayProps } = useOverlayTrigger(
-    { type: 'dialog' },
-    state,
-    triggerRef
-  )
-
   useEffect(() => props.onChange && props.onChange(values), [values.length])
+  useEffect(() => { setInputValue(props, state) }, [])
+
+  /**
+   * Needed to filter item results according to input value
+   *
+   * @see https://react-spectrum.adobe.com/react-aria/useFilter.html
+   */
+  const { contains } = useFilter({ sensitivity: 'base' })
+  const state = useComboBoxState({
+    ...props,
+    onSelectionChange : value => onSelectionChange(value, props, state),
+    selectedKey       : getSelectedKey(props),
+    defaultFilter     : contains,
+    disabledKeys      : getDisabledKeys(props)
+  })
+
+  const {
+    buttonProps,
+    inputProps,
+    listBoxProps,
+    labelProps,
+    descriptionProps
+  } = useComboBox({
+    ...props,
+    inputRef,
+    buttonRef,
+    listBoxRef,
+    popoverRef,
+    menuTrigger: 'input'
+  }, state)
 
   const add = value => {
     setValues([
@@ -81,69 +93,46 @@ const MultipleComboBox = props => {
     ])
   }
 
-  const getDisabledKeys = () => (
+  const getDisabledValues = () => (
     props.isAsync
       ? values.map(item => (item.value))
       : values
   )
   
+  /**
+   * We pass everything in a single ref as we can't forward
+   * multiple refs from the layout components
+   *
+   * @see https://stackoverflow.com/a/53818443
+   */
+  const layoutRefs = useRef({
+    tirgger : buttonRef,
+    input   : inputRef,
+    popover : popoverRef,
+    wrapper : wrapperRef,
+    listbox : listBoxRef
+  })
+
+  const Layout = getLayout( props.layout ?? 'simple-multiple' )
+
   return(
-    <div className="tf-multiple-combobox" data-enabled={ ! props.readOnly }>
-      { props.label &&
-        <Label labelProps={ labelProps } parent={ props }>
-          { props.label }
-        </Label> }
-      <div className="tf-multiple-combobox-container">
-        <div ref={ input } className="tf-multiple-combobox-values" { ...inputProps }>
-          { values.length === 0
-            ? props.placeholder ?? 'No item selected'
-            : values.map(
-              (value, i) => (
-                <span key={ value.key ?? i } className="tf-combo-box-item">
-                  <span>{ props.isAsync ? value.label : props.choices[value] ?? '' }</span>
-                  { props.readOnly !== true && 
-                    <Button onPress={ () => remove(i) }>x</Button> }
-                </span>
-              )
-            ) }
-        </div>
-        <Button type="action" ref={ triggerRef } { ...triggerProps } isDisabled={ props.readOnly }>
-          Add
-        </Button>
-        { state.isOpen && (
-          <div className="tf-popover" ref={ overlayRef } { ...overlayProps }>
-            <ComboBox
-              focusStrategy={ 'first' }
-              label={ 'Select an item to add' }
-              labelVisuallyHidden={ true }
-              description={ false }
-              disabledKeys={ getDisabledKeys() }
-              autoFocus={ true }
-              multiple={ true }
-              showButton={ false }
-              menuTrigger="focus"
-              onSelectionChange={ value => {
-                if( ! value ) return;
-                add(value)
-                state.close()
-              }}
-              onFocusChange={ isFocus => isFocus 
-                ? (! state.isOpen && state.open())
-                : state.close() 
-              }
-              isAsync={ props.isAsync ?? false }
-              { ...itemProps }
-            >
-              { props.children }
-            </ComboBox>
-            <DismissButton onDismiss={ state.close } />
-          </div> ) }
-      </div>
-      { props.description &&
-          <Description descriptionProps={ descriptionProps } parent={ props }>
-            { props.description }
-          </Description> }
-  </div>
+    <Layout
+      parent={ props }
+      labelProps={ labelProps }
+      descriptionProps={ descriptionProps }
+      inputProps={ inputProps }
+      buttonProps={ buttonProps }
+      listBoxProps={ listBoxProps }
+      itemProps={ props.itemProps }
+      ref={ layoutRefs }
+      state={ state }
+      multiple={{
+        getDisabledValues,
+        add,
+        remove,
+        values
+      }}
+    />
   )
 }
 

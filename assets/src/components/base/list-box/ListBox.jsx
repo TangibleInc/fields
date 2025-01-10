@@ -67,7 +67,7 @@ const ListBox = props => {
       </ul>
       <DismissButton onDismiss={ state.close } />
     </>
-  );
+  )
 }
 
 export default ListBox

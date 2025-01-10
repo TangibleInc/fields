@@ -3,24 +3,20 @@ import {
   useEffect 
 } from 'react'
 
-import { useComboBoxState } from 'react-stately'
-
 import {  
   useFilter,
-  useComboBox,
-  useFocusWithin,
-  FocusScope
+  useComboBox
 } from 'react-aria'
 
 import { 
-  Button,
-  Label,
-  Description,
-  ListBox,
-  Popover
-} from '../../base'
+  onSelectionChange,
+  getSelectedKey,
+  getDisabledKeys,
+  setInputValue
+} from './common'
 
-import { getOption } from '../../../utils'
+import { useComboBoxState } from 'react-stately'
+import { getLayout } from './layout'
 
 /**
  * <ComboBox label='Favorite Color'>
@@ -30,38 +26,18 @@ import { getOption } from '../../../utils'
  * </Select>
  * 
  * @see https://react-spectrum.adobe.com/react-aria/useComboBox.html
- * @see https://codesandbox.io/s/h185r?file=/src/App.js  
+ * @see https://codesandbox.io/s/h185r?file=/src/App.js
  */
 
 const ComboBox = props => {
 
-  /**
-   * The returned value is diffent accoding to if the current combobox get item
-   * in async mode or not
-   * 
-   * If true, return an object with value + label, otherwise return just the value
-   */
-  const onSelectionChange = value => {
+  const buttonRef  = useRef()
+  const inputRef   = useRef()
+  const listBoxRef = useRef()
+  const popoverRef = useRef()
+  const wrapperRef = useRef()
     
-    if( ! props.isAsync ) {
-      props.onSelectionChange(value)
-      return;
-    }
-
-    const option = getOption(value, props.items)
-    
-    props.onSelectionChange(option)
-    if( ! props.multiple ) state.setInputValue(option.label)
-  }
-
-  /**
-   * For some reason the inputValue is not correctly initialized in async mode
-   */
-  useEffect(() => {
-    props.isAsync && props.selectedKey 
-      ? state.setInputValue(props.selectedKey.label ?? '')
-      : null
-  }, [])
+  useEffect(() => { setInputValue(props, state) }, [])
 
   /**
    * Needed to filter item results according to input value
@@ -70,23 +46,12 @@ const ComboBox = props => {
    */
   const { contains } = useFilter({ sensitivity: 'base' })
   const state = useComboBoxState({ 
-    ...props, 
-    onSelectionChange: onSelectionChange,
-    selectedKey: props.isAsync && props.selectedKey?.value 
-      ? props.selectedKey.value 
-      : (props.selectedKey ?? ''),
-    defaultFilter: contains,
-    disabledKeys: [ 
-      ...(props.disabledKeys ?? []),
-      '_noResults'
-    ]
+    ...props,
+    onSelectionChange : value => onSelectionChange(value, props, state),
+    selectedKey       : getSelectedKey(props),
+    defaultFilter     : contains,
+    disabledKeys      : getDisabledKeys(props)
   })
-
-  const triggerRef = useRef()
-  const inputRef   = useRef()
-  const listBoxRef = useRef()
-  const popoverRef = useRef()
-  const wrapperRef = useRef()
 
   const {
     buttonProps,
@@ -97,69 +62,41 @@ const ComboBox = props => {
   } = useComboBox({
     ...props,
     inputRef,
-    buttonRef: triggerRef,
+    buttonRef,
     listBoxRef,
     popoverRef,
     menuTrigger: 'input'
   }, state)
 
   /**
-   * @see https://react-spectrum.adobe.com/react-aria/useFocusWithin.html
+   * We pass everything in a single ref as we can't forward
+   * multiple refs from the layout components
+   *
+   * @see https://stackoverflow.com/a/53818443
    */
-  const { focusWithinProps } = useFocusWithin({
-    onFocusWithinChange: isFocus => {
-      props.onFocusChange ? props.onFocusChange(isFocus) : false
-    }
+  const layoutRefs = useRef({
+    tirgger : buttonRef,
+    input   : inputRef,
+    popover : popoverRef,
+    wrapper : wrapperRef,
+    listbox : listBoxRef
   })
 
+  const Layout = getLayout( props.layout ?? 'simple' )
+
   return(
-    <div className="tf-combo-box" { ...focusWithinProps }>
-      { props.label &&
-        <Label labelProps={ labelProps } parent={ props }>
-          { props.label }
-        </Label> }
-      <FocusScope autoFocus={ props.autoFocus } restoreFocus>
-        <div className="tf-combo-box-text" ref={ wrapperRef }>
-          <input { ...inputProps } ref={ inputRef } readOnly={ props.readOnly } />
-          { props.showButton &&  
-            <Button 
-              type="action" 
-              ref={ triggerRef }
-              preventFocusOnPress={ true } 
-              { ...buttonProps }
-              isDisabled={ props.readOnly }
-            >
-              <span aria-hidden="true">
-                ▼
-              </span>
-            </Button> }
-          { state.isOpen && ! props.readOnly &&
-            <Popover
-              state={state}
-              triggerRef={inputRef}
-              popoverRef={popoverRef}
-              placement="bottom start"
-              isNonModal
-              style={{ width: wrapperRef?.current?.offsetWidth }}
-              className={ 'tf-combo-box-popover' }
-            >
-              <ListBox
-                loadingState={ props.loadingState ?? 'idle' }
-                listBoxRef={ listBoxRef }
-                state={ state }
-                items={ props.items }
-                focusWithinProps
-                shouldUseVirtualFocus
-                { ...listBoxProps }
-              />
-            </Popover> }
-        </div>
-      </FocusScope>
-      { props.description &&
-        <Description descriptionProps={ descriptionProps } parent={ props }>
-          { props.description }
-        </Description> }
-    </div>
+    <Layout
+      parent={ props }
+      labelProps={ labelProps }
+      descriptionProps={ descriptionProps }
+      inputProps={ inputProps }
+      buttonProps={ buttonProps }
+      listBoxProps={ listBoxProps }
+      itemProps={ props.itemProps }
+      ref={ layoutRefs }
+      state={ state }
+      multiple={ false }
+    />
   )
 }
 

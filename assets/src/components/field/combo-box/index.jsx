@@ -17,15 +17,17 @@ import MultipleComboBox from './MultipleComboxBox'
 /**
  * Export used when initialized from a php function, or inside a repeater
  * 
- * The data returned by the ComboBox component is different according to the type of list (async or not)
+ * The data returned by the ComboBox component is different according to
+ * the type of list (async or not)
  * 
  * A regular combox box return just the value (or a comma separated list a value if multiple)
- * but the async combox return an object with the value and the label for each element
+ * but the async combox return an object with the value and the label for each element (or an
+ * array of objects if multiple=true)
  * 
  * @see control-list.js
  */
 export default props => {
-  
+
   const [value, setValue] = useState(
     props.isAsync
       ? initJSON(props.value ?? '')
@@ -58,6 +60,21 @@ export default props => {
           { ...props }
           onChange={ values => setValue(props.isAsync ? values : values.join(',')) }
           value={ value }
+          label={ props.label ?? null }
+          placeholder={ props.placeholder }
+          description={ props.description ?? false }
+          onFocusChange={ props.onFocusChange ?? false }
+          autoFocus={ props.autoFocus ?? false }
+          isAsync={ props.isAsync ?? false }
+          showButton={ props.showButton ?? true }
+          menuTrigger="focus"
+          labelVisuallyHidden={ props.labelVisuallyHidden ?? false }
+          descriptionVisuallyHidden={ props.descriptionVisuallyHidden ?? false }
+          disabledKeys={ props.disabledKeys ?? [] }
+          readOnly={ props.readOnly ?? false }
+          layout={ props.layout ?? 'simple-multiple' }
+          itemProps={ itemProps }
+          { ...itemProps }
         >
           { RenderChoices }
         </MultipleComboBox>
@@ -88,10 +105,12 @@ export default props => {
         descriptionVisuallyHidden={ props.descriptionVisuallyHidden ?? false }
         disabledKeys={ props.disabledKeys ?? [] }
         readOnly={ props.readOnly ?? false }
+        layout={ props.layout ?? 'simple' }
+        itemProps={ itemProps }
         { ...itemProps }
       >
         { RenderChoices }
       </ComboBox>
-    </>  
+    </>
   )
 }
