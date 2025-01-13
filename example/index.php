@@ -55,6 +55,7 @@ framework\register_admin_menu([
         $fields->set_context($current_context); 
         
         ?>
+        <form method="POST">
         <script>window.addEventListener('load', () => hljs.highlightAll())</script>
         <div class="tangible-field-example-settings">
         <div class="tf-example-container">
@@ -97,6 +98,8 @@ framework\register_admin_menu([
           <?php endif; ?>
         
         </div>
-        </div><?php
+        </div>
+        <form>
+        <?php
   }
 ]);
