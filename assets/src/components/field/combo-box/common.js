@@ -14,22 +14,23 @@ const onSelectionChange = (value, props, state) => {
   }
 
   const option = getOption(value, props.items)
+
+  props.onSelectionChange(option)
   if( ! props.multiple ) state.setInputValue(option.label)
 }
 
 /**
  * For some reason the inputValue is not correctly initialized in async mode
  */
-const setInputValue = (props, state) => 
-  props.isAsync && props.selectedKey 
+const setInputValue = (props, state) =>
+  props.isAsync && props.selectedKey
     ? state.setInputValue(props.selectedKey.label ?? '')
     : null
 
-const getSelectedKey = props => {
-  props.isAsync && props.selectedKey?.value 
-    ? props.selectedKey.value 
+const getSelectedKey = props =>
+  props.isAsync && props.selectedKey?.value
+    ? props.selectedKey.value
     : (props.selectedKey ?? '')
-}
 
 const getDisabledKeys = props => ([ 
   ...(props.disabledKeys ?? []),
