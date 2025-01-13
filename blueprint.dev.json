@@ -4,6 +4,12 @@
     {
       "step": "activatePlugin",
       "pluginPath": "/var/www/html/wp-content/plugins/e2e-plugin"
-    }
+    },
+    {
+			"step": "defineWpConfigConsts",
+			"consts": {
+				"SCRIPT_DEBUG": true
+			}
+		}
   ]
 }
