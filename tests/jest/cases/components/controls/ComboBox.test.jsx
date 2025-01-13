@@ -1,4 +1,5 @@
 import '../../../../../assets/src/index.jsx'
+import { forwardRef } from 'react'
 import {
   render,
   screen,
@@ -243,4 +244,52 @@ describe('ComboBox component', () => {
       }
     )
   })
+
+  test.each([
+    'single',
+    'multiple'
+  ])('support custom layouts (%p)', async type => {
+
+    const CustomLayout = forwardRef((props, ref) => (
+      <>
+        <span>Custom search component</span>
+        <input
+          type="text"
+          { ...props.inputProps }
+          ref={ ref.current.input }
+        />
+        <ul>
+          { [...props.state.collection].map(item => (
+            <li key={ item.key }>
+              { item.textValue }
+            </li>
+          )) }
+        </ul>
+      </>
+    ))
+
+    const choices = {
+      value1 : 'Value 1',
+      value2 : 'Value 2',
+      value3 : 'Value 3'
+    }
+
+    const { container } = render(
+      fields.render({
+        name      : 'field-name',
+        type      : 'combo-box',
+        label     : 'Label',
+        multiple  : type === 'multiple',
+        choices   : choices,
+        layout    : CustomLayout
+      })
+    )
+
+    expect(within(container).getByText('Custom search component'))
+
+    for( const value in choices ) {
+      within(document).getByText( choices[ value ] )
+    }
+  })
+
 })

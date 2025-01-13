@@ -80,6 +80,7 @@ const MultipleComboBox = props => {
   }, state)
 
   const add = value => {
+    if ( values.indexOf(value) !== -1 ) return
     setValues([
       ...values,
       value
@@ -87,6 +88,7 @@ const MultipleComboBox = props => {
   }
 
   const remove = i => {
+    if ( ! values[ i ] ) return;
     setValues([
       ...values.slice(0, i),
       ...values.slice(i + 1)

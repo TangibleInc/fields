@@ -38,6 +38,16 @@ const Checkbox = props => {
   } = useField(props)
 
   useEffect(() => props.onChange && props.onChange(state.isSelected), [state.isSelected])
+
+  /**
+   * This useEffect on props.value is dangerous and could cause infinite re-render
+   *
+   * I believe it was initially needed to set the value from repeaters (to select
+   * items and applies bulk actions), but that would be nice if we find a less
+   * risky way to do it
+   *
+   * Ref + forwardRef maybe?
+   */
   useEffect(() => {
     if( props.value === '1' ) state.setSelected(true)
     if( typeof props.value === 'boolean' && props.value !== state.isSelected ) {
@@ -46,9 +56,9 @@ const Checkbox = props => {
   }, [props.value])
 
   /**
-   * If label needs to be visually hidden for the checkbox, we can't rely on the labelVisuallyHidden
-   * prop of the Label component as the checkbox element is also inside the label and needs to be Visibile 
-   * in any case 
+   * If label needs to be visually hidden for the checkbox, we can't rely on the
+   * labelVisuallyHidden prop of the Label component as the checkbox element is also
+   * inside the label and needs to be Visible all the time
    */
   const LabelWrapper = props?.labelVisuallyHidden ? VisuallyHidden : Fragment
   

@@ -32,11 +32,12 @@ import {
 import {
   Button,
   Label,
+  ListBox,
   Description,
   ModalTrigger,
   Wrapper,
   Title,
-  TooltipTrigger,
+  TooltipTrigger
 } from './components/base'
 
 import {
@@ -82,6 +83,7 @@ const elements = {
   'button'            : Button,
   'description'       : Description,
   'label'             : Label,
+  'list-box'          : ListBox,
   'modal'             : ModalTrigger,
   'wrapper'           : Wrapper,
   'tooltip'           : TooltipTrigger,

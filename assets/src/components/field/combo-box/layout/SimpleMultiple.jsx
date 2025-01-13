@@ -19,9 +19,6 @@ import {
 import { useOverlayTriggerState } from 'react-stately'
 import ComboBox from './../ComboBox'
 
-// Current issue -> async value not displaying as it should in multiple comnbobox
-// -> Tests pass so we should do a better check
-
 /**
  * /!\ This layout support only multiple values 
  */
@@ -104,7 +101,7 @@ const SimpleMutliple = forwardRef(({
               }}
               onFocusChange={ isFocus => isFocus 
                 ? (! overlayState.isOpen && overlayState.open())
-                : overlayState.close() 
+                : overlayState.close()
               }
               isAsync={ parent.isAsync ?? false }
               { ...itemProps }

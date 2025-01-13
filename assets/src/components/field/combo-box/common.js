@@ -7,16 +7,13 @@ import { getOption } from '../../../utils'
   * If true, return an object with value + label, otherwise return just the value
   */
 const onSelectionChange = (value, props, state) => {
-  console.log('_______')
-  console.log(props)
+
   if( ! props.isAsync ) {
     props.onSelectionChange(value)
     return;
   }
 
   const option = getOption(value, props.items)
-  console.log(option)
-  props.onSelectionChange(option)
   if( ! props.multiple ) state.setInputValue(option.label)
 }
 
