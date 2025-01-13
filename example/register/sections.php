@@ -122,6 +122,13 @@ $documentation->register_section('fields', [
         'combobox_async_multiple' => [ 'json' => true ]
       ]
     ],
+    'combo_box_custom' => [
+      'title' => 'ComboBox - Custom layout',
+      'path'  => 'fields/combo-box-custom',
+      'fields'=> [
+        'combobox_async_layout' => [ 'json' => true ],
+      ]
+    ],
     'date_picker' => [
       'title' => 'Date picker',
       'path'  => 'fields/date-picker',
