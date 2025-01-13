@@ -11,10 +11,11 @@ import Option from './list-box/Option'
 import Popover from './popover/Popover'
 import RenderChoices from './list-box/RenderChoices'
 import Section from './list-box/Section'
+import * as Tabs from './tab/Tab'
 import Title from './title/Title'
-import Wrapper from './wrapper/Wrapper'
 import Tooltip from './tooltip/Tooltip'
 import TooltipTrigger from './tooltip/TooltipTrigger'
+import Wrapper from './wrapper/Wrapper'
 
 export {
   Button,
@@ -30,8 +31,9 @@ export {
   Popover,
   RenderChoices,
   Section,
+  Tabs,
   Title,
-  Wrapper,
   Tooltip,
-  TooltipTrigger
+  TooltipTrigger,
+  Wrapper
 }

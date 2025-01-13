@@ -1,0 +1,159 @@
+$tab-item-index-width: 32px;
+$tab-item-index-height: 40px;
+
+.tf-tab-container {
+  background-color: $field-background;
+  width: 100%;
+  border: $field-border;
+  border-radius: $field-border-radius;
+  border-color: rgba($field-border-color, 0.5);
+}
+
+.tf-tab-header {
+  display: flex;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: $field-border;
+  border-bottom-color: rgba($field-border-color, 0.5);
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.tf-tab-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.tf-tab-items {
+  display: flex;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  gap: $global-spacer-sm;
+  background-color: $field-background;
+  margin: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-width: fit-content;
+}
+
+.tf-tab-item {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: fit-content;
+  height: $field-height;
+  padding: $section-padding;
+  @include label;
+  margin-bottom: 0;
+
+  &[data-open="true"]::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: $button-primary-color;
+  }
+
+  button {
+    white-space: nowrap;
+  }
+}
+
+.tf-tab-content {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: $field-background;
+
+  padding-left: $tab-item-index-width;
+  padding-right: $tab-item-index-width;
+  padding-top: calc($tab-item-index-width / 2);
+  padding-bottom: calc($tab-item-index-width / 2);
+
+  .tf-tab-row-field {
+    padding: $section-padding;
+  }
+}
+
+.tf-tab-row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+
+  .tf-tab-row-title {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .tf-tab-row-field {
+    padding-top: 0;
+  }
+
+  .tf-tab-row-title-section {
+    max-width: 100%;
+  }
+
+  .tf-tab-row-field {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+
+    & > div[class*='tf-context-'] {
+      width: 100%;
+    }
+  }
+  
+  /**
+   * Make sure we hide label for fields with visibility condition set
+   * to hide
+   */
+  &:has(> .tf-tab-row-field > div[class*='tf-context-']:empty) {
+    display: none;
+  }
+
+  /**
+   * Field specific tweaks
+   */
+  .tf-tab-row-field > div[class*='tf-context-'] > .tf-switch {
+    display: flex;
+    gap: $global-spacer-sm;
+
+    .tf-switch-label {
+      width: fit-content;
+      height: $field-height;
+
+      .tf-switch-element,
+      .tf-switch-element-selected {
+        height: 20px;
+      }
+    }
+  }
+
+  .tf-tab-row-field > div[class*='tf-context-'] > .tf-radio-group {
+    .tf-radio-group-container {
+      flex-direction: row;
+      gap: 10px;
+    }
+  }
+}
+
+.tf-tab-content {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: $field-background;
+
+  padding-left: $tab-item-index-width;
+  padding-right: $tab-item-index-width;
+  padding-top: calc($tab-item-index-width / 2);
+  padding-bottom: calc($tab-item-index-width / 2);
+
+  .tf-tab-row-field {
+    padding: $section-padding;
+  }
+}
