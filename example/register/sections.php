@@ -243,6 +243,13 @@ $documentation->register_section('fields', [
         'switch' => []
       ]
     ],
+    'tab' => [
+      'title' => 'Tab',
+      'path'  => 'fields/tab',
+      'fields'=> [
+        'tab' => [ 'json' => true ],
+      ]
+    ],
     'text' => [
       'title' => 'Text',
       'path'  => 'fields/text',
