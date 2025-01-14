@@ -13,7 +13,7 @@ const Accordion = props => {
   const [value, setValue] = useState(initJSON(props.value))
 
   useEffect(() => props.onChange && props.onChange(value), [value])
-  
+
   const isEnabled = isEnabled => {
     setValue({
       ...value, 
@@ -21,7 +21,7 @@ const Accordion = props => {
         ? 'on' : 'off'
     })
   }
-  
+
   const headerLeft = props.useSwitch
     ? <div onClick={ e => e.stopPropagation() }>
         <Switch 

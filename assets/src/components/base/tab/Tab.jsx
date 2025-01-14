@@ -35,7 +35,7 @@ const Header = props => (
       { props.children }
     </div>
     { props.actions && 
-      <div className={ 'tf-tab-actions' + (props.actionsClassName ?? '') }>
+      <div className={ 'tf-tab-actions ' + (props.actionsClassName ?? '') }>
         { props.actions }
       </div> }
   </div>

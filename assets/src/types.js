@@ -25,6 +25,7 @@ import {
   Select,
   SimpleDimension,
   Switch,
+  Tab as TabField,
   Text,
   TextArea
 } from './components/field/'
@@ -72,6 +73,7 @@ const controls = {
   'select'            : Select,
   'simple-dimension'  : SimpleDimension,
   'switch'            : Switch,
+  'tab'               : TabField,
   'text'              : Text,
   'text-suggestion'   : DynamicText,
   'wysiwyg'           : Editor,

@@ -21,6 +21,7 @@ import Radio from './radio/'
 import Select from './select/'
 import SimpleDimension from './simple-dimension/SimpleDimension'
 import Switch from './switch/'
+import Tab from './tab/Tab'
 import Text from './text/Text'
 import TextArea from './textarea/TextArea'
 
@@ -48,6 +49,7 @@ export {
   Select,
   SimpleDimension,
   Switch,
+  Tab,
   Text,
   TextArea
 }

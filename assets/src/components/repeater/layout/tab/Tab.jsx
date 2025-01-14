@@ -82,7 +82,7 @@ const Tab = ({
     <Container className="tf-repeater-tab-container">
       <Header
         className="tf-repeater-items tf-repeater-tab-items"
-        actionClassName="tf-repeater-tab-actions"
+        actionsClassName="tf-repeater-tab-actions"
         actions={ actions }
       >
         { items && items.slice(0, maxLength).map((item, i) => (

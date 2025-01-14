@@ -4,6 +4,10 @@
   height: $color-area-height;
 }
 
+.tf-color .tf-label {
+  display: flex;
+}
+
 .tf-color-area-thumb {
   height: 20px;
   width: 20px;
