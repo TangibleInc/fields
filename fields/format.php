@@ -138,6 +138,12 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'read_only', 'readOnly');
       $args = $fields->format_value($args, 'input_mask', 'inputMask');
       break;
+
+    case 'tab':
+      foreach( ($args['tabs'] ?? []) as $name => $tab ) {
+        $args[ $name ] = $fields->format_groups($type, $tab);
+      }
+      break;
   }
 
   if( isset($args['value']) && $args['value'] === false ) {

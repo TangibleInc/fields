@@ -58,7 +58,7 @@ describe('Accordion component', () => {
           name      : 'accordion-name',
           type      : 'accordion',
           useSwitch : true,
-          value     : {test:'lol'},
+          value     : {},
           fields    : []
         }) }
       </>
@@ -119,7 +119,7 @@ describe('Accordion component', () => {
           name      : 'accordion-name',
           type      : 'accordion',
           useSwitch : true,
-          value     : {test:'lol'},
+          value     : {},
           fields    : []
         }) }
       </>
