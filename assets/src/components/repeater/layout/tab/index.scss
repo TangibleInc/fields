@@ -12,3 +12,8 @@
   width: 100%;
   justify-content: flex-start;
 }
+
+// No border when tab is used inside the tab repeater
+.tf-repeater-container .tf-tab-container {
+  border: none;
+}
