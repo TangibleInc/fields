@@ -141,7 +141,7 @@ $fields->format_args = function(
 
     case 'tab':
       foreach( ($args['tabs'] ?? []) as $name => $tab ) {
-        $args[ $name ] = $fields->format_groups($type, $tab);
+        $args['tabs'][ $name ] = $fields->format_groups($type, $tab);
       }
       break;
   }
