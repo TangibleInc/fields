@@ -30,4 +30,12 @@ describe('Tooltip component', () => {
     }, container => container.querySelector('.tf-button-primary'))
   })
 
+  it('supports the render with custom JSX components passed as a child', () => {
+
+    renderHasElement({
+      type        : 'tooltip',
+      children    : <div className="custom-class">Custom component</div>
+    }, container => container.querySelector('.custom-class'))
+  })
+
 })
