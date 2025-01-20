@@ -1,3 +1,7 @@
+.tf-button-group label {
+  display: flex;
+}
+
 .tf-button-group .tf-button-group-option {
   @include button;
   

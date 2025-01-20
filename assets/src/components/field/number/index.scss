@@ -1,5 +1,12 @@
+.tf-number {
+  width: 100%;
+}
+
 .tf-number input {
   @include field;
+  padding-top: 0;
+  padding-bottom: 0;
+  box-sizing: border-box;
 }
 
 .tf-number .tf-label {
