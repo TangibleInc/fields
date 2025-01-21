@@ -5,17 +5,20 @@ import { getOption } from '../../../utils'
   * in async mode or not
   * 
   * If true, return an object with value + label, otherwise return just the value
+  *
+  * Note: I don't remember why we need the onSelectionChange props anymore, but
+  * we will keep it just in case (@todo investigate)
   */
 const onSelectionChange = (value, props, state) => {
 
   if( ! props.isAsync ) {
-    props.onSelectionChange(value)
+    props.onSelectionChange && props.onSelectionChange(value)
     return;
   }
 
   const option = getOption(value, props.items)
 
-  props.onSelectionChange(option)
+  props.onSelectionChange && props.onSelectionChange(option)
   if( ! props.multiple ) state.setInputValue(option.label)
 }
 
