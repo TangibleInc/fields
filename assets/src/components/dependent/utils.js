@@ -99,7 +99,7 @@ const getDependentFields = props => {
 
     const value = props[name]
 
-    if( typeof value === 'object' && ! Array.isArray(value) ) {
+    if( value && typeof value === 'object' && ! Array.isArray(value) ) {
 
       const subfields = getDependentFields(value)
       const hasSubfields = Object.keys(subfields).length === 0
