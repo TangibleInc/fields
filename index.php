@@ -23,7 +23,7 @@ endif;
     $caller = current( debug_backtrace() );
     trigger_error("Undefined method \"$method\" for {$this->name}, called from <b>{$caller['file']}</b> in <b>{$caller['line']}</b><br>", E_USER_WARNING);
   }
-  
+
   function load() {
 
     // Parent plugin is expected to load framework
