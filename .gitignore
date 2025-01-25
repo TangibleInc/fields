@@ -10,7 +10,9 @@ node_modules
 .idea/
 .rollup-plugin-visualizer.html
 
-# Allow symlinked local packages - always use latest commit on composer/npm/yarn update
+# Ignore lock files to allow any package manager
+bun.lock
+bun.lockb
 composer.lock
 # package-lock.json
 yarn.lock
