@@ -1,4 +1,3 @@
-import { Button, ModalTrigger } from '../../../base'
 import { Checkbox } from '../../../field'
 import BulkActions from '../../common/BulkActions'
 
@@ -18,6 +17,7 @@ const Table = ({
   renderItem,
   maxLength,
   useBulk,
+  renderAction,
   renderFooterActions
 }) => (
   <>
@@ -61,29 +61,9 @@ const Table = ({
               )) }
               <td className='tf-repeater-row-actions'>
                 <div>
-                  { maxLength !== undefined &&
-                    <Button
-                      type="action"
-                      isDisabled={ maxLength <= items.length }
-                      onPress={() => dispatch({
-                        type : 'clone',
-                        item : item
-                      })}
-                    >
-                      Clone
-                    </Button> }
-                  { maxLength !== undefined &&
-                    <ModalTrigger
-                      label="Remove"
-                      title="Confirmation"
-                      onValidate={ () => dispatch({ type : 'remove', item : i })}
-                      buttonProps={{
-                        type: 'danger'
-                      }}
-                    >
-                      Are you sure you want to remove item { i + 1 }?
-                    </ModalTrigger> }
-                  </div>
+                  { renderAction( 'clone', i ) }
+                  { renderAction( 'delete', i ) }
+                </div>
               </td>
             </tr>
           )) }

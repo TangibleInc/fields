@@ -1,5 +1,3 @@
-import { ModalTrigger } from '../../../base'
-
 const Bare = ({
   items,
   rowFields,
@@ -8,6 +6,7 @@ const Bare = ({
   dispatch,
   beforeRow = false,
   afterRow = false,
+  renderAction,
   renderFooterActions
 }) => (
   <>
@@ -20,14 +19,7 @@ const Bare = ({
               { renderItem(control, item, i) }
             </div>
           )) }
-          { maxLength !== undefined &&
-            <ModalTrigger 
-              label="Remove"
-              title="Confirmation"
-              onValidate={ () => dispatch({ type : 'remove', item : i }) }
-            >
-              Are you sure you want to remove item { i + 1 }?
-            </ModalTrigger> }
+          { renderAction( 'delete', i ) }
           { afterRow && afterRow(item, i, dispatch) }
         </div>
       )) }

@@ -7,12 +7,18 @@
 export default {
   
   common: {
-    add : 'Add item'
+    add       : 'Add item',
+    clone     : 'Clone',
+    delete    : 'Remove'
   },
   
-  layoutOveride : {
-    tab : {
-      add : '+ Add Item'
+  layoutOveride: {
+    advanced  : {
+      clone     : 'Duplicate',
+      delete    : 'Delete'
+    },
+    tab       : {
+      add       : '+ Add Item'
     }
   }
   

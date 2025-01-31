@@ -4,7 +4,6 @@
  * Description: React-based custom fields library
  * Version: 2025.1.25
  */
-use tangible\framework;
 use tangible\updater;
 
 define('TANGIBLE_FIELDS_IS_PLUGIN', true);

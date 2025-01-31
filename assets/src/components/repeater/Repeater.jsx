@@ -178,6 +178,73 @@ const Repeater = props => {
     )
   )
 
+  const renderCustomComponent = (action, i, customProps) => {
+
+    /**
+     * Custom component will always be a string if fields has been
+     * registered from the PHP side
+     *
+     * If rendered from the JS side, it can either be  a string (=element name)
+     * or a react component
+     */
+    const Component = typeof props.parts.actions[ action ] === 'string'
+      ? types.get( props.parts.actions[ action ], 'element' )
+      : props.parts.actions[ action ]
+
+    return (
+      <Component
+        dispatch={ dispatch }
+        item={ i }
+        items={ items }
+        { ...customProps }
+      />
+    )
+  }
+
+  /**
+   * Default render for action button
+   *
+   * Render props can be overwritten by the layout if different from default
+   * Component can be overwritten by the user
+   *
+   * Also, rendering actions from <Repeater /> instead of <Layout /> avoid
+   * having to deal with props.repeatable in each layout
+   */
+  const renderAction = (action, i, customProps = {}) => {
+    if ( ! repeatable ) return <></>;
+    if ( props?.parts?.actions?.[ action ] ) {
+      return renderCustomComponent( action, i, customProps )
+    }
+    switch( action ) {
+      case 'delete':
+        return(
+          <ModalTrigger
+            label={ string('delete') }
+            title="Confirmation"
+            onValidate={ () => dispatch({ type : 'remove', item : i }) }
+            buttonProps={{ type: 'danger' }}
+            { ...customProps }
+          >
+            Are you sure you want to remove item { i + 1 }?
+          </ModalTrigger>
+        )
+        case 'clone':
+          return(
+            <Button
+              type="action"
+              isDisabled={ maxLength <= items.length }
+              onPress={ () => dispatch({
+                type : 'clone',
+                item : items[i]
+              }) }
+              { ...customProps }
+            >
+              { string('clone') }
+            </Button>
+          )
+    }
+  }
+
   useEffect(() => props.onChange && props.onChange( getSavedValue() ), [items])
 
   return(
@@ -195,7 +262,7 @@ const Repeater = props => {
           rowFields={ rowFields }
           headerFields={ props.headerFields }
           renderItem={ renderItem }
-          maxLength = { repeatable ? maxLength : undefined }
+          maxLength={ repeatable ? maxLength : undefined }
           title={ props.sectionTitle ?? false }
           useSwitch={ props.useSwitch }
           useBulk={ props.useBulk }
@@ -203,6 +270,7 @@ const Repeater = props => {
           beforeRow={ props.beforeRow }
           name={ props.name ?? '' }
           renderFooterActions={ renderFooterActions }
+          renderAction={ renderAction }
           parent={ props }
           string={ string }
         />

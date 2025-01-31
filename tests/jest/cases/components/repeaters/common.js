@@ -406,6 +406,82 @@ const commonRepeaterTests = (layout, args = {}) => {
     expect(within(container).queryByText(config.addText)).toBeFalsy()
     expect(within(container).getByText('add custom text')).toBeTruthy()
   })
+
+  it('support custom layout for the deletion button', async () => {
+
+    const CustomButton = props => (
+      <button onClick={ () => props.dispatch({
+        type : 'remove',
+        item : props.item
+      }) }>
+        Custom button
+      </button>
+    )
+
+    const user = userEvent.setup()
+    const { container } = render(
+      fields.render({
+        type    : 'repeater',
+        layout  : layout,
+        name    : 'test',
+        parts   : { actions : { delete : CustomButton } },
+        fields  : [
+          {
+            name  : 'test2',
+            label : 'Test 1',
+            type  : 'text'
+          }
+        ],
+      })
+    )
+
+    const items = document.querySelector(`.tf-repeater-items`)
+    expect(items.children.length).toBe(1)
+
+    const deleteButton = within(container).getByText('Custom button')
+    await user.click(deleteButton)
+
+    expect(items.children.length).toBe(0)
+  })
+
+  it('support custom layout for the clone button', async () => {
+
+    if ( layout === 'bare' ) return; // No clone button for this layout
+
+    const CustomButton = props => (
+      <button onClick={ () => props.dispatch({
+        type : 'clone',
+        item : props.items[ props.item ]
+      }) }>
+        Custom button
+      </button>
+    )
+
+    const user = userEvent.setup()
+    const { container } = render(
+      fields.render({
+        type    : 'repeater',
+        layout  : layout,
+        name    : 'test',
+        parts   : { actions : { clone : CustomButton } },
+        fields  : [
+          {
+            name  : 'test2',
+            label : 'Test 1',
+            type  : 'text'
+          }
+        ],
+      })
+    )
+
+    const items = document.querySelector(`.tf-repeater-items`)
+    expect(items.children.length).toBe(1)
+
+    const deleteButton = within(container).getByText('Custom button')
+    await user.click(deleteButton)
+
+    expect(items.children.length).toBe(2)
+  })
 }
 
 export { commonRepeaterTests }

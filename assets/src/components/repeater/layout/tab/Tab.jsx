@@ -3,7 +3,6 @@ import { renderTitle } from '../../common/helpers'
 
 import {
   Button,
-  ModalTrigger,
   Tabs
 } from '../../../base'
 
@@ -11,6 +10,7 @@ const Tab = ({
   items,
   rowFields,
   renderItem,
+  renderAction,
   maxLength,
   dispatch,
   name,
@@ -46,35 +46,24 @@ const Tab = ({
         </Button> }
     </div>
     <div className='tf-repeater-tab-icon-actions'>
-      { maxLength !== undefined &&
-        <Button
-          type="icon-clone"
-          className={ 'tf-tab-item' }
-          contentVisuallyHidden={ true }
-          isDisabled={ maxLength <= items.length }
-          onPress={() => dispatch({
-            type : 'clone',
-            item : items[ activeItem ]
-          })}
-        >
-          Clone
-        </Button> }
-      { maxLength !== undefined &&
-        <ModalTrigger
-          label="Remove"
-          title="Confirmation"
-          onValidate={ () => {
-            dispatch({ type : 'remove', item : activeItem })
-            setActiveItem( activeItem == 0 ? 0 : activeItem - 1 )
-          } }
-          buttonProps={ {
-            type                  : 'icon-trash',
-            contentVisuallyHidden : true,
-            className             : 'tf-tab-item'
-          } }
-        >
-          Are you sure you want to remove item { activeItem + 1 }?
-        </ModalTrigger> }
+      { renderAction( 'clone', activeItem, {
+        type                  : 'icon-clone',
+        className             : 'tf-tab-item',
+        contentVisuallyHidden : true
+      } ) }
+      { renderAction( 'delete', activeItem, {
+        label       : 'Remove',
+        title       :'Confirmation',
+        onValidate  : () => {
+          dispatch({ type : 'remove', item : activeItem })
+          setActiveItem( activeItem == 0 ? 0 : activeItem - 1 )
+        },
+        buttonProps : {
+          type                  : 'icon-trash',
+          contentVisuallyHidden : true,
+          className             : 'tf-tab-item'
+        }
+      } ) }
     </div>
   </>
 

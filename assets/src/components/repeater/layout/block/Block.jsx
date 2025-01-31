@@ -1,8 +1,7 @@
 import { useState } from 'react'
 
 import { 
-  Button, 
-  ModalTrigger,
+  Button,
   ExpandablePanel 
 } from '../../../base'
 
@@ -22,6 +21,7 @@ const Block = ({
   useBulk,
   name,
   renderFooterActions,
+  renderAction,
   parent
 }) => {
 
@@ -78,28 +78,11 @@ const Block = ({
 
   const actions = (i, item) => (
      <> 
-      { maxLength !== undefined &&
-        <Button
-          type="action"
-          isDisabled={ maxLength <= items.length }
-          onPress={() => dispatch({ 
-            type : 'clone',
-            item : item
-          })}
-        >
-          Clone
-        </Button> }
+      { renderAction( 'clone', i ) }
       <Button type="action" onPress={ () => toggleItem(i) }>
         { activeItem !== i ? 'Edit' : 'Close' }
       </Button>
-      { maxLength !== undefined && 
-        <ModalTrigger 
-          title="Confirmation"
-          label="Remove"
-          onValidate={ () => dispatch({ type : 'remove', item : i }) }
-        >
-          Are you sure you want to remove item { i + 1 }?
-        </ModalTrigger> }
+      { renderAction( 'delete', i ) }
     </>
   )
 
