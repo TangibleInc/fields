@@ -90,8 +90,8 @@ const Tab = ({
         key={ items[ activeItem ].key ?? activeItem }
         className='tf-repeater-tab-content'
       >
-        { rowFields.map(control => (
-          <Row key={ control.name } className='tf-repeater-tab-row'>
+        { rowFields.map((control, i) => (
+          <Row key={ control.name ?? i } className='tf-repeater-tab-row'>
             { beforeRow && beforeRow(items[ activeItem ], activeItem, dispatch) }
             { control.type === 'title'
               ? <RowTitle className='tf-repeater-tab-row-title tf-repeater-tab-row-title-section'>
