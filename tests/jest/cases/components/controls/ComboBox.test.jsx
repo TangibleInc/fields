@@ -9,6 +9,44 @@ import { userEvent } from '@testing-library/user-event'
 
 const fields = window.tangibleFields
 
+/**
+ * Test data for choices
+ */
+const getChoices = (category = false) => ({
+  values : {
+    value1 : 'Value 1',
+    value2 : 'Value 2',
+    value3 : 'Value 3'
+  },
+  categories : category
+    ? [
+        'Category 1',
+        'Category 2'
+      ]
+    : false,
+  config : category
+    ? [
+        {
+          name    : 'Category 1',
+          choices : {
+            value1 : 'Value 1',
+            value2 : 'Value 2',
+          }
+        },
+        {
+          name    : 'Category 2',
+          choices : {
+            value3 : 'Value 3'
+          }
+        }
+      ]
+    : {
+        value1 : 'Value 1',
+        value2 : 'Value 2',
+        value3 : 'Value 3'
+      }
+})
+
 describe('ComboBox component', () => {
 
   /**
@@ -21,15 +59,13 @@ describe('ComboBox component', () => {
    */
 
   test.each([
-    'single',
-    'multiple',
-  ])('displays options when popover is open (%p)', async type => {
+    { type: 'single',   category: false },
+    { type: 'single',   category: true },
+    { type: 'multiple', category: false },
+    { type: 'multiple', category: true },
+  ])('displays options when popover is open (%p)', async ({ type, category }) => {
 
-    const choices = {
-      value1 : 'Value 1',
-      value2 : 'Value 2',
-      value3 : 'Value 3'
-    }
+    const choices = getChoices(category)
 
     const user = userEvent.setup()
     const { container } = render(
@@ -38,15 +74,21 @@ describe('ComboBox component', () => {
           name     : 'field-name',
           type     : 'combo-box',
           label    : 'Label',
-          choices  : choices,
+          choices  : choices.config,
           multiple : type === 'multiple'
         }) }
         <span>Click me to unfocus</span>
       </>
     )
 
-    for( const value in choices ) {
-      expect(within(document).queryByText( choices[ value ] )).toBe(null)
+    for( const value in choices.values ) {
+      expect(within(document).queryByText( choices.values[ value ] )).toBe(null)
+    }
+
+    if ( category ) {
+      choices.categories.map(category => (
+        expect(within(document).queryByText( category )).toBe(null)
+      ))
     }
 
     await user.click(
@@ -55,15 +97,27 @@ describe('ComboBox component', () => {
         : within(container).getByText('▼')
     )
 
-    for( const value in choices ) {
-      const item = within(document).getByText( choices[ value ] )
+    for( const value in choices.values ) {
+      const item = within(document).getByText( choices.values[ value ] )
       expect(item.getAttribute('data-key')).toBe( value )
+    }
+
+    if ( category ) {
+      choices.categories.map(category => (
+        expect(within(document).getByText( category )).toBeTruthy()
+      ))
     }
 
     await user.click( within(container).getByText('Click me to unfocus') )
 
-    for( const value in choices ) {
-      expect(within(document).queryByText( choices[ value ] )).toBe(null)
+    for( const value in choices.values ) {
+      expect(within(document).queryByText( choices.values[ value ] )).toBe(null)
+    }
+
+    if ( category ) {
+      choices.categories.map(category => (
+        expect(within(document).queryByText( category )).toBe(null)
+      ))
     }
   })
 
@@ -160,30 +214,28 @@ describe('ComboBox component', () => {
   })
 
   test.each([
-    'single',
-    'multiple',
-  ])('supports readOnly (%p)', async type => {
+    { type: 'single',   category: false },
+    { type: 'single',   category: true },
+    { type: 'multiple', category: false },
+    { type: 'multiple', category: true },
+  ])('supports readOnly (%p)', async({ type, category }) => {
 
-    const choices = {
-      value1 : 'Value 1',
-      value2 : 'Value 2',
-      value3 : 'Value 3'
-    }
+    const choices = getChoices(category)
 
     const { container } = render(
       fields.render({
         name     : 'field-name',
         type     : 'combo-box',
         label    : 'Label',
-        choices  : choices,
+        choices  : choices.config,
         multiple : type === 'multiple',
         readOnly : true
       })
     )
 
     const button = type === 'multiple'
-        ? within(container).getByText('Add')
-        : within(container).getByText('▼').parentElement
+      ? within(container).getByText('Add')
+      : within(container).getByText('▼').parentElement
 
     expect(button.hasAttribute('disabled')).toBe(true)
 
@@ -290,6 +342,60 @@ describe('ComboBox component', () => {
     for( const value in choices ) {
       within(document).getByText( choices[ value ] )
     }
+  })
+
+  test.each([
+    { type: 'single',   category: false },
+    { type: 'single',   category: true },
+    { type: 'multiple', category: false },
+    { type: 'multiple', category: true },
+  ])('supports display of selected value', async({ type, category }) => {
+
+    const choices = getChoices(category)
+
+    const { container } = render(
+      fields.render({
+        name     : 'field-name',
+        type     : 'combo-box',
+        label    : 'Label',
+        choices  : choices.config,
+        multiple : type === 'multiple',
+        value    : 'value1'
+      })
+    )
+
+    if ( type === 'multiple' ) {
+      expect(within(container).getByText('Value 1')).toBeTruthy()
+      expect(within(container).queryByText('Value 2')).toBeFalsy()
+      expect(within(container).queryByText('Value 3')).toBeFalsy()
+    }
+    else {
+      const input = screen.getByRole('combobox')
+      expect(input.value).toBe('Value 1')
+    }
+  })
+
+  test.each([
+    { category: false },
+    { category: true },
+  ])('supports display of multiple values', async({ category }) => {
+
+    const choices = getChoices(category)
+
+    const { container } = render(
+      fields.render({
+        name     : 'field-name',
+        type     : 'combo-box',
+        label    : 'Label',
+        choices  : choices.config,
+        multiple : 'multiple',
+        value    : 'value1,value3'
+      })
+    )
+
+    expect(within(container).getByText('Value 1')).toBeTruthy()
+    expect(within(container).queryByText('Value 2')).toBeFalsy()
+    expect(within(container).getByText('Value 3')).toBeTruthy()
   })
 
 })

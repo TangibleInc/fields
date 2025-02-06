@@ -54,6 +54,17 @@ const SimpleMutliple = forwardRef(({
     triggerRef
   )
 
+  /**
+   * If is array, it means choices contains categories
+   */
+  const choices = Array.isArray(parent.choices)
+    ? parent.choices.reduce(
+      (data, category) => ({
+        ...data,
+        ...(category.choices ?? {})
+      }), {})
+    : parent.choices
+
   return (
     <div className="tf-multiple-combobox" data-enabled={ ! parent.readOnly }>
       { props.label &&
@@ -67,7 +78,11 @@ const SimpleMutliple = forwardRef(({
             : values.map(
               (value, i) => (
                 <span key={ value.key ?? i } className="tf-combo-box-item">
-                  <span>{ parent.isAsync ? value.label : parent.choices[value] ?? '' }</span>
+                  <span>
+                    { parent.isAsync
+                      ? value.label
+                      : choices[value] ?? '' }
+                  </span>
                   { parent.readOnly !== true &&
                     <Button onPress={ () => remove(i) }>x</Button> }
                 </span>
