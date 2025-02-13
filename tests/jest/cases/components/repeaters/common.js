@@ -261,7 +261,7 @@ const commonRepeaterTests = (layout, args = {}) => {
     expect(addButton).not.toBeDisabled()
 
     if( layout !== 'bare' ) {
-      cloneButton  = within(container).getByText(config.cloneText)
+      cloneButton = within(container).getByText(config.cloneText)
       expect(cloneButton).not.toBeDisabled()
     }
 
@@ -482,6 +482,132 @@ const commonRepeaterTests = (layout, args = {}) => {
 
     expect(items.children.length).toBe(2)
   })
+
+  it('support exclude props when cloning', async () => {
+
+    const user = userEvent.setup()
+    const store = tangibleFields.store
+
+    const { container } = render(
+      fields.render({
+        type    : 'repeater',
+        layout  : layout,
+        name    : 'test',
+        clone   : {
+          exclude   : {
+            id        : true,
+            name2     : { id: true },
+            name4     : { id: true },
+          }
+        },
+        value   : [
+          {
+            key   : 'something',
+            id    : 10,
+            name1 : 'Text value',
+            name2 : {
+              id      : 20,
+              name3   : 'Text value 2'
+            },
+            name4 : [
+              {
+                id    : 30,
+                name5 : 'Text value 3'
+              },
+              {
+                id    : 40,
+                name5 : 'Text value 4'
+              }
+            ],
+          }
+        ],
+        fields  : [
+          {
+            name      : 'id',
+            type      : 'hidden'
+          },
+          {
+            name      : 'name1',
+            label     : 'Test 1',
+            type      : 'text'
+          },
+          {
+            name      : 'name2',
+            label     : 'Test 2',
+            type      : 'field-group',
+            fields    : [
+              {
+                name    : 'id',
+                type    : 'hidden'
+              },
+              {
+                name    : 'text-name',
+                label   : 'Text',
+                type    : 'text'
+              },
+            ]
+          },
+          {
+            name      : 'name4',
+            label     : 'Test 2',
+            type      : 'repeater',
+            // To be sure there is only one clone button, easier to test
+            parts     : { actions : { clone : props => <></> } },
+            fields    : [
+              {
+                name  : 'id',
+                type  : 'hidden'
+              },
+              {
+                name  : 'name5',
+                label : 'Text',
+                type  : 'text'
+              },
+            ]
+          },
+        ],
+      })
+    )
+
+    // Does not have a clone button
+    if( layout === 'bare' ) return;
+
+    const cloneButton = within(container).getByText(config.cloneText)
+    await user.click(cloneButton)
+
+    const repeater = store.getRepeater('test')
+
+    expect( repeater.getRowValue('0', 'id') ).toBe(10)
+    expect( repeater.getRowValue('1', 'id') ).not.toBe(10)
+
+    expect( repeater.getRowValue('0', 'name1') ).toBe('Text value')
+    expect( repeater.getRowValue('1', 'name1') ).toBe('Text value')
+
+    const fieldGroup1 = repeater.getRowValue('0', 'name2')
+    const fieldGroup2 = repeater.getRowValue('1', 'name2')
+
+    expect( fieldGroup1.id ).toBe(20)
+    expect( fieldGroup2.id ).not.toBe(20)
+
+    expect( fieldGroup1.name3 ).toBe('Text value 2')
+    expect( fieldGroup2.name3 ).toBe('Text value 2')
+
+    const subRepeater1 = repeater.getRowValue('0', 'name4')
+    const subRepeater2 = repeater.getRowValue('1', 'name4')
+
+    expect( subRepeater1[0].id ).toBe(30)
+    expect( subRepeater2[0].id ).not.toBe(30)
+
+    expect( subRepeater1[1].id ).toBe(40)
+    expect( subRepeater2[1].id ).not.toBe(40)
+
+    expect( subRepeater1[0].name5 ).toBe('Text value 3')
+    expect( subRepeater2[0].name5 ).toBe('Text value 3')
+
+    expect( subRepeater1[1].name5 ).toBe('Text value 4')
+    expect( subRepeater2[1].name5 ).toBe('Text value 4')
+  })
+
 }
 
 export { commonRepeaterTests }

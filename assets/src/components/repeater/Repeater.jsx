@@ -57,7 +57,7 @@ const Repeater = props => {
   fields.forEach(field => emptyItem[ field.name ] = '')
 
   const [items, dispatch] = useReducer(
-    repeaterDispatcher(emptyItem, maxLength),
+    repeaterDispatcher(emptyItem, maxLength, props),
     props.value ?? '',
     initDispatcher
   )

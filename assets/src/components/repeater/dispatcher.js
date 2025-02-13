@@ -1,6 +1,6 @@
 import { uniqid } from '../../utils'
 
-const repeaterDispatcher = (emptyItem, maxLength) => (items, action) => {
+const repeaterDispatcher = (emptyItem, maxLength, props) => (items, action) => {
   if( action.callback ) setTimeout(action.callback) // Trigger callback after state change
   switch (action.type) {
     case 'add':
@@ -35,7 +35,7 @@ const repeaterDispatcher = (emptyItem, maxLength) => (items, action) => {
         : [
             ...items,
             {
-              ...(action.item),
+              ...(formatClone(action.item, props)),
               key: uniqid(),
             },
           ]
@@ -65,6 +65,36 @@ const repeaterDispatcher = (emptyItem, maxLength) => (items, action) => {
     default:
       return items
   }
+}
+
+/**
+ * If props.clone.exclude is set on a repeater, some fields
+ * value won't be cloned
+ *
+ * Syntax is the following:
+ * {
+ *     clone: {
+ *         exclude: {
+ *             'fields-name-1': true,
+ *             'fields-name-2': { 'sub-value': true },
+ *         }
+ *     }
+ * }
+ */
+const formatClone = (initial, props) => {
+  if ( typeof props?.clone?.exclude !== 'object' ) return initial
+  const item = { ...initial }
+  Object.keys(props.clone.exclude)
+    .map(name => {
+      const value = props.clone.exclude[ name ]
+      if ( value === true ) delete item[ name ]
+      if ( typeof value === 'object' ) item[ name ] = Array.isArray(item[ name ])
+        ? item[ name ].map(
+            subItem => formatClone(subItem, { clone : { exclude : value } })
+          )
+        : formatClone(item[ name ], { clone : { exclude : value } })
+    })
+  return item
 }
 
 const initDispatcher = value => {
