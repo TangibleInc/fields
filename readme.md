@@ -53,8 +53,10 @@ cd fields
 Install dependencies:
 
 ```sh
-composer install & npm ci
+npm ci
 ```
+
+### JS and CSS
 
 Build for development - watch files for changes and rebuild
 
@@ -82,7 +84,7 @@ Start a local test site using [`wp-now`](https://github.com/WordPress/playground
 npm run start
 ```
 
-For convenience, this also concurrently builds for development and watches files to rebuild.
+For convenience, this also concurrently runs `npm run dev`.
 
 ### Dev dependencies
 
@@ -118,13 +120,13 @@ Mainly it's useful for mounting local folders into the virtual file system. For 
 
 This module comes with a suite of unit and integration tests.
 
-`composer install --dev` will install PHPUnit.
-
 #### Method 1: Cloning wordpress-develop.git (Previous)
 
 You will need a copy of https://github.com/WordPress/wordpress-develop.git available. You can run `git clone https://github.com/WordPress/wordpress-develop.git` in this directory as this is where the bootstrap script expects it to be by default (the `WORDPRESS_DEVELOP_DIR` environment variable overrides this path).
 
 Bootstrap the WordPress development environment by running `npm i; npm run build:dev`. Then copy wp-tests-config-sample.php to wp-tests-config.php inside the wordpress-develop directory and set the database credentials as needed. **WARNING!** This database is **dropped** everytime the tests run. Do not use a production database.
+
+To install PHPUnit with this method, run `composer install`. You'll need `composer` installed globally.
 
 Run `vendor/bin/phpunit` to launch the tests and hope for all green ;)
 
@@ -140,17 +142,25 @@ https://docs.phpunit.de/en/9.6/ for more information.
 
 Alternatively, you can use the [wp-env](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) tool to quickly spin up a local dev and test environment, optionally switching between multiple PHP versions.
 
-Please note that `wp-env` requires Docker to be installed. There are instructions available for installing Docker on [Windows](https://docs.docker.com/desktop/install/windows-install/), [macOS](https://docs.docker.com/desktop/install/mac-install/), and [Linux](https://docs.docker.com/desktop/install/linux-install/).
+The test environment is started by running:
 
-This repository includes NPM scripts to run the tests with PHP versions 8.2 and 7.4. 
-
-**Note**: We need to maintain compatibility with PHP 7.4, as WordPress itself only has “beta support” for PHP 8.x. See https://make.wordpress.org/core/handbook/references/php-compatibility-and-wordpress-versions/ for more information.
-
-If you’re on Windows, you might have to use [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install) to run the tests (see [this comment](https://bitbucket.org/tangibleinc/tangible-fields-module/pull-requests/30#comment-389568162)).
-
-To run the tests with Docker installed:
+```sh
+npm run env:start
 ```
-npm install
+
+This uses [`wp-env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) to quickly spin up a local dev and test environment, optionally switching between multiple PHP versions. `wp-env` requires Docker to be installed. There are instructions available for installing Docker on [Windows](https://docs.docker.com/desktop/install/windows-install/), [macOS](https://docs.docker.com/desktop/install/mac-install/), and [Linux](https://docs.docker.com/desktop/install/linux-install/).
+
+Visit [http://localhost:8888](http://localhost:8888) to see the dev site, and [http://localhost:8889](http://localhost:8880) for the test site, whose database is cleared on every run.
+
+Before running tests, install PHPUnit as a dev dependency using Composer in the container.
+
+```sh
+npm run env:composer:install
+```
+
+To run the tests:
+
+```sh
 npm run env:test:8.2
 npm run env:test:7.4
 ```
@@ -158,14 +168,32 @@ npm run env:test:7.4
 The version-specific commands take a while to start, but afterwards you can run npm run env:test to re-run tests in the same environment.
 
 To stop the Docker process:
-```
+
+```sh
 npm run env:stop
 ```
 
 To “destroy” and remove cache:
-```
+
+```sh
 npm run env:destroy
 ```
+
+#### Notes
+
+To run more than one instance of `wp-env`, set different ports for the dev and test sites:
+
+```sh
+WP_ENV_PORT=3333 WP_ENV_TESTS_PORT=3334 npm run env:start
+```
+
+---
+
+This repository includes NPM scripts to run the tests with PHP versions 8.2 and 7.4. We need to maintain compatibility with PHP 7.4, as WordPress itself only has “beta support” for PHP 8.x. See https://make.wordpress.org/core/handbook/references/php-compatibility-and-wordpress-versions/ for more information.
+
+---
+
+If you’re on Windows, you might have to use [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install) to run the tests (see [this comment](https://bitbucket.org/tangibleinc/tangible-fields-module/pull-requests/30#comment-389568162)).
 
 ### Jest
 

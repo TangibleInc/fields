@@ -1,10 +1,8 @@
 <?php
-
 namespace Tangible\FieldsExample;
+use tangible\framework;
 
 defined('ABSPATH') or die();
-
-use tangible\framework;
 
 $plugin = \tangible\create_object([
   'name'           => 'tangible-field-example',
@@ -15,8 +13,8 @@ $plugin = \tangible\create_object([
   'file_path'      => __FILE__,
   'base_path'      => plugin_basename( __FILE__ ),
   'dir_path'       => plugin_dir_path( __FILE__ ),
-  'url'            => plugins_url( '/', __FILE__ ),
-  'assets_url'     => plugins_url( '/../assets', __FILE__ ),
+  'url'            => framework\module_url( '/', __FILE__ ),
+  'assets_url'     => framework\module_url( '/../assets', __FILE__ ),
 ]);
 
 if (!function_exists('tangible_field_example')) {
