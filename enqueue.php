@@ -1,5 +1,4 @@
 <?php
-use tangible\framework;
 
 defined('ABSPATH') or die();
 
@@ -43,7 +42,7 @@ $fields->enqueue = function(array $config = []) use($fields) {
 
     wp_enqueue_style(
       'tangible-fields-' . $context,
-      framework\module_url( '/assets', __FILE__ ) . '/build/' . $context . '/index.min.css',
+      plugins_url( '/assets', __FILE__ ) . '/build/' . $context . '/index.min.css',
       [],
       $fields->version
     );
@@ -51,7 +50,7 @@ $fields->enqueue = function(array $config = []) use($fields) {
 
   wp_enqueue_script(
     'tangible-fields',
-    framework\module_url( '/assets', __FILE__ ) . '/build/index.min.js',
+    plugins_url( '/assets', __FILE__ ) . '/build/index.min.js',
     [ 'wp-element' ],
     $fields->version,
     true
