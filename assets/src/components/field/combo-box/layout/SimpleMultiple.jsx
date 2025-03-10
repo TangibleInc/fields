@@ -67,9 +67,9 @@ const SimpleMutliple = forwardRef(({
 
   return (
     <div className="tf-multiple-combobox" data-enabled={ ! parent.readOnly }>
-      { props.label &&
+      { parent.label &&
         <Label labelProps={ labelProps } parent={ parent }>
-          { props.label }
+          { parent.label }
         </Label> }
       <div className="tf-multiple-combobox-container">
         <div ref={ ref.current.input } className="tf-multiple-combobox-values" { ...inputProps }>
@@ -126,9 +126,9 @@ const SimpleMutliple = forwardRef(({
             <DismissButton onDismiss={ overlayState.close } />
           </div> ) }
       </div>
-      { props.description &&
+      { parent.description &&
         <Description descriptionProps={ descriptionProps } parent={ parent }>
-          { props.description }
+          { parent.description }
         </Description> }
     </div>
   )

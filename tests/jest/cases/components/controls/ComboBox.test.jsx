@@ -1,6 +1,7 @@
 import '../../../../../assets/src/index.jsx'
 import { forwardRef } from 'react'
 import {
+    getAllByLabelText,
   render,
   screen,
   within
@@ -57,6 +58,34 @@ describe('ComboBox component', () => {
    * - Test multiple selection (multiple, async multiple)
    * - Test map results (async, async multiple)
    */
+
+  test.each([
+    { type: 'single',   category: false },
+    { type: 'single',   category: true },
+    { type: 'multiple', category: false },
+    { type: 'multiple', category: true },
+  ])('displays label and description (%p)', async ({ type, category }) => {
+  
+    const choices = getChoices(category)
+    
+    const user = userEvent.setup()
+    const { container } = render(
+      fields.render({
+        name        : 'field-name',
+        type        : 'combo-box',
+        label       : 'I am the label',
+        description : 'I am the description',
+        choices     : choices.config,
+        multiple    : type === 'multiple'
+      })
+    )
+    
+    const labels = within(container).getAllByLabelText('I am the label')
+    const descriptions = within(container).getAllByText('I am the description')
+    
+    expect(labels.length).not.toBe(0)
+    expect(descriptions.length).not.toBe(0)
+  })
 
   test.each([
     { type: 'single',   category: false },
