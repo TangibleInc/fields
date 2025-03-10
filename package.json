@@ -1,7 +1,7 @@
 {
   "name": "@tangible/fields",
   "description": "React library for form field types",
-  "version": "2025.2.26",
+  "version": "2025.3.10",
   "type": "module",
   "repository": {
     "url": "git+ssh://git@github.com/tangibleinc/fields.git"
