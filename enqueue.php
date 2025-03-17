@@ -88,3 +88,4 @@ $fields->maybe_enqueue_scripts = function() use($fields) : void {
 
 add_action( 'wp_footer', $fields->maybe_enqueue_scripts );
 add_action( 'admin_footer', $fields->maybe_enqueue_scripts );
+add_action( 'login_footer', $fields->maybe_enqueue_scripts );
