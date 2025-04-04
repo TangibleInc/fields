@@ -124,7 +124,6 @@ class RenderField_TestCase extends WP_UnitTestCase {
       'store_callback'            => '__return_false',
       'permission_callback_fetch' => '__return_true',
       'permission_callback_store' => '__return_false',
-      // We don't use the store callback, save is handled by database module
       'fetch_callback'            => function( string $name, array $args ) {
         return $args['test_render_args'] ?? 0;
       },
