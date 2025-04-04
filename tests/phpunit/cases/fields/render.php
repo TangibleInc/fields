@@ -72,7 +72,6 @@ class RenderField_TestCase extends WP_UnitTestCase {
     $this->assertEquals('number', $result[1]->type);
   }
 
-
   public function test_fields_render_fetch_value() {
     tangible_fields()->register_field('test', [
       'type' => 'text',
@@ -118,4 +117,37 @@ class RenderField_TestCase extends WP_UnitTestCase {
     $this->assertEquals('initial', $result[0]->value, 'value should not use fetch_callback if set on registration');
   }
 
+  public function test_fields_render_with_fetch_value_args() {
+    $fields = tangible_fields();
+    $fields->register_field('test', [
+      'type'                      => 'number',
+      'store_callback'            => '__return_false',
+      'permission_callback_fetch' => '__return_true',
+      'permission_callback_store' => '__return_false',
+      // We don't use the store callback, save is handled by database module
+      'fetch_callback'            => function( string $name, array $args ) {
+        return $args['test_render_args'] ?? 0;
+      },
+      'render_callback'           => function($args, $field) {
+        return json_encode([ $args, $field ]);
+      }
+    ]);
+
+    $result = json_decode( $fields->render_field( 'test' ) );
+    $this->assertEquals(
+      0,
+      $result[0]->value,
+      'value should be 0 if rendered without $args[\'test_render_args\']t'
+    );
+
+    $result = json_decode(
+      $fields->render_field( 'test', [], [ 'test_render_args' => 999 ] )
+    );
+
+    $this->assertEquals(
+      999,
+      $result[0]->value,
+      'value should be equal to $args[\'test_render_args\']t'
+    );
+  }
 }

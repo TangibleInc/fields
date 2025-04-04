@@ -51,7 +51,8 @@ $fields->get_field = function(
  */
 $fields->render_field = function(
   string $name,
-  array $args = []
+  array $args = [],
+  array $render_args = []
 ) use($fields) : string {
 
   if ( ! $field = $fields->get_field( $name ) ) {
@@ -65,7 +66,7 @@ $fields->render_field = function(
   $field = array_merge( $field, $args );
 
   if( ! isset($field['value']) && isset($field['fetch_callback']) ) {
-    $field['value'] = $fields->fetch_value( $name );
+    $field['value'] = $fields->fetch_value( $name, $render_args );
   }
 
   $args = $fields->format_args( $name, $field );
