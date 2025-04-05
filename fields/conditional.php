@@ -10,6 +10,10 @@ $fields->evaluate_conditional = function(
   array $dynamic_value_config = []
 ) use ($fields) {
 
+  if ( empty( $conditional ) ) {
+    return true;
+  }
+
   $result_or = false;
   foreach ($conditional as $key => $conditions) {
     $result_and = true;
@@ -41,6 +45,7 @@ $fields->evaluate_condition = function(
   array $condition,
   array $dynamic_value_config = []
 ) use ( $fields ) : bool {
+
   $part_results = [];
   $dynamic_value_config['action'] = 'evaluate';
 
@@ -49,6 +54,7 @@ $fields->evaluate_condition = function(
   }
 
   foreach ( $condition as $lho => $_parts ) {
+
     if ( $fields->condition_has_dynamic_value($lho) ) {
       $lho = $fields->render_value($lho, $dynamic_value_config);
     }
@@ -74,9 +80,11 @@ $fields->evaluate_condition = function(
 
     // Comparison.
     foreach ( $_parts as $op => $rho ) {
+
       if ( $fields->condition_has_dynamic_value($rho) ) {
         $rho = $fields->render_value($rho, $dynamic_value_config);
       }
+
       switch ( $op ) {
         case '_eq':
           $part_results []= $lho == $rho;
@@ -117,5 +125,8 @@ $fields->evaluate_condition = function(
     }
   }
 
-  return ( ! empty ( $part_results ) ) && ( count( $part_results ) === count( array_filter( $part_results ) ) );
+  return (
+      ! empty ( $part_results ) )
+    && ( count( $part_results ) === count( array_filter( $part_results ) )
+  );
 };

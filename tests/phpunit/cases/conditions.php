@@ -17,8 +17,17 @@ class Conditions_TestCase extends WP_UnitTestCase {
   /**
    * @dataProvider _test_fields_evaluate_conditional_data
    */
-  public function test_fields_evaluate_conditional(bool $result, string $conditions, array $dynamic_value_config = []) {
-    $this->assertSame($result, tangible_fields()->evaluate_conditional(json_decode($conditions), $dynamic_value_config));
+  public function test_fields_evaluate_conditional(
+    bool $result,
+    string $conditions,
+    array $dynamic_value_config = []
+  ) {
+    $this->assertSame(
+      $result,
+      tangible_fields()->evaluate_conditional(
+        json_decode($conditions), $dynamic_value_config
+      )
+    );
   }
 
   public function _test_fields_evaluate_conditional_data() {
@@ -26,7 +35,7 @@ class Conditions_TestCase extends WP_UnitTestCase {
     $fields = tangible_fields();
     $fields->register_dynamic_value([
       'name'     => 'test-value-conditional-config',
-      'label'    => 'M',
+      'label'    => 'Test dynamic value',
       'category' => 'test-category',
       'callback' => function($settings, $config) {
         return $config['context']['test'] ?? '';
@@ -36,7 +45,6 @@ class Conditions_TestCase extends WP_UnitTestCase {
     ]);
 
     return [
-
       'basic nested and modal false'	=> [
         false, json_encode([	
           [
@@ -172,10 +180,10 @@ class Conditions_TestCase extends WP_UnitTestCase {
                 'right_value' => '',
               ]
             ]
-
           ],
         ])
-      ]
+      ],
+      'empty value'	=> [ true, json_encode([]) ],
     ];
   }
 
