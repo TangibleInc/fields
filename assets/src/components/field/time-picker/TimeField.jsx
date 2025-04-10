@@ -27,7 +27,7 @@ const TimeField = (props) => {
         {state.segments.map((segment, i) => (
           <DateSegment key={i} segment={segment} state={state} />
         ))}
-        {state.validationState === 'invalid' &&
+        {state.isInvalid &&
           <span aria-hidden="true">🚫</span>}
       </div>
     </div>
