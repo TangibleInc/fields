@@ -1,0 +1,25 @@
+.tf-time-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.tf-time-field {
+    @include field;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(#{$field-height} - #{$field-padding-vertical * 2});
+    width: calc(#{$field-width} - #{$field-padding-horizontal * 2});
+    
+    &:focus-within {
+      border-color: $field-focus-color;
+    }
+    padding: 2px 4px;
+    border-radius: 2px;
+    border: 1px solid black;
+}
+
+.tf-time-field:focus-within {
+    border-color: blue;
+}

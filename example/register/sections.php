@@ -284,6 +284,14 @@ $documentation->register_section('fields', [
         'wysiwyg-visual'  => [],
         'wysiwyg-tinymce' => []
       ]
+    ],
+    'time_picker' => [
+      'title' => 'Time picker',
+      'path'  => 'fields/time-picker',
+      'fields'=> [
+        'time' => [],
+        'time-limit' => [],
+      ]
     ]
   ]
 ]);

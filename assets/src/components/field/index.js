@@ -24,6 +24,7 @@ import Switch from './switch/'
 import Tab from './tab/Tab'
 import Text from './text/Text'
 import TextArea from './textarea/TextArea'
+import TimePicker from './time-picker/TimePicker'
 
 export {
   Accordion,
@@ -51,5 +52,6 @@ export {
   Switch,
   Tab,
   Text,
-  TextArea
+  TextArea,
+  TimePicker
 }
