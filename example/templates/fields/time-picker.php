@@ -12,12 +12,12 @@
 
 <div class="tangible-settings-row">
   <?php submit_button() ?>
-</dib>
+  </dib>
 
-<h4>Example of Limit Time Selection</h4>
+  <h4>Example of Limit Time Selection</h4>
 
-<div class="tangible-settings-row">
-  <?= $fields->render_field('time-limit', [
+  <div class="tangible-settings-row">
+    <?= $fields->render_field('time-limit', [
       'label'       => 'Time field',
       'type'        => 'time_picker',
       'hour_cycle'  => 12,
@@ -25,21 +25,21 @@
       'max'         => "17:00",
       'description' => "You can only select a time between 9 AM to 5:00 PM",
       'value'       => $fields->fetch_value('time-limit')
-  ]); ?>
-</div>
+    ]); ?>
+  </div>
 
-<div class="tangible-settings-row">
-  <?php submit_button() ?>
-</dib>
+  <div class="tangible-settings-row">
+    <?php submit_button() ?>
+    </dib>
 
-<?php tangible\see(
-  $fields->fetch_value('time'),
-  $fields->fetch_value('time-limit'),
-); ?>
+    <?php tangible\see(
+      $fields->fetch_value('time'),
+      $fields->fetch_value('time-limit'),
+    ); ?>
 
-<h4>Code</h4>
+    <h4>Code</h4>
 
-<pre>
+    <pre>
   <code>
     $fields = tangible_fields();
     <?php $plugin->render_registation_message(); ?>

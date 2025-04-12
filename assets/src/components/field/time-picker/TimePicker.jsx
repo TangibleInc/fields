@@ -21,6 +21,7 @@ const TimePicker = ( props ) => {
     <>
       <TimeField
         label={ props.label ?? '' }
+        description={ props.description ?? '' }
         value={ value }
         onChange={ setValue }
         name={ props.name ?? '' }
@@ -28,14 +29,6 @@ const TimePicker = ( props ) => {
         minValue={ minValue }
         maxValue={ maxValue }
         />
-
-      {
-        props.description &&
-         <Description>
-            { props.description }
-         </Description>
-      }
-
     </>
   )
 }

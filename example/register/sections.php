@@ -276,6 +276,14 @@ $documentation->register_section('fields', [
         'textarea' => []
       ]
     ],
+    'time_picker' => [
+      'title' => 'Time picker',
+      'path'  => 'fields/time-picker',
+      'fields'=> [
+        'time' => [],
+        'time-limit' => [],
+      ]
+    ],
     'wysiwyg' => [
       'title' => 'WYSIWYG',
       'path'  => 'fields/wysiwyg',
@@ -285,14 +293,6 @@ $documentation->register_section('fields', [
         'wysiwyg-tinymce' => []
       ]
     ],
-    'time_picker' => [
-      'title' => 'Time picker',
-      'path'  => 'fields/time-picker',
-      'fields'=> [
-        'time' => [],
-        'time-limit' => [],
-      ]
-    ]
   ]
 ]);
 
