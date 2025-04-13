@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Time } from '@internationalized/date';
 import TimeField from './TimeField'
-import { Description } from '../../base'
 
 const TimePicker = (props) => {
 
