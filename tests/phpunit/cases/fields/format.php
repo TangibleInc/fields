@@ -84,6 +84,7 @@ class FormatField_TestCase extends WP_UnitTestCase {
       'repeater'          => ['repeater', 'repeater'],
       'field_group'       => ['field_group', 'field-group'],
       'switch'            => ['switch', 'switch'],
+      'time_picker'       => ['time_picker', 'time-picker'],
     ];
   }
 
@@ -144,6 +145,9 @@ class FormatField_TestCase extends WP_UnitTestCase {
         'value_on' => 'valueOn',
         'value_off' => 'valueOff',
       ]],
+      'time_picker' => ['time_picker', [
+				'hour_cycle' => 'hourCycle',
+			]],
       'text' => ['text', [
         'read_only' => 'readOnly',
         'input_mask' => 'inputMask',

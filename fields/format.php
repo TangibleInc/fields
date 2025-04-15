@@ -144,6 +144,14 @@ $fields->format_args = function(
         $args['tabs'][ $name ] = $fields->format_groups($type, $tab);
       }
       break;
+
+    case 'time_picker':
+      $args['type'] = 'time-picker';
+      $args['value'] = !empty( $args['value'] ) ? $args['value'] : $args['min'] ?? "00:00";
+      $args = $fields->format_value($args, 'hour_cycle', 'hourCycle');
+      $args = $fields->format_value($args, 'min', 'minValue');
+      $args = $fields->format_value($args, 'max', 'maxValue');
+      break;
   }
 
   if( isset($args['value']) && $args['value'] === false ) {

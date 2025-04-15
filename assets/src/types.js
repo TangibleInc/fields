@@ -27,7 +27,8 @@ import {
   Switch,
   Tab as TabField,
   Text,
-  TextArea
+  TextArea,
+  TimePicker
 } from './components/field/'
 
 import {
@@ -78,7 +79,8 @@ const controls = {
   'text-suggestion'   : DynamicText,
   'wysiwyg'           : Editor,
   'editor'            : Editor, // alias of wysiwyg
-  'textarea'          : TextArea
+  'textarea'          : TextArea,
+  'time-picker'       : TimePicker
 }
 
 const elements = {
