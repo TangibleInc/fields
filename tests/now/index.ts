@@ -1,5 +1,5 @@
 import { test, is, ok, run } from 'testra'
-import { getServer } from '@tangible/env'
+import { getServer } from './server.ts'
 
 async function ensurePlugin({ wpx }) {
   return wpx/* php */ `
@@ -42,7 +42,7 @@ export default run(async () => {
     phpVersion: process.env.PHP_VERSION || '8.2',
     mappings: process.env.TEST_ARCHIVE
       ? {
-          'wp-content/plugins/tangible-fields': '../publish/tangible-fields',
+          'wp-content/plugins/tangible-fields': '../../publish/tangible-fields',
         }
       : {},
     reset: true,

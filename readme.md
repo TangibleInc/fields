@@ -140,7 +140,7 @@ https://docs.phpunit.de/en/9.6/ for more information.
 
 #### Method 2: Using wp-env (Recommended)
 
-Alternatively, you can use the [wp-env](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) tool to quickly spin up a local dev and test environment, optionally switching between multiple PHP versions.
+Alternatively, you can use the [wp-env](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) tool to serve local dev and test sites, optionally switching between multiple PHP versions.
 
 The test environment is started by running:
 
@@ -148,7 +148,7 @@ The test environment is started by running:
 npm run env:start
 ```
 
-This uses [`wp-env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) to quickly spin up a local dev and test environment, optionally switching between multiple PHP versions. `wp-env` requires Docker to be installed. There are instructions available for installing Docker on [Windows](https://docs.docker.com/desktop/install/windows-install/), [macOS](https://docs.docker.com/desktop/install/mac-install/), and [Linux](https://docs.docker.com/desktop/install/linux-install/).
+This uses [`wp-env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/), which requires Docker to be installed. There are instructions available for installing Docker on [Windows](https://docs.docker.com/desktop/install/windows-install/), [macOS](https://docs.docker.com/desktop/install/mac-install/), and [Linux](https://docs.docker.com/desktop/install/linux-install/).
 
 Visit [http://localhost:8888](http://localhost:8888) to see the dev site, and [http://localhost:8889](http://localhost:8880) for the test site, whose database is cleared on every run.
 

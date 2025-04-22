@@ -1,4 +1,6 @@
-import { describe, test, expect } from '@tangible/env/playwright'
+import { test, expect } from '@wordpress/e2e-test-utils-playwright'
+
+const { describe } = test
 
 /**
  * Tests to exercise the frontend and admin features.
