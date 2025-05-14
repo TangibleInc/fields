@@ -8,6 +8,8 @@ import {
   VisuallyHidden
 } from 'react-aria'
 
+import PropTypes from 'prop-types';
+
 import { triggerEvent } from '../../../events'
 
 /**
@@ -61,5 +63,32 @@ const Button = forwardRef(({
     </CustomTag>
   )
 })
+
+Button.propTypes = {
+  /** How large should the button be? */
+  layout: PropTypes.oneOf(['small', 'medium', 'large']),
+  /** Button contents */
+  content: PropTypes.string,
+  /** Button context for styling */
+  context: PropTypes.string,
+  /** Additional class names */
+  className: PropTypes.string,
+  /** Inline styles */
+  style: PropTypes.object,
+  /** Button name */
+  name: PropTypes.string,
+  /** Change the tag used to render the button */
+  changeTag: PropTypes.oneOf(['button', 'span']),
+  /** Visually hidden content */
+  contentVisuallyHidden: PropTypes.bool,
+  /** Button type attribute */
+  buttonType: PropTypes.oneOf(['button', 'submit', 'reset']),
+  /** Children nodes */
+  children: PropTypes.node,
+};
+
+Button.defaultProps = {
+  buttonType: 'button',
+};
 
 export default Button

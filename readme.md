@@ -211,6 +211,14 @@ End-to-end tests with [Playwright](https://playwright.dev/).
 npm run e2e
 ```
 
+### Storybook
+
+Frontend workshop for building UI components and pages in isolation with [Storybook](https://storybook.js.org)
+
+```
+npm run  storybook dev -p 6006
+```
+
 ## Render fields
 
 To render a field, we use `$fields->render_field`. It takes 2 arguments:
