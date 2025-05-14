@@ -8,8 +8,6 @@ import {
   VisuallyHidden
 } from 'react-aria'
 
-import PropTypes from 'prop-types';
-
 import { triggerEvent } from '../../../events'
 
 /**
@@ -37,7 +35,7 @@ const Button = forwardRef(({
   const { buttonProps } = useButton(props, ref)
 
   const context = props.context ? `tf-button-is-${props.context}` : ''
-  const classes = `${type} ${context} ${props.className ?? ''}`
+  const classes = `tf-button ${type} ${context} ${props.className ?? ''}`
   
   const CustomTag = props.changeTag && props.changeTag == 'span' ? 'span' : 'button'
   
@@ -63,34 +61,5 @@ const Button = forwardRef(({
     </CustomTag>
   )
 })
-
-Button.propTypes = {
-  /** Usage context for styling */
-  context: PropTypes.oneOf(['default', 'wp', 'elementor', 'beaver-builder']),
-  /** Which layout should the button use? */
-  layout: PropTypes.oneOf(['action', 'danger', 'primary', 'text-action', 'text-danger', 'text-primary']),
-  /** Button contents */
-  content: PropTypes.string,
-  /** Additional class names */
-  className: PropTypes.string,
-  /** Inline styles */
-  style: PropTypes.object,
-  /** Button name */
-  name: PropTypes.string,
-  /** Change the tag used to render the button */
-  changeTag: PropTypes.oneOf(['button', 'span']),
-  /** Visually hidden content */
-  contentVisuallyHidden: PropTypes.bool,
-  /** Button type attribute */
-  buttonType: PropTypes.oneOf(['button', 'submit', 'reset']),
-  /** Children nodes */
-  children: PropTypes.node,
-};
-
-Button.defaultProps = {
-  context: 'default',
-  layout: 'action',
-  buttonType: 'button',
-};
 
 export default Button
