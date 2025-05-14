@@ -65,12 +65,12 @@ const Button = forwardRef(({
 })
 
 Button.propTypes = {
-  /** How large should the button be? */
-  layout: PropTypes.oneOf(['small', 'medium', 'large']),
+  /** Usage context for styling */
+  context: PropTypes.oneOf(['default', 'wp', 'elementor', 'beaver-builder']),
+  /** Which layout should the button use? */
+  layout: PropTypes.oneOf(['action', 'danger', 'primary', 'text-action', 'text-danger', 'text-primary']),
   /** Button contents */
   content: PropTypes.string,
-  /** Button context for styling */
-  context: PropTypes.string,
   /** Additional class names */
   className: PropTypes.string,
   /** Inline styles */
@@ -88,6 +88,8 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
+  context: 'default',
+  layout: 'action',
   buttonType: 'button',
 };
 

@@ -10,22 +10,34 @@ export default {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: 'centered',
   },
+decorators: [
+    (Story, { args }) => {
+      const contextClass = args.context ? `tf-context-${args.context}` : '';
+      
+      return (
+        <div className={contextClass}>
+          {/* 👇 Decorators in Storybook also accept a function. Replace <Story/> with Story() to enable it  */}
+          <Story />
+        </div>
+      );
+    },
+  ],
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
 };
 
 export const Primary = {
   args: {
-    layout: 'large',
+    layout: 'primary',
     content: 'Primary Button',
-    context: 'primary',
+    context: 'default',
   },
 };
 
 export const Secondary = {
   args: {
-    layout: 'large',
-    content: 'Secondary Button',
-    context: 'secondary',
+    layout: 'action',
+    content: 'Action Button',
+    context: 'default',
   },
 };
