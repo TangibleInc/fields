@@ -211,6 +211,28 @@ End-to-end tests with [Playwright](https://playwright.dev/).
 npm run e2e
 ```
 
+### Storybook
+
+Frontend workshop for building UI components and pages in isolation with [Storybook](https://storybook.js.org)
+
+Start Storybook in dev mode, to watch files and rebuild.
+
+```
+npm run storybook
+```
+
+It serves on a random port by default. To specify a port number:
+
+```
+npm run storybook -- -p 6006
+```
+
+Build Storybook for publishing.
+
+```
+npm run storybook:build
+```
+
 ## Render fields
 
 To render a field, we use `$fields->render_field`. It takes 2 arguments:
