@@ -43,8 +43,9 @@
     "e2e:debug": "npm run e2e -- --debug",
     "e2e:ui": "npm run e2e -- --ui",
     "e2e:watch": "chokidar 'tests/e2e/**/*.js' --initial -c 'npm run e2e -- --retries=0'",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "-- Storybook --": "https://storybook.js.org",
+    "storybook": "storybook dev",
+    "storybook:build": "storybook build"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.18.6",
