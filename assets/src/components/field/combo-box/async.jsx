@@ -1,8 +1,14 @@
+import { useRef } from 'react'
 import { useAsyncList } from 'react-stately'
 import { get } from '../../../requests'
 import { getOptions } from '../../../utils'
 
 const getAsyncProps = props => {
+
+  const debounced = useRef( {
+    status    : false,
+    callback  : false
+  } )
 
   /**
    * Async search
@@ -11,6 +17,26 @@ const getAsyncProps = props => {
    */
   const list = useAsyncList({
     async load({ filterText }) {
+
+      /**
+       * Adds delay to avoid sending new request while the user is typing
+       */
+      if ( debounced.current.status === 'waiting' ) {
+
+        const delay = props.debounceTime ?? 200
+        clearTimeout( debounced.current.callback )
+
+        debounced.current = {
+          status    :'waiting',
+          callback  : setTimeout(() => {
+            debounced.current.status = false
+            list.setFilterText( filterText )
+          }, delay )
+        }
+        return;
+      }
+
+      debounced.current.status = 'waiting'
 
       const data = {
         ...(props.asyncArgs ?? {}),

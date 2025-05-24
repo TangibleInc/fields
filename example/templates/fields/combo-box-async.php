@@ -170,8 +170,11 @@ In the case of an async combobox, it will be a json object with both the value a
         'post_type' => 'post'
       ],
 
-      'placeholder' => 'Example placeholder',
-      'description' => 'Example description'
+      // Debounced time (default is 300ms)
+      'debounce_time' => 500,
+
+      'placeholder'   => 'Example placeholder',
+      'description'   => 'Example description',
     ]);
   </code> 
 </pre>

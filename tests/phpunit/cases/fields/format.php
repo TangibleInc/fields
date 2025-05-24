@@ -135,7 +135,8 @@ class FormatField_TestCase extends WP_UnitTestCase {
         'search_url' => 'searchUrl',
         'ajax_action' => 'ajaxAction',
         'map_results' => 'mapResults',
-        'read_only' => 'readOnly'
+        'read_only' => 'readOnly',
+        'debounce_time' => 'debounceTime'
       ]],
       'file' => ['file', [
         'mime_types' => 'mimeTypes',

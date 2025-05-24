@@ -98,6 +98,7 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'search_url', 'searchUrl');
       $args = $fields->format_value($args, 'ajax_action', 'ajaxAction');
       $args = $fields->format_value($args, 'read_only', 'readOnly');
+      $args = $fields->format_value($args, 'debounce_time', 'debounceTime');
       break;
 
     case 'file':
