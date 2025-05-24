@@ -4,7 +4,7 @@
  * @see https://github.com/jsdom/jsdom/issues/3002#issue-652790925
  */
 document.createRange = () => {
-  
+
   const range = new Range()
 
   range.getBoundingClientRect = jest.fn()

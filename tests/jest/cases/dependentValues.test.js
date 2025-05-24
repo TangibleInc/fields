@@ -226,12 +226,12 @@ describe('dependent values feature', () => {
         layout       : 'block',
         sectionTitle : '{{subfield-1}}',
         value        : [
-          { 'key': 1, 'subfield-1' : 'Initial value of the repeater subfield 1' },
+          { 'key': 1, 'subfield-1' : 'on' },
         ],
         fields       : [
           {
             label       : 'Subfield 1',
-            type        : 'text',
+            type        : 'switch',
             name        : 'subfield-1'
           }
         ]
@@ -243,31 +243,24 @@ describe('dependent values feature', () => {
 
     const sectionTitle = itemsContainer.childNodes[0].querySelector('.tf-panel-header-title')
 
-    let dependentTitle = await within(sectionTitle).findByText('Initial value of the repeater subfield 1')
+    let dependentTitle = await within(sectionTitle).findByText('on')
     expect(dependentTitle).toBeTruthy()
 
     const user = userEvent.setup()
-    const field = itemsContainer.childNodes[0].querySelector('.cm-line')
-    await user.type(field, 'Updated - ')
+    await user.click(itemsContainer.childNodes[0].querySelector('.tf-switch-label'))
 
-    /**
-     * Sometimes this test fail because the last character we type won't be updated, but
-     * it seems to be an issue with user.type and not with what we test
-     *
-     * That would be nice to find a workaround or a fix
-     */
-    dependentTitle = await within(sectionTitle).findByText( 'Updated - Initial value of the repeater subfield 1' )
-    // expect(dependentTitle).toBeTruthy()
+    dependentTitle = await within(sectionTitle).findByText('off')
+    expect(dependentTitle).toBeTruthy()
   })
 
   it('works for repeater sectionTitle with a regular value', async () => {
 
-    render(
+    const { container } = render(
       <>
         { fields.render({
           label   : 'Field 1',
-          type    : 'text',
-          value   : 'Initial value of field 1',
+          type    : 'switch',
+          value   : 'on',
           name    : 'field-1'
         }) }
         { fields.render({
@@ -289,14 +282,13 @@ describe('dependent values feature', () => {
 
     const sectionTitle = itemsContainer.childNodes[0].querySelector('.tf-panel-header-title')
 
-    let dependentTitle = await within(sectionTitle).findByText('Initial value of field 1')
+    let dependentTitle = await within(sectionTitle).findByText('on')
     expect(dependentTitle).toBeTruthy()
 
     const user = userEvent.setup()
-    const field = document.querySelector('.cm-line')
-    await user.type(field, 'Updated|')
+    await user.click(container.querySelector('.tf-switch-label'))
 
-    dependentTitle = await within(sectionTitle).findByText( 'Updated|Initial value of field 1')
+    dependentTitle = await within(sectionTitle).findByText('off')
     expect(dependentTitle).toBeTruthy()
   })
 

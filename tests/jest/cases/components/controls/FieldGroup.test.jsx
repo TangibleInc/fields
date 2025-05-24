@@ -1,7 +1,6 @@
 import '../../../../../assets/src/index.jsx'
 import userEvent from '@testing-library/user-event'
 import { render, within } from '@testing-library/react'
-
 const fields = window.tangibleFields
 
 describe('Field group component', () => {
@@ -93,18 +92,18 @@ describe('Field group component', () => {
           type   : 'field-group',
           fields : [
             {
-              label   : 'Subfield 1',
-              type    : 'text',
-              name    : 'subfield1',
+              label     : 'Subfield 1',
+              type      : 'switch',
+              name      : 'subfield1',
             },
             {
-              label   : 'Subfield 2',
-              type    : 'text',
-              name    : 'subfield2',
+              label     : 'Subfield 2',
+              type      : 'text',
+              name      : 'subfield2',
               condition : {
-                action : 'show',
+                action    : 'show',
                 condition : {
-                  subfield1 : { '_eq' : 'test' }
+                  subfield1 : { '_eq' : 'on' }
                 }
               }
             },
@@ -116,23 +115,13 @@ describe('Field group component', () => {
     const fieldGroup = container.querySelectorAll('.tf-field-group')
     expect(fieldGroup.length).toBe(1)
 
-    expect(container.querySelector('.tf-text'))
+    await user.click(container.querySelector('.tf-switch-label'))
 
-    await user.type(container.querySelector('.cm-line'), 'test')
-
-    /**
-     * Most of the time, this test will pass in a reasonable amount of time
-     * but now and then the field will need a lot of time to appears in the dom
-     * which is why we have the very high timeout both here and on the condition
-     *
-     * We should probably investigate to find the root of the issue, but
-     * for now the timeout will do
-     */
-    const subfield2 = await within(container).findByText('Subfield 2', undefined, { timeout: 5000 })
+    const subfield2 = await within(container).findByText('Subfield 2')
     expect(subfield2).toBeTruthy()
 
-    await user.type(container.querySelector('.cm-line'), 'hide')
+    await user.click(container.querySelector('.tf-switch-label'))
 
     expect(within(container).queryByText('Subfield 2')).toBe(null)
-  }, 10000)
+  })
 })

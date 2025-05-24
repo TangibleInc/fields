@@ -21,7 +21,7 @@
     "install:dev": "roll install --dev",
     "update:dev": "roll update --dev",
     "archive": "roll archive -y && rm -rf publish/tangible-fields && unzip -q publish/tangible-fields.zip -d publish/ && npm run now:test:archive",
-    "jest:test": "jest --config=tests/jest/jest.config.js --silent=false --maxWorkers=1 test",
+    "jest:test": "jest --config=tests/jest/jest.config.js --silent=false test",
     "now": "wp-now start --blueprint=blueprint.dev.json",
     "now:dev": "concurrently --raw 'roll dev' 'npm run now'",
     "now:test": "roll run tests/now/index.ts",
