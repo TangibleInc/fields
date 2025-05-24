@@ -31,14 +31,13 @@ const DateRange = (props) => {
 	useEffect(()=>{
 		if(dateValue !== props.value && typeof props.value === 'object') setDateValue(props.value)
 	},[props.value])
-	
+
 	const hasFutureOnly = props.futureOnly && props.futureOnly === true
 	const dateToday = today(getLocalTimeZone())
 	const minValue = hasFutureOnly 
 		? dateToday 
 		: new CalendarDate('AD', '1', '1', '1') 
 
-	
 	const state = useDateRangePickerState({
 		...props,
 		/**
@@ -46,13 +45,13 @@ const DateRange = (props) => {
 		 */
 		value: dateValue,
 	})
-	
-    const ref = useRef()
+
+  const ref = useRef()
 
 	/**
 	 * https://react-spectrum.adobe.com/react-aria/useDateRangePicker.html
 	 */
-    const {
+  const {
 		labelProps,
 		descriptionProps,
 		...dateRangePickerProps
@@ -61,9 +60,9 @@ const DateRange = (props) => {
 	return (
 	<div className="tf-date-picker">
 		{ props.label &&
-		<Label labelProps={ labelProps } parent={ props }>
-			{ props.label }
-		</Label> }
+  		<Label labelProps={ labelProps } parent={ props }>
+  			{ props.label }
+  		</Label> }
 		<FieldWrapper 
 			{ ...props } 
 			value={ dateValue }
@@ -76,7 +75,7 @@ const DateRange = (props) => {
 				value={ dateValue }
 				hasFutureOnly={ hasFutureOnly }
 				onChange={ setDateValue }
-				onFocusChange={ props.onFocusChange ?? false }
+				onFocusChange={ props.onFocusChange ?? null }
 				state={ state }
 				multiMonth = { props.multiMonth ?? 1 }
 				datePresets = { props.datePresets ?? false }
@@ -86,9 +85,9 @@ const DateRange = (props) => {
 			/>
 		</FieldWrapper>
 		{ props.description &&
-		<Description descriptionProps={ descriptionProps } parent={ props }>
-			{ props.description }
-		</Description> }
+  		<Description descriptionProps={ descriptionProps } parent={ props }>
+  			{ props.description }
+  		</Description> }
 	</div>
 	)
 }

@@ -1,4 +1,3 @@
-import React from 'react'
 import Date from './Date'
 import DateRange from './DateRange'
 import { CalendarContextProvider } from './calendar/DateRangeCalendarContext'
