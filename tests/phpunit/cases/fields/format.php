@@ -157,7 +157,8 @@ class FormatField_TestCase extends WP_UnitTestCase {
         'use_switch' => 'useSwitch',
         'use_bulk' => 'useBulk',
         'section_title' => 'sectionTitle',
-        'header_fields' => 'headerFields'
+        'header_fields' => 'headerFields',
+        'new_item' => 'newItem'
       ]],
       'button_group' => ['button_group', [
         'read_only' => 'isDisabled'

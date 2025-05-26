@@ -97,12 +97,12 @@ const formatClone = (initial, props) => {
   return item
 }
 
-const initDispatcher = value => {
+const initDispatcher = (value, emptyItem) => {
   try {
     const initialItems = Array.isArray(value) ? value : JSON.parse(value)
-    return Array.isArray(initialItems) ? initialItems : [{}]
+    return Array.isArray(initialItems) ? initialItems : [ emptyItem ]
   } catch (err) {
-    return [{}]
+    return [ emptyItem ]
   }
 }
 

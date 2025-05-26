@@ -114,6 +114,7 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'use_bulk', 'useBulk');
       $args = $fields->format_value($args, 'section_title', 'sectionTitle');
       $args = $fields->format_value($args, 'header_fields', 'headerFields');
+      $args = $fields->format_value($args, 'new_item', 'newItem');
       break;
 
     case 'field_group':

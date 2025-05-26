@@ -608,6 +608,58 @@ const commonRepeaterTests = (layout, args = {}) => {
     expect( subRepeater2[1].name5 ).toBe('Text value 4')
   })
 
+  it('supports newItem', async () => {
+
+    const user = userEvent.setup()
+    const { container } = render(
+      fields.render({
+        type   : 'repeater',
+        name   : 'repeater-test',
+        layout : layout,
+        fields : [
+          {
+            label : 'Text',
+            type  : 'text',
+            name  : 'text-field'
+          },
+          {
+            label : 'Date',
+            type  : 'date',
+            name  : 'date-field'
+          }
+        ],
+        newItem : {
+          'text-field' : 'Default value for new item'
+        }
+      })
+    )
+
+    let value = JSON.parse(
+      container.querySelector('input[name=repeater-test]').value
+    )
+
+    expect(Array.isArray(value)).toBe(true)
+    expect(value.length).toBe(1)
+
+    expect(value[0]['text-field']).toBe('Default value for new item')
+    expect(value[0]['date-field']).toBe('')
+
+    await user.click(within(container).getByText(config.addText))
+
+    value = JSON.parse(
+      container.querySelector('input[name=repeater-test]').value
+    )
+
+    expect(Array.isArray(value)).toBe(true)
+    expect(value.length).toBe(2)
+
+    expect(value[0]['text-field']).toBe('Default value for new item')
+    expect(value[0]['date-field']).toBe('')
+
+    expect(value[1]['text-field']).toBe('Default value for new item')
+    expect(value[1]['date-field']).toBe('')
+  })
+
 }
 
 export { commonRepeaterTests }

@@ -54,12 +54,16 @@ const Repeater = props => {
   })
 
   const emptyItem = {}
-  fields.forEach(field => emptyItem[ field.name ] = '')
+  fields.forEach(field => {
+    emptyItem[ field.name ] = props.newItem
+      ? (props.newItem[ field.name ] ?? '')
+      : ''
+  })
 
   const [items, dispatch] = useReducer(
     repeaterDispatcher(emptyItem, maxLength, props),
     props.value ?? '',
-    initDispatcher
+    value => initDispatcher(value, emptyItem)
   )
 
   const hasField = name => (
