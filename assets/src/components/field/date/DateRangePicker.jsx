@@ -18,15 +18,20 @@ const DateRangePicker = forwardRef(({
 
   const { dateValue } = useCalendarContext()
 
-  const [focusedDate, setFocusedDate] = useState( dateValue.start )
+  const [focusedDate, setFocusedDate] = useState( dateValue !== null
+    ? dateValue.start
+    : ''
+  )
 
   /**
-     * Make sure focused date is updated when value from input changes
-     * 
-     * @see https://react-spectrum.adobe.com/react-aria/useCalendar.html#controlling-the-focused-date
-     */
+   * Make sure focused date is updated when value from input changes
+   * 
+   * @see https://react-spectrum.adobe.com/react-aria/useCalendar.html#controlling-the-focused-date
+   */
   useEffect(() => {
-    if( props.value !== focusedDate ) setFocusedDate(props.value.start) // focus only on the start
+    if( props.value && props.value !== focusedDate ) {
+      setFocusedDate( props.value.start ) // focus only on the start
+    } 
   }, [props.value])
 
   const {
