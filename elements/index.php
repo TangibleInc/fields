@@ -83,7 +83,7 @@ $fields->render_element = function(
 $fields->format_element_args = function(
   string $name, 
   array $args
-) use($fields) {
+) use($fields) : array {
 
   $type = $args['type'] ?? '';
 

@@ -42,8 +42,8 @@ const renderField = props => (
         if( props.onChange ) props.onChange(value)
       }}
       visibility={{
-        condition: props.condition?.condition ?? false,
-        actiElementComponenton: props.condition?.action ?? 'show',
+        condition : props.condition?.condition ?? false,
+        action    : props.condition?.action ?? 'show',
       }}
       data={{
         getValue: store.getValue.bind(store)
@@ -54,9 +54,9 @@ const renderField = props => (
 
 const renderElement = props => (
   <ControlContext.Provider value={{
-    name     : props.context ?? 'default',
-    wrapper  : `tf-context-${props.context ?? 'default'}`,
-    getValue : store.getValue.bind(store),
+    name            : props.context ?? 'default',
+    wrapper         : `tf-context-${props.context ?? 'default'}`,
+    getValue        : store.getValue.bind(store),
     portalContainer : props.portalContainer ?? document.body
   }}>
     <Element 
@@ -66,8 +66,8 @@ const renderElement = props => (
         if( props.onChange ) props.onChange(value)
       }}
       visibility={{
-        condition: props.condition?.condition ?? false,
-        action: props.condition?.action ?? 'show',
+        condition : props.condition?.condition ?? false,
+        action    : props.condition?.action ?? 'show',
       }}
       data={{
         getValue: store.getValue.bind(store)
@@ -83,13 +83,15 @@ const init = () => {
 
   const { fields, elements } = TangibleFields
   const items = []
-  
+
   for( const field in fields ) {
     items.push( initItem(field, fields[ field ], 'fields') )
   }
 
   for( const element in elements ) {
-    items.push( initItem(element, elements[ element ], 'elements') )
+    elements[ element ].forEach(instance => {
+      items.push( initItem(element, instance, 'elements') )
+    })
   }
 
   /**

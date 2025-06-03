@@ -23,7 +23,14 @@ $fields->enqueue_item = function(
 
   $args['context'] = $fields->current_context;
 
-  $fields->enqueued[ $type ][ $name ] = $args;
+  /**
+   * An element can be rendered multiple times as it does not
+   * contain a value
+   */
+  if( $type === 'elements' ) {
+    $fields->enqueued[ $type ][ $name ] []= $args;
+  }
+  else $fields->enqueued[ $type ][ $name ] = $args;
 };
 
 $fields->enqueue = function(array $config = []) use($fields) {
