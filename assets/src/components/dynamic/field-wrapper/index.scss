@@ -6,6 +6,10 @@
     background: rgba(white, 0.5)
   }
 
+  .tf-dynamic-value-input {
+    box-sizing: border-box;
+  }
+
   .tf-button-icon.tf-dynamic-wrapper-clear::before {
     content: "⨯";
   }
