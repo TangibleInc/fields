@@ -1,4 +1,4 @@
-/** @type { import('@storybook/react').Preview } */
+/** @type { import('@storybook/react-webpack5').Preview } */
 import '../assets/build/default/index.min.css';
 import '../assets/build/wp/index.min.css';
 import '../assets/build/beaver-builder/index.min.css';

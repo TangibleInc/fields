@@ -1,6 +1,6 @@
 // Button.stories.js (or .mdx)
 
-// import { fn } from '@storybook/test'; // Keep if you use it for action logging
+// import { fn } from 'storybook/test'; // Keep if you use it for action logging
 import Button from './Button.jsx';
 
 export default {

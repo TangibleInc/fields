@@ -8,9 +8,8 @@ const config = {
   ],
   "addons": [
     "@storybook/addon-webpack5-compiler-swc",
-    "@storybook/addon-essentials",
     "@storybook/addon-onboarding",
-    "@storybook/addon-interactions"
+    "@storybook/addon-docs"
   ],
   "framework": {
     "name": "@storybook/react-webpack5",
