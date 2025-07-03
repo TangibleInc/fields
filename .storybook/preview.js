@@ -3,6 +3,8 @@ import '../assets/build/default/index.min.css';
 import '../assets/build/wp/index.min.css';
 import '../assets/build/beaver-builder/index.min.css';
 import '../assets/build/elementor/index.min.css';
+import './src/storybook.css';
+import './src/fonts/dashicons.css';
 
 import { withContext } from './decorators/context';
 
