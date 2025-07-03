@@ -1,9 +1,14 @@
-.tf-notice{
+.tf-notice {
+	box-sizing: border-box;
+	width: 100%;
   background: #fff;
   box-shadow: 0 1px 1px rgba(0,0,0,.04);
   padding: 1px 12px;
 	color: black;
 	margin-top: 4px;
+	border-left-width: 4px;
+	border-left-style: solid;
+	border-left-color: #ccc;
 }
 
 .tf-notice.tf-is-dismissible {
@@ -12,11 +17,11 @@
 }
 
 .tf-notice.tf-error {
-	border-left: 4px solid #d63638;
+	border-left-color: #d63638;
 }
 
 .tf-notice.tf-success {
-	border-left: 4px solid #00a32a;
+	border-left-color: #00a32a;
 }
 
 .tf-notice.tf-warning {
