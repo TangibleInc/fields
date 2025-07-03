@@ -13,18 +13,13 @@ export default {
   argTypes: {
     // Props that directly control the Button's appearance/functionality
     layout: {
-      control: {
-        type: 'select',
-        // Ensure these values directly map to what your class generation expects
-        options: ['action', 'danger', 'primary', 'text-action', 'text-danger', 'text-primary'],
-      },
+      control:  'select',
+      options: ['action', 'danger', 'primary', 'text-action', 'text-danger', 'text-primary'],
       description: 'Which layout style the button should use for class generation.',
     },
     changeTag: {
-      control: {
-        type: 'select',
-        options: ['button', 'span'], // These are the values your component expects
-      },
+      control: 'select',
+      options: ['button', 'span'], // These are the values your component expects
       description: 'Change the HTML tag used to render the button (button or span).',
     },
     content: { // This is for the main visible text
@@ -36,10 +31,8 @@ export default {
       description: 'If true, the button content (text/children) will be visually hidden but accessible.',
     },
     buttonType: { // For the HTML type attribute of a <button>
-      control: {
-        type: 'select',
-        options: ['button', 'submit', 'reset'],
-      },
+      control: 'select',
+      options: ['button', 'submit', 'reset'],
       description: "The HTML 'type' attribute for the button (if rendered as a button tag).",
       if: { arg: 'changeTag', eq: 'button' }, // Only show if changeTag is 'button'
     },
