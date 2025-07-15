@@ -1,12 +1,10 @@
-import '../../../../assets/src/index.jsx'
+import * as fields from '../../../../assets/src/index.jsx'
 import { userEvent } from '@testing-library/user-event'
 import { allowedTypes } from '../../../../assets/src/dynamic-values/index.js'
 import {
   render,
   within
 } from '@testing-library/react'
-
-const fields = window.tangibleFields
 
 /**
  * TODO:
@@ -287,8 +285,8 @@ describe('dynamic values feature - render', () => {
  */
 const setValuesToFieldType = fieldType => {
   const type = getTypeByFieldType(fieldType)
-  window.TangibleFields.dynamics.values[0].type = type
-  window.TangibleFields.dynamics.values[1].type = type
+  fields.dynamics.values[0].type = type
+  fields.dynamics.values[1].type = type
 }
 
 const getTypeByFieldType = fieldType => {

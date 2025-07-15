@@ -1,12 +1,10 @@
-import '../../../assets/src/index.jsx'
+import * as fields from '../../../assets/src/index.jsx'
 import {
   render,
   within,
   act
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-
-const fields = window.tangibleFields
 
 /**
  * TODO:
@@ -700,7 +698,7 @@ describe('dependent values feature', () => {
         </>
       )
 
-      tangibleFields.fields.dependent.registerCallback(
+      fields.fields.dependent.registerCallback(
         'callback-name',
         ({ attribute, value }) => {
           if ( attribute === 'readOnly' ) return value.includes('disabled')
@@ -765,7 +763,7 @@ describe('dependent values feature', () => {
       )
 
       let hasCustomValue = false
-      tangibleFields.fields.dependent.registerCallback(
+      fields.fields.dependent.registerCallback(
         'callback-name',
         ({ attribute, value, customData }) => {
           hasCustomValue = customData === 'value from callbackData'

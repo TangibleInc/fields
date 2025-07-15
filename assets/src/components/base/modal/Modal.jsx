@@ -7,6 +7,7 @@ import {
   Overlay,
   useModalOverlay
 } from 'react-aria'
+import { ControlContext } from '../../../index.jsx'
 
 const Modal = ({ state, children, ...props }) => {
 
@@ -18,7 +19,6 @@ const Modal = ({ state, children, ...props }) => {
    * 
    * @see renderField() in ./src/index.jsx 
    */
-  const { ControlContext } = tangibleFields 
   const control = useContext(ControlContext)
 
   const ref = useRef(null)

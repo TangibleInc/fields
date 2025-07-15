@@ -1,12 +1,10 @@
-import '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.jsx'
 import { render, screen, fireEvent } from '@testing-library/react'
 import {
   rendersWithMinimal,
   rendersWithoutLabelThrowWarning,
   rendersLabelAndDescription
 } from '../../../utils/fields.js'
-
-const fields = window.tangibleFields
 
 describe('Time Picker component', () => {
 

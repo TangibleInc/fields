@@ -1,4 +1,4 @@
-import '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.jsx'
 import { 
   render, 
   within 
@@ -10,8 +10,6 @@ import {
   renderHasElement,
   renderHasNotElement
 } from '../../../utils/fields.js'
-
-const fields = window.tangibleFields
 
 describe('Number component', () => {
 

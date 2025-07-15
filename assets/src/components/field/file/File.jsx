@@ -14,6 +14,7 @@ import {
   Description, 
   Label
 } from "../../base"
+import { getConfig } from '../../../index.jsx'
 
 import { postMedia } from "../../../requests/media"
 import FilePreview from "./FilePreview"
@@ -26,7 +27,7 @@ import Notice from '../../base/notice/Notice'
  */
 
 const FileUpload = (props) => {
-  const { mimetypes } = TangibleFields
+  const { mimetypes } = getConfig()
   const ref = useRef(null)
 
   const [file, setFile] = useState(false)

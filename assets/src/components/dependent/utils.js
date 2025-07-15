@@ -1,3 +1,5 @@
+import * as tangibleFields from '../../index.jsx'
+
 /**
  * Returns an object that can be used to map which exterior field will trigger which value
  * change inside the current control

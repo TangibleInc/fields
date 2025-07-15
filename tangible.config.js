@@ -7,7 +7,7 @@ export default {
      * Script: Common for all contexts
      */
     {
-      src: 'assets/src/index.jsx',
+      src: 'assets/src/global.js',
       dest: 'assets/build/index.min.js',
       react: 'wp',
       rollupPlugins: [

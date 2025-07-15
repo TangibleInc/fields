@@ -2,8 +2,7 @@ import {
   render,
   screen
 } from '@testing-library/react'
-
-const fields = window.tangibleFields
+import * as fields from '../../../assets/src/index.jsx'
 
 const rendersWithMinimal = ({
   type,

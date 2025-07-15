@@ -3,6 +3,7 @@ import {
   useContext,
   useEffect
 } from 'react'
+import { ControlContext } from './index.jsx'
 
 import types from './types.js'
 import DependendWrapper from './components/dependent/DependendWrapper'
@@ -22,7 +23,6 @@ const Element = ({
   /**
    * @see renderElement() in ./src/index.jsx 
    */
-  const { ControlContext } = tangibleFields 
   const control = useContext(ControlContext)
 
   const wrapper = {

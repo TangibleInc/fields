@@ -15,6 +15,7 @@ import {
   exampleSetup,
   buildMenuItems
 } from 'prosemirror-example-setup'
+import { types } from '../../../../index.jsx'
 
 import CodeEditor from '../../code/Editor'
 
@@ -27,7 +28,7 @@ const ProseMirror = forwardRef(({
   const [view, setView] = useState('visual')
   const editorView = useRef(null)
 
-  const ButtonGroup = window.tangibleFields.types.get('button-group')
+  const ButtonGroup = types.get('button-group')
 
   useEffect(() => {
     if ( props.onChange ) props.onChange(value)

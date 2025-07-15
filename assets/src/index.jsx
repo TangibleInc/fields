@@ -5,6 +5,11 @@ import {
 
 import { createContext } from 'react'
 
+import {
+  config,
+  getConfig,
+  setConfig
+} from './config'
 import { 
   triggerEvent,
   addEventListener 
@@ -81,7 +86,7 @@ const renderElement = props => (
  */
 const init = () => {
 
-  const { fields, elements } = TangibleFields
+  const { fields, elements } = getConfig() // Previously window.TangibleFields
   const items = []
 
   for( const field in fields ) {
@@ -128,18 +133,17 @@ const initItem = (name, props, type) => (
   })
 )
 
-/**
- * Make tangibleFields accessible from other scripts
- */
-window.tangibleFields = {
-  render         : renderComponent,
-  event          : addEventListener,
-  trigger        : triggerEvent,
-  store          : store,
-  types          : types,
-  utils          : utils,
-  fields         : fields,
-  ControlContext : ControlContext
+export {
+  renderComponent as render,
+  addEventListener as event,
+  triggerEvent as trigger,
+  store,
+  types,
+  utils,
+  fields,
+  ControlContext,
+  init,
+  config,
+  getConfig,
+  setConfig
 }
-
-window.addEventListener('load', init)

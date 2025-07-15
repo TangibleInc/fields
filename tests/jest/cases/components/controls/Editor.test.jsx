@@ -1,4 +1,4 @@
-import '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.jsx'
 import userEvent from '@testing-library/user-event'
 import {
   render,
@@ -9,8 +9,6 @@ import {
   rendersWithoutLabelThrowWarning,
   rendersLabelAndDescription
 } from '../../../utils/fields.js'
-
-const fields = window.tangibleFields
 
 /**
  * TODO: Add tests to check is value correctly set from both visual and raw views
