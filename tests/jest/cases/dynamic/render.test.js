@@ -285,8 +285,9 @@ describe('dynamic values feature - render', () => {
  */
 const setValuesToFieldType = fieldType => {
   const type = getTypeByFieldType(fieldType)
-  fields.dynamics.values[0].type = type
-  fields.dynamics.values[1].type = type
+  // TODO: values is an object not array as expected here
+  fields.config.dynamics.values[0].type = type
+  fields.config.dynamics.values[1].type = type
 }
 
 const getTypeByFieldType = fieldType => {
