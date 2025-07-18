@@ -1,0 +1,23 @@
+name: Publish NPM package
+permissions:
+  contents: write
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install dependencies
+        run: bun install
+      - name: Build NPM package
+        run: bun run build:npm
+      - name: Publish NPM package
+        run: echo TODO
+      # run: npm publish --provenance --access public
+      # env:
+      #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
