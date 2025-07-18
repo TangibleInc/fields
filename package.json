@@ -4,17 +4,23 @@
   "version": "2025.6.25",
   "type": "module",
   "repository": {
-    "url": "git+ssh://git@github.com/tangibleinc/fields.git"
+    "type": "git",
+    "url": "git+https://github.com/tangibleinc/fields.git"
   },
+  "homepage": "https://github.com/tangibleinc/fields#readme",
   "tangible": {
     "deployType": "module"
   },
+  "main": "index.js",
+  "author": "Team Tangible",
+  "license": "MIT",
   "scripts": {
     "start": "wp-env start",
     "start:update": "wp-env start --update",
     "stop": "wp-env stop",
     "dev": "roll dev",
     "build": "roll build",
+    "build:npm": "node build.js npm",
     "format": "roll format",
     "postinstall": "roll install",
     "update": "roll update",
