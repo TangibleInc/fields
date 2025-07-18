@@ -1,7 +1,10 @@
 name: Publish NPM package
 permissions:
   contents: write
-on: push
+on:
+  push:
+    tags:
+      - '*'
 jobs:
   build:
     runs-on: ubuntu-latest
