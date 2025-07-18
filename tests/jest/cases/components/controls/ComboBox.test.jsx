@@ -1,4 +1,4 @@
-import '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.jsx'
 import { forwardRef } from 'react'
 import {
     getAllByLabelText,
@@ -7,8 +7,6 @@ import {
   within
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-
-const fields = window.tangibleFields
 
 /**
  * Test data for choices
@@ -158,7 +156,7 @@ describe('ComboBox component', () => {
     /**
      * Used to simulate async response
      */
-    window.tangibleTests.fetchResponse = [
+    fields.config.fetchResponse = [
       { id: 'value1', title: 'Value 1' },
       { id: 'value2', title: 'Value 2' },
       { id: 'value3', title: 'Value 3' },
@@ -179,7 +177,7 @@ describe('ComboBox component', () => {
       </>
     )
 
-    window.tangibleTests.fetchResponse.forEach(
+    fields.config.fetchResponse.forEach(
       result => {
         expect(within(document).queryByText( result.title )).toBe(null)
       }
@@ -191,7 +189,7 @@ describe('ComboBox component', () => {
         : within(container).getByText('▼')
     )
 
-    window.tangibleTests.fetchResponse.forEach(
+    fields.config.fetchResponse.forEach(
       result => {
         const item = within(document).getByText( result.title )
         expect(item.getAttribute('data-key')).toBe( result.id )
@@ -200,7 +198,7 @@ describe('ComboBox component', () => {
 
     await user.click( within(container).getByText('Click me to unfocus') )
 
-    window.tangibleTests.fetchResponse.forEach(
+    fields.config.fetchResponse.forEach(
       result => {
         expect(within(document).queryByText( result.title )).toBe(null)
       }
@@ -215,7 +213,7 @@ describe('ComboBox component', () => {
     /**
      * Used to simulate async response
      */
-    window.tangibleTests.fetchResponse = []
+    fields.config.fetchResponse = []
 
     const user = userEvent.setup()
     const { container } = render(
@@ -285,7 +283,7 @@ describe('ComboBox component', () => {
     /**
      * Used to simulate async response
      */
-    window.tangibleTests.fetchResponse = {
+    fields.config.fetchResponse = {
       0  : { id: 'value1', title: 'Value 1' },
       11 : { id: 'value2', title: 'Value 2' },
       28 : { id: 'value3', title: 'Value 3' },
@@ -306,7 +304,7 @@ describe('ComboBox component', () => {
       </>
     )
 
-    Object.values(window.tangibleTests.fetchResponse).forEach(
+    Object.values(fields.config.fetchResponse).forEach(
       result => {
         expect(within(document).queryByText( result.title )).toBe(null)
       }
@@ -318,7 +316,7 @@ describe('ComboBox component', () => {
         : within(container).getByText('▼')
     )
 
-    Object.values(window.tangibleTests.fetchResponse).forEach(
+    Object.values(fields.config.fetchResponse).forEach(
       result => {
         const item = within(document).getByText( result.title )
         expect(item.getAttribute('data-key')).toBe( result.id )

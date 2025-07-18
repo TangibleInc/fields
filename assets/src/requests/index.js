@@ -1,15 +1,12 @@
+import { getConfig } from '../index.jsx'
+
 const post = (url, data) => {
 
-  /**
-   * Simulate request in jest tests 
-   */
-  if( process.env.JEST_WORKER_ID ) {
-    return new Promise(resolve => (
-      resolve(window.tangibleTests.fetchResponse)
-    )) 
+  const { api, fetchResponse } = getConfig()
+
+  if ( fetchResponse ) {
+    return new Promise(resolve => resolve(fetchResponse))
   }
-  
-  const { api } = TangibleFields
 
   return new Promise((resolve, reject) => {
     fetch(url, {
@@ -33,16 +30,11 @@ const post = (url, data) => {
 
 const get = (url, data = false) => {
 
-  /**
-   * Simulate request in jest tests
-   */
-  if( process.env.JEST_WORKER_ID ) {
-    return new Promise(resolve => (
-      resolve(window.tangibleTests.fetchResponse)
-    )) 
-  }
+  const { api, fetchResponse } = getConfig()
 
-  const { api } = TangibleFields
+  if ( fetchResponse ) {
+    return new Promise(resolve => resolve(fetchResponse))
+  }
 
   return new Promise((resolve, reject) => {
     fetch(`${url}?${data ? new URLSearchParams(data) : ''}`, {

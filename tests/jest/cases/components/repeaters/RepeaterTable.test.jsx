@@ -1,8 +1,6 @@
 import { render, within } from '@testing-library/react'
-import '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.jsx'
 import { commonRepeaterTests } from './common.js'
-
-const fields = window.tangibleFields
 
 describe('Repeater with a table layout', () => {
   

@@ -10,6 +10,7 @@ import {
   useOverlayTrigger,
 } from 'react-aria'
 
+import { getConfig } from '../../../index.jsx'
 import Control from '../../../Control'
 
 import { useOverlayTriggerState } from 'react-stately'
@@ -32,7 +33,7 @@ const BaseWrapper = props => {
     return props.children
   }
 
-  const { dynamics } = TangibleFields
+  const { dynamics } = getConfig()
 
   const triggerRef = useRef()
   const overlayRef = useRef()

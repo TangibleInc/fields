@@ -2,10 +2,11 @@ import {
   post, 
   get 
 } from '.'
+import { getConfig } from '../index.jsx'
 
 const postMedia = file => {
 
-  const { api } = TangibleFields
+  const { api } = getConfig()
 
   /**
    * @see https://gist.github.com/ahmadawais/0ccb8a32ea795ffac4adfae84797c19a 
@@ -22,8 +23,8 @@ const postMedia = file => {
 
 const getMedia = id => {
 
-  const { api } = TangibleFields
-  
+  const { api } = getConfig()
+
   return get(api.endpoint.media + id)
 }
 

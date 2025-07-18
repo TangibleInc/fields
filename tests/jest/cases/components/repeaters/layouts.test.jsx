@@ -1,8 +1,6 @@
-import '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.jsx'
 import '@testing-library/jest-dom'
 import { render } from '@testing-library/react'
-
-const fields = window.tangibleFields
 
 describe('Repeater layout', () => {
   

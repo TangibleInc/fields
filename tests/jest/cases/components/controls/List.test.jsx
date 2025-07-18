@@ -1,4 +1,4 @@
-import '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.jsx'
 import { 
   render,
   screen,
@@ -9,8 +9,6 @@ import {
   rendersWithoutLabelThrowWarning
 } from '../../../utils/fields.js'
 import { userEvent } from '@testing-library/user-event'
-
-const fields = window.tangibleFields
 
 describe('List component', () => {
 

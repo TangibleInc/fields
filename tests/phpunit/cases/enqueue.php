@@ -56,7 +56,7 @@ class Enqueue_TestCase extends WP_UnitTestCase {
     } else {
       $data = wp_scripts()->print_inline_script('tangible-fields', 'before', false);
     }
-    $this->assertGreaterThan(0, preg_match('#^var TangibleFields = (.+?);$#', $data, $matches), 'wp_add_inline_script does not have TangibleFields');
+    $this->assertGreaterThan(0, preg_match('#^var TangibleFieldsConfig = (.+?);$#', $data, $matches), 'wp_add_inline_script does not have TangibleFieldsConfig');
     $data = json_decode($matches[1], true);
 
     $this->assertEquals([
@@ -88,9 +88,9 @@ class Enqueue_TestCase extends WP_UnitTestCase {
     tangible_fields()->maybe_enqueue_scripts();
 
     if ( version_compare($wp_version, '6.3', '>') ) {
-      preg_match('#^var TangibleFields = (.+?);$#', wp_scripts()->get_inline_script_data('tangible-fields', 'before', false), $matches);
+      preg_match('#^var TangibleFieldsConfig = (.+?);$#', wp_scripts()->get_inline_script_data('tangible-fields', 'before', false), $matches);
     } else {
-      preg_match('#^var TangibleFields = (.+?);$#', wp_scripts()->print_inline_script('tangible-fields', 'before', false), $matches);
+      preg_match('#^var TangibleFieldsConfig = (.+?);$#', wp_scripts()->print_inline_script('tangible-fields', 'before', false), $matches);
     }
 
     $data = json_decode($matches[1], true);

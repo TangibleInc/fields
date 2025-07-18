@@ -8,6 +8,7 @@ import {
   Overlay, 
   usePopover
 } from 'react-aria'
+import { ControlContext } from '../../../index.jsx'
 
 function Popover({ 
   children, 
@@ -31,7 +32,6 @@ function Popover({
    * 
    * @see renderField() in ./src/index.jsx 
    */
-  const { ControlContext } = tangibleFields 
   const control = useContext(ControlContext)
 
   return (

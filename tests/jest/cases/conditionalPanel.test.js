@@ -1,12 +1,10 @@
-import '../../../assets/src/index.jsx'
+import * as fields from '../../../assets/src/index.jsx'
 import { uniqid } from '../../../assets/src/utils.js'
 import { userEvent } from '@testing-library/user-event'
 import {
   render,
   within
 } from '@testing-library/react'
-
-const fields = window.tangibleFields
 
 describe('conditional panel', () => {
 
