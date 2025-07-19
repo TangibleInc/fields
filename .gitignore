@@ -1,5 +1,6 @@
 /artifacts
 /publish
+/storybook-static
 /vendor
 node_modules
 *.log
