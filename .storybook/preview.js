@@ -1,4 +1,5 @@
-/** @type { import('@storybook/react-webpack5').Preview } */
+import React from 'react'
+/** @type { import('@storybook/react-vite').Preview } */
 import '../assets/build/default/index.min.css';
 import '../assets/build/wp/index.min.css';
 import '../assets/build/beaver-builder/index.min.css';
@@ -8,6 +9,8 @@ import { withContext } from './decorators/context';
 
 export const decorators = [withContext];
 
+// React is automatically imported during actual build, but not when using Storybook
+global.React = React
 
 const preview = {
   globalTypes: {
