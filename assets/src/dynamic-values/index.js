@@ -2,8 +2,9 @@ import {
   dynamicValueToString,
   stringToDynamicValue
 } from './format'
+import { getConfig } from '../index.jsx'
 
-const { dynamics } = TangibleFields
+const { dynamics } = getConfig()
 
 /**
  * Field type that support dynamic values (!== to supported props.dyanmic.types)

@@ -1,4 +1,4 @@
-import '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.jsx'
 import { 
   act, 
   render
@@ -11,8 +11,6 @@ import {
   renderHasElement,
   renderHasNotElement
 } from '../../../utils/fields.js'
-
-const fields = window.tangibleFields
 
 describe('Text component', () => {
 

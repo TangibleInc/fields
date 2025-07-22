@@ -1,11 +1,9 @@
-import '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.jsx'
 import { renderHasElement } from '../../../utils/elements.js'
 import { 
   render,
   screen
 } from '@testing-library/react'
-
-const fields = window.tangibleFields
 
 describe('Description component', () => {
 

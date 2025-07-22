@@ -2,6 +2,7 @@ import {
   createRoot,
   forwardRef
 } from 'react'
+import * as tangibleFields from '../index.jsx'
 
 const initCombobox = () => {
  

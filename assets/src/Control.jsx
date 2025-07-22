@@ -3,6 +3,7 @@ import {
   useState,
   useContext
 } from 'react'
+import { ControlContext } from './index.jsx'
 
 import { triggerEvent } from './events'
 import { OverlayProvider } from 'react-aria'
@@ -23,7 +24,6 @@ const Control = ({
   /**
    * @see renderField() in ./src/index.jsx
    */
-  const { ControlContext } = tangibleFields
   const control = useContext(ControlContext)
 
   const wrapper = {

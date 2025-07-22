@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-
-const fields = window.tangibleFields
+import * as fields from '../../../../../assets/src/index.jsx'
 
 /**
  * Run common tests that must succeed for all repeater types
@@ -486,7 +485,7 @@ const commonRepeaterTests = (layout, args = {}) => {
   it('support exclude props when cloning', async () => {
 
     const user = userEvent.setup()
-    const store = tangibleFields.store
+    const store = fields.store
 
     const { container } = render(
       fields.render({

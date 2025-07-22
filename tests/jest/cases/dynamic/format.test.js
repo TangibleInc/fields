@@ -3,6 +3,7 @@ import {
   dynamicValuesAPI,
   defaultConfig
 } from '../../../../assets/src/dynamic-values'
+import { getConfig } from '../../../../assets/src/index.jsx'
 
 describe('dynamic values feature - format', () => {
 
@@ -65,7 +66,9 @@ describe('dynamic values feature - format', () => {
 
   it('uses all the categories by default', () => {
 
-    const allCategories = Object.keys(TangibleFields.dynamics.categories)
+    const { dynamics } = getConfig()
+
+    const allCategories = Object.keys(dynamics.categories)
     const result = dynamicValuesAPI(
       '',
       value => {},
@@ -80,7 +83,9 @@ describe('dynamic values feature - format', () => {
 
   it('uses categories from the config when set', () => {
 
-    const allCategories = Object.keys(TangibleFields.dynamics.categories)
+    const { dynamics } = getConfig()
+
+    const allCategories = Object.keys(dynamics.categories)
     const result = dynamicValuesAPI(
       '',
       value => {},

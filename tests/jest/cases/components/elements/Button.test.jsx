@@ -1,12 +1,10 @@
-import '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.jsx'
 import { renderHasElement } from '../../../utils/elements.js'
 import userEvent from '@testing-library/user-event'
 import { 
   within,
   render
 } from '@testing-library/react'
-
-const fields = window.tangibleFields
 
 describe('Button component', () => {
 

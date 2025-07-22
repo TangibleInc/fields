@@ -1,4 +1,4 @@
-import '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.jsx'
 import userEvent from '@testing-library/user-event'
 import { 
   within,
@@ -16,8 +16,6 @@ import {
   startOfMonth,
   endOfMonth
 } from '@internationalized/date'
-
-const fields = window.tangibleFields
 
 /**
  * TODO: 

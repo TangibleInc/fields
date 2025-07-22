@@ -1,4 +1,4 @@
-import '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.jsx'
 import { renderHasElement } from '../../../utils/elements.js'
 import { 
   render,
@@ -6,8 +6,6 @@ import {
   within
 } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-
-const fields = window.tangibleFields
 
 describe('Modal component', () => {
 

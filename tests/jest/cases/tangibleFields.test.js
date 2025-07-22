@@ -1,12 +1,10 @@
-import '../../../assets/src/index.jsx'
+import * as fields from '../../../assets/src/index.jsx'
 import { render, within, act } from '@testing-library/react'
 
-const fields = window.tangibleFields
-
-describe('window.tangibleFields', () => {
+describe('tangibleFields', () => {
   
-  it('exists', () => {
-    expect(window.tangibleFields).toBeDefined()
+  it('does not define global variable by default', () => {
+    expect(window.tangibleFields).toBeUndefined()
   })
 
   it('can render fields when no type specified', () => {
