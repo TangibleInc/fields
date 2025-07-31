@@ -28,10 +28,10 @@ const Color = props =>{
    * To avoid any issues, we use #FFFFFF as a default value
    */
   let propertyValue
-  if ( typeof props.value === 'object' && Object.hasOwn( props.value, 'value' ) ) {
-    propertyValue = props.value.value === 0 ? '#FFFFFF' : props.value.value
+  if ( typeof props.value === 'object' ) {
+    propertyValue = props.value?.value || '#FFFFFF'
   } else {
-    propertyValue = props?.value ?? '#FFFFFF'
+    propertyValue = props?.value || '#FFFFFF'
   }
 
   const formatedProps = ({
