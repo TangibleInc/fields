@@ -9,6 +9,13 @@ export default {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  argTypes: {
+    selectionMode: { 
+      type: 'inline-radio',
+      options: ['single', 'multiple'],
+      description: 'Selection Mode',
+    }
+  },
 }
 
 const Template = (args) => {
@@ -26,6 +33,5 @@ const Template = (args) => {
 
 export const Default = Template.bind({})
 Default.args = {
-  label: 'Alignment',
   selectionMode: 'single',
 }
