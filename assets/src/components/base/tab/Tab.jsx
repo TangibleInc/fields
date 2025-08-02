@@ -1,4 +1,4 @@
-import Button from '../button/Button'
+import { Button } from '../../base'
 
 /**
  * No logic/state, just to share the CSS/classes

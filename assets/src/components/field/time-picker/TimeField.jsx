@@ -1,6 +1,6 @@
 import { useLocale, useTimeField } from 'react-aria';
 import { useTimeFieldState } from 'react-stately';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import DateSegment from '../date/DateSegment';
 import { Description, Label } from '../../base/';
 import { Time } from '@internationalized/date';

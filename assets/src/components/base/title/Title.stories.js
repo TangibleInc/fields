@@ -34,3 +34,9 @@ export const h1 = {
     content: 'Section Title',
   },
 };
+export const h2 = {
+  args: {
+    level: 2,
+    content: 'Section Title',
+  },
+};

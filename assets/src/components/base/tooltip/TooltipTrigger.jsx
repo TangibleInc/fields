@@ -1,5 +1,5 @@
 import Tooltip from './Tooltip'
-import Button from '../button/Button'
+import { Button } from '../../base'
 
 const TooltipTrigger = props => {
 

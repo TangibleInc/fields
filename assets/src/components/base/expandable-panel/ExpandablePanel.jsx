@@ -4,7 +4,7 @@ import {
   isValidElement 
 } from 'react'
 
-import { Button } from '../'
+import { Button } from '../../base'
 
 /**
  * Note: 

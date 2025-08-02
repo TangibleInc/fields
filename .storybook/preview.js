@@ -1,5 +1,6 @@
 import React from 'react'
 /** @type { import('@storybook/react-vite').Preview } */
+import './mocks/tangibleFields';
 import '../assets/build/default/index.min.css';
 import '../assets/build/wp/index.min.css';
 import '../assets/build/beaver-builder/index.min.css';

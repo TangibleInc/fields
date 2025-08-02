@@ -1,4 +1,3 @@
-// import { fn } from 'storybook/test'; // Keep if you use it for action logging
 import ExpandablePanel from './ExpandablePanel.jsx';
 
 export default {
