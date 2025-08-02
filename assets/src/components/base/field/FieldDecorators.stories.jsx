@@ -3,6 +3,7 @@ import Description from './Description.jsx';
 
 export default {
   title: 'Field/Label and Description',
+  tags: ['autodocs'],
 };
 
 export const Basic = () => {
