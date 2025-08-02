@@ -16,7 +16,7 @@ export default props => {
   useEffect(() => props.onChange && props.onChange(value), [value])
 
   return(
-    <RadioGroup { ...props } onChange={ setValue }>
+    <RadioGroup { ...props } value={value} onChange={ setValue }>
       { options.map(option => (
         <Radio key={ option.value ?? '' } { ...option }>
           { option.label ?? '' }

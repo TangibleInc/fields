@@ -24,17 +24,17 @@ const RadioContext = createContext(null)
 
 const RadioGroup = props => {
 
-  const state = useRadioGroupState(props)
+  const state = useRadioGroupState({
+    ...props,
+    value: props.value,
+    onChange: props.onChange,
+  })
 
   const {
     radioGroupProps,
     labelProps,
     descriptionProps
   } = useRadioGroup(props, state)
-
-  useEffect(() => {
-    props.onChange && props.onChange(state.selectedValue)
-  }, [state.selectedValue])
 
   return(
     <div className="tf-radio-group">
