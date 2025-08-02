@@ -9,6 +9,10 @@ export default {
       control: 'text',
       description: 'Radio group label',
     },
+    description: {
+      control: 'text',
+      description: 'Radio group description',
+    },
     value: {
       control: 'text',
       description: 'Default selected value',
