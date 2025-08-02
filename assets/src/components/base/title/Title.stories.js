@@ -9,8 +9,7 @@ export default {
   },
   argTypes: {
     level: {
-      control: { type: 'select' },
-      options: [1, 2, 3, 4, 5, 6],
+      control: { type: 'number', min: 1, max: 6 },
       description: 'Heading level (h1–h6). Defaults to h3.',
     },
     content: {

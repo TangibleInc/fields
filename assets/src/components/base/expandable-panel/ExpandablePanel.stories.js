@@ -3,9 +3,6 @@ import ExpandablePanel from './ExpandablePanel.jsx';
 export default {
   title: 'ExpandablePanel',
   component: ExpandablePanel,
-  parameters: {
-    layout: 'centered',
-  },
   tags: ['autodocs'],
   argTypes: {
     // Props that directly control the Button's appearance/functionality
