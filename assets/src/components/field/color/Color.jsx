@@ -27,10 +27,16 @@ const Color = props =>{
    *
    * To avoid any issues, we use #FFFFFF as a default value
    */
+  let propertyValue
+  if ( typeof props.value === 'object' ) {
+    propertyValue = props.value?.value || '#FFFFFF'
+  } else {
+    propertyValue = props?.value || '#FFFFFF'
+  }
+
   const formatedProps = ({
     ...props,
-    value: props.value && props.value !== ''
-      ? props.value : '#FFFFFF'
+    value: propertyValue
   })
 
   const ref = useRef()
