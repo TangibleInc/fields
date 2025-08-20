@@ -71,7 +71,7 @@ describe('Repeater with an advanced layout', () => {
     expect(within(header).getByText('Test 2')).toBeTruthy()
   })
 
-  it('renders object.label inside headers', async () => {
+  it('renders object.label inside headers', () => {
 
     const { container } = render(
       fields.render({
@@ -120,5 +120,112 @@ describe('Repeater with an advanced layout', () => {
     const overviewValues = itemOverview.querySelectorAll('.tf-repeater-advanced-label-row-item')
     expect(overviewValues.length).toBe(3)
     expect(overviewValues[2].textContent).toBe('')
+  })
+
+  it('renders value with callback header previews', async () => {
+
+    const { container } = render(
+      fields.render({
+        type         : 'repeater',
+        layout       : 'advanced',
+        headerFields : [
+          {
+            name      : 'test2',
+            callback  : config => (`custom render with value ${config.value.label}`)
+          }
+        ],
+        fields : [
+          {
+            name      : 'test',
+            label     : 'Test 1',
+            type      : 'text'
+          },
+          {
+            name      : 'test2',
+            label     : 'Test 2',
+            type      : 'combo-box',
+            isAync    : true,
+            searchUrl : 'test.json',
+          },
+          {
+            name      : 'test3',
+            label     : 'Test 3',
+            type      : 'field-group'
+          }
+        ],
+        value : JSON.stringify([
+          {
+            test  : 'test',
+            test2 : { value: 'value', label: 'Name 1' },
+            test3 : { random: 'object' }
+          }
+        ])
+      })
+    )
+
+    const header = container.querySelector('.tf-repeater-advanced-header')
+
+    expect(within(header).queryByText('Test 1')).toBeFalsy()
+    expect(within(header).queryByText('Test 2')).toBeTruthy()
+    expect(within(header).queryByText('Test 3')).toBeFalsy()
+
+    const itemOverview = container.querySelector('.tf-repeater-advanced-overview')
+    expect(within(itemOverview).queryByText('custom render with value Name 1')).toBeTruthy()
+  })
+
+  it('renders value in header previews with a separatly registered callback', async () => {
+
+    fields.fields.repeater.registerCallback(
+      'custom_callback_name',
+      config => (`custom render with value ${config.value.label}`)
+    )
+
+    const { container } = render(
+      fields.render({
+        type         : 'repeater',
+        layout       : 'advanced',
+        headerFields : [
+          {
+            name      : 'test2',
+            callback  : 'custom_callback_name'
+          }
+        ],
+        fields : [
+          {
+            name      : 'test',
+            label     : 'Test 1',
+            type      : 'text'
+          },
+          {
+            name      : 'test2',
+            label     : 'Test 2',
+            type      : 'combo-box',
+            isAync    : true,
+            searchUrl : 'test.json',
+          },
+          {
+            name      : 'test3',
+            label     : 'Test 3',
+            type      : 'field-group'
+          }
+        ],
+        value : JSON.stringify([
+          {
+            test  : 'test',
+            test2 : { value: 'value', label: 'Name 1' },
+            test3 : { random: 'object' }
+          }
+        ])
+      })
+    )
+
+    const header = container.querySelector('.tf-repeater-advanced-header')
+
+    expect(within(header).queryByText('Test 1')).toBeFalsy()
+    expect(within(header).queryByText('Test 2')).toBeTruthy()
+    expect(within(header).queryByText('Test 3')).toBeFalsy()
+
+    const itemOverview = container.querySelector('.tf-repeater-advanced-overview')
+    expect(within(itemOverview).queryByText('custom render with value Name 1')).toBeTruthy()
   })
 })

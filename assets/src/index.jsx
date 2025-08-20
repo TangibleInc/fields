@@ -10,6 +10,7 @@ import {
   getConfig,
   setConfig
 } from './config'
+
 import { 
   triggerEvent,
   addEventListener 

@@ -13,5 +13,11 @@ export default {
     registerCallback(name, callback) {
       this.__callbacks[ name ] = callback
     }
+  },
+  repeater: {
+    __callbacks: {},
+    registerCallback(name, callback) {
+      this.__callbacks[ name ] = callback
+    }
   }
 }
