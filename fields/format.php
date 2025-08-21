@@ -81,7 +81,8 @@ $fields->format_args = function(
       break;
 
     case 'gallery':
-      wp_enqueue_media();
+      // Enqueue instead of calling directly
+      add_action('admin_enqueue_scripts', 'wp_enqueue_media');
       break;
 
     case 'list':
@@ -102,7 +103,10 @@ $fields->format_args = function(
       break;
 
     case 'file':
-      if( !isset( $args['wp_media'] ) || $args['wp_media'] ) wp_enqueue_media();
+      if( !isset( $args['wp_media'] ) || $args['wp_media'] ) {
+        // Enqueue instead of calling directly
+        add_action('admin_enqueue_scripts', 'wp_enqueue_media');
+      }
       $args = $fields->format_value($args, 'mime_types', 'mimeTypes');
       $args = $fields->format_value($args, 'max_upload', 'maxUpload');
       break;

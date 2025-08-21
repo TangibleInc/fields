@@ -1,5 +1,7 @@
 <?php
 
+use function Tangible\Fields\Tests\action_hook_has_callback;
+
 // @todo: We need tests for the tab layout
 class FormatField_TestCase extends WP_UnitTestCase {
 
@@ -207,7 +209,9 @@ class FormatField_TestCase extends WP_UnitTestCase {
     $args = tangible_fields()->format_args('test', [
       'type' => 'gallery',
     ]);
-    $this->assertGreaterThan(0, did_action('wp_enqueue_media'), 'wp_enqueue_media was not called');
+
+    $found_action = action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media');
+    $this->assertTrue($found_action, 'wp_enqueue_media was not enqueued');
   }
 
   public function test_format_args_file_ensure_wp_enqueue_media() {
@@ -215,12 +219,16 @@ class FormatField_TestCase extends WP_UnitTestCase {
       'type'     => 'file',
       'wp_media' => false
     ]);
-    $this->assertEquals(0, did_action('wp_enqueue_media'), 'wp_enqueue_media was called');
+
+    $found_action = action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media');
+    $this->assertFalse($found_action, 'wp_enqueue_media was enqueued');
 
     $args = tangible_fields()->format_args('test', [
       'type' => 'file',
     ]);
-    $this->assertGreaterThan(0, did_action('wp_enqueue_media'), 'wp_enqueue_media was not called');
+
+    $found_action = action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media');
+    $this->assertTrue($found_action, 'wp_enqueue_media was not enqueued');
   }
 
   public function test_format_args_repeater_empty_value() {
