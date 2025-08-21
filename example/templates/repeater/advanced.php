@@ -10,7 +10,7 @@ A repeater row can contain any fields.
     'value'      => $fields->fetch_value('repeater_advanced'),
     'sub_fields' => [
       [
-        'label' => 'Text',
+        'label' => 'Date',
         'type'  => 'date_picker',
         'name'  => 'date',
       ], 
@@ -51,12 +51,23 @@ $fields->render_field('repeater_bare', [
   
   /**
    * Optional:
+   *
    * By default all fields will be displayed in the overview row, but it's possible
    * to only set a few if needed with the header_fields parameter
+   *
+   * It's also possible to set a callback to format the returned value. The callback will
+   * have to be registered on the JS side:
+   *
+   * <script>
+   * tangibleFields.fields.repeater.registerCallback(
+   *    'callback_name',
+   *    ({ value }) => `_Prefix_${value}`
+   * )
+   * </script>
    */
   'header_fields' => [
     'date_picker',
-    'color_picker'
+    [ name: 'color_picker', callback: 'callback_name' ]
   ],
 
   'sub_fields' => [

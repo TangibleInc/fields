@@ -1,4 +1,5 @@
-// .storybook/decorators/context.js
+import React from 'react'
+
 export const withContext = (Story, { args, globals }) => {
   // Access the global context value
   const globalContext = globals.context || 'default';
