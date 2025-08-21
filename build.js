@@ -46,9 +46,10 @@ async function buildForNpm() {
 
   console.log('Built', i, 'files')
 
-  await fs.copy('package.json', path.join(targetFolder, 'package.json'))
-
-  console.log('Copied package.json to', targetFolder)
+  for (const file of ['package.json', 'readme.md']) {
+    await fs.copy(file, path.join(targetFolder, file))
+    console.log('Copied', file)
+  }
 }
 
 async function help() {
