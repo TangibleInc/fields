@@ -12,14 +12,12 @@ function action_hook_has_callback(
 ): bool {
   global $wp_filter;
 
-  $found_action = false;
+  if (!isset($wp_filter['admin_enqueue_scripts'])) return false;
 
-  if (isset($wp_filter['admin_enqueue_scripts'])) {
-    foreach ($wp_filter['admin_enqueue_scripts']->callbacks as $priority => $indexes) {
-      foreach ($indexes as $index => $definition) {
-        if ($definition['function']==='wp_enqueue_media') {
-          return true;
-        }
+  foreach ($wp_filter['admin_enqueue_scripts']->callbacks as $priority => $indexes) {
+    foreach ($indexes as $index => $definition) {
+      if ($definition['function']==='wp_enqueue_media') {
+        return true;
       }
     }
   }
