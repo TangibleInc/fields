@@ -210,8 +210,8 @@ class FormatField_TestCase extends WP_UnitTestCase {
       'type' => 'gallery',
     ]);
 
-    $found_action = action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media');
-    $this->assertTrue($found_action, 'wp_enqueue_media was not enqueued');
+    $is_enqueued = action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media');
+    $this->assertTrue($is_enqueued, 'wp_enqueue_media was not enqueued');
   }
 
   public function test_format_args_file_ensure_wp_enqueue_media() {
@@ -220,15 +220,15 @@ class FormatField_TestCase extends WP_UnitTestCase {
       'wp_media' => false
     ]);
 
-    $found_action = action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media');
-    $this->assertFalse($found_action, 'wp_enqueue_media was enqueued');
+    $is_enqueued = action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media');
+    $this->assertFalse($is_enqueued, 'wp_enqueue_media was enqueued');
 
     $args = tangible_fields()->format_args('test', [
       'type' => 'file',
     ]);
 
-    $found_action = action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media');
-    $this->assertTrue($found_action, 'wp_enqueue_media was not enqueued');
+    $is_enqueued = action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media');
+    $this->assertTrue($is_enqueued, 'wp_enqueue_media was not enqueued');
   }
 
   public function test_format_args_repeater_empty_value() {
