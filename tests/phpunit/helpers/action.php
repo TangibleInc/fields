@@ -10,6 +10,7 @@ function action_hook_has_callback(
   string $action_name,
   callable $callback
 ): bool {
+
   global $wp_filter;
 
   if (!isset($wp_filter[ $action_name ])) return false;
