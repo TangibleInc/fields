@@ -16,7 +16,7 @@ function action_hook_has_callback(
 
   foreach ($wp_filter[ $action_name ]->callbacks as $priority => $indexes) {
     foreach ($indexes as $index => $definition) {
-      if ($definition['function']===$callback) {
+      if ($definition['function'] === $callback) {
         return true;
       }
     }
