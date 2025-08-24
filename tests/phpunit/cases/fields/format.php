@@ -1,6 +1,6 @@
 <?php
 
-use function Tangible\Fields\Tests\action_hook_has_callback;
+use Tangible\Fields\Tests as helpers;
 
 // @todo: We need tests for the tab layout
 class FormatField_TestCase extends WP_UnitTestCase {
@@ -206,29 +206,169 @@ class FormatField_TestCase extends WP_UnitTestCase {
   }
 
   public function test_format_args_gallery_ensure_wp_enqueue_media() {
-    $args = tangible_fields()->format_args('test', [
-      'type' => 'gallery',
-    ]);
 
-    $is_enqueued = action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media');
-    $this->assertTrue($is_enqueued, 'wp_enqueue_media was not enqueued');
+    $field_args = [
+      'type' => 'gallery',
+    ];
+
+    // Frontend before document head
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('wp_enqueue_scripts', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in site frontend before head'
+    );
+
+    // Frontend during head
+
+    helpers\mock_doing_action('wp_enqueue_scripts');
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('wp_footer', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in site frontend during head'
+    );
+    helpers\unmock_doing_action('wp_enqueue_scripts');
+
+    // Frontend after head
+
+    helpers\mock_did_action('wp_enqueue_scripts');
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('wp_footer', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in site frontend after head'
+    );
+      
+    helpers\unmock_did_action('wp_enqueue_scripts');
+
+    // Admin
+
+    // Admin before document head
+
+    helpers\mock_is_admin();
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in admin before head'
+    );
+
+    // Admin during head
+
+    helpers\mock_doing_action('admin_enqueue_scripts');
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('admin_footer', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in admin during head'
+    );
+
+    helpers\unmock_doing_action('admin_enqueue_scripts');
+
+    // Admin after head
+
+    helpers\mock_did_action('admin_enqueue_scripts');
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('admin_footer', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in admin after head'
+    );
+
+    helpers\unmock_did_action('admin_enqueue_scripts');
+
+    helpers\unmock_is_admin();
   }
 
   public function test_format_args_file_ensure_wp_enqueue_media() {
+
+    // Without media uploader
     $args = tangible_fields()->format_args('test', [
       'type'     => 'file',
       'wp_media' => false
     ]);
 
-    $is_enqueued = action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media');
-    $this->assertFalse($is_enqueued, 'wp_enqueue_media was enqueued');
+    $this->assertFalse(
+      helpers\action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media'),
+      'wp_enqueue_media was enqueued'
+    );
 
-    $args = tangible_fields()->format_args('test', [
+    // With media uploader
+
+    $field_args = [
       'type' => 'file',
-    ]);
+    ];
 
-    $is_enqueued = action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media');
-    $this->assertTrue($is_enqueued, 'wp_enqueue_media was not enqueued');
+    // Frontend before document head
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('wp_enqueue_scripts', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in site frontend before head'
+    );
+
+    // Frontend during head
+
+    helpers\mock_doing_action('wp_enqueue_scripts');
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('wp_footer', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in site frontend during head'
+    );
+
+    helpers\unmock_doing_action('wp_enqueue_scripts');
+    
+    // Frontend after head
+
+    helpers\mock_did_action('wp_enqueue_scripts');
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('wp_footer', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in site frontend after head'
+    );
+
+    helpers\unmock_did_action('wp_enqueue_scripts');
+
+    // Admin
+
+    // Admin before document head
+
+    helpers\mock_is_admin();
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in admin before head'
+    );
+
+    // Admin during head
+
+    helpers\mock_doing_action('admin_enqueue_scripts');
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('admin_footer', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in admin during head'
+    );
+
+    helpers\unmock_doing_action('admin_enqueue_scripts');
+
+    // Admin after head
+
+    helpers\mock_did_action('admin_enqueue_scripts');
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('admin_footer', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in admin after head'
+    );
+
+    helpers\unmock_did_action('admin_enqueue_scripts');
+
+    helpers\unmock_is_admin();
   }
 
   public function test_format_args_repeater_empty_value() {
