@@ -290,8 +290,13 @@ class FormatField_TestCase extends WP_UnitTestCase {
     ]);
 
     $this->assertFalse(
+      helpers\action_hook_has_callback('wp_enqueue_scripts', 'wp_enqueue_media'),
+      'wp_enqueue_media was enqueued using wp_enqueue_scripts'
+    );
+
+    $this->assertFalse(
       helpers\action_hook_has_callback('admin_enqueue_scripts', 'wp_enqueue_media'),
-      'wp_enqueue_media was enqueued'
+      'wp_enqueue_media was enqueued using admin_enqueue_scripts'
     );
 
     // With media uploader

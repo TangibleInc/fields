@@ -18,7 +18,7 @@ $fields->enqueue_wp_media_uploader = function() {
     $action = 'admin_enqueue_scripts';
 
     if (doing_action($action) || did_action($action)) {
-      $action = 'admin_footer'; // During and after head
+      $action = 'admin_footer'; // During and after
     }
 
   } else {
@@ -29,7 +29,7 @@ $fields->enqueue_wp_media_uploader = function() {
     $action = 'wp_enqueue_scripts';
 
     if (doing_action($action) || did_action($action)) {
-      $action = 'wp_footer'; // During and after head
+      $action = 'wp_footer'; // During and after
     }
   }
 
