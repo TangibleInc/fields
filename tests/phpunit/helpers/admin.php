@@ -4,8 +4,11 @@ namespace Tangible\Fields\Tests;
 
 /**
  * Mock is_admin() to return true or false for testing purpose
- * 
- * It must be restored afterward with unmock_is_admin() below.
+ *
+ * Must call unmock_is_admin() afterward.
+ *
+ * @see wp-includes/load.php is_admin()
+ * @see wp-admin/includes/class-wp-screen.php WP_Screen::in_admin()
  */
 function mock_is_admin($state = true) {
 
