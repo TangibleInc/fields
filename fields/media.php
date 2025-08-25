@@ -33,5 +33,5 @@ $fields->enqueue_wp_media_uploader = function() {
     }
   }
 
-  add_action($action, 'wp_enqueue_media');
+  add_action($action, 'wp_enqueue_media', 9); // enqueue before fields scripts
 };
