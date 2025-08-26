@@ -374,6 +374,44 @@ class FormatField_TestCase extends WP_UnitTestCase {
     helpers\unmock_did_action('admin_enqueue_scripts');
 
     helpers\unmock_is_admin();
+
+    // Login
+
+    // Login before document head
+
+    helpers\mock_is_login();
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('login_enqueue_scripts', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in login before head'
+    );
+
+    // Login during head
+
+    helpers\mock_doing_action('login_enqueue_scripts');
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('login_footer', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in footer during head'
+    );
+
+    helpers\unmock_doing_action('login_enqueue_scripts');
+
+    // Login after head
+
+    helpers\mock_did_action('login_enqueue_scripts');
+
+    tangible_fields()->format_args('test', $field_args);
+    $this->assertTrue(
+      helpers\action_hook_has_callback('login_footer', 'wp_enqueue_media'),
+      'wp_enqueue_media was not enqueued in login after head'
+    );
+
+    helpers\unmock_did_action('login_enqueue_scripts');
+
+    helpers\unmock_is_login();
   }
 
   public function test_format_args_repeater_empty_value() {

@@ -21,6 +21,16 @@ $fields->enqueue_wp_media_uploader = function() {
       $action = 'admin_footer'; // During and after
     }
 
+  } elseif (is_login()) {
+
+    // Login
+
+    // Before document head
+    $action = 'login_enqueue_scripts';
+
+    if (doing_action($action) || did_action($action)) {
+      $action = 'login_footer'; // During and after
+    }
   } else {
 
     // Site frontend
