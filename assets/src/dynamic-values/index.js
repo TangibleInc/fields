@@ -4,8 +4,6 @@ import {
 } from './format'
 import { getConfig } from '../index.jsx'
 
-const { dynamics } = getConfig()
-
 /**
  * Field type that support dynamic values (!== to supported props.dyanmic.types)
  */
@@ -107,14 +105,15 @@ const dynamicValuesAPI = (value, setValue, {
   dynamic: config,
   type
 }) => {
+  const globalConfig = getConfig().dynamics
   return allowedTypes.includes(type)
     ? {
       getTypes      : () => config.types ?? defaultConfig[ type ].types,
       getMode       : () => getMode(type, config.mode ?? false),
-      getCategories : () => config.categories ?? Object.keys(dynamics.categories),
-      getList       : () => dynamics.values,
+      getCategories : () => config.categories ?? Object.keys(globalConfig.categories),
+      getList       : () => globalConfig.values,
       getAll        : () => getDynamicStrings(value).map(stringToDynamicValue),
-      getLabel      : type => dynamics.values[type] ? dynamics.values[type].label : type,
+      getLabel      : type => globalConfig.values[type] ? globalConfig.values[type].label : type,
       stringify     : dynamicValueToString,
       parse         : stringToDynamicValue,
       hasValues     : () => getDynamicStrings(value).length !== 0,
