@@ -453,6 +453,11 @@ $documentation->register_section('dependent-attributes', [
         'dependent-color-picker' => [],
         'dependent-attribute-repeater' => [ 'json' => true ]
       ]
+    ],
+    'callbacks' => [
+      'title' => 'Callbacks',
+      'path'  => 'dependent-attributes/callbacks',
+      'fields'=> []
     ]
   ]
 ]);
