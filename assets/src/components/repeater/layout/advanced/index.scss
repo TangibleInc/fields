@@ -162,3 +162,9 @@ $advanced-item-index-height: 40px;
 .tf-repeater-advanced .tf-repeater-actions {
   padding: $section-padding;
 }
+
+.tf-repeater-advanced-item-checkbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -303,7 +303,8 @@ $documentation->register_section('repeater', [
       'title' => 'Advanced',
       'path'  => 'repeater/advanced',
       'fields'=> [
-        'repeater_advanced' => [ 'json' => true ],
+        'repeater_advanced'           => [ 'json' => true ],
+        'repeater_advanced_use_bulk'  => [ 'json' => true ],
       ]
     ],
     'bare' => [

@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Button } from '../../../base'
+import { Checkbox } from '../../../field'
+import BulkActions from '../../common/BulkActions'
 import {
   getHeaderConfig,
   renderHeaderValue
@@ -16,7 +18,8 @@ const Advanced = ({
   beforeRow = false,
   afterRow = false,
   renderAction,
-  renderFooterActions
+  renderFooterActions,
+  useBulk
 }) => {
 
   const [openSection, setOpenSection] = useState(false)
@@ -24,6 +27,11 @@ const Advanced = ({
 
   return(
     <>
+      { useBulk &&
+        <BulkActions
+          actions={{ 'deletion': 'Delete' }}
+          dispatch={ dispatch }
+        /> }
       <div className='tf-repeater-advanced'>
         <div className='tf-repeater-advanced-header tf-repeater-advanced-label-row'>
           <div key={ 'index' } className='tf-repeater-advanced-label-row-index'></div>
@@ -42,6 +50,23 @@ const Advanced = ({
               data-open={ openSection === i ? 'true' : 'false' }
             >
               <div className='tf-repeater-advanced-overview tf-repeater-advanced-label-row'>
+                { useBulk &&
+                  <div
+                    className="tf-repeater-advanced-item-checkbox"
+                    onClick={ e => e.stopPropagation() }
+                  >
+                    <Checkbox
+                      label={ `Select item ${i + 1}` }
+                      labelVisuallyHidden={ true }
+                      value={ item._bulkCheckbox }
+                      onChange={ value => dispatch({
+                        type    : 'update',
+                        item    : i,
+                        control : '_bulkCheckbox',
+                        value   : value
+                      }) }
+                    />
+                  </div> }
                 <div key={ 'index' } className='tf-repeater-advanced-label-row-index'>
                   { i + 1 }
                 </div>

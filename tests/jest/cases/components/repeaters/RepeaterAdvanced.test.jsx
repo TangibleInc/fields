@@ -1,5 +1,6 @@
 import * as fields from '../../../../../assets/src/index.jsx'
 import { commonRepeaterTests } from './common.js'
+import { bulkActionsRepeaterTests } from './bulkActions.js'
 import { within, render } from '@testing-library/react'
 
 describe('Repeater with an advanced layout', () => {
@@ -8,6 +9,14 @@ describe('Repeater with an advanced layout', () => {
    * Common tests that must work regardless of the layout used
    */
   commonRepeaterTests('advanced', {
+    cloneText   : 'Duplicate',
+    removeText  : 'Delete'
+  })
+
+  /**
+   * Common tests for the bulk actions (shared with block layout)
+   */
+  bulkActionsRepeaterTests('advanced', {
     cloneText   : 'Duplicate',
     removeText  : 'Delete'
   })
