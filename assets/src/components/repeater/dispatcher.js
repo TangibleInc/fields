@@ -102,7 +102,7 @@ const initDispatcher = (value, emptyItem) => {
     const initialItems = Array.isArray(value) ? value : JSON.parse(value)
     return Array.isArray(initialItems) ? initialItems : [ emptyItem ]
   } catch (err) {
-    return [ emptyItem ]
+    return [{ key: uniqid(), ...emptyItem }]
   }
 }
 
