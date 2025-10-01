@@ -40,19 +40,22 @@ const Tab = props => {
             </Title>
           )) }
         </Header>
-        <Content>
-          { activeTab &&
-            <FieldGroup key={ activeTab }
+        { tabs && tabs.map((tab, indexTab) => (
+          <Content
+            key={ tab.name }
+            isActive={ tab.name === activeTab }
+          >
+            <FieldGroup
               { ...props }
               name={ null } 
-              fields={ props.tabs[ activeTab ].fields } 
-              value={ value[ activeTab ] ?? {} }
+              fields={ tab.fields } 
+              value={ value[ indexTab ] ?? {} }
               onChange={ tabValue => setValue({
                 ...value,
-                [activeTab]: tabValue
+                [indexTab]: tabValue
               }) }
-            /> }
-        </Content>
+            />
+          </Content> )) }
       </Container>
     </>
   )

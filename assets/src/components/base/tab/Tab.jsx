@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import Button from '../button/Button'
 
 /**
@@ -52,11 +53,22 @@ const Title = props => (
   </div>
 )
 
-const Content = props => (
-  <div className={ 'tf-tab-content ' + (props.className ?? '') }>
-    { props.children }
-  </div>
-)
+const Content = props => {
+
+  const [ isActive, setIsActive ] = useState( props.isActive ?? false )
+
+  useEffect(() => {
+    if ( props.isActive !== isActive ) setIsActive( props.isActive )
+  }, [ props.isActive ])
+
+  if ( ! isActive ) return <></>;
+
+  return(
+    <div className={ 'tf-tab-content ' + (props.className ?? '') }>
+      { props.children }
+    </div>
+  )
+}
 
 const Row = props => (
   <div className={ 'tf-tab-row ' + (props.className ?? '') }>
