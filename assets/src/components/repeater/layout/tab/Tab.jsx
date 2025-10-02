@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useLayoutEffect } from 'react'
 import { renderTitle } from '../../common/helpers'
 
 import {
@@ -85,29 +85,30 @@ const Tab = ({
           </Title>
         )) }
       </Header>
-    { items[ activeItem ] &&
-      <Content
-        key={ items[ activeItem ].key ?? activeItem }
-        className='tf-repeater-tab-content'
-      >
-        { rowFields.map((control, i) => (
-          <Row key={ control.name ?? i } className='tf-repeater-tab-row'>
-            { beforeRow && beforeRow(items[ activeItem ], activeItem, dispatch) }
-            { control.type === 'title'
-              ? <RowTitle className='tf-repeater-tab-row-title tf-repeater-tab-row-title-section'>
-                  { renderItem(control, items[ activeItem ], activeItem) }
-                </RowTitle>
-              : <>
-                  <RowLabel className='tf-repeater-tab-row-title'>
-                    { control.label ?? '' }
-                  </RowLabel>
-                  <RowField className="tf-repeater-tab-item-field">
-                    { renderItem(control, items[ activeItem ], activeItem) }
-                  </RowField>
-                </> }
-            { afterRow && afterRow(items[ activeItem ], activeItem, dispatch) }
-          </Row> )) }
-      </Content> }
+      { items && items.map((item, itemIndex) => (
+        <Content
+          key={ item.key ?? itemIndex }
+          isActive={ activeItem === itemIndex }
+          className='tf-repeater-tab-content'
+        >
+          { rowFields.map((control, i) => (
+            <Row key={ control.name ?? i } className='tf-repeater-tab-row'>
+              { beforeRow && beforeRow(item, itemIndex, dispatch) }
+              { control.type === 'title'
+                ? <RowTitle className='tf-repeater-tab-row-title tf-repeater-tab-row-title-section'>
+                    { renderItem(control, item, itemIndex) }
+                  </RowTitle>
+                : <>
+                    <RowLabel className='tf-repeater-tab-row-title'>
+                      { control.label ?? '' }
+                    </RowLabel>
+                    <RowField className="tf-repeater-tab-item-field">
+                      { renderItem(control, item, itemIndex) }
+                    </RowField>
+                  </> }
+              { afterRow && afterRow(item, itemIndex, dispatch) }
+            </Row> )) }
+        </Content> )) }
     </Container>
   )
 }
