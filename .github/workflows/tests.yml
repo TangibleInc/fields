@@ -16,7 +16,7 @@ jobs:
       - name: Install PHP dependencies (Composer)
         uses: php-actions/composer@v6
         with:
-          php_version: '7.4'
+          php_version: '8.1'
           command: install
           dev: yes
           args: --prefer-dist --no-interaction --no-progress --optimize-autoloader
