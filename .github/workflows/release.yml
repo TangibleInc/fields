@@ -1,7 +1,11 @@
 name: Release
 permissions:
   contents: write
-on: push
+on:
+  workflow_run:
+    workflows: [Run Tests]
+    types:
+      - completed
 jobs:
   build:
     runs-on: ubuntu-latest

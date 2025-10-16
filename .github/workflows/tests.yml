@@ -1,0 +1,32 @@
+name: Run Tests
+permissions:
+  contents: write
+on: push
+jobs:
+  tests:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Docker
+        uses: docker/setup-docker-action@v4
+      - name: Install PHP dependencies (Composer)
+        uses: php-actions/composer@v6
+        with:
+          php_version: '7.4'
+          command: install
+          dev: yes
+          args: --prefer-dist --no-interaction --no-progress --optimize-autoloader
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install dependencies
+        run: bun install
+      - name: PHPUnit - Run tests for PHP 7.4
+        run: bun run test:7.4
+      - name: PHPUnit - Run tests for PHP 8.2
+        run: bun run test:8.2
+      - name: Jest - Run tests
+        run: bun run jest:test
