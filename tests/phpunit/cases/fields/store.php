@@ -1,10 +1,25 @@
 <?php
 class Store_TestCase extends TF_UnitTestCase {
   public function setUp(): void {
-    tangible_fields()->registered_fields = [];
     $_GET = [];
     $_POST = [];
     $_REQUEST = [];
+    
+    /**
+     * Make sure value for the memory callback is null
+     * @see fields/store.php
+     */
+    $fields = tangible_fields();
+    $fields->registered_fields = [];
+    $fields->register_field('test', array_merge(
+      $fields->_store_callbacks['memory'](),
+      $fields->_permission_callbacks([
+        'store' => 'always_allow',
+        'fetch' => 'always_allow',
+      ])
+    ));
+    $fields->store_value('test', null);
+    $fields->registered_fields = [];
   }
 
   public function test_fields_store_store_callbacks_memory() {
