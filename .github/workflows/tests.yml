@@ -30,3 +30,7 @@ jobs:
         run: bun run test:8.2
       - name: Jest - Run tests
         run: bun run jest:test
+      - name: Install playwright
+        run: bun playwright install
+      - name: End to end - Run tests
+        run: bun run e2e

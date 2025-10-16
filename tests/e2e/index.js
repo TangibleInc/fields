@@ -24,7 +24,7 @@ describe('Admin', () => {
   })
 
   const plugins = [
-    ['Tangible Fields', 'tangible-fields/plugin'],
+    ['Tangible Fields', 'fields/plugin'],
     ['Tangible E2E', 'tangible-e2e-plugin/index'],
     ['Elementor', 'elementor/elementor'],
     ['Beaver Builder', 'beaver-builder-lite-version/fl-builder'],
@@ -76,7 +76,7 @@ describe('Admin', () => {
         { pluginBasename },
       )
 
-      if (pluginTitle !== 'Template System' && !pluginClasses.length) {
+      if (pluginTitle !== 'Tangible Fields' && !pluginClasses.length) {
         return
       }
 
@@ -113,12 +113,13 @@ describe('Admin', () => {
 })
 
 describe('Admin menu', () => {
+
   test('Exists', async ({ admin, page }) => {
     await admin.visitAdminPage('/')
     expect(page.getByRole('navigation', { name: 'Main menu' })).toHaveCount(1)
   })
 
-  test('Tangbile', async ({ admin, page }) => {
+  test('Tangible', async ({ admin, page }) => {
     await admin.visitAdminPage('/')
     expect(
       page
@@ -128,7 +129,7 @@ describe('Admin menu', () => {
     ).toHaveCount(1)
   })
 
-  test('Tangbile -> Fields Example', async ({ admin, page }) => {
+  test('Tangible -> Fields Example', async ({ admin, page }) => {
     await admin.visitAdminPage('/')
     expect(
       page
