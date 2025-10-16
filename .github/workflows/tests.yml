@@ -13,6 +13,10 @@ jobs:
           fetch-depth: 0
       - name: Set up Docker
         uses: docker/setup-docker-action@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install dependencies
+        run: bun install
       - name: Install PHP dependencies (Composer)
         uses: php-actions/composer@v6
         with:
@@ -20,10 +24,6 @@ jobs:
           command: install
           dev: yes
           args: --prefer-dist --no-interaction --no-progress --optimize-autoloader
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-      - name: Install dependencies
-        run: bun install
       - name: PHPUnit - Run tests for PHP 7.4
         run: bun run test:7.4
       - name: PHPUnit - Run tests for PHP 8.2
