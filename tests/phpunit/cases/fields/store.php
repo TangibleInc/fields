@@ -2,6 +2,9 @@
 class Store_TestCase extends TF_UnitTestCase {
   public function setUp(): void {
     tangible_fields()->registered_fields = [];
+    $_GET = [];
+    $_POST = [];
+    $_REQUEST = [];
   }
 
   public function test_fields_store_store_callbacks_memory() {
