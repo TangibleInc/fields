@@ -7,7 +7,8 @@ const getAsyncProps = props => {
 
   const debounced = useRef( {
     status    : false,
-    callback  : false
+    callback  : false,
+    firstLoad : true
   } )
 
   /**
@@ -17,26 +18,30 @@ const getAsyncProps = props => {
    */
   const list = useAsyncList({
     async load({ filterText }) {
+      if ( debounced.current.firstLoad ) {
+        debounced.current.firstLoad = false
+      }else{
+        /**
+         * Adds delay to avoid sending new request while the user is typing
+         */
+        if ( debounced.current.status === 'waiting' ) {
 
-      /**
-       * Adds delay to avoid sending new request while the user is typing
-       */
-      if ( debounced.current.status === 'waiting' ) {
+          const delay = props.debounceTime ?? 200
+          clearTimeout( debounced.current.callback )
 
-        const delay = props.debounceTime ?? 200
-        clearTimeout( debounced.current.callback )
-
-        debounced.current = {
-          status    :'waiting',
-          callback  : setTimeout(() => {
-            debounced.current.status = false
-            list.setFilterText( filterText )
-          }, delay )
+          debounced.current = {
+            status    :'waiting',
+            callback  : setTimeout(() => {
+              debounced.current.status = false
+              list.setFilterText( filterText )
+            }, delay )
+          }
+          return;
         }
-        return;
+
+        debounced.current.status = 'waiting'
       }
 
-      debounced.current.status = 'waiting'
 
       const data = {
         ...(props.asyncArgs ?? {}),
