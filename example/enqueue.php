@@ -19,11 +19,17 @@ $plugin->enqueue = function() use($plugin, $fields) {
 
   wp_enqueue_script( 
     'fields-example',
-    $plugin->assets_url . '/build/example.min.js', 
+    $plugin->assets_url . '/build/example.min.js',
+    ['wp-element'],
+    $plugin->version,
+    true
   );
+
   wp_enqueue_style( 
     'fields-example',
-    $plugin->assets_url . '/build/example.min.css', 
+    $plugin->assets_url . '/build/example.min.css',
+    [],
+    $plugin->version,
   );
 
   wp_enqueue_script( 
@@ -42,5 +48,4 @@ $plugin->enqueue = function() use($plugin, $fields) {
     '11.9.0'
   );
 
-  
 };
