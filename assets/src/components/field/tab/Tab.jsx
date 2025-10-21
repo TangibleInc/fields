@@ -24,7 +24,7 @@ const Tab = props => {
   const [value, setValue] = useState( initJSON( props.value ) )
 
   useEffect(() => props.onChange && props.onChange(value), [value])
-  
+
   return(
     <>
       <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(value) } />
@@ -49,10 +49,10 @@ const Tab = props => {
               { ...props }
               name={ null } 
               fields={ tab.fields } 
-              value={ value[ indexTab ] ?? {} }
+              value={ value[ tab.name ] ?? {} }
               onChange={ tabValue => setValue({
                 ...value,
-                [indexTab]: tabValue
+                [ tab.name ]: tabValue
               }) }
             />
           </Content> )) }
