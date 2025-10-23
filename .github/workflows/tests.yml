@@ -24,8 +24,7 @@ jobs:
       - name: Git safe.directory
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Install Composer dependencies
-        run: |
-          composer install --no-interaction --no-progress --optimize-autoloader
+        run: composer install --no-interaction --no-progress --optimize-autoloader
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
       - name: Install dependencies
