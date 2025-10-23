@@ -2,10 +2,9 @@ name: Release
 permissions:
   contents: write
 on:
-  workflow_run:
-    workflows: [Run Tests]
-    types:
-      - completed
+  push:
+    branches:
+      - main
 jobs:
   tests:
     uses: ./.github/workflows/tests.yml # Run tests
