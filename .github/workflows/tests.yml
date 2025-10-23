@@ -22,8 +22,7 @@ jobs:
           tools: phpunit-polyfills
       # Configure workspace as safe for Git, to solve: https://github.com/composer/composer/issues/12221
       - name: Git safe.directory
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Install Composer dependencies
         run: |
           composer install --no-interaction --no-progress --optimize-autoloader
