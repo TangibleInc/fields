@@ -1,7 +1,9 @@
 name: Run Tests
 permissions:
   contents: write
-on: push
+on:
+  push:
+  workflow_call: # Allow this workflow to be called from other workflows
 jobs:
   tests:
     timeout-minutes: 15
