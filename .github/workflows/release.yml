@@ -47,3 +47,6 @@ jobs:
           make_latest: true
       - name: After release script
         run: bun run publish/pipeline/after-release.ts
+  publish:
+    uses: ./.github/workflows/publish.yml
+    needs: [tests] # Require tests to pass before release
