@@ -4,7 +4,10 @@ permissions:
 on:
   workflow_run:
     workflows: ["Run Tests"]
-    branches: [main]
+    tags:
+      - '*'
+    branches:
+      - main
     types:
       - completed
 jobs:
