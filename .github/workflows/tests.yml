@@ -2,10 +2,11 @@ name: Run Tests
 permissions:
   contents: write
 on:
+  # Release workflow calls this manually for main and tags
   push:
     branches:
       - '!main'
-  workflow_call: # Allow this workflow to be called from other workflows
+  workflow_call: # Can called from other workflows
 jobs:
   tests:
     timeout-minutes: 15
