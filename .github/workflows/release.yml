@@ -2,16 +2,17 @@ name: Release
 permissions:
   contents: write
 on:
-  workflow_run:
-    workflows: [Run Tests]
-    types:
-      - completed
+  push:
+    tags:
+      - '*'
+    branches:
+      - main
 jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml # Run tests
   build:
     runs-on: ubuntu-latest
-    # Only build release if tests of previous workflow passed
-    # https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#running-a-workflow-based-on-the-conclusion-of-another-workflow
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: [tests] # Require tests to pass before release
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,3 +47,6 @@ jobs:
           make_latest: true
       - name: After release script
         run: bun run publish/pipeline/after-release.ts
+  publish:
+    uses: ./.github/workflows/publish.yml
+    needs: [tests] # Require tests to pass before publish

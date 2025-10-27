@@ -2,11 +2,10 @@ name: Publish NPM package
 permissions:
   contents: write
 on:
-  push:
-    tags:
-      - '*'
+  # Release workflow calls this after shared test step succeeds
+  workflow_call: # Can called from other workflows
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

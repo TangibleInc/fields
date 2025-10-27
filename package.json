@@ -45,7 +45,7 @@
     "env:destroy": "wp-env destroy",
     "env:clean": "wp-env clean all",
     "-- End-to-end testing --": "https://playwright.dev/",
-    "e2e": "playwright test --config playwright.config.js",
+    "e2e": "playwright test --config playwright.config.js --reporter=list",
     "e2e:install": "playwright install chromium",
     "e2e:debug": "npm run e2e -- --debug",
     "e2e:ui": "npm run e2e -- --ui",

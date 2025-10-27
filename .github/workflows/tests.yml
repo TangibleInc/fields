@@ -1,7 +1,12 @@
 name: Run Tests
 permissions:
   contents: write
-on: push
+on:
+  # Release workflow calls this manually for main and tags
+  push:
+    branches:
+      - '!main'
+  workflow_call: # Can called from other workflows
 jobs:
   tests:
     timeout-minutes: 15
@@ -20,11 +25,9 @@ jobs:
           tools: phpunit-polyfills
       # Configure workspace as safe for Git, to solve: https://github.com/composer/composer/issues/12221
       - name: Git safe.directory
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Install Composer dependencies
-        run: |
-          composer install --no-interaction --no-progress --optimize-autoloader
+        run: composer install --no-interaction --no-progress --optimize-autoloader
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
       - name: Install dependencies
