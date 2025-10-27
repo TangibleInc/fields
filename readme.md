@@ -76,15 +76,15 @@ Format to code standard
 npm run format
 ```
 
-## Local test site
+## Local dev site
 
-Start a local test site using [`wp-now`](https://github.com/WordPress/playground-tools/blob/trunk/packages/wp-now/README.md).
+Start a local dev site using [`wp-env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/).
 
 ```sh
 npm run start
 ```
 
-For convenience, this also concurrently runs `npm run dev`.
+For details see [Tests](#tests) below.
 
 ### Dev dependencies
 
@@ -145,32 +145,32 @@ Alternatively, you can use the [wp-env](https://developer.wordpress.org/block-ed
 The test environment is started by running:
 
 ```sh
-npm run env:start
+npm run start
 ```
 
 This uses [`wp-env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/), which requires Docker to be installed. There are instructions available for installing Docker on [Windows](https://docs.docker.com/desktop/install/windows-install/), [macOS](https://docs.docker.com/desktop/install/mac-install/), and [Linux](https://docs.docker.com/desktop/install/linux-install/).
 
-Visit [http://localhost:8888](http://localhost:8888) to see the dev site, and [http://localhost:8889](http://localhost:8880) for the test site, whose database is cleared on every run.
+Visit [http://localhost:8888](http://localhost:8888) to see the dev site (default user `admin` with `password`); and [http://localhost:8889](http://localhost:8880) for the test site, whose database is cleared on every run.
 
 Before running tests, install PHPUnit as a dev dependency using Composer in the container.
 
 ```sh
-npm run env:composer:install
+npm run composer:install
 ```
 
 To run the tests:
 
 ```sh
-npm run env:test:8.2
-npm run env:test:7.4
+npm run test:8.2
+npm run test:7.4
 ```
 
-The version-specific commands take a while to start, but afterwards you can run npm run env:test to re-run tests in the same environment.
+The version-specific commands take a while to start, but afterwards you can run npm run test to re-run tests in the same environment.
 
 To stop the Docker process:
 
 ```sh
-npm run env:stop
+npm run stop
 ```
 
 To “destroy” and remove cache:
@@ -184,7 +184,7 @@ npm run env:destroy
 To run more than one instance of `wp-env`, set different ports for the dev and test sites:
 
 ```sh
-WP_ENV_PORT=3333 WP_ENV_TESTS_PORT=3334 npm run env:start
+WP_ENV_PORT=3333 WP_ENV_TESTS_PORT=3334 npm run start
 ```
 
 ---
