@@ -1,8 +1,8 @@
 export default {
   testEnvironment: 'jsdom',
   setupFiles: [
-    './setup/config.js',
-    './setup/range.js',
-    './setup/timeout.js'
+    './setup/config.ts',
+    './setup/range.ts',
+    './setup/timeout.ts'
   ]
 }
