@@ -7,7 +7,7 @@ export default {
      * Script: Common for all contexts
      */
     {
-      src: 'assets/src/global.js',
+      src: 'assets/src/global.ts',
       dest: 'assets/build/index.min.js',
       react: 'wp',
       rollupPlugins: [
@@ -41,7 +41,7 @@ export default {
      * Example
      */
     {
-      src: 'assets/src/example/index.js',
+      src: 'assets/src/example/index.ts',
       dest: 'assets/build/example.min.js',
       react: 'wp',
     },

@@ -4,8 +4,8 @@ permissions:
 on:
   # Release workflow calls this manually for main and tags
   push:
-    branches:
-      - '!main'
+    branches-ignore:
+      - 'main'
   workflow_call: # Can called from other workflows
 jobs:
   tests:
