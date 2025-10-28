@@ -8,7 +8,7 @@ import {
 import {
   repeaterDispatcher,
   initDispatcher
-} from './dispatcher.js'
+} from './dispatcher.ts'
 
 import {
   Button,
@@ -16,9 +16,9 @@ import {
   ModalTrigger
 } from '../base'
 
-import types from '../../types.js'
+import types from '../../types.ts'
 import Item from './common/Item'
-import strings from './strings.js'
+import strings from './strings.ts'
 
 const Repeater = props => {
 

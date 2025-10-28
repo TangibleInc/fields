@@ -1,10 +1,10 @@
-import * as fields from '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.tsx'
 import { render, screen, fireEvent } from '@testing-library/react'
 import {
   rendersWithMinimal,
   rendersWithoutLabelThrowWarning,
   rendersLabelAndDescription
-} from '../../../utils/fields.js'
+} from '../../../utils/fields.ts'
 
 describe('Time Picker component', () => {
 

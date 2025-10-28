@@ -3,13 +3,13 @@ import {
   useState,
   useContext
 } from 'react'
-import { ControlContext } from './index.jsx'
+import { ControlContext } from './index.tsx'
 
 import { triggerEvent } from './events'
 import { OverlayProvider } from 'react-aria'
 import { dynamicValuesAPI } from './dynamic-values'
 
-import types from './types.js'
+import types from './types.ts'
 import DependendWrapper from './components/dependent/DependendWrapper'
 import RenderWrapper from './components/render/RenderWrapper'
 import VisibilityWrapper from './components/visibility/VisibilityWrapper'

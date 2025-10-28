@@ -1,4 +1,4 @@
-import { setConfig } from '../../../assets/src/config.js'
+import { setConfig } from '../../../assets/src/config.ts'
 
 setConfig({
   api: {

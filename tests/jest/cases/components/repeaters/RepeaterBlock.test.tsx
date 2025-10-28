@@ -1,6 +1,6 @@
-import '../../../../../assets/src/index.jsx'
-import { commonRepeaterTests } from './common.js'
-import { bulkActionsRepeaterTests } from './bulkActions.js'
+import '../../../../../assets/src/index.tsx'
+import { commonRepeaterTests } from './common.ts'
+import { bulkActionsRepeaterTests } from './bulkActions.ts'
 
 describe('Repeater with a block layout', () => {
   

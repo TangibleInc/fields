@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import * as fields from '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.tsx'
 
 /**
  * Run common tests for bulk actions (currently advanced and block layout only)

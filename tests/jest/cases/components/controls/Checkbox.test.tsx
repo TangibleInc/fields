@@ -1,4 +1,4 @@
-import * as fields from '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.tsx'
 import userEvent from '@testing-library/user-event'
 import { 
   render, 
@@ -8,7 +8,7 @@ import {
   rendersWithMinimal,
   rendersWithoutLabelThrowWarning,
   rendersLabelAndDescription
-} from '../../../utils/fields.js'
+} from '../../../utils/fields.ts'
 
 describe('Checkbox component', () => {
 

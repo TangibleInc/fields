@@ -1,4 +1,4 @@
-import * as fields from '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.tsx'
 import { forwardRef } from 'react'
 import {
     getAllByLabelText,

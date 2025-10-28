@@ -1,6 +1,6 @@
 import { render, within } from '@testing-library/react'
-import * as fields from '../../../../../assets/src/index.jsx'
-import { commonRepeaterTests } from './common.js'
+import * as fields from '../../../../../assets/src/index.tsx'
+import { commonRepeaterTests } from './common.ts'
 
 describe('Repeater with a table layout', () => {
   

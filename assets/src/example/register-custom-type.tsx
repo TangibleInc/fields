@@ -3,7 +3,7 @@ import {
   useEffect,
   createRoot
 } from 'react'
-import * as tangibleFields from '../index.jsx'
+import * as tangibleFields from '../index.tsx'
 
 const initExample = () => {
 

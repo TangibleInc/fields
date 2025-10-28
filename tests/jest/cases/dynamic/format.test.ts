@@ -3,7 +3,7 @@ import {
   dynamicValuesAPI,
   defaultConfig
 } from '../../../../assets/src/dynamic-values'
-import { getConfig } from '../../../../assets/src/index.jsx'
+import { getConfig } from '../../../../assets/src/index.tsx'
 
 describe('dynamic values feature - format', () => {
 

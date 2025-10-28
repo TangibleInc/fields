@@ -1,10 +1,10 @@
-import * as fields from '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.tsx'
 import { render, within } from '@testing-library/react'
 import { 
   rendersWithoutLabelThrowWarning,
   renderHasElement,
   renderHasNotElement
-} from '../../../utils/fields.js'
+} from '../../../utils/fields.ts'
 
 describe('Select component', () => {
 

@@ -1,9 +1,9 @@
-import '../../../../../assets/src/index.jsx'
+import '../../../../../assets/src/index.tsx'
 import {
   rendersWithMinimal,
   rendersWithoutLabelThrowWarning,
   rendersLabelAndDescription
-} from '../../../utils/fields.js'
+} from '../../../utils/fields.ts'
 
 describe('Code component', () => {
   it('renders with minimal config', () => rendersWithMinimal({ type: 'code' }))

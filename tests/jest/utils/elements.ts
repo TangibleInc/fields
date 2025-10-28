@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import * as fields from '../../../assets/src/index.jsx'
+import * as fields from '../../../assets/src/index.tsx'
 
 const renderHasElement = (config, getElement) => {
 

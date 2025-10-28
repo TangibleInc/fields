@@ -1,4 +1,4 @@
-import * as fields from '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.tsx'
 import { render } from '@testing-library/react'
 import {
   rendersWithMinimal,
@@ -6,7 +6,7 @@ import {
   rendersLabelAndDescription,
   renderHasElement,
   renderHasNotElement
-} from '../../../utils/fields.js'
+} from '../../../utils/fields.ts'
 
 describe('Button group component', () => {
 

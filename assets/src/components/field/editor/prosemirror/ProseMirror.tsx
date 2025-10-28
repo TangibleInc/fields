@@ -15,7 +15,7 @@ import {
   exampleSetup,
   buildMenuItems
 } from 'prosemirror-example-setup'
-import { types } from '../../../../index.jsx'
+import { types } from '../../../../index.tsx'
 
 import CodeEditor from '../../code/Editor'
 

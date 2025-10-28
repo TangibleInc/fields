@@ -8,7 +8,7 @@ import {
   Overlay, 
   usePopover
 } from 'react-aria'
-import { ControlContext } from '../../../index.jsx'
+import { ControlContext } from '../../../index.tsx'
 
 function Popover({ 
   children, 

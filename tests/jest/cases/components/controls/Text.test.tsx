@@ -1,4 +1,4 @@
-import * as fields from '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.tsx'
 import { 
   act, 
   render
@@ -10,7 +10,7 @@ import {
   rendersLabelAndDescription,
   renderHasElement,
   renderHasNotElement
-} from '../../../utils/fields.js'
+} from '../../../utils/fields.ts'
 
 describe('Text component', () => {
 

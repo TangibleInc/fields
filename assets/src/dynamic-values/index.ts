@@ -2,7 +2,7 @@ import {
   dynamicValueToString,
   stringToDynamicValue
 } from './format'
-import { getConfig } from '../index.jsx'
+import { getConfig } from '../index.tsx'
 
 /**
  * Field type that support dynamic values (!== to supported props.dyanmic.types)

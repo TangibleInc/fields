@@ -1,4 +1,4 @@
-import * as fields from '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.tsx'
 import '@testing-library/jest-dom'
 import { render } from '@testing-library/react'
 

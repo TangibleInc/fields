@@ -1,6 +1,6 @@
-import * as fields from '../../../../../assets/src/index.jsx'
-import { commonRepeaterTests } from './common.js'
-import { bulkActionsRepeaterTests } from './bulkActions.js'
+import * as fields from '../../../../../assets/src/index.tsx'
+import { commonRepeaterTests } from './common.ts'
+import { bulkActionsRepeaterTests } from './bulkActions.ts'
 import { within, render } from '@testing-library/react'
 
 describe('Repeater with an advanced layout', () => {

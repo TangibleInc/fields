@@ -1,5 +1,5 @@
-import '../../../../../assets/src/index.jsx'
-import { renderHasElement } from '../../../utils/elements.js'
+import '../../../../../assets/src/index.tsx'
+import { renderHasElement } from '../../../utils/elements.ts'
 
 describe('Tooltip component', () => {
 

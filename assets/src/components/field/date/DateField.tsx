@@ -7,7 +7,7 @@ import {
   useLocale 
 } from 'react-aria'
 
-import DateSegment from './DateSegment.jsx'
+import DateSegment from './DateSegment.tsx'
 
 const DateField = props => {
   

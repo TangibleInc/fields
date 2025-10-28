@@ -2,7 +2,7 @@ import {
   post, 
   get 
 } from '.'
-import { getConfig } from '../index.jsx'
+import { getConfig } from '../index.tsx'
 
 const postMedia = file => {
 

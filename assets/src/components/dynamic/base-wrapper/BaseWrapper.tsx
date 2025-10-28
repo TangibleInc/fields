@@ -10,7 +10,7 @@ import {
   useOverlayTrigger,
 } from 'react-aria'
 
-import { getConfig } from '../../../index.jsx'
+import { getConfig } from '../../../index.tsx'
 import Control from '../../../Control'
 
 import { useOverlayTriggerState } from 'react-stately'

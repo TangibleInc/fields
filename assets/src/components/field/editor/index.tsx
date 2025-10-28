@@ -1,5 +1,5 @@
 import ProseMirror from './prosemirror/Editor'
-import TinyMce from './TinyMce.jsx'
+import TinyMce from './TinyMce.tsx'
 
 export default props => {
 

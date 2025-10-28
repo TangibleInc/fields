@@ -1,4 +1,4 @@
-import * as tangibleFields from '../../index.jsx'
+import * as tangibleFields from '../../index.tsx'
 
 /**
  * Returns an object that can be used to map which exterior field will trigger which value

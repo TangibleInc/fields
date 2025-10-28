@@ -1,5 +1,5 @@
-import * as fields from '../../../assets/src/index.jsx'
-import { uniqid } from '../../../assets/src/utils.js'
+import * as fields from '../../../assets/src/index.tsx'
+import { uniqid } from '../../../assets/src/utils.ts'
 import { userEvent } from '@testing-library/user-event'
 import {
   render,

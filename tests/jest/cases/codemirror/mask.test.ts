@@ -1,6 +1,6 @@
-import '../../../../assets/src/index.jsx'
+import '../../../../assets/src/index.tsx'
 import { userEvent } from '@testing-library/user-event'
-import { createInput } from '../../../../assets/src/codemirror/index.js'
+import { createInput } from '../../../../assets/src/codemirror/index.ts'
 
 describe('codeMirror - Mask', () => {
 

@@ -1,4 +1,4 @@
-import * as fields from '../../../../../assets/src/index.jsx'
+import * as fields from '../../../../../assets/src/index.tsx'
 import { 
   render,
   screen,
@@ -7,7 +7,7 @@ import {
 import { 
   rendersWithMinimal,
   rendersWithoutLabelThrowWarning
-} from '../../../utils/fields.js'
+} from '../../../utils/fields.ts'
 import { userEvent } from '@testing-library/user-event'
 
 describe('List component', () => {

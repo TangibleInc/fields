@@ -1,4 +1,4 @@
-import * as tangibleFields from '../../../../index.jsx'
+import * as tangibleFields from '../../../../index.tsx'
 
 /**
  * This file contains helper functions that are used to render

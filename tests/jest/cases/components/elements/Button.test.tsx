@@ -1,5 +1,5 @@
-import * as fields from '../../../../../assets/src/index.jsx'
-import { renderHasElement } from '../../../utils/elements.js'
+import * as fields from '../../../../../assets/src/index.tsx'
+import { renderHasElement } from '../../../utils/elements.ts'
 import userEvent from '@testing-library/user-event'
 import { 
   within,

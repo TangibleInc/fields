@@ -1,4 +1,4 @@
-import { getConfig } from '../index.jsx'
+import { getConfig } from '../index.tsx'
 
 const post = (url, data) => {
 

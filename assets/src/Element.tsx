@@ -3,12 +3,12 @@ import {
   useContext,
   useEffect
 } from 'react'
-import { ControlContext } from './index.jsx'
+import { ControlContext } from './index.tsx'
 
-import types from './types.js'
+import types from './types.ts'
 import DependendWrapper from './components/dependent/DependendWrapper'
 import VisibilityWrapper from './components/visibility/VisibilityWrapper'
-import RenderWrapper from './components/render/RenderWrapper.jsx'
+import RenderWrapper from './components/render/RenderWrapper.tsx'
 
 /**
  * Really similar to Control component, expect it has no values

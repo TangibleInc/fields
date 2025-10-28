@@ -14,7 +14,7 @@ import {
   Description, 
   Label
 } from "../../base"
-import { getConfig } from '../../../index.jsx'
+import { getConfig } from '../../../index.tsx'
 
 import { postMedia } from "../../../requests/media"
 import FilePreview from "./FilePreview"
