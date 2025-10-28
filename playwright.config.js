@@ -14,7 +14,7 @@ const readJson = (f) => JSON.parse(fs.readFileSync(f, 'utf8'))
 export default (function createConfig() {
   const cwd = process.cwd()
   const testDir = path.join(cwd, 'tests')
-  const testMatch = 'e2e/**/*.js'
+  const testMatch = 'e2e/**/*.{js,ts}'
   const timeout = parseInt(process.env.TIMEOUT || '', 10) || 100_000 // Defaults to 100 seconds
   const artifactsPath = (process.env.WP_ARTIFACTS_PATH ??= path.join(
     cwd,
