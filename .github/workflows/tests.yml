@@ -6,7 +6,6 @@ on:
   push:
     branches-ignore:
       - 'main'
-  pull_request:
   workflow_call: # Can called from other workflows
 jobs:
   tests:
