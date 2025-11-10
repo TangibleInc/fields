@@ -31,9 +31,9 @@ jobs:
         run: npx storybook build --output-dir storybook-static
 
       # Determines to publish on dev or main
+      - uses: nelonoel/branch-name@v1
       - name: Set Cloudflare Pages branch
         id: cf
-        uses: nelonoel/branch-name@v1
         run: |
           if [[ "${{ github.ref_type }}" == "tag" ]] || [[ "$BRANCH_NAME" == "main" ]]; then
             echo "branch=main" >> "$GITHUB_OUTPUT"
