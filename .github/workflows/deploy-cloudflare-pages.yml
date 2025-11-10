@@ -1,0 +1,53 @@
+# Workflow name
+name: Build and Publish Storybook to CloudFlare Pages
+
+on:
+  # workflow will run on any push
+  push: {}
+
+permissions:
+  contents: read
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    
+    # Job steps
+    steps:
+      # Manual Checkout
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Set up Node
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Storybook
+        run: npx storybook build --output-dir storybook-static
+
+      # Determines to publish on dev or main
+      - name: Set Cloudflare Pages branch
+        id: cf
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            echo "branch=main" >> "$GITHUB_OUTPUT"
+          else
+            echo "branch=development" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Publishes to dev if no tag on commit, otherwise publishes to main(production)
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: storybook-fields
+          directory: storybook-static
+          branch: ${{ steps.cf.outputs.branch }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
