@@ -46,7 +46,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: storybook-tangible-fields
+          projectName: storybook-fields
           directory: storybook-static
           branch: ${{ steps.cf.outputs.branch }}
         env:
