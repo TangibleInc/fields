@@ -33,8 +33,9 @@ jobs:
       # Determines to publish on dev or main
       - name: Set Cloudflare Pages branch
         id: cf
+        uses: nelonoel/branch-name@v1
         run: |
-          if [ "${{ github.ref_type }}" = "tag" ]; then
+          if [[ "${{ github.ref_type }}" == "tag" ]] || [[ "$BRANCH_NAME" == "main" ]]; then
             echo "branch=main" >> "$GITHUB_OUTPUT"
           else
             echo "branch=development" >> "$GITHUB_OUTPUT"
