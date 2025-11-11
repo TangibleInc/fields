@@ -34,9 +34,11 @@ jobs:
       - name: Set Cloudflare Pages branch
         id: cf
         run: |
-          if [[ "${{ github.ref_type }}" == "tag" ]] || [[ "$GITHUB_REF_NAME" == "main" ]]; then
+          if [ "${{ github.ref_type }}" == "tag" ] || [ "$GITHUB_REF_NAME" == "main" ]; then
+            echo "Main site"
             echo "branch=main" >> "$GITHUB_OUTPUT"
           else
+            echo "Dev site"
             echo "branch=development" >> "$GITHUB_OUTPUT"
           fi
 
