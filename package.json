@@ -60,6 +60,7 @@
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.36.5",
     "@react-aria/color": "^3.0.6",
+    "mime-types": "^3.0.2",
     "prosemirror-example-setup": "^1.2.3",
     "prosemirror-menu": "^1.2.4",
     "prosemirror-model": "^1.25.0",
