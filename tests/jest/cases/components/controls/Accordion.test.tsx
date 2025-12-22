@@ -11,6 +11,7 @@ describe('Accordion component', () => {
         { fields.render({
           name    : 'accordion-name',
           type    : 'accordion',
+          isOpen  : true,
           value   : { 
             subfield1 : 'Subvalue1', 
             subfield2 : 'Subvalue2'
