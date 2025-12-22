@@ -33,7 +33,6 @@ const Accordion = props => {
       </div>  
     : null
 
-  console.log( props );
   return(
     <div className='tf-accordion'>
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
