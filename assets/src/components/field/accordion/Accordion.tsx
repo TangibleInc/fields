@@ -32,14 +32,16 @@ const Accordion = props => {
         />
       </div>  
     : null
-  
+
+  console.log( props );
   return(
     <div className='tf-accordion'>
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
       <ExpandablePanel 
         title={ props.title ?? false }  
         headerLeft={ headerLeft }
-        behavior={ 'hide' }
+        behavior={ 'show' }
+        isOpen={ props.isOpen ?? false }
       >
         <FieldGroup 
           { ...props }
