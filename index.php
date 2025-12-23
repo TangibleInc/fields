@@ -13,7 +13,7 @@ endif;
 
   public $name = 'tangible_fields';
   // Remember to update the version - Expected format: YYYYMMDD
-  public $version = '20251128';
+  public $version = '20251223';
 
   // Dynamic methods
   function __call( $method = '', $args = [] ) {
