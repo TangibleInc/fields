@@ -47,8 +47,9 @@ $documentation->register_section('fields', [
       'title' => 'Accordion',
       'path'  => 'fields/accordion',
       'fields'=> [
-        'accordion'             => [ 'json' => true ],
-        'accordion-with-switch' => [ 'json' => true ]
+        'accordion'                 => [ 'json' => true ],
+        'accordion-open-by-default' => [ 'json' => true ],
+        'accordion-with-switch'     => [ 'json' => true ]
       ]
     ],
     'alignment_matrix' => [
