@@ -21,3 +21,11 @@ $fields->set_context = function(string $context) use($fields) {
 
   $fields->enqueued_contexts []= $context; 
 };
+
+/**
+ * By default, assume we want to use the wp context inside the
+ * wordpress admin
+ */
+add_action( 'admin_init', function() use( $fields ) {
+  $fields->set_context( 'wp' );
+}, 1 );
