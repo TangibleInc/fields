@@ -1,7 +1,5 @@
 #### Description
 
-Registration is required if you render your field from `php`.
-
 To register a field, the `$fields->register_field()` function is used. It takes 2 arguments:
 - The field name
 - An array with the configuration of the field that can contain: 
@@ -20,5 +18,3 @@ echo $fields->render_field('field-name');
 ```
 
 More information on the save/load configuration in the next page.
-
-

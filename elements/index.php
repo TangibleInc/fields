@@ -57,9 +57,6 @@ $fields->render_element = function(
 ) use($fields) : string {
 
   if ( ! $field = $fields->get_element( $name ) ) {
-    $caller = current( debug_backtrace() );
-    trigger_error("Element {$name} is not registered, called from <b>{$caller['file']}</b> in <b>{$caller['line']}</b>. Permissions, storage, validation callbacks are inert.", E_USER_WARNING);
-
     $fields->register_element( $name, $args );
     return $fields->render_element( $name );
   }

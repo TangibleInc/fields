@@ -57,9 +57,6 @@ $fields->render_field = function(
 ) use($fields) : string {
 
   if ( ! $field = $fields->get_field( $name ) ) {
-    $caller = current( debug_backtrace() );
-    trigger_error("Field {$name} is not registered, called from <b>{$caller['file']}</b> in <b>{$caller['line']}</b>. Permissions, storage, validation callbacks are inert.", E_USER_WARNING);
-
     $fields->register_field( $name, $args );
     return $fields->render_field( $name );
   }

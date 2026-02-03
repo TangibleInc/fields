@@ -33,20 +33,10 @@ class RenderField_TestCase extends WP_UnitTestCase {
   }
 
   public function test_fields_render_compat() {
-    $errored = null;
-    set_error_handler(function($errno, $errstr, ...$args) use (&$errored) {
-      $errored = [$errno, $errstr, $args];
-      restore_error_handler();
-    });
 
     $html = tangible_fields()->render_field('test', [
       'type' => 'switch',
     ]);
-
-    $this->assertNotNull($errored, 'calling render_field without register_field did not trigger a warning');
-    [$errno, $errstr, $args] = $errored;
-
-    $this->assertEquals(E_USER_WARNING, $errno, 'calling render_field without register_field did not trigger an E_USER_WARNING');
 
     preg_match('#tangible-field-test-[^"]+#', $html, $matches);
     [$element] = $matches;
