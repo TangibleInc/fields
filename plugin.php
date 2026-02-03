@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Tangible Fields
  * Description: React-based custom fields library
- * Version: 2025.11.28
+ * Version: 2026.02.03
  */
 use tangible\updater;
 
