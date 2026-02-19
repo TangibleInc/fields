@@ -1,6 +1,6 @@
 @import '../default/variables.scss';
 
-// We only need to define the variables we need to overwrite 
+// We only need to define the variables we need to overwrite
 $global-theme-color: var(--wp-admin-theme-color, #3858E9);
 $global-theme-color-darker-10: var(--wp-components-color-accent-darker-10, var(--wp-admin-theme-color-darker-10, #006ba1));
 
@@ -37,7 +37,7 @@ $button-color--hover: $global-theme-color-darker-10;
 
 @import '../default/mixins.scss';
 
-// We only need to defined the mixin we need to overwrite
+// We only need to define the mixin we need to overwrite
 @mixin field-focus {
   border-color: $field-focus-color;
   box-shadow: 0 0 0 1px $field-focus-color;
@@ -46,10 +46,7 @@ $button-color--hover: $global-theme-color-darker-10;
 
 .tf-context-wp {
   @import '../../components/index.scss';
-  // wp context specific rules
-  @import './components/text-input.scss';
-  @import './components/file.scss';
-  @import './components/button.scss';
 }
 
+@import '../../themes/wp.scss';
 @import '../../lib/prose-mirror/index.scss';

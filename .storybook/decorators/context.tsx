@@ -42,7 +42,7 @@ const ContextFrame = ({
 
   return (
     <div className={`${contextClass} ${modeClass}`} style={colorScheme ? { colorScheme } : undefined}>
-      <div className="tui-interface" data-theme={themeAttr} style={{ backgroundColor: 'var(--tui-color-bg)' }}>
+      <div className="tui-interface" data-theme={themeAttr}>
         <Story />
       </div>
     </div>

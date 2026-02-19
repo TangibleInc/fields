@@ -1,0 +1,59 @@
+/*
+ * WordPress context theme overrides.
+ * Keep context-specific styling centralized here instead of per-component files.
+ */
+
+@mixin wp-tokens-light {
+  --tui-theme-primary-subtlest: #C5D9ED;
+  --tui-theme-primary-subtler: #9EC2E6;
+  --tui-theme-primary-subtle: #4F94D4;
+  --tui-theme-primary-base: var(--wp-admin-theme-color, #135E96);
+  --tui-theme-primary-strong: var(--wp-components-color-accent-darker-10, #006ba1);
+  --tui-theme-primary-stronger: var(--wp-components-color-accent-darker-20, #043959);
+  --tui-theme-primary-strongest: #01263A;
+
+  --tui-color-bg: #ffffff;
+  --tui-color-bg-surface: #ffffff;
+  --tui-color-bg-elevated: #ffffff;
+  --tui-color-fg: #1d2327;
+  --tui-color-fg-muted: #50575e;
+  --tui-color-border: #c3c4c7;
+  --tui-color-divider: #dcdcde;
+
+  --tui-focus-ring-color: var(--wp-admin-theme-color, #3858e9);
+}
+
+@mixin wp-tokens-dark {
+
+  --tui-theme-primary-subtlest: #01263A;
+  --tui-theme-primary-subtler: var(--wp-components-color-accent-darker-20, #043959);
+  --tui-theme-primary-subtle: var(--wp-components-color-accent-darker-10, #006ba1);
+  --tui-theme-primary-base: var(--wp-admin-theme-color, #135E96);
+  --tui-theme-primary-strong: #4382bd;
+  --tui-theme-primary-stronger: #5b91c7;
+  --tui-theme-primary-strongest: #C5D9ED;
+
+  --tui-color-bg: #1f2328;
+  --tui-color-bg-surface: #2c3338;
+  --tui-color-bg-elevated: #32373c;
+  --tui-color-fg: #f0f0f1;
+  --tui-color-fg-muted: #c3c4c7;
+  --tui-color-border: #50575e;
+  --tui-color-divider: #3c434a;
+
+  --tui-focus-ring-color: #72aee6;
+}
+
+.tf-context-wp .tui-interface {
+  @include wp-tokens-light;
+
+  --tui-focus-ring-offset: 1px;
+
+  /* Component-level remaps that make WP influence obvious */
+  --tui-button-radius: 2px;
+  --tui-input-radius: 2px;
+}
+
+.tf-context-wp .tui-interface[data-theme='dark'] {
+  @include wp-tokens-dark;
+}
