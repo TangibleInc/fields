@@ -1,42 +1,48 @@
-import React from 'react'
-/** @type { import('@storybook/react-vite').Preview } */
-import '../assets/build/default/index.min.css';
-import '../assets/build/wp/index.min.css';
-import '../assets/build/beaver-builder/index.min.css';
-import '../assets/build/elementor/index.min.css';
+import type { Preview } from '@storybook/react-vite'
 
-import { withContext } from './decorators/context';
+import './preview.css'
+import '@tangible/ui/styles/unlayered'
+import '../assets/src/contexts/default/index.scss'
+import '../assets/src/contexts/wp/index.scss'
+import '../assets/src/contexts/beaver-builder/index.scss'
+import '../assets/src/contexts/elementor/index.scss'
 
-export const decorators = [withContext];
+import { withContext } from './decorators/context'
 
-// React is automatically imported during actual build, but not when using Storybook
-global.React = React
-
-const preview = {
+const preview: Preview = {
+  decorators: [withContext],
   globalTypes: {
     context: {
       description: 'Global theme for components',
       toolbar: {
         title: 'Context',
         icon: 'paintbrush',
-        // Array of plain string values or MenuItem shape (see below)
         items: ['default', 'wp', 'elementor', 'beaver-builder'],
-        // Change title based on selected value
-        dynamicTitle: true,
-      },
+        dynamicTitle: true
+      }
     },
+    colorMode: {
+      description: 'Global color mode',
+      toolbar: {
+        title: 'Mode',
+        icon: 'circlehollow',
+        items: ['light', 'dark', 'auto'],
+        dynamicTitle: true
+      }
+    }
   },
   initialGlobals: {
-    theme: 'default',
+    context: 'default',
+    colorMode: 'light'
   },
   parameters: {
     controls: {
       matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
-      },
-    },
-  },
-};
+        color: /(background|color)$/i,
+        date: /Date$/i
+      }
+    }
+  }
+}
 
-export default preview;
+export default preview

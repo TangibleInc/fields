@@ -10,6 +10,16 @@
   @include button;
 }
 
+/* TUI span fallback compatibility */
+.tui-interface span.tui-button {
+  cursor: pointer;
+}
+
+.tui-interface span.tui-button[aria-disabled='true'],
+.tui-interface span.tui-button.is-disabled {
+  cursor: not-allowed;
+}
+
 .tf-button-danger {
   color: $global-context-destructive;
   border-color: $global-context-destructive;

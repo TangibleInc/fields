@@ -1,65 +1,246 @@
-import { 
-  useRef,
-  forwardRef 
-} from 'react'
-
-import { 
-  useButton,
-  VisuallyHidden
-} from 'react-aria'
+import type { CSSProperties, MouseEvent, ReactNode } from 'react'
+import { forwardRef } from 'react'
+import type { Ref } from 'react'
+import { Button as TuiButton } from '@tangible/ui'
+import type { ButtonProps as TuiButtonProps } from '@tangible/ui'
 
 import { triggerEvent } from '../../../events'
+import LegacyButton from './LegacyButton'
 
-/**
- * @see https://react-spectrum.adobe.com/react-aria/useButton.html
- */
+type MappedLayout =
+  | 'primary'
+  | 'action'
+  | 'danger'
+  | 'text-action'
+  | 'text-primary'
+  | 'text-danger'
 
-const Button = forwardRef(({ 
-  children,
-  ...props 
-}, ref) => {
+interface LayoutConfig {
+  theme: TuiButtonProps['theme']
+  variant: TuiButtonProps['variant']
+}
 
-  /**
-   * Use new ref if no ref forwarded
-   */
-  const _ref = useRef()
-  const buttonRef = ref ?? _ref
+const layoutMap: Record<MappedLayout, LayoutConfig> = {
+  primary: { theme: 'primary', variant: 'solid' },
+  action: { theme: 'secondary', variant: 'outline' },
+  danger: { theme: 'danger', variant: 'solid' },
+  'text-action': { theme: 'secondary', variant: 'ghost' },
+  'text-primary': { theme: 'primary', variant: 'ghost' },
+  'text-danger': { theme: 'danger', variant: 'ghost' }
+}
 
-  // Some props names are going to be different when generated from PHP
-  const content = props.content ?? children
-  const buttonType = props.buttonType ?? 'button'
-  const type = props.layout 
-    ? (props.layout ? `tf-button-${props.layout}` : '')
-    : (props.type ? `tf-button-${props.type}` : '')
+const isMappedLayout = (value: string): value is MappedLayout => value in layoutMap
+let hasWarnedAboutSpanButton = false
+let hasWarnedAboutMissingLabel = false
 
-  const { buttonProps } = useButton(props, ref)
+export interface FieldsButtonProps {
+  size?: TuiButtonProps['size']
+  theme?: TuiButtonProps['theme']
+  variant?: TuiButtonProps['variant']
+  fullWidth?: TuiButtonProps['fullWidth']
+  loading?: TuiButtonProps['loading']
+  leftIconName?: TuiButtonProps['leftIconName']
+  rightIconName?: TuiButtonProps['rightIconName']
+  leftIcon?: TuiButtonProps['leftIcon']
+  rightIcon?: TuiButtonProps['rightIcon']
+  iconSize?: TuiButtonProps['iconSize']
+  href?: TuiButtonProps['href']
+  target?: TuiButtonProps['target']
+  rel?: TuiButtonProps['rel']
+  children?: ReactNode
+  content?: ReactNode
+  layout?: string
+  type?: string
+  buttonType?: 'button' | 'submit' | 'reset'
+  context?: string
+  className?: string
+  style?: CSSProperties
+  name?: string
+  disabled?: boolean
+  isDisabled?: boolean
+  onClick?: (event: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void
+  onPress?: () => void
+  contentVisuallyHidden?: boolean
+  changeTag?: 'button' | 'span'
+  data?: unknown
+  wrapper?: unknown
+  visibility?: unknown
+  itemType?: unknown
+  afterInitialization?: unknown
+  element?: unknown
+  condition?: unknown
+  portalContainer?: unknown
+  onChange?: unknown
+  [key: string]: unknown
+}
 
-  const context = props.context ? `tf-button-is-${props.context}` : ''
-  const classes = `tf-button ${type} ${context} ${props.className ?? ''}`
-  
-  const CustomTag = props.changeTag && props.changeTag == 'span' ? 'span' : 'button'
-  
+const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement, FieldsButtonProps>(
+  (props: FieldsButtonProps, ref) => {
+  const {
+    size,
+    fullWidth,
+    loading,
+    leftIconName,
+    rightIconName,
+    leftIcon,
+    rightIcon,
+    iconSize,
+    href,
+    target,
+    rel,
+    children,
+    content,
+    layout,
+    type,
+    buttonType = 'button',
+    context: _context,
+    data: _data,
+    wrapper: _wrapper,
+    visibility: _visibility,
+    itemType: _itemType,
+    afterInitialization: _afterInitialization,
+    element: _element,
+    condition: _condition,
+    portalContainer: _portalContainer,
+    onChange: _onChange,
+    theme,
+    variant,
+    className,
+    style,
+    name,
+    disabled,
+    isDisabled,
+    onClick,
+    onPress,
+    contentVisuallyHidden,
+    changeTag,
+    ...tuiProps
+  } = props
+
+  const resolvedLayout = String(layout || type || 'action')
+
+  if (!isMappedLayout(resolvedLayout)) {
+    return <LegacyButton ref={ref} {...props} />
+  }
+
+  const mapped = layoutMap[resolvedLayout]
+  const label: ReactNode = content ?? children
+  const stringLabel = typeof label === 'string' ? label : undefined
+  const ariaLabel = contentVisuallyHidden ? stringLabel : undefined
+  const renderedContent = contentVisuallyHidden ? null : label
+  const resolvedDisabled = Boolean(disabled || isDisabled)
+  const resolvedTheme = theme ?? mapped.theme
+  const resolvedVariant = variant ?? mapped.variant
+  const resolvedSize = size ?? 'md'
+  const resolvedLoading = Boolean(loading)
+
+  const handleClick = (event: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
+    onClick?.(event)
+    onPress?.()
+    triggerEvent('buttonPressed', {
+      name: name ?? false,
+      props,
+      event
+    })
+  }
+
+  if (
+    !hasWarnedAboutMissingLabel &&
+    typeof process !== 'undefined' &&
+    process.env.NODE_ENV !== 'production' &&
+    renderedContent == null &&
+    !ariaLabel
+  ) {
+    hasWarnedAboutMissingLabel = true
+    console.warn(
+      '[Fields Button] Button has no visible label and no aria-label. Provide `content`, `children`, or an accessible label.'
+    )
+  }
+
+  if (changeTag === 'span') {
+    if (!hasWarnedAboutSpanButton && typeof process !== 'undefined' && process.env.NODE_ENV !== 'production') {
+      hasWarnedAboutSpanButton = true
+      console.warn(
+        '[Fields Button] `changeTag=\"span\"` is supported for backward compatibility but discouraged. Prefer semantic <button> or <a> usage.'
+      )
+    }
+
+    const themeClass = resolvedTheme === 'destructive' ? 'danger' : resolvedTheme
+    // Keep in sync with TUI Button class contract (tui-button + is-size/theme/style modifiers).
+    // If TUI renames these classes, this span compatibility branch must be updated.
+    const spanClasses = [
+      'tui-button',
+      `is-size-${resolvedSize}`,
+      `is-theme-${themeClass}`,
+      resolvedVariant !== 'solid' ? `is-style-${resolvedVariant}` : '',
+      fullWidth ? 'is-width-full' : '',
+      resolvedDisabled || resolvedLoading ? 'is-disabled' : '',
+      className ?? ''
+    ]
+      .filter(Boolean)
+      .join(' ')
+
+    return (
+      <span
+        ref={ref as Ref<HTMLSpanElement>}
+        {...(tuiProps as Record<string, unknown>)}
+        className={spanClasses}
+        style={style}
+        data-name={name}
+        data-loading={resolvedLoading || undefined}
+        role="button"
+        tabIndex={resolvedDisabled || resolvedLoading ? -1 : 0}
+        aria-disabled={resolvedDisabled || resolvedLoading || undefined}
+        aria-busy={resolvedLoading || undefined}
+        aria-label={ariaLabel}
+        onClick={event => {
+          if (resolvedDisabled || resolvedLoading) return
+          handleClick(event as unknown as MouseEvent<HTMLButtonElement | HTMLAnchorElement>)
+        }}
+        onKeyDown={event => {
+          if (resolvedDisabled || resolvedLoading) return
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault()
+            ;(event.currentTarget as HTMLSpanElement).click()
+          }
+        }}
+      >
+        {renderedContent}
+      </span>
+    )
+  }
+
   return (
-    <CustomTag 
-      className={ classes } 
-      style={ props.style } 
-      { ...buttonProps }
-      onClick={ event => {
-        buttonProps.onClick(event)
-        triggerEvent('buttonPressed', {
-          name  : props.name ?? false,
-          props : props,
-          event : event,
-        })
-      }}
-      ref={ buttonRef } 
-      type={ buttonType }
+    <TuiButton
+      {...(tuiProps as Partial<TuiButtonProps>)}
+      ref={ref as Ref<HTMLButtonElement | HTMLAnchorElement>}
+      theme={resolvedTheme}
+      variant={resolvedVariant}
+      size={size}
+      fullWidth={fullWidth}
+      loading={loading}
+      leftIconName={leftIconName}
+      rightIconName={rightIconName}
+      leftIcon={leftIcon}
+      rightIcon={rightIcon}
+      iconSize={iconSize}
+      href={href}
+      target={target}
+      rel={rel}
+      type={buttonType}
+      disabled={resolvedDisabled}
+      onClick={handleClick as TuiButtonProps['onClick']}
+      className={className}
+      style={style}
+      data-name={name}
+      aria-label={ariaLabel}
     >
-      { props.contentVisuallyHidden
-        ? <VisuallyHidden>{ content }</VisuallyHidden>
-        : content }
-    </CustomTag>
+      {renderedContent}
+    </TuiButton>
   )
-})
+}
+)
+
+Button.displayName = 'Button'
 
 export default Button

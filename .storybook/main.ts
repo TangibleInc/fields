@@ -1,22 +1,23 @@
+import type { StorybookConfig } from '@storybook/react-vite'
 
-
-/** @type { import('@storybook/react-vite').StorybookConfig } */
-const config = {
-  "stories": [
-    "../assets/src/components/**/*.mdx",
-    "../assets/src/components/**/*.stories.@(js|jsx|mjs|ts|tsx)"
+const config: StorybookConfig = {
+  stories: [
+    '../assets/src/components/**/*.mdx',
+    '../assets/src/components/**/*.stories.@(js|jsx|mjs|ts|tsx)'
   ],
-  "addons": [
-    "@storybook/addon-onboarding",
-    "@storybook/addon-docs"
+  addons: [
+    '@storybook/addon-onboarding',
+    '@storybook/addon-docs',
+    '@storybook/addon-a11y'
   ],
-  "framework": {
-    "name": "@storybook/react-vite",
-    "options": {}
+  framework: {
+    name: '@storybook/react-vite',
+    options: {}
   },
   core: {
-    builder: '@storybook/builder-vite', // Replace Webpack with Vite
-    disableTelemetry: true,
+    builder: '@storybook/builder-vite',
+    disableTelemetry: true
   }
-};
-export default config;
+}
+
+export default config
