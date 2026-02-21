@@ -1,36 +1,30 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Open Sans", "Inter", "Helvetica Neue", Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color: initial;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #4338ca;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #3730a3;
-}
-
 body {
   margin: 0;
-  display: flex;
   min-width: 320px;
-  min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+body.tui-interface {
+  min-height: 100vh;
+  background-color: var(--tui-color-bg);
+  color: var(--tui-color-fg);
+}
+
+body.tui-interface.tf-color-mode-dark {
+  color-scheme: dark;
+}
+
+body.tui-interface.tf-color-mode-light {
+  color-scheme: light;
 }
 
 /* Docs story preview: wrapper fills frame */

@@ -27,6 +27,7 @@ const Button = forwardRef(({
 
   // Some props names are going to be different when generated from PHP
   const content = props.content ?? children
+  const testId = props.testId ?? props['data-testid']
   const buttonType = props.buttonType ?? 'button'
   const type = props.layout 
     ? (props.layout ? `tf-button-${props.layout}` : '')
@@ -43,6 +44,7 @@ const Button = forwardRef(({
     <CustomTag 
       className={ classes } 
       style={ props.style } 
+      data-testid={ testId }
       { ...buttonProps }
       onClick={ event => {
         buttonProps.onClick(event)

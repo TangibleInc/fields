@@ -14,6 +14,18 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {}
   },
+  typescript: {
+    reactDocgen: 'react-docgen-typescript',
+    reactDocgenTypescriptOptions: {
+      shouldExtractLiteralValuesFromEnum: true,
+      shouldRemoveUndefinedFromOptional: true,
+      savePropValueAsString: true,
+      propFilter: (prop) => {
+        if (!prop.parent) return true
+        return !/node_modules/.test(prop.parent.fileName)
+      }
+    }
+  },
   core: {
     builder: '@storybook/builder-vite',
     disableTelemetry: true

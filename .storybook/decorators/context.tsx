@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { Decorator } from '@storybook/react-vite'
 
 type Mode = 'light' | 'dark' | 'auto'
@@ -9,7 +9,6 @@ type ContextFrameProps = {
   modeClass: string
   themeAttr?: 'dark'
   colorScheme?: 'light' | 'dark'
-  isDocsView: boolean
 }
 
 const ContextFrame = ({
@@ -17,29 +16,8 @@ const ContextFrame = ({
   contextClass,
   modeClass,
   themeAttr,
-  colorScheme,
-  isDocsView
+  colorScheme
 }: ContextFrameProps) => {
-  useLayoutEffect(() => {
-    if (isDocsView) return
-
-    document.body.classList.add('tui-interface')
-    if (themeAttr) {
-      document.body.setAttribute('data-theme', themeAttr)
-    } else {
-      document.body.removeAttribute('data-theme')
-    }
-    document.body.style.backgroundColor = 'var(--tui-color-bg)'
-    document.body.style.color = 'var(--tui-color-fg)'
-
-    return () => {
-      document.body.classList.remove('tui-interface')
-      document.body.removeAttribute('data-theme')
-      document.body.style.backgroundColor = ''
-      document.body.style.color = ''
-    }
-  }, [themeAttr, isDocsView])
-
   return (
     <div className={`${contextClass} ${modeClass}`} style={colorScheme ? { colorScheme } : undefined}>
       <div className="tui-interface" data-theme={themeAttr}>
@@ -49,7 +27,7 @@ const ContextFrame = ({
   )
 }
 
-export const withContext: Decorator = (Story, { globals, viewMode }) => {
+export const withContext: Decorator = (Story, { globals, viewMode, id }) => {
   const contextClass = `tf-context-${globals.context || 'default'}`
   const colorMode = (globals.colorMode || 'light') as Mode
   const [systemMode, setSystemMode] = useState<'light' | 'dark'>(() => {
@@ -64,19 +42,24 @@ export const withContext: Decorator = (Story, { globals, viewMode }) => {
     const onChange = (event: MediaQueryListEvent) => {
       setSystemMode(event.matches ? 'dark' : 'light')
     }
+    const legacyOnChange = (event: MediaQueryListEvent) => onChange(event)
 
     setSystemMode(media.matches ? 'dark' : 'light')
     if ('addEventListener' in media) {
       media.addEventListener('change', onChange)
     } else {
-      media.addListener(onChange)
+      ;(media as MediaQueryList & {
+        addListener: (listener: (event: MediaQueryListEvent) => void) => void
+      }).addListener(legacyOnChange)
     }
 
     return () => {
       if ('removeEventListener' in media) {
         media.removeEventListener('change', onChange)
       } else {
-        media.removeListener(onChange)
+        ;(media as MediaQueryList & {
+          removeListener: (listener: (event: MediaQueryListEvent) => void) => void
+        }).removeListener(legacyOnChange)
       }
     }
   }, [colorMode])
@@ -89,6 +72,13 @@ export const withContext: Decorator = (Story, { globals, viewMode }) => {
   const themeAttr = resolvedMode === 'dark' ? 'dark' : undefined
   const colorScheme = resolvedMode
   const isDocsView = viewMode === 'docs'
+  const isDocsPage = typeof id === 'string' && id.endsWith('--docs')
+
+  // Keep docs page chrome (controls/table) unwrapped to avoid style leakage,
+  // but still wrap docs story blocks so components render with TUI styles.
+  if (isDocsView && isDocsPage) {
+    return <Story />
+  }
 
   return (
     <ContextFrame
@@ -97,7 +87,6 @@ export const withContext: Decorator = (Story, { globals, viewMode }) => {
       modeClass={modeClass}
       themeAttr={themeAttr}
       colorScheme={colorScheme}
-      isDocsView={isDocsView}
     />
   )
 }

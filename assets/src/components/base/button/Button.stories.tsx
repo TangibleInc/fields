@@ -42,6 +42,9 @@ const meta = {
     fullWidth: {
       control: 'boolean'
     },
+    testId: {
+      control: 'text'
+    },
     content: {
       control: 'text'
     }
@@ -49,6 +52,7 @@ const meta = {
   args: {
     layout: 'action',
     content: 'Button',
+    testId: 'base-button',
     size: 'md',
     iconSize: 'sm',
     loading: false,

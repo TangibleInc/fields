@@ -20,7 +20,7 @@
   --tui-color-border: #c3c4c7;
   --tui-color-divider: #dcdcde;
 
-  --tui-focus-ring-color: var(--wp-admin-theme-color, #3858e9);
+  --tui-focus-ring-color: var(--wp-admin-theme-color, #135E96);
 }
 
 @mixin wp-tokens-dark {
@@ -48,6 +48,7 @@
   @include wp-tokens-light;
 
   --tui-focus-ring-offset: 1px;
+  --tui-focus-ring-width: 1.5px;
 
   /* Component-level remaps that make WP influence obvious */
   --tui-button-radius: 2px;

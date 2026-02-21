@@ -8,10 +8,30 @@ import '../assets/src/contexts/beaver-builder/index.scss'
 import '../assets/src/contexts/elementor/index.scss'
 
 import { withContext } from './decorators/context'
+import { withGlobalCss } from './decorators/globalCss'
+import { withRtl } from './decorators/rtl'
 
 const preview: Preview = {
-  decorators: [withContext],
+  decorators: [withGlobalCss, withRtl, withContext],
   globalTypes: {
+    direction: {
+      description: 'Global text direction',
+      toolbar: {
+        title: 'Direction',
+        icon: 'globe',
+        items: ['ltr', 'rtl'],
+        dynamicTitle: true
+      }
+    },
+    css: {
+      description: 'Global CSS environment simulation',
+      toolbar: {
+        title: 'Global CSS',
+        icon: 'document',
+        items: ['auto', 'none', 'basic', 'wordpress', 'elementor', 'beaver-builder'],
+        dynamicTitle: true
+      }
+    },
     context: {
       description: 'Global theme for components',
       toolbar: {
@@ -32,14 +52,22 @@ const preview: Preview = {
     }
   },
   initialGlobals: {
+    direction: 'ltr',
+    css: 'auto',
     context: 'default',
     colorMode: 'light'
   },
   parameters: {
     controls: {
+      sort: 'requiredFirst',
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/i
+      }
+    },
+    docs: {
+      controls: {
+        sort: 'requiredFirst'
       }
     }
   }

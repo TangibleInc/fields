@@ -60,6 +60,8 @@ export interface FieldsButtonProps {
   isDisabled?: boolean
   onClick?: (event: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void
   onPress?: () => void
+  testId?: string
+  'data-testid'?: string
   contentVisuallyHidden?: boolean
   changeTag?: 'button' | 'span'
   data?: unknown
@@ -93,6 +95,8 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
     layout,
     type,
     buttonType = 'button',
+    testId,
+    'data-testid': dataTestId,
     context: _context,
     data: _data,
     wrapper: _wrapper,
@@ -118,9 +122,10 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
   } = props
 
   const resolvedLayout = String(layout || type || 'action')
+  const resolvedTestId = testId ?? dataTestId
 
   if (!isMappedLayout(resolvedLayout)) {
-    return <LegacyButton ref={ref} {...props} />
+    return <LegacyButton ref={ref} {...props} testId={resolvedTestId} />
   }
 
   const mapped = layoutMap[resolvedLayout]
@@ -186,6 +191,7 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
         {...(tuiProps as Record<string, unknown>)}
         className={spanClasses}
         style={style}
+        data-testid={resolvedTestId}
         data-name={name}
         data-loading={resolvedLoading || undefined}
         role="button"
@@ -232,6 +238,7 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
       onClick={handleClick as TuiButtonProps['onClick']}
       className={className}
       style={style}
+      data-testid={resolvedTestId}
       data-name={name}
       aria-label={ariaLabel}
     >
