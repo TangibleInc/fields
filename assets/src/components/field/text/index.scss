@@ -2,9 +2,14 @@
   display: flex; 
   flex-direction: column;
   box-sizing: content-box;
-  
-  input {
+}
+
+.tf-text.tf-text-legacy {
+  input:not([type='hidden']) {
     @include field;
   }
-  
 }
+
+// TUI now handles text addon styling natively via .is-text modifier.
+// No overrides needed — string prefixes/suffixes get surface bg, borders,
+// and the group padding adjusts automatically.
