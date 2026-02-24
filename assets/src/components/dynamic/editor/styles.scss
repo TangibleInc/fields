@@ -1,0 +1,43 @@
+/**
+ * DynamicEditor container styles
+ * Uses TUI's .tui-input-group for consistent prefix/suffix/focus styling.
+ * Scoped under .tf-dynamic-editor to avoid collision with existing WYSIWYG editor.
+ */
+
+// Pull in ProseMirror pill + editor base styles
+@import '../../../prosemirror/dynamic-text/styles';
+
+// ProseMirror sits where <input> normally would — stretch to fill
+.tui-input-group .tf-dynamic-editor {
+  flex: 1 1 auto;
+  min-width: 0;
+
+  .ProseMirror {
+    outline: none;
+  }
+}
+
+// When inside dynamic wrapper, make room for the insert button
+.tf-dynamic-wrapper[data-dynamic="true"] .tui-input-group .tf-dynamic-editor {
+  .ProseMirror {
+    padding-right: 25px;
+  }
+}
+
+// With suffix: editor doesn't need extra padding, suffix handles spacing
+.tf-dynamic-wrapper[data-dynamic="true"] .tui-input-group:has(.tui-input-group__suffix) {
+  .tf-dynamic-editor .ProseMirror {
+    padding-right: 0;
+  }
+
+  // Suffix needs margin for the insert button that sits outside the group
+  .tui-input-group__suffix {
+    margin-right: 25px;
+  }
+}
+
+// Read-only state
+.tf-dynamic-editor[aria-readonly="true"] .ProseMirror {
+  cursor: default;
+  opacity: 0.6;
+}
