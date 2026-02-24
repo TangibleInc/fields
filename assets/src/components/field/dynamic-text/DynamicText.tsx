@@ -20,10 +20,8 @@ import {
   Description
 } from '../../base'
 
-import { 
-  Text,
-  ComboBox
-} from '../'
+import Text from '../text/Text'
+import ComboBox from '../combo-box'
 
 import { createInput } from '../../../codemirror/'
 
@@ -124,4 +122,3 @@ const DynamicText = props => {
 }
 
 export default DynamicText
-

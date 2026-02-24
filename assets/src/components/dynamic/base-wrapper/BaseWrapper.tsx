@@ -15,7 +15,7 @@ import Control from '../../../Control'
 
 import { useOverlayTriggerState } from 'react-stately'
 import { Button, Title } from '../../base'
-import { ComboBox } from '../../field'
+import ComboBox from '../../field/combo-box'
 
 /**
  * Accepted props:

@@ -32,8 +32,34 @@ const layoutMap: Record<MappedLayout, LayoutConfig> = {
 const isMappedLayout = (value: string): value is MappedLayout => value in layoutMap
 let hasWarnedAboutSpanButton = false
 let hasWarnedAboutMissingLabel = false
+const isDevBuild =
+  typeof globalThis !== 'undefined' &&
+  (globalThis as { process?: { env?: { NODE_ENV?: string } } }).process?.env?.NODE_ENV !== 'production'
 
-export interface FieldsButtonProps {
+type ForwardedTuiProps = Omit<
+  TuiButtonProps,
+  | 'children'
+  | 'theme'
+  | 'variant'
+  | 'size'
+  | 'fullWidth'
+  | 'loading'
+  | 'leftIconName'
+  | 'rightIconName'
+  | 'leftIcon'
+  | 'rightIcon'
+  | 'iconSize'
+  | 'href'
+  | 'target'
+  | 'rel'
+  | 'type'
+  | 'disabled'
+  | 'onClick'
+  | 'className'
+  | 'content'
+>
+
+export interface FieldsButtonProps extends ForwardedTuiProps {
   size?: TuiButtonProps['size']
   theme?: TuiButtonProps['theme']
   variant?: TuiButtonProps['variant']
@@ -62,6 +88,8 @@ export interface FieldsButtonProps {
   onPress?: () => void
   testId?: string
   'data-testid'?: string
+  'data-test-id'?: string
+  'aria-label'?: string
   contentVisuallyHidden?: boolean
   changeTag?: 'button' | 'span'
   data?: unknown
@@ -73,7 +101,6 @@ export interface FieldsButtonProps {
   condition?: unknown
   portalContainer?: unknown
   onChange?: unknown
-  [key: string]: unknown
 }
 
 const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement, FieldsButtonProps>(
@@ -97,6 +124,8 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
     buttonType = 'button',
     testId,
     'data-testid': dataTestId,
+    'data-test-id': dataTestIdDashed,
+    'aria-label': ariaLabelProp,
     context: _context,
     data: _data,
     wrapper: _wrapper,
@@ -122,7 +151,7 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
   } = props
 
   const resolvedLayout = String(layout || type || 'action')
-  const resolvedTestId = testId ?? dataTestId
+  const resolvedTestId = testId ?? dataTestId ?? dataTestIdDashed
 
   if (!isMappedLayout(resolvedLayout)) {
     return <LegacyButton ref={ref} {...props} testId={resolvedTestId} />
@@ -131,7 +160,8 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
   const mapped = layoutMap[resolvedLayout]
   const label: ReactNode = content ?? children
   const stringLabel = typeof label === 'string' ? label : undefined
-  const ariaLabel = contentVisuallyHidden ? stringLabel : undefined
+  const computedAriaLabel = contentVisuallyHidden ? stringLabel : undefined
+  const ariaLabel = ariaLabelProp ?? computedAriaLabel
   const renderedContent = contentVisuallyHidden ? null : label
   const resolvedDisabled = Boolean(disabled || isDisabled)
   const resolvedTheme = theme ?? mapped.theme
@@ -151,8 +181,7 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
 
   if (
     !hasWarnedAboutMissingLabel &&
-    typeof process !== 'undefined' &&
-    process.env.NODE_ENV !== 'production' &&
+    isDevBuild &&
     renderedContent == null &&
     !ariaLabel
   ) {
@@ -163,7 +192,7 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
   }
 
   if (changeTag === 'span') {
-    if (!hasWarnedAboutSpanButton && typeof process !== 'undefined' && process.env.NODE_ENV !== 'production') {
+    if (!hasWarnedAboutSpanButton && isDevBuild) {
       hasWarnedAboutSpanButton = true
       console.warn(
         '[Fields Button] `changeTag=\"span\"` is supported for backward compatibility but discouraged. Prefer semantic <button> or <a> usage.'
@@ -188,17 +217,18 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
     return (
       <span
         ref={ref as Ref<HTMLSpanElement>}
-        {...(tuiProps as Record<string, unknown>)}
+        {...tuiProps}
         className={spanClasses}
         style={style}
         data-testid={resolvedTestId}
+        data-test-id={resolvedTestId}
         data-name={name}
         data-loading={resolvedLoading || undefined}
         role="button"
         tabIndex={resolvedDisabled || resolvedLoading ? -1 : 0}
         aria-disabled={resolvedDisabled || resolvedLoading || undefined}
         aria-busy={resolvedLoading || undefined}
-        aria-label={ariaLabel}
+        {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
         onClick={event => {
           if (resolvedDisabled || resolvedLoading) return
           handleClick(event as unknown as MouseEvent<HTMLButtonElement | HTMLAnchorElement>)
@@ -218,13 +248,13 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
 
   return (
     <TuiButton
-      {...(tuiProps as Partial<TuiButtonProps>)}
+      {...tuiProps}
       ref={ref as Ref<HTMLButtonElement | HTMLAnchorElement>}
       theme={resolvedTheme}
       variant={resolvedVariant}
-      size={size}
+      size={resolvedSize}
       fullWidth={fullWidth}
-      loading={loading}
+      loading={resolvedLoading}
       leftIconName={leftIconName}
       rightIconName={rightIconName}
       leftIcon={leftIcon}
@@ -239,8 +269,9 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
       className={className}
       style={style}
       data-testid={resolvedTestId}
+      data-test-id={resolvedTestId}
       data-name={name}
-      aria-label={ariaLabel}
+      {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
     >
       {renderedContent}
     </TuiButton>

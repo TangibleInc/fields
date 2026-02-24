@@ -51,6 +51,14 @@
   --tui-focus-ring-width: 1.5px;
 
   /* Component-level remaps that make WP influence obvious */
+  --tui-control-height-sm: 24px;
+  --tui-control-height-md: 32px;
+  --tui-control-height-lg: 40px;
+  --tui-button-font-size-xs: 13px;
+  --tui-button-font-size-sm: 13px;
+  --tui-button-font-size: 13px;
+  --tui-button-font-size-lg: 13px;
+  --tui-button-font-weight: 499;
   --tui-button-radius: 2px;
   --tui-input-radius: 2px;
 }

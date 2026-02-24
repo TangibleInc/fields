@@ -27,13 +27,13 @@ const Button = forwardRef(({
 
   // Some props names are going to be different when generated from PHP
   const content = props.content ?? children
-  const testId = props.testId ?? props['data-testid']
+  const testId = props.testId ?? props['data-testid'] ?? props['data-test-id']
   const buttonType = props.buttonType ?? 'button'
   const type = props.layout 
     ? (props.layout ? `tf-button-${props.layout}` : '')
     : (props.type ? `tf-button-${props.type}` : '')
 
-  const { buttonProps } = useButton(props, ref)
+  const { buttonProps } = useButton(props, buttonRef)
 
   const context = props.context ? `tf-button-is-${props.context}` : ''
   const classes = `tf-button ${type} ${context} ${props.className ?? ''}`
@@ -45,6 +45,7 @@ const Button = forwardRef(({
       className={ classes } 
       style={ props.style } 
       data-testid={ testId }
+      data-test-id={ testId }
       { ...buttonProps }
       onClick={ event => {
         buttonProps.onClick(event)
