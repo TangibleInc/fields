@@ -18,6 +18,15 @@ export default {
     },
 
     /**
+     * Tangible UI style
+     */
+    {
+      task: 'copy',
+      src: 'node_modules/@tangible/ui/styles/all.unlayered.css',
+      dest: 'assets/build',
+    },
+
+    /**
      * Style: One stylesheet per context
      */
     {

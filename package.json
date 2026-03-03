@@ -61,6 +61,7 @@
     "@codemirror/view": "^6.36.5",
     "@react-aria/color": "^3.0.6",
     "@tangible/ui": "^0.0.3",
+    "baseline-browser-mapping": "^2.10.0",
     "mime-types": "^3.0.2",
     "prosemirror-commands": "^1.7.1",
     "prosemirror-example-setup": "^1.2.3",
