@@ -114,12 +114,12 @@ describe('Field group component', () => {
     const fieldGroup = container.querySelectorAll('.tf-field-group')
     expect(fieldGroup.length).toBe(1)
 
-    await user.click(container.querySelector('.tf-switch-label'))
+    await user.click(container.querySelector('[role="switch"]'))
 
     const subfield2 = await within(container).findByText('Subfield 2')
     expect(subfield2).toBeTruthy()
 
-    await user.click(container.querySelector('.tf-switch-label'))
+    await user.click(container.querySelector('[role="switch"]'))
 
     expect(within(container).queryByText('Subfield 2')).toBe(null)
   })

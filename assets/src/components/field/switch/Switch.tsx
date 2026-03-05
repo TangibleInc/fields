@@ -1,77 +1,75 @@
-import { 
-  useRef,
-  useEffect 
+import {
+  forwardRef,
+  useEffect,
+  useState
 } from 'react'
 
-import {
-  useFocusRing, 
-  useSwitch,
-  VisuallyHidden,
-  useField
-} from 'react-aria'
+import { Switch as TuiSwitch, Field } from '@tangible/ui'
 
-import { useToggleState } from 'react-stately'
+export interface FieldsSwitchProps {
+  value?: boolean | '1' | '0'
+  onChange?: (value: boolean) => void
+  label?: string
+  labelVisuallyHidden?: boolean
+  description?: string
+  descriptionVisuallyHidden?: boolean
+  isDisabled?: boolean
+  name?: string
+  className?: string
+}
 
-import { 
-  Description,
-  Label 
-} from '../../base'
+const Switch = forwardRef<HTMLButtonElement, FieldsSwitchProps>((props, ref) => {
 
-/**
- * @see https://react-spectrum.adobe.com/react-aria/useSwitch.html
- */
+  const {
+    value,
+    onChange,
+    label,
+    labelVisuallyHidden,
+    description,
+    descriptionVisuallyHidden,
+    isDisabled,
+    name,
+    className,
+  } = props
 
-const Switch = props => {
+  const boolValue = value === '1' || value === true
+  const [checked, setChecked] = useState(boolValue)
 
-  const state = useToggleState(props)
-  const ref = useRef()
-
-  const { inputProps } = useSwitch({
-    ...props,
-    children: props.label ?? ''
-  }, state, ref)
-  const { focusProps } = useFocusRing()
-  
-  /**
-   * useSwitch does not return label and description props directly
-   */
-  const { 
-    labelProps, 
-    fieldProps,
-    descriptionProps 
-  } = useField(props)
-
-  useEffect(() => props.onChange && props.onChange(state.isSelected), [state.isSelected])
   useEffect(() => {
-    if( props.value !== state.isSelected )  state.setSelected(props.value)
-  }, [props.value])
+    if (boolValue !== checked) setChecked(boolValue)
+  }, [boolValue])
 
-  return(
+  const labelContent = label
+    ? labelVisuallyHidden
+      ? <span className="tui-visually-hidden">{label}</span>
+      : label
+    : undefined
+
+  return (
     <div className="tf-switch">
-      { props.label &&
-        <Label labelProps={ labelProps } parent={ props }>
-          { props.label }
-        </Label> }
-        <label className="tf-switch-label">
-          <VisuallyHidden>
-            <input 
-              { ...fieldProps }
-              { ...inputProps } 
-              { ...focusProps }
-              ref={ ref } 
-              name="" 
-            />
-          </VisuallyHidden>
-          <div className={ `tf-switch-element${state.isSelected ? '-selected' : '' }` } aria-hidden="true">
-            <span></span>
-          </div>
-        </label>
-      { props.description &&
-        <Description descriptionProps={ descriptionProps } parent={ props }>
-          { props.description }
-        </Description> }
+      <Field
+        className={className}
+        disabled={Boolean(isDisabled)}
+      >
+        <TuiSwitch
+          ref={ref}
+          label={labelContent}
+          checked={checked}
+          disabled={Boolean(isDisabled)}
+          onCheckedChange={nextChecked => {
+            setChecked(nextChecked)
+            if (onChange) onChange(nextChecked)
+          }}
+        />
+        <input type="hidden" name={name ?? ''} value={checked ? '1' : '0'} />
+        {description && (
+          <Field.HelperText className={descriptionVisuallyHidden ? 'tui-visually-hidden' : undefined}>
+            {description}
+          </Field.HelperText>
+        )}
+      </Field>
     </div>
   )
-}
+})
 
 export default Switch
