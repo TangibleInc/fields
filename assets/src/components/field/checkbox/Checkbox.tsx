@@ -1,7 +1,5 @@
 import {
   forwardRef,
-  useState,
-  useEffect,
   useRef
 } from 'react'
 
@@ -41,15 +39,15 @@ const Checkbox = forwardRef<HTMLInputElement, FieldsCheckboxProps>((props, ref) 
     console.warn('Checkbox: Missing label. Provide a label prop for accessibility.')
   }
 
-  const [checked, setChecked] = useState(value === '1' || value === true)
-
   /**
-   * Sync external value changes (e.g. repeater bulk-select sets value={true}).
-   * This does not call onChange — it only mirrors externally-driven state.
+   * Derive boolean checked state directly from the value prop.
+   * When value is provided, TUI Checkbox is fully controlled — no local state needed.
+   * External changes (e.g. repeater bulk-select) are reflected automatically.
    */
-  useEffect(() => {
-    setChecked(value === '1' || value === true)
-  }, [value])
+  const boolValue = value === '1' || value === true
+  const controlledProps = value !== undefined
+    ? { checked: boolValue }
+    : { defaultChecked: false }
 
   const labelContent = label
     ? labelVisuallyHidden
@@ -67,14 +65,13 @@ const Checkbox = forwardRef<HTMLInputElement, FieldsCheckboxProps>((props, ref) 
         <TuiCheckbox
           ref={ref}
           label={labelContent}
-          checked={checked}
+          {...controlledProps}
           disabled={Boolean(isDisabled)}
           onCheckedChange={nextChecked => {
-            setChecked(nextChecked)
             if (onChange) onChange(nextChecked)
           }}
         />
-        <input type="hidden" name={name ?? ''} value={checked ? '1' : '0'} />
+        <input type="hidden" name={name ?? ''} value={boolValue ? '1' : '0'} />
         {description && (
           <Field.HelperText className={descriptionVisuallyHidden ? 'tui-visually-hidden' : undefined}>
             {description}
