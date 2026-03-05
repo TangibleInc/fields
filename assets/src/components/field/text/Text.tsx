@@ -8,6 +8,7 @@ import {
 
 import { useTextField } from 'react-aria'
 import { Field, TextInput as TuiTextInput } from '@tangible/ui'
+import type { SizeStandard, TextInputType } from '@tangible/ui'
 
 import Description from '../../base/field/Description'
 import Label from '../../base/field/Label'
@@ -24,7 +25,31 @@ const DynamicEditor = lazy(() => import('../../dynamic/editor/DynamicEditor'))
  * @see https://react-spectrum.adobe.com/react-aria/useTextField.html
  */
 
-const TextField = props => {
+export interface FieldsTextProps {
+  dynamic?: unknown
+  inputMask?: string
+  prefix?: string
+  suffix?: string
+  value?: string
+  onChange?: (value: string) => void
+  name?: string
+  placeholder?: string
+  readOnly?: boolean
+  isDisabled?: boolean
+  isRequired?: boolean
+  isInvalid?: boolean
+  error?: boolean
+  label?: string
+  labelVisuallyHidden?: boolean
+  description?: string
+  descriptionVisuallyHidden?: boolean
+  className?: string
+  inputClassName?: string
+  size?: SizeStandard
+  type?: TextInputType
+}
+
+const TextField = (props: FieldsTextProps) => {
   const {
     dynamic,
     inputMask,
@@ -35,14 +60,15 @@ const TextField = props => {
   const hasDynamic = Boolean(dynamic)
 
   const [value, setValue] = useState(props.value ?? '')
-  const ref = useRef()
+  const ref = useRef<HTMLInputElement | null>(null)
   const inputMaskRef = useRef<HTMLInputElement | null>(null)
 
   const {
     labelProps,
     inputProps,
     descriptionProps,
-  } = useTextField(props, ref)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } = useTextField(props as any, ref as any)
 
   useInputMask(inputMaskRef, !hasDynamic ? inputMask : null)
 
