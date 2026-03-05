@@ -62,6 +62,7 @@ const TextField = (props: FieldsTextProps) => {
   const [value, setValue] = useState(props.value ?? '')
   const ref = useRef<HTMLInputElement | null>(null)
   const inputMaskRef = useRef<HTMLInputElement | null>(null)
+  const mountedRef = useRef(false)
 
   const {
     labelProps,
@@ -73,6 +74,10 @@ const TextField = (props: FieldsTextProps) => {
   useInputMask(inputMaskRef, !hasDynamic ? inputMask : null)
 
   useEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true
+      return
+    }
     if (props.onChange) props.onChange(value)
   }, [value])
 
