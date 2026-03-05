@@ -1,16 +1,6 @@
-import {
-  createContext,
-  forwardRef
-} from 'react'
+import { forwardRef } from 'react'
 
 import { RadioGroup as TuiRadioGroup, Field } from '@tangible/ui'
-
-/**
- * Stub export maintained for Radio.tsx import compatibility.
- * TUI RadioGroup manages context internally — this context is no longer provided.
- * Remove when Radio.tsx is migrated to TUI in Task 6.
- */
-const RadioContext = createContext(null)
 
 export interface FieldsRadioGroupProps {
   value?: string
@@ -75,7 +65,4 @@ const RadioGroup = forwardRef<HTMLDivElement, FieldsRadioGroupProps>((props, ref
   )
 })
 
-export {
-  RadioGroup,
-  RadioContext
-}
+export { RadioGroup }
