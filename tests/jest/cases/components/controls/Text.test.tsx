@@ -181,11 +181,11 @@ describe('Text component', () => {
   })
 
   it('supports placeholder', () => {
-    
-    const { container } = render( 
+
+    const { container } = render(
       fields.render({
-        name       : 'field-name', 
-        type       : 'text', 
+        name       : 'field-name',
+        type       : 'text',
         label      : 'Label',
         placeholder: 'Example'
       })
@@ -193,6 +193,23 @@ describe('Text component', () => {
 
     const placeholder = container.querySelector('.cm-placeholder')
     expect(placeholder.innerHTML).toBe('Example')
+  })
+
+  it('renders TUI TextInput path when no dynamic prop', () => {
+    renderHasElement(
+      { type: 'text', label: 'Label' },
+      container => container.querySelector('.tf-text-tui')
+    )
+    renderHasElement(
+      { type: 'text', label: 'Label' },
+      container => container.querySelector('input')
+    )
+  })
+
+  it('onChange does not fire on initial mount', () => {
+    const onChange = jest.fn()
+    render(fields.render({ type: 'text', label: 'Label', value: 'initial', onChange }))
+    expect(onChange).not.toHaveBeenCalled()
   })
 
 })
