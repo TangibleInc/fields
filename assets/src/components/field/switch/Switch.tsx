@@ -1,8 +1,4 @@
-import {
-  forwardRef,
-  useEffect,
-  useState
-} from 'react'
+import { forwardRef } from 'react'
 
 import { Switch as TuiSwitch, Field } from '@tangible/ui'
 
@@ -32,12 +28,15 @@ const Switch = forwardRef<HTMLButtonElement, FieldsSwitchProps>((props, ref) => 
     className,
   } = props
 
+  /**
+   * Derive boolean checked state directly from the value prop.
+   * When value is provided, TUI Switch is fully controlled — no local state needed.
+   * TUI onCheckedChange only fires on user interaction, not on mount.
+   */
   const boolValue = value === '1' || value === true
-  const [checked, setChecked] = useState(boolValue)
-
-  useEffect(() => {
-    if (boolValue !== checked) setChecked(boolValue)
-  }, [boolValue])
+  const controlledProps = value !== undefined
+    ? { checked: boolValue }
+    : { defaultChecked: false }
 
   const labelContent = label
     ? labelVisuallyHidden
@@ -54,14 +53,13 @@ const Switch = forwardRef<HTMLButtonElement, FieldsSwitchProps>((props, ref) => 
         <TuiSwitch
           ref={ref}
           label={labelContent}
-          checked={checked}
+          {...controlledProps}
           disabled={Boolean(isDisabled)}
           onCheckedChange={nextChecked => {
-            setChecked(nextChecked)
             if (onChange) onChange(nextChecked)
           }}
         />
-        <input type="hidden" name={name ?? ''} value={checked ? '1' : '0'} />
+        <input type="hidden" name={name ?? ''} value={boolValue ? '1' : '0'} />
         {description && (
           <Field.HelperText className={descriptionVisuallyHidden ? 'tui-visually-hidden' : undefined}>
             {description}
