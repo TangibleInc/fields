@@ -161,9 +161,10 @@ const TextField = forwardRef<HTMLInputElement, FieldsTextProps>((props, ref) => 
             ref={node => {
               if (typeof ref === 'function') ref(node)
               else if (ref) ref.current = node
-              // For input masking, grab the actual <input> element
+              // TUI TextInput forwards its ref directly to the <input> element —
+              // no querySelector needed.
               if (inputMask && node) {
-                inputMaskRef.current = node.querySelector?.('input') ?? node
+                inputMaskRef.current = node
               }
             }}
             inputClassName={`tui-input-reset ${props.inputClassName ?? ''}`.trim()}
@@ -179,6 +180,8 @@ const TextField = forwardRef<HTMLInputElement, FieldsTextProps>((props, ref) => 
           />
         </Field.Control>
         {props.description &&
+          // Field.HelperText has no `hidden` prop — apply `tui-visually-hidden`
+          // directly as a className to visually hide while keeping it accessible.
           <Field.HelperText className={props.descriptionVisuallyHidden ? 'tui-visually-hidden' : undefined}>
             {props.description}
           </Field.HelperText>}
