@@ -1,9 +1,10 @@
 import type { CSSProperties, MouseEvent, ReactNode } from 'react'
-import { forwardRef } from 'react'
+import { forwardRef, useEffect, useRef } from 'react'
 import type { Ref } from 'react'
 import { Button as TuiButton } from '@tangible/ui'
 import type { ButtonProps as TuiButtonProps } from '@tangible/ui'
 
+import { isDev } from '../../../utils/is-dev'
 import { triggerEvent } from '../../../events'
 import LegacyButton from './LegacyButton'
 
@@ -30,11 +31,6 @@ const layoutMap: Record<MappedLayout, LayoutConfig> = {
 }
 
 const isMappedLayout = (value: string): value is MappedLayout => value in layoutMap
-let hasWarnedAboutSpanButton = false
-let hasWarnedAboutMissingLabel = false
-const isDevBuild =
-  typeof globalThis !== 'undefined' &&
-  (globalThis as { process?: { env?: { NODE_ENV?: string } } }).process?.env?.NODE_ENV !== 'production'
 
 type ForwardedTuiProps = Omit<
   TuiButtonProps,
@@ -150,6 +146,20 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
     ...tuiProps
   } = props
 
+  const hasWarnedSpan = useRef(false)
+  const hasWarnedMissingLabel = useRef(false)
+  const hasWarnedOnChange = useRef(false)
+
+  useEffect(() => {
+    if (!hasWarnedOnChange.current && isDev() && props.onChange !== undefined) {
+      console.warn(
+        '[Fields Button] `onChange` prop is not supported on Button and will be ignored. ' +
+        'Use `onClick` for click handling.'
+      )
+      hasWarnedOnChange.current = true
+    }
+  }, [])
+
   const resolvedLayout = String(layout || type || 'action')
   const resolvedTestId = testId ?? dataTestId ?? dataTestIdDashed
 
@@ -180,20 +190,20 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
   }
 
   if (
-    !hasWarnedAboutMissingLabel &&
-    isDevBuild &&
+    !hasWarnedMissingLabel.current &&
+    isDev() &&
     renderedContent == null &&
     !ariaLabel
   ) {
-    hasWarnedAboutMissingLabel = true
+    hasWarnedMissingLabel.current = true
     console.warn(
       '[Fields Button] Button has no visible label and no aria-label. Provide `content`, `children`, or an accessible label.'
     )
   }
 
   if (changeTag === 'span') {
-    if (!hasWarnedAboutSpanButton && isDevBuild) {
-      hasWarnedAboutSpanButton = true
+    if (!hasWarnedSpan.current && isDev()) {
+      hasWarnedSpan.current = true
       console.warn(
         '[Fields Button] `changeTag=\"span\"` is supported for backward compatibility but discouraged. Prefer semantic <button> or <a> usage.'
       )
