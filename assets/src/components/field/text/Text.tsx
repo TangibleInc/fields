@@ -3,7 +3,8 @@ import {
   useEffect,
   useState,
   lazy,
-  Suspense
+  Suspense,
+  forwardRef
 } from 'react'
 
 import { useTextField } from 'react-aria'
@@ -49,7 +50,59 @@ export interface FieldsTextProps {
   type?: TextInputType
 }
 
-const TextField = (props: FieldsTextProps) => {
+/**
+ * Dynamic path sub-component — rendered only when the `dynamic` prop is set.
+ * Isolated here so `useTextField` (react-aria) is only called in this path.
+ */
+const DynamicTextField = (props: FieldsTextProps) => {
+  const [value, setValue] = useState(props.value ?? '')
+  const ref = useRef<HTMLInputElement | null>(null)
+  const mountedRef = useRef(false)
+
+  const {
+    labelProps,
+    inputProps,
+    descriptionProps,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } = useTextField(props as any, ref as any)
+
+  useEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true
+      return
+    }
+    if (props.onChange) props.onChange(value)
+  }, [value])
+
+  return (
+    <div className="tf-text tf-text-dynamic">
+      {props.label &&
+        <Label labelProps={labelProps} parent={props}>
+          {props.label}
+        </Label>}
+      <Suspense fallback={null}>
+        <DynamicEditor
+          value={value}
+          onChange={setValue}
+          dynamic={props.dynamic}
+          name={props.name}
+          placeholder={props.placeholder}
+          readOnly={props.readOnly}
+          prefix={props.prefix}
+          suffix={props.suffix}
+          singleLine={true}
+          inputProps={inputProps}
+        />
+      </Suspense>
+      {props.description &&
+        <Description descriptionProps={descriptionProps} parent={props}>
+          {props.description}
+        </Description>}
+    </div>
+  )
+}
+
+const TextField = forwardRef<HTMLInputElement, FieldsTextProps>((props, ref) => {
   const {
     dynamic,
     inputMask,
@@ -60,16 +113,8 @@ const TextField = (props: FieldsTextProps) => {
   const hasDynamic = Boolean(dynamic)
 
   const [value, setValue] = useState(props.value ?? '')
-  const ref = useRef<HTMLInputElement | null>(null)
   const inputMaskRef = useRef<HTMLInputElement | null>(null)
   const mountedRef = useRef(false)
-
-  const {
-    labelProps,
-    inputProps,
-    descriptionProps,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } = useTextField(props as any, ref as any)
 
   useInputMask(inputMaskRef, !hasDynamic ? inputMask : null)
 
@@ -81,43 +126,19 @@ const TextField = (props: FieldsTextProps) => {
     if (props.onChange) props.onChange(value)
   }, [value])
 
+  /**
+   * Dynamic path — delegate to DynamicTextField which calls useTextField.
+   * Note: ref is not forwarded to the ProseMirror editor.
+   */
+  if (hasDynamic) {
+    return <DynamicTextField {...props} />
+  }
+
   // Validate initial mask value
   const getInitialMaskValue = () => {
     if (!inputMask || !value) return value
     const stripped = stripAffixes(value, prefix, suffix)
     return matchesMask(stripped, inputMask) ? value : ''
-  }
-
-  /**
-   * Dynamic path — ProseMirror editor
-   */
-  if (hasDynamic) {
-    return (
-      <div className="tf-text tf-text-dynamic">
-        {props.label &&
-          <Label labelProps={labelProps} parent={props}>
-            {props.label}
-          </Label>}
-        <Suspense fallback={null}>
-          <DynamicEditor
-            value={value}
-            onChange={setValue}
-            dynamic={dynamic}
-            name={props.name}
-            placeholder={props.placeholder}
-            readOnly={props.readOnly}
-            prefix={prefix}
-            suffix={suffix}
-            singleLine={true}
-            inputProps={inputProps}
-          />
-        </Suspense>
-        {props.description &&
-          <Description descriptionProps={descriptionProps} parent={props}>
-            {props.description}
-          </Description>}
-      </div>
-    )
   }
 
   /**
@@ -138,7 +159,8 @@ const TextField = (props: FieldsTextProps) => {
         <Field.Control>
           <TuiTextInput
             ref={node => {
-              ref.current = node
+              if (typeof ref === 'function') ref(node)
+              else if (ref) ref.current = node
               // For input masking, grab the actual <input> element
               if (inputMask && node) {
                 inputMaskRef.current = node.querySelector?.('input') ?? node
@@ -163,7 +185,7 @@ const TextField = (props: FieldsTextProps) => {
       </Field>
     </div>
   )
-}
+})
 
 /**
  * Strip prefix/suffix from a stored value for mask validation.
