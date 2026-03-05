@@ -1,0 +1,21 @@
+# Fields TUI Migration Harness
+# Supervised loop for fixing and migrating Fields→TUI component wrappers
+
+validation:
+  commands:
+    lint: npm run lint 2>/dev/null || true   # soft gate — pre-existing failures expected
+    typecheck: npx tsc -b --noEmit
+    test: npm run jest:test
+
+state:
+  plan: .harness/plan.md
+  progress: .harness/progress.md
+  complete: .harness/COMPLETE
+
+prompts:
+  build: .harness/prompts/build.md
+
+specs:
+  - .harness/specs/wrapper-contract.md
+  - .harness/specs/fix-button.md
+  - .harness/specs/fix-text.md
