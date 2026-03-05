@@ -174,7 +174,8 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
   const ariaLabel = ariaLabelProp ?? computedAriaLabel
   const renderedContent = contentVisuallyHidden ? null : label
   const resolvedDisabled = Boolean(disabled || isDisabled)
-  const resolvedTheme = theme ?? mapped.theme
+  const rawTheme = theme ?? mapped.theme
+  const resolvedTheme = rawTheme === 'destructive' ? 'danger' : rawTheme
   const resolvedVariant = variant ?? mapped.variant
   const resolvedSize = size ?? 'md'
   const resolvedLoading = Boolean(loading)
@@ -209,13 +210,16 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
       )
     }
 
-    const themeClass = resolvedTheme === 'destructive' ? 'danger' : resolvedTheme
-    // Keep in sync with TUI Button class contract (tui-button + is-size/theme/style modifiers).
-    // If TUI renames these classes, this span compatibility branch must be updated.
+    /**
+     * @fragile This span branch manually replicates TUI Button's class contract.
+     * If TUI changes its class naming (tui-button, is-size-*, is-theme-*, is-style-*),
+     * this branch must be updated to match. There is no automated check for drift.
+     * Consider removing changeTag="span" support when legacy callers are migrated.
+     */
     const spanClasses = [
       'tui-button',
       `is-size-${resolvedSize}`,
-      `is-theme-${themeClass}`,
+      `is-theme-${resolvedTheme}`,
       resolvedVariant !== 'solid' ? `is-style-${resolvedVariant}` : '',
       fullWidth ? 'is-width-full' : '',
       resolvedDisabled || resolvedLoading ? 'is-disabled' : '',
