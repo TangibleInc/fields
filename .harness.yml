@@ -1,5 +1,5 @@
 # Fields TUI Migration Harness
-# Supervised loop for fixing and migrating Fields→TUI component wrappers
+# Supervised loop for migrating Fields components to TUI wrappers
 
 validation:
   commands:
@@ -17,5 +17,8 @@ prompts:
 
 specs:
   - .harness/specs/wrapper-contract.md
-  - .harness/specs/fix-button.md
-  - .harness/specs/fix-text.md
+  - .harness/specs/migrate-checkbox.md
+  - .harness/specs/migrate-switch.md
+  - .harness/specs/migrate-radio.md
+  - .harness/specs/migrate-textarea.md
+  - .harness/specs/migrate-notice.md
