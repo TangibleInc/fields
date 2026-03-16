@@ -1,5 +1,6 @@
-import { 
+import {
   useRef,
+  useMemo,
   useState,
   useEffect
 } from 'react'
@@ -22,7 +23,10 @@ const NumberComponent = props => {
 
   const { locale } = useLocale()
   const [value, setValue] = useState(props.value ?? '')
-  const state = useNumberFieldState({ ...props, locale })
+
+  const defaultFormatOptions = useMemo(() => ({ maximumFractionDigits: 10, useGrouping: false }), [])
+  const formatOptions = props.formatOptions ?? defaultFormatOptions
+  const state = useNumberFieldState({ ...props, formatOptions, locale })
   const inputRef = useRef()
 
   const {
@@ -32,7 +36,7 @@ const NumberComponent = props => {
     inputProps,
     incrementButtonProps,
     decrementButtonProps
-  } = useNumberField(props, state, inputRef)
+  } = useNumberField({ ...props, formatOptions }, state, inputRef)
 
   useEffect(() => props.onChange && props.onChange(value), [value])
 
@@ -53,10 +57,10 @@ const NumberComponent = props => {
           ref={ inputRef } 
           inputProps={ inputProps }
         >
-          <input 
-            { ...inputProps} 
-            value={ Number.isInteger(state.numberValue) ? state.numberValue : 0 } 
-            ref={ inputRef } 
+          <input
+            { ...inputProps}
+            step={ props.step ?? 1 }
+            ref={ inputRef }
             name={ props.name ?? '' }
             disabled={ isDisabled }
           />
