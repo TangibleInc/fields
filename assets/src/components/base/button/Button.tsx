@@ -143,6 +143,22 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
     onPress,
     contentVisuallyHidden,
     changeTag,
+    /**
+     * Destructured to prevent react-aria props from reaching the DOM.
+     * onPressStart is forwarded in handleClick, the rest are discarded.
+     */
+    onPressStart,
+    onPressEnd: _onPressEnd,
+    onPressChange: _onPressChange,
+    onPointerDown: _onPointerDown,
+    onPointerUp: _onPointerUp,
+    onMouseDown: _onMouseDown,
+    onMouseUp: _onMouseUp,
+    onKeyDown: _onKeyDown,
+    onKeyUp: _onKeyUp,
+    onFocusChange: _onFocusChange,
+    preventFocusOnPress: _preventFocusOnPress,
+    excludeFromTabOrder: _excludeFromTabOrder,
     ...tuiProps
   } = props
 
@@ -182,7 +198,30 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
 
   const handleClick = (event: MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
     onClick?.(event)
-    onPress?.()
+    /**
+     * TUI Button uses native onClick, but react-aria hooks (useComboBox,
+     * useDatePicker, etc.) pass onPressStart/onPress expecting PressEvent objects.
+     * We synthesize one so both APIs work through the same Button component.
+     * onPressStart is called first because react-aria's useComboBox uses it
+     * (not onPress) for mouse/keyboard toggles.
+     *
+     * Without this, ComboBox dropdowns, DatePicker calendars, and calendar
+     * navigation buttons silently stop responding to clicks.
+     *
+     * @see https://react-spectrum.adobe.com/react-aria/useComboBox.html
+     * @see https://react-spectrum.adobe.com/react-aria/PressEvent.html
+     */
+    const syntheticPressEvent = {
+      type: 'press' as const,
+      pointerType: 'mouse' as const,
+      target: event.currentTarget,
+      shiftKey: event.shiftKey,
+      ctrlKey: event.ctrlKey,
+      metaKey: event.metaKey,
+      altKey: event.altKey,
+    }
+    onPressStart?.(syntheticPressEvent)
+    onPress?.(syntheticPressEvent)
     triggerEvent('buttonPressed', {
       name: name ?? false,
       props,
