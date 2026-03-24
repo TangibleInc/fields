@@ -21,7 +21,17 @@ function Popover({
   const popoverRef = useRef(null);
   const { popoverProps, underlayProps } = usePopover({
     ...props,
-    popoverRef
+    popoverRef,
+    /**
+     * Let the trigger's own toggle handle open/close
+     * 
+     * Without this, pointerdown closes the popover then click reopens it.
+     * Needed since TUI migration: TUI Button uses native onClick instead of
+     * react-aria's useButton, so usePopover and the trigger no longer share
+     * the same event pipeline.
+     */
+    shouldCloseOnInteractOutside: props.shouldCloseOnInteractOutside
+      ?? ((element) => !props.triggerRef?.current?.contains(element)),
   }, state);
 
   /**
