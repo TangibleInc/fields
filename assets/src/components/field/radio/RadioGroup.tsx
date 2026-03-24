@@ -6,6 +6,7 @@ export interface FieldsRadioGroupProps {
   value?: string
   onChange?: (value: string) => void
   label?: string
+  labelVisuallyHidden?: boolean
   description?: string
   isDisabled?: boolean
   isRequired?: boolean
@@ -27,6 +28,7 @@ const RadioGroup = forwardRef<HTMLDivElement, FieldsRadioGroupProps>((props, ref
     value,
     onChange,
     label,
+    labelVisuallyHidden,
     description,
     isDisabled,
     isRequired,
@@ -46,7 +48,10 @@ const RadioGroup = forwardRef<HTMLDivElement, FieldsRadioGroupProps>((props, ref
         required={Boolean(isRequired)}
         disabled={Boolean(isDisabled)}
       >
-        {label && <Field.Label>{label}</Field.Label>}
+        {label && 
+          <Field.Label hidden={Boolean(labelVisuallyHidden)}>
+            {label}
+          </Field.Label>}
         <TuiRadioGroup
           {...controlledProps}
           disabled={Boolean(isDisabled)}
