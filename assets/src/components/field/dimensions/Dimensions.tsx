@@ -8,9 +8,10 @@ import { useField } from 'react-aria'
 
 import {
   Label,
-  Description, 
+  Description,
   Button
 } from '../../base'
+
 
 import Number from '../number/Number'
 import Select from '../select/Select'
@@ -124,9 +125,11 @@ const Dimensions = props => {
           )) }
         </Select>
         { showToggle &&
-          <Button type={"action"} onPress={ () => setIsLinked(!value.isLinked) }>
-            <span className="dashicons dashicons-admin-links"></span>
-          </Button>
+          <Button
+            type={"action"}
+            leftIconName={ value.isLinked ? 'system/link' : 'system/unlink' }
+            onPress={ () => setIsLinked(!value.isLinked) }
+          />
         }
       </div>
       { props.description &&
