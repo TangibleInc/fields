@@ -67,7 +67,7 @@ const Control = ({
         <RenderWrapper
           itemType={ props.itemType ?? 'field' }
           name={ props.name ?? false }
-          setValue={ setValue }
+          setValue={ onChange }
         >
         { refreshRender =>
           <DependendWrapper

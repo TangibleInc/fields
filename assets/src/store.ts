@@ -37,16 +37,10 @@ export default {
     return this._values[name] ?? ''
   },
   setValue(name, value) {
-    const previousValue = this._values[name] ?? ''
     this._values[name] = value
     triggerEvent('_refreshFieldValue', {
       name  : name,
       value : value
-    })
-    triggerEvent('valueChange', {
-      name          : name,
-      value         : value,
-      previousValue : previousValue
     })
   },
   getRepeater(name) {
