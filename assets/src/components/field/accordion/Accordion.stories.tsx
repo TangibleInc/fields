@@ -33,8 +33,15 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 
+export const Open: Story = {
+  args: {
+    isOpen: true,
+  }
+}
+
 export const WithSwitch: Story = {
   args: {
     useSwitch: true,
+    isOpen: true,
   }
 }

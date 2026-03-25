@@ -6,42 +6,32 @@
   @include section;
 }
 
-.tf-panel-header {
+.tf-panel .tf-panel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
   cursor: pointer;
   height: $field-height;
+  appearance: none;
+  box-sizing: border-box;
+  background: none;
+  text-align: left;
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  color: $field-font-color;
+  margin: 0;
+  padding: $section-padding;
+  border-radius: 0;
+  border: 0;
 
-  &.tf-button-action {
-    appearance: none;
-    box-sizing: border-box;
-    cursor: pointer;
-    background: none;
-    text-align: left;
-    font-family: inherit;
-    font-size: 100%;
-    line-height: 1.15;
-
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    height: $field-height;
-    color: $field-font-color;
-    margin: 0;
-    padding: $section-padding;
-    border-radius: 0;
-    border: 0;
-
-    &:hover {
-      background: #f0f0f0;
-    }
+  &:hover {
+    background: #f0f0f0;
   }
-
 }
 
-.tf-panel-open .tf-panel-header.tf-button-action {
+.tf-panel-open .tf-panel-header {
   border-bottom: $section-border;
 }
 
