@@ -40,24 +40,25 @@ describe('Repeater with a table layout', () => {
 
     const labels = within(itemsContainer)
       .getAllByText('Label name')
-      .filter(label => label.classList.contains('tf-label')) // We only want to test label from our Label component
+      .filter(label =>
+        label.classList.contains('tf-label') ||
+        label.classList.contains('tui-field__label') ||
+        label.classList.contains('tui-visually-hidden')
+      )
     
     /**
-     * 2 particular cases:
-     *  - Text suggestion and list have 2 label (because of child combobox)
-     *  - Checkbox label is not fully hidden as the checkbox input element needs to always be visible
+     * Text suggestion and list have 2 labels (because of child combobox)
      */
-    if( type === 'checkbox' ) {
-      expect(labels.length).toBe(0)
-      return;
-    }
-
     expect(labels.length).toBe(
-      ['text-suggestion', 'list'].includes(type)  
-        ? 2 
+      ['text-suggestion', 'list'].includes(type)
+        ? 2
         : 1
     )
 
-    expect(labels[0].parentNode.getAttribute('style')).toBe(visuallyHiddenStyle)
+    // TUI fields use `hidden` prop which adds a class; legacy fields use inline VisuallyHidden style
+    const isHiddenByStyle = labels[0].parentNode.getAttribute('style') === visuallyHiddenStyle
+    const isHiddenByClass = labels[0].classList.contains('tui-visually-hidden')
+      || labels[0].parentNode.classList.contains('tui-visually-hidden')
+    expect(isHiddenByStyle || isHiddenByClass).toBe(true)
   })
 })

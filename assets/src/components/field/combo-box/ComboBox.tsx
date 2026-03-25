@@ -36,7 +36,7 @@ const ComboBox = props => {
   const listBoxRef = useRef()
   const popoverRef = useRef()
   const wrapperRef = useRef()
-    
+
   useEffect(() => { setInputValue(props, state) }, [])
 
   /**
@@ -65,7 +65,7 @@ const ComboBox = props => {
     buttonRef,
     listBoxRef,
     popoverRef,
-    menuTrigger: 'input'
+    menuTrigger: props.menuTrigger ?? 'input'
   }, state)
 
   /**

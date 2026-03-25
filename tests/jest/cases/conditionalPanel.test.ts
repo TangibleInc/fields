@@ -3,10 +3,25 @@ import { uniqid } from '../../../assets/src/utils.ts'
 import { userEvent } from '@testing-library/user-event'
 import {
   render,
-  within
+  within,
+  act,
+  waitFor,
 } from '@testing-library/react'
 
 describe('conditional panel', () => {
+
+  /**
+   * Text fields lazy-load DynamicEditor — pre-resolve the module so
+   * subsequent synchronous renders don't trigger act() warnings.
+   */
+  beforeAll(async () => {
+    await act(async () => {
+      render(
+        fields.render({ type: 'text', name: '_warmup', label: '_', dynamic: true })
+      )
+      await waitFor(() => {})
+    })
+  })
 
   it('renders', () => {
 
@@ -19,10 +34,10 @@ describe('conditional panel', () => {
 
     expect(document.querySelectorAll('.tf-conditional-panel').length).toBe(1)
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(1)
 
     expect(within(container).getByText('And')).toBeTruthy()
-    expect(within(container).getByText('Delete condition')).toBeTruthy()
+    expect(within(container).getByRole('button', { name: 'Delete condition' })).toBeTruthy()
     expect(within(container).getByText('Add group')).toBeTruthy()
   })
 
@@ -37,22 +52,22 @@ describe('conditional panel', () => {
     )
 
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(1)
 
     await user.click(within(container).getByText('And'))
 
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(2)
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(0)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(0)
 
-    await user.click(within(container).getAllByText('Delete condition')[0])
-
-    expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
-
-    await user.click(within(container).getByText('Delete condition'))
+    await user.click(within(container).getAllByRole('button', { name: 'Delete condition' })[0])
 
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(1)
+
+    await user.click(within(container).getByRole('button', { name: 'Delete condition' }))
+
+    expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(1)
   })
 
   it('can add condition groups', async () => {
@@ -65,11 +80,11 @@ describe('conditional panel', () => {
       })
     )
 
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(1)
 
     await user.click(within(container).getByText('Add group'))
 
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(0)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(0)
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(2)
   })
 
@@ -83,17 +98,17 @@ describe('conditional panel', () => {
       })
     )
 
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(1)
 
     await user.click(within(container).getByText('Add group'))
 
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(0)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(0)
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(2)
 
-    await user.click(within(container).getAllByText('Delete condition')[0])
+    await user.click(within(container).getAllByRole('button', { name: 'Delete condition' })[0])
 
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(1)
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(1)
   })
 
   it('can load value', async () => {
@@ -129,24 +144,24 @@ describe('conditional panel', () => {
       })
     )
 
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(0)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(0)
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(3)
     expect(within(container).getAllByText('Add group').length).toBe(3)
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(6)
 
-    await user.click(within(document.querySelectorAll('.tf-conditional-group')[1]).getAllByText('Delete condition')[1])
-    await user.click(within(document.querySelectorAll('.tf-conditional-group')[1]).getAllByText('Delete condition')[0])
+    await user.click(within(document.querySelectorAll('.tf-conditional-group')[1]).getAllByRole('button', { name: 'Delete condition' })[1])
+    await user.click(within(document.querySelectorAll('.tf-conditional-group')[1]).getAllByRole('button', { name: 'Delete condition' })[0])
 
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(0)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(0)
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(2)
     expect(within(container).getAllByText('Add group').length).toBe(2)
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(4)
 
-    await user.click(within(document.querySelectorAll('.tf-conditional-group')[1]).getAllByText('Delete condition')[2])
-    await user.click(within(document.querySelectorAll('.tf-conditional-group')[1]).getAllByText('Delete condition')[1])
-    await user.click(within(document.querySelectorAll('.tf-conditional-group')[1]).getAllByText('Delete condition')[0])
+    await user.click(within(document.querySelectorAll('.tf-conditional-group')[1]).getAllByRole('button', { name: 'Delete condition' })[2])
+    await user.click(within(document.querySelectorAll('.tf-conditional-group')[1]).getAllByRole('button', { name: 'Delete condition' })[1])
+    await user.click(within(document.querySelectorAll('.tf-conditional-group')[1]).getAllByRole('button', { name: 'Delete condition' })[0])
 
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(1)
     expect(document.querySelectorAll('.tf-conditional-group').length).toBe(1)
     expect(within(container).getAllByText('Add group').length).toBe(1)
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
@@ -167,22 +182,22 @@ describe('conditional panel', () => {
 
     expect(document.querySelectorAll('.tf-conditional-panel').length).toBe(0)
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(0)
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(0)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(0)
 
     expect(within(container).queryByText('And')).toBeFalsy()
-    expect(within(container).queryByText('Delete condition')).toBeFalsy()
+    expect(within(container).queryByRole('button', { name: 'Delete condition' })).toBeFalsy()
     expect(within(container).queryByText('Add group')).toBeFalsy()
 
     await user.click(within(container).getByText('Open conditional panel'))
 
     expect(document.querySelectorAll('.tf-conditional-panel').length).toBe(1)
     expect(document.querySelectorAll('.tf-repeater-bare-row').length).toBe(1)
-    expect(document.querySelectorAll('.tf-button-danger[disabled=""]').length).toBe(1)
+    expect(document.querySelectorAll('.tui-button.is-theme-danger[disabled]').length).toBe(1)
 
     const cancelModal = document.querySelector('.tf-modal-container')
 
     expect(within(cancelModal).getByText('And')).toBeTruthy()
-    expect(within(cancelModal).getByText('Delete condition')).toBeTruthy()
+    expect(within(cancelModal).getByRole('button', { name: 'Delete condition' })).toBeTruthy()
     expect(within(cancelModal).getByText('Add group')).toBeTruthy()
     expect(within(cancelModal).getByText('Save')).toBeTruthy()
     expect(within(cancelModal).getByText('Cancel')).toBeTruthy()

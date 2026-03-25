@@ -15,7 +15,7 @@ import { useOverlayTriggerState } from 'react-stately'
 
 import { ControlContext, getConfig } from '../../../index.tsx'
 import { Button, Title } from '../../base'
-import ComboBox from '../../field/combo-box/ComboBox'
+import ComboBox from '../../field/combo-box'
 import Control from '../../../Control'
 
 interface DynamicFieldSettingsProps {
@@ -297,7 +297,7 @@ const SettingsOverlay = ({ state, control, title, children }) => {
   const modalRef = useRef(null)
   const dialogRef = useRef(null)
 
-  const { modalProps, underlayProps } = useModalOverlay({}, state, modalRef)
+  const { modalProps, underlayProps } = useModalOverlay({ isDismissable: true }, state, modalRef)
   const { dialogProps } = useDialog({ role: 'dialog' }, dialogRef)
 
   return (

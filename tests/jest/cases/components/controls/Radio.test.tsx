@@ -56,7 +56,7 @@ describe('RadioGroup TUI path', () => {
         <Radio value="a">Option A</Radio>
       </RadioGroup>
     )
-    const radioBtn = container.querySelector('[role="radio"]') as HTMLButtonElement
-    expect(radioBtn.disabled).toBe(true)
+    const radioBtn = container.querySelector('[role="radio"]')
+    expect(radioBtn.getAttribute('aria-disabled')).toBe('true')
   })
 })
