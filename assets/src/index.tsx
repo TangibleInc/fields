@@ -137,6 +137,8 @@ export {
   types,
   utils,
   fields,
+  renderField as Field,
+  renderElement as Element,
   ControlContext,
   init,
   config,
