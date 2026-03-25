@@ -3,7 +3,7 @@ import {
   createRoot 
 } from 'react-dom'
 
-import { createContext } from 'react'
+import { ControlContext } from './context'
 
 import {
   config,
@@ -22,11 +22,6 @@ import store from './store'
 import types from './types'
 import fields from './fields'
 import * as utils from './utils'
-
-/**
- * Used to detect the current context from child components
- */
-const ControlContext = createContext(null)
 
 const renderComponent = (props, type = 'field') => (
   type === 'element' 

@@ -13,7 +13,8 @@ import {
 } from 'react-aria'
 import { useOverlayTriggerState } from 'react-stately'
 
-import { ControlContext, getConfig } from '../../../index.tsx'
+import { ControlContext } from '../../../context'
+import { getConfig } from '../../../index.tsx'
 import { Button, Title } from '../../base'
 import ComboBox from '../../field/combo-box'
 import Control from '../../../Control'

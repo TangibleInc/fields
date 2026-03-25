@@ -63,6 +63,7 @@ export const LegacyVsTui: Story = {
 
 export const InteractiveComparison: Story = {
   render: () => {
+
     const [legacyChecked, setLegacyChecked] = useState(false)
     const [tuiChecked, setTuiChecked] = useState(false)
 

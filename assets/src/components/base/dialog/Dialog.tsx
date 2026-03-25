@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useDialog } from 'react-aria'
-import { Title } from '../../base'
+import Title from '../title/Title'
 
 /**
  * @see https://react-spectrum.adobe.com/react-aria/useDialog.html 

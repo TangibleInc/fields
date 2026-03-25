@@ -7,7 +7,7 @@ import {
   Overlay,
   useModalOverlay
 } from 'react-aria'
-import { ControlContext } from '../../../index.tsx'
+import { ControlContext } from '../../../context'
 
 const Modal = ({ state, children, ...props }) => {
 
