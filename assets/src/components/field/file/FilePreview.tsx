@@ -14,13 +14,13 @@ const FilePreview = props => {
   useEffect(() => {
 
     const fetch = async () => {
-  
+
       const data = await getMedia(props.id)
-    
+
       setData(data)
       isLoaded(true)
     }
-    
+
     fetch()
   }, [])
 
@@ -45,7 +45,7 @@ const FilePreview = props => {
         className="attachment-medium size-medium"
       />}
       <span>{`${data.title.rendered}${fileExtension !== '' ? '.' + fileExtension : ''}`}</span>
-      <Button type="action" onPress={ () => props.remove() }>
+      <Button type="danger" onPress={ () => props.remove() }>
         Remove
       </Button>
     </li>

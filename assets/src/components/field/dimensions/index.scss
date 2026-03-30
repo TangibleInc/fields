@@ -13,11 +13,6 @@
   width: fit-content;
   position: relative;
   flex-wrap: wrap;
-
-  & > button.tui-button.is-theme-secondary {
-    // needed to overwrite important from .tui-interface .tui-button
-    background: $field-background !important;
-  }
 }
 
 .tf-dimensions-number-groups {

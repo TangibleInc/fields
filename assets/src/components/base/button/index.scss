@@ -72,6 +72,19 @@
   color: $button-primary-color;
 }
 
+/**
+ * Per default, background will be transparent for secondary button
+ * with outline button
+ *
+ * Most of the time we expect this background to be the same color as
+ * fields background in fields
+ *
+ * We have to use !important because rule we overwrite is set to important
+ */
+button.tui-button.is-theme-secondary.is-style-outline {
+  background: $field-background !important;
+}
+
 /* Icons */
 $icons: (
   (name: 'trash', icon: url('data:image/svg+xml;utf8,<svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.99995 0.714233C6.73758 0.714233 5.71423 1.73758 5.71423 2.99995H0V4.49995H1.38525L3.15687 15.4619C3.31345 16.4307 4.14986 17.1428 5.13126 17.1428H10.8687C11.8501 17.1428 12.6865 16.4307 12.8431 15.4619L14.6147 4.49995H16V2.99995H10.2857C10.2857 1.73758 9.26231 0.714233 7.99995 0.714233ZM2.90471 4.49995H13.0952L11.3623 15.2225C11.3231 15.4647 11.114 15.6428 10.8687 15.6428H5.13126C4.88591 15.6428 4.6768 15.4648 4.63766 15.2225L2.90471 4.49995Z" fill="%23D63638"/></svg>')),

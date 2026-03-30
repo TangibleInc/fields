@@ -27,11 +27,6 @@
 
 .tf-date-field-container {
   width: 100%;
-
-  .tf-date-group > button.tui-button.is-theme-secondary {
-    // needed to overwrite important from .tui-interface .tui-button
-    background: $field-background !important;
-  }
 }
 
 .tf-date-field {
