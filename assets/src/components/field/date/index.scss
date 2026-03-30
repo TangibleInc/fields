@@ -27,6 +27,11 @@
 
 .tf-date-field-container {
   width: 100%;
+
+  .tf-date-group > button.tui-button.is-theme-secondary {
+    // needed to overwrite important from .tui-interface .tui-button
+    background: $field-background !important;
+  }
 }
 
 .tf-date-field {
@@ -34,9 +39,8 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  height: calc(#{$field-height} - #{$field-padding-vertical * 2});
-  width: calc(#{$field-width} - #{$field-padding-horizontal * 2});
-  
+  height: fit-content;
+
   &:focus-within {
     border-color: $field-focus-color;
   }
