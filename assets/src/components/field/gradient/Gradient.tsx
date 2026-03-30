@@ -40,7 +40,7 @@ const Gradient = props => {
           'rgba(0,255,255,1)',
           'rgba(0,255,255,1)' 
         ]
-      } 
+      }
   )
 
   const input = useRef()
