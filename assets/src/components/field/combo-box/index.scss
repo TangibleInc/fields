@@ -10,6 +10,7 @@
   justify-content: space-between;
   flex-wrap: nowrap;
   @include field;
+  height: fit-content;
   padding: 0;
 	
   input {
@@ -64,6 +65,7 @@
     color: $field-focus-color;
     background-color: transparent;
     border: none;
+    padding: 0;
 
     &:focus{
       outline: none;
@@ -78,6 +80,11 @@
   display: flex;
   gap: $global-spacer-sm;
   position: relative;
+
+  & > button.tui-button.is-theme-secondary {
+    // needed to overwrite important from .tui-interface .tui-button
+    background: $field-background !important;
+  }
 }
 
 .tf-multiple-combobox-container > .tf-popover {
