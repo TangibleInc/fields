@@ -38,6 +38,7 @@ $tab-item-index-height: 40px;
   overflow-x: auto;
   overflow-y: hidden;
   min-width: fit-content;
+  gap: 0;
 }
 
 .tf-tab-item {
@@ -46,10 +47,12 @@ $tab-item-index-height: 40px;
   justify-content: center;
   align-items: center;
   min-width: fit-content;
-  height: $field-height;
-  padding: $section-padding;
   @include label;
   margin-bottom: 0;
+
+  button {
+    border-radius: 0;
+  }
 
   &[data-open="true"]::before {
     content: '';

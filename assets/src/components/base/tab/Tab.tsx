@@ -48,7 +48,11 @@ const Title = props => (
     className={ 'tf-tab-item ' + (props.className ?? '') }
     data-open={ props.isOpen ?? false }
   >
-    <Button type={ 'text-action' } onPress={ props.onPress }>
+    <Button
+      type={ 'text-action' }
+      onPress={ props.onPress }
+      variant={ 'ghost' }
+    >
       { props.children }
     </Button>
   </div>
