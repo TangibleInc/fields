@@ -31,8 +31,8 @@ export const Default: Story = {}
 
 export const WithLimits: Story = {
   args: {
-    min: '09:00',
-    max: '17:00',
+    minValue: '09:00',
+    maxValue: '17:00',
     description: 'You can only select a time between 9 AM to 5:00 PM',
   }
 }

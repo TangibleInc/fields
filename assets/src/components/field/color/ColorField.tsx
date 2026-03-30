@@ -35,7 +35,10 @@ const ColorField = forwardRef(({
 
   return(
     <div className="tf-color-container" ref={ wrapperRef }>
-      <input ref={ ref } { ...inputProps }
+      <input
+        ref={ ref }
+        { ...inputProps }
+        className="tui-input tui-input-reset"
         onClick={() => isOpen(true)}
         value={ state.inputValue ?? '' }
       />

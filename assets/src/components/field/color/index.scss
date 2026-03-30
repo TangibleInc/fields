@@ -19,10 +19,10 @@
 .tf-color-container {
   position: relative;
   width: 100%;
+  height: fit-content;
 
   input {
     @include field;
-    box-sizing: border-box;
   }
 }
 
