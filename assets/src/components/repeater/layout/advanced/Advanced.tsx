@@ -82,15 +82,16 @@ const Advanced = ({
                     )) }
                   </div>
                   { maxLength !== undefined &&
-                    <div className="tf-repeater-advanced-overview-item-actions">
+                    <div className="tf-repeater-advanced-overview-item-actions is-size-sm">
                       <Button
                         type="text-primary"
+                        size={ 'xs' }
                         onPress={ () => setOpenSection(openSection === i ? false : i) }
                       >
                         { openSection === i ? 'Close' : 'Edit' }
                       </Button>
-                      { renderAction( 'clone', i, { type : 'text-primary' } ) }
-                      { renderAction( 'delete', i, { buttonProps : { type: 'text-danger' } } ) }
+                      { renderAction( 'clone', i, { type : 'text-primary', size: 'xs' } ) }
+                      { renderAction( 'delete', i, { buttonProps : { type: 'text-danger', size: 'xs' } } ) }
                     </div> } 
                 </div>
                 <Button

@@ -48,7 +48,7 @@ $advanced-item-index-height: 40px;
 
 .tf-repeater-advanced-overview {
   background: $field-background;
-  
+
   .tf-repeater-advanced-label-row-arrow,
   .tf-repeater-advanced-label-row-index {
     height: $advanced-item-index-height;
@@ -72,10 +72,10 @@ $advanced-item-index-height: 40px;
     height: calc(#{$field-height} / 4);
     width: calc(#{$field-height} / 4);
   }
-  
+
   .tf-repeater-advanced-overview-item-actions {
     width: 100%;
-    height: calc($advanced-item-index-height / 2);
+    height: var(--tui-control-height-sm, 25px);
     button {
       display: none;
     }
