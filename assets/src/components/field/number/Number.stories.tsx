@@ -34,3 +34,9 @@ export const WithMinMax: Story = {
     maxValue: 20,
   }
 }
+
+export const WithoutButtons: Story = {
+  args: {
+    hasButtons: false,
+  }
+}
