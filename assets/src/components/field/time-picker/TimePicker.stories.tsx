@@ -36,3 +36,9 @@ export const WithLimits: Story = {
     description: 'You can only select a time between 9 AM to 5:00 PM',
   }
 }
+
+export const TwentyFourHour: Story = {
+  args: {
+    hourCycle: 24,
+  }
+}
