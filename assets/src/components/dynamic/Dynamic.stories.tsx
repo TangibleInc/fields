@@ -235,6 +235,19 @@ export const TextInsert: Story = {
 }
 
 /**
+ * Read-only text field with dynamic values in insert mode
+ */
+export const TextInsertReadOnly: Story = {
+  args: {
+    type: 'text',
+    label: 'Text (read-only, insert mode)',
+    value: '[[post_title]]',
+    readOnly: true,
+    dynamic: true,
+  }
+}
+
+/**
  * Text field with dynamic values in replace mode — fully replaces
  * the field value with a single dynamic value
  */
@@ -243,6 +256,21 @@ export const TextReplace: Story = {
     type: 'text',
     label: 'Text (replace mode)',
     description: 'Fully replaces value with a dynamic value',
+    dynamic: {
+      mode: 'replace',
+    },
+  }
+}
+
+/**
+ * Read-only text field with dynamic values in replace mode
+ */
+export const TextReplaceReadOnly: Story = {
+  args: {
+    type: 'text',
+    label: 'Text (read-only, replace mode)',
+    value: '[[post_title]]',
+    readOnly: true,
     dynamic: {
       mode: 'replace',
     },

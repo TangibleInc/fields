@@ -38,6 +38,14 @@ export const SimpleTuiInput: Story = {
   }
 }
 
+export const ReadOnlyInput: Story = {
+  args: {
+    label: 'Read only Text',
+    value: 'Read only value',
+    readOnly: true
+  }
+}
+
 export const MaskedEnhancedInput: Story = {
   args: {
     label: 'Masked Text',
@@ -83,4 +91,3 @@ export const InteractiveComparison: Story = {
     )
   }
 }
-
