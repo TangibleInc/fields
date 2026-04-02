@@ -115,6 +115,28 @@ describe('Text component', () => {
     expect(input.value).toBe('123/abc')
   })
 
+  it('mask rejects invalid characters', async () => {
+
+    const { container } = render(
+      fields.render({
+        name       : 'field-name',
+        type       : 'text',
+        label      : 'Label',
+        inputMask  : '999/aaa',
+      })
+    )
+
+    const input = container.querySelector('input.tui-input')
+    const user = userEvent.setup()
+
+    // Type digits where letters are expected (after the /)
+    await user.type(input, '123456')
+
+    // 456 are digits, but the last 3 slots expect letters (aaa) — should be rejected
+    expect(input.value).not.toBe('123/456')
+    expect(input.value).toBe('123/___')
+  })
+
   it('supports placeholder', () => {
 
     const { container } = render(
