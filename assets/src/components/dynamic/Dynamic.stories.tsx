@@ -241,7 +241,7 @@ export const TextInsertReadOnly: Story = {
   args: {
     type: 'text',
     label: 'Text (read-only, insert mode)',
-    value: '[[post_title]]',
+    value: '[[post-title]]',
     readOnly: true,
     dynamic: true,
   }
@@ -269,7 +269,7 @@ export const TextReplaceReadOnly: Story = {
   args: {
     type: 'text',
     label: 'Text (read-only, replace mode)',
-    value: '[[post_title]]',
+    value: '[[post-title]]',
     readOnly: true,
     dynamic: {
       mode: 'replace',
