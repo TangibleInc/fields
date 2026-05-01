@@ -483,11 +483,13 @@ $documentation->register_section('dynamic-values', [
       'title'  => 'Examples',
       'path'   => 'dynamic-values/examples',
       'fields' => [
-        'dynamic-text'          => [ 'json' => true ],
-        'dynamic-text-replace'  => [ 'json' => true ],
-        'dynamic-color'         => [],
-        'dynamic-date'          => [],
-        'dynamic-number'        => [],
+        'dynamic-text'              => [ 'json' => true ],
+        'dynamic-text-replace'      => [ 'json' => true ],
+        'dynamic-color'             => [],
+        'dynamic-date'              => [],
+        'dynamic-number'            => [],
+        'dynamic-editor'            => [ 'json' => true ],
+        'dynamic-editor-tinymce'    => [ 'json' => true ],
       ]
     ]
   ]

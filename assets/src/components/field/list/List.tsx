@@ -58,13 +58,11 @@ const List = props => {
   }
 
   const updateItem = (i, name, value) => {
-    setTimeout(() => {
-      setItems([
-        ...items.slice(0, i),
-        { ...items[i], [name]: value },
-        ...items.slice(i + 1)
-      ])
-    })
+    setItems([
+      ...items.slice(0, i),
+      { ...items[i], [name]: value },
+      ...items.slice(i + 1)
+    ])
   }
 
   const getItemText = item => (

@@ -117,3 +117,50 @@
 <div class="tangible-settings-row">
   <?php submit_button() ?>
 </div>
+
+<h4>Editor (ProseMirror)</h4>
+
+<div class="tangible-settings-row">
+  <?= $fields->render_field('dynamic-editor', [
+    'label'       => 'Editor field',
+    'type'        => 'wysiwyg',
+    'value'       => $fields->fetch_value('dynamic-editor'),
+    'description' => 'Example description',
+    'dynamic'     => true
+  ]) ?>
+</div>
+
+<?php tangible\see(
+  'Raw value: ' . $fields->fetch_value('dynamic-editor'),
+  'Parsed value: ' . $fields->render_value(
+    $fields->fetch_value('dynamic-editor')
+  ),
+); ?>
+
+<div class="tangible-settings-row">
+  <?php submit_button() ?>
+</div>
+
+<h4>Editor (TinyMCE)</h4>
+
+<div class="tangible-settings-row">
+  <?= $fields->render_field('dynamic-editor-tinymce', [
+    'label'       => 'Editor field (TinyMCE)',
+    'type'        => 'wysiwyg',
+    'editor'      => 'tinymce',
+    'value'       => $fields->fetch_value('dynamic-editor-tinymce'),
+    'description' => 'Example description',
+    'dynamic'     => true
+  ]) ?>
+</div>
+
+<?php tangible\see(
+  'Raw value: ' . $fields->fetch_value('dynamic-editor-tinymce'),
+  'Parsed value: ' . $fields->render_value(
+    $fields->fetch_value('dynamic-editor-tinymce')
+  ),
+); ?>
+
+<div class="tangible-settings-row">
+  <?php submit_button() ?>
+</div>

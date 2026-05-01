@@ -11,6 +11,8 @@ import {
   Description
 } from '../../base'
 
+import { BaseWrapper } from '../../dynamic/'
+
 const TinyMce = props => {
 
   const ref = useRef()
@@ -48,13 +50,27 @@ const TinyMce = props => {
 
   useEffect(() => props.onChange && props.onChange(value), [value])
 
+  const insertDynamicValue = token => {
+    if( tinyMCE.activeEditor ) {
+      tinyMCE.activeEditor.insertContent(token)
+    } else {
+      setValue(prev => (prev ?? '') + token)
+    }
+  }
+
   return (
     <div className="tf-editor">
       {props.label &&
         <Label labelProps={ labelProps } parent={ props }>
           {props.label}
         </Label>}
-      <textarea ref={ref} {...inputProps}>{value}</textarea>
+      <BaseWrapper
+        config={ props.dynamic ?? false }
+        onValueSelection={ insertDynamicValue }
+        buttonType="outside"
+      >
+        <textarea ref={ref} {...inputProps}>{value}</textarea>
+      </BaseWrapper>
       { props.description &&
         <Description descriptionProps={ descriptionProps } parent={ props }>
           { props.description }

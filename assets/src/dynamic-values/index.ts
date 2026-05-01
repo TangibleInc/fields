@@ -11,8 +11,10 @@ const allowedTypes = [
   'color-picker',
   'conditional-panel',
   'date-picker',
+  'editor',   // alias of wysiwyg
   'number',
-  'text'
+  'text',
+  'wysiwyg'
 ]
 
 /**
@@ -74,6 +76,30 @@ const defaultConfig = {
     mode : {
       default   : 'insert',
       supported : [ 'insert', 'replace' ]
+    },
+    types : [
+      'text',
+      'date',
+      'color',
+      'number'
+    ]
+  },
+  'editor': {
+    mode : {
+      default   : 'insert',
+      supported : [ 'insert' ]
+    },
+    types : [
+      'text',
+      'date',
+      'color',
+      'number'
+    ]
+  },
+  'wysiwyg': {
+    mode : {
+      default   : 'insert',
+      supported : [ 'insert' ]
     },
     types : [
       'text',
