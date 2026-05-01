@@ -80,6 +80,7 @@ const getAsyncProps = props => {
         ? mapResults(results, props.mapResults)
         : results
 
+      debounced.current.status = false
       return {
         items: getOptions(
           (formatedResults ?? []).reduce((items, item) => ({ ...items, [item.id]: item.title }), {})

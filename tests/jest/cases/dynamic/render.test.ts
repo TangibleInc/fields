@@ -21,6 +21,11 @@ describe('dynamic values feature - render', () => {
    */
   const testTypes = allowedTypes.filter(type => type !== 'conditional-panel')
 
+  /**
+   * Types that only support insert mode (no replace/clear)
+   */
+  const insertOnlyTypes = [ 'text', 'editor', 'wysiwyg' ]
+
   test.each(testTypes)('%p type do not render dynamic values UI if not specified', type => {
 
     const { container } = render(
@@ -31,8 +36,8 @@ describe('dynamic values feature - render', () => {
       })
     )
 
-    expect(within(container).queryByText('Insert')).toBeFalsy()
-    expect(within(container).queryByText('Clear')).toBeFalsy()
+    expect(within(container).queryByRole('button', { name: 'Insert' })).toBeFalsy()
+    expect(within(container).queryByRole('button', { name: 'Clear' })).toBeFalsy()
   })
 
   test.each(testTypes)('%p type do not render dynamic values UI if dynamic is false', type => {
@@ -46,8 +51,8 @@ describe('dynamic values feature - render', () => {
       })
     )
 
-    expect(within(container).queryByText('Insert')).toBeFalsy()
-    expect(within(container).queryByText('Clear')).toBeFalsy()
+    expect(within(container).queryByRole('button', { name: 'Insert' })).toBeFalsy()
+    expect(within(container).queryByRole('button', { name: 'Clear' })).toBeFalsy()
   })
 
   test.each(testTypes)('%p type does render dynamic values UI if dynamic is true', type => {
@@ -61,13 +66,13 @@ describe('dynamic values feature - render', () => {
       })
     )
 
-    expect(within(container).getByText('Insert')).toBeTruthy()
+    expect(within(container).getByRole('button', { name: 'Insert' })).toBeTruthy()
 
-    // Special case for text, as it uses insert mode by default instead if replace like other types
-    if( type === 'text' ) {
-      expect(within(container).queryByText('Clear')).toBeFalsy()
+    // Insert-only types (text, editor, wysiwyg) do not show a Clear button
+    if( insertOnlyTypes.includes(type) ) {
+      expect(within(container).queryByRole('button', { name: 'Clear' })).toBeFalsy()
     }
-    else expect(within(container).getByText('Clear')).toBeTruthy()
+    else expect(within(container).getByRole('button', { name: 'Clear' })).toBeTruthy()
   })
 
   test.each(testTypes)('%p type open dynamic value combobox when clicking on insert button', async type => {
@@ -87,7 +92,7 @@ describe('dynamic values feature - render', () => {
 
     expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeFalsy()
 
-    await user.click(within(container).getByText('Insert'))
+    await user.click(within(container).getByRole('button', { name: 'Insert' }))
 
     expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeTruthy()
 
@@ -95,7 +100,7 @@ describe('dynamic values feature - render', () => {
 
     expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeFalsy()
 
-    await user.click(within(container).getByText('Insert'))
+    await user.click(within(container).getByRole('button', { name: 'Insert' }))
 
     expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeTruthy()
   })

@@ -58,7 +58,7 @@ class Enqueue_TestCase extends WP_UnitTestCase {
     }
     $this->assertGreaterThan(
       0,
-      preg_match('#var TangibleFieldsConfig = (.+?);#', $data, $matches),
+      preg_match('#^var TangibleFieldsConfig = (.+);$#m', $data, $matches),
       'wp_add_inline_script does not have TangibleFieldsConfig'
     );
     $data = json_decode($matches[1], true);
@@ -93,13 +93,13 @@ class Enqueue_TestCase extends WP_UnitTestCase {
 
     if ( version_compare($wp_version, '6.3', '>') ) {
       preg_match(
-        '#var TangibleFieldsConfig = (.+?);#',
+        '#^var TangibleFieldsConfig = (.+);$#m',
         wp_scripts()->get_inline_script_data('tangible-fields', 'before'),
         $matches
       );
     } else {
       preg_match(
-        '#^var TangibleFieldsConfig = (.+?);$#',
+        '#^var TangibleFieldsConfig = (.+);$#m',
         wp_scripts()->print_inline_script('tangible-fields', 'before', false),
         $matches
       );

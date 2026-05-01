@@ -300,6 +300,67 @@ class Dynamics_TestCase extends WP_UnitTestCase {
   /**
    * @depends test_dynamic_value_category_registration
    */
+  function test_dynamic_value_render_in_html_content() {
+
+    $fields = tangible_fields();
+    $fields->register_dynamic_value([
+      'name'     => 'test-value-html',
+      'category' => 'test-category',
+      'callback' => function() {
+        return 'World';
+      },
+      'permission_callback_store' => '__return_true',
+      'permission_callback_parse' => '__return_true'
+    ]);
+
+    // Simulate a wysiwyg field value: token inside HTML
+    $parsed = $fields->render_value('<p>Hello [[test-value-html]]</p>');
+    $this->assertEquals('<p>Hello World</p>', $parsed, 'dynamic value was not replaced inside HTML content');
+
+    // Multiple tokens in HTML
+    $parsed = $fields->render_value('<p>[[test-value-html]] [[test-value-html]]</p>');
+    $this->assertEquals('<p>World World</p>', $parsed, 'multiple dynamic values were not replaced inside HTML content');
+
+    // Token inside an attribute value should still be replaced
+    $parsed = $fields->render_value('<a title="[[test-value-html]]">link</a>');
+    $this->assertEquals('<a title="World">link</a>', $parsed, 'dynamic value was not replaced inside an HTML attribute');
+  }
+
+  /**
+   * @depends test_dynamic_value_category_registration
+   */
+  function test_dynamic_value_store_strips_tokens_for_wysiwyg() {
+
+    $fields = tangible_fields();
+
+    $fields->register_field('wysiwyg-dv-test',
+      [ 'permission_callback' => '__return_true' ]
+      + $fields->_store_callbacks['memory']()
+    );
+
+    // Unauthorized token should be stripped on store
+    $fields->store_value('wysiwyg-dv-test', '<p>Hello [[unauthorized-dynamic-value]]</p>');
+    $this->assertEquals(
+      '<p>Hello </p>',
+      $fields->fetch_value('wysiwyg-dv-test'),
+      'unauthorized dynamic value was not stripped from wysiwyg content on store'
+    );
+
+    // Authorized token should be preserved on store
+    $fields->store_value('wysiwyg-dv-test', '<p>Hello [[test-value-html]]</p>');
+    $this->assertEquals(
+      '<p>Hello [[test-value-html]]</p>',
+      $fields->fetch_value('wysiwyg-dv-test'),
+      'authorized dynamic value token was incorrectly stripped from wysiwyg content on store'
+    );
+
+    // Cleanup
+    $fields->store_value('wysiwyg-dv-test', null);
+  }
+
+  /**
+   * @depends test_dynamic_value_category_registration
+   */
   function test_dynamic_values_data_for_enqueue() {
     
     $fields = tangible_fields();
