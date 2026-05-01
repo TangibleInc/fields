@@ -327,7 +327,7 @@ class Dynamics_TestCase extends WP_UnitTestCase {
   }
 
   /**
-   * @depends test_dynamic_value_category_registration
+   * @depends test_dynamic_value_render_in_html_content
    */
   function test_dynamic_value_store_strips_tokens_for_wysiwyg() {
 
