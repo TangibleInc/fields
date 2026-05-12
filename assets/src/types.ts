@@ -14,6 +14,7 @@ import {
   Dimensions,
   DynamicText,
   Editor,
+  EnhancedChoice,
   FieldGroup,
   File,
   Gradient,
