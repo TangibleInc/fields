@@ -124,6 +124,17 @@ $fields->format_args = function(
       $args = $fields->format_groups($type, $args);
       break;
 
+    case 'enhanced_choice':
+      $args['type'] = 'enhanced-choice';
+      $args = $fields->format_value($args, 'is_async', 'isAsync');
+      $args = $fields->format_value($args, 'map_results', 'mapResults');
+      $args = $fields->format_value($args, 'async_args', 'asyncArgs');
+      $args = $fields->format_value($args, 'search_url', 'searchUrl');
+      $args = $fields->format_value($args, 'ajax_action', 'ajaxAction');
+      $args = $fields->format_value($args, 'read_only', 'readOnly');
+      $args = $fields->format_value($args, 'debounce_time', 'debounceTime');
+      break;
+
     case 'accordion':
       $args = $fields->format_groups($type, $args);
       $args = $fields->format_value($args, 'use_switch', 'useSwitch');

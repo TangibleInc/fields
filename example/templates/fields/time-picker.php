@@ -12,7 +12,7 @@
 
 <div class="tangible-settings-row">
   <?php submit_button() ?>
-  </dib>
+</div>
 
   <h4>Example of Limit Time Selection</h4>
 
@@ -30,7 +30,7 @@
 
   <div class="tangible-settings-row">
     <?php submit_button() ?>
-    </dib>
+  </div>
 
     <?php tangible\see(
       $fields->fetch_value('time'),
