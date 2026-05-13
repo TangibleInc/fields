@@ -30,24 +30,28 @@ const EnhancedOption = ({ item, state, visibility, onToggleVisibility }) => {
     onToggleVisibility(item.key)
   }
 
-  // let classes = 'tf-enhanced-choice-option'
-  // if (isSelected) classes += ' is-selected'
-  // if (isFocused) classes += ' is-focused'
-  // if (isDisabled) classes += ' is-disabled'
-  // if (!isVisible) classes += ' is-hidden'
+  // Prevent selection logic from firing when clicking the toggle
+  const preventSelection = (e) => {
+    e.stopPropagation()
+  }
+
+  let classes = 'tf-enhanced-choice-option'
+  if (isSelected) classes += ' is-selected'
+  if (isFocused) classes += ' is-focused'
+  if (isDisabled) classes += ' is-disabled'
+  if (!isVisible) classes += ' is-hidden'
 
   return (
     <li
       { ...mergeProps(optionProps, focusProps) }
       ref={ref}
-      // className={classes}
+      className={classes}
     >
       <div className="tf-enhanced-choice-option-content">
-        <div className="tf-enhanced-choice-checkbox">
+        <div className="tf-enhanced-choice-checkbox" style={{ pointerEvents: 'none' }}>
           <Checkbox 
             isSelected={isSelected}
-            // isDisabled={isDisabled}
-            // onChange={() => state.toggleSelection(item.key)}
+            isDisabled={isDisabled}
           />
         </div>
         <div className="tf-enhanced-choice-label">
@@ -56,6 +60,8 @@ const EnhancedOption = ({ item, state, visibility, onToggleVisibility }) => {
         <button 
           className="tf-enhanced-choice-visibility-toggle"
           onClick={handleEyeClick}
+          onPointerDown={preventSelection}
+          onMouseDown={preventSelection}
           aria-label={isVisible ? 'Hide item' : 'Show item'}
           type="button"
         >
