@@ -13,7 +13,8 @@ import { Item, useListState } from 'react-stately'
 
 import { 
   Label,
-  Description
+  Description,
+  Button
 } from '../../base'
 
 import EnhancedOption from './EnhancedOption'
@@ -21,8 +22,10 @@ import SearchField from './SearchField'
 
 const SingleChoices = (props) => {
 
-  const [filterValue, setFilterValue] = useState('')
+  const [filterValue, setFilterValue] = useState('');
+  // const [value, setValue] = useState(props.value || null);
   const { contains } = useFilter({ sensitivity: 'base' })
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   // Initialize visibility state
   const [visibility, setVisibility] = useState(props.value?.visibility ?? {})
@@ -41,12 +44,19 @@ const SingleChoices = (props) => {
     ...props,
     items: filteredItems,
     selectionMode: 'single',
-    disallowEmptySelection: true,
+    disallowEmptySelection: false,
+    children: (item) => <Item key={item.key}>{item.rendered}</Item>,
     selectedKeys: props.value?.selected ? [props.value.selected] : (props.value && typeof props.value === 'string' ? [props.value] : []),
     onSelectionChange: (keys) => {
-      const selected = Array.from(keys)[0]
+      setIsConfirmed(false);
+      const selectedKey = Array.from(keys)[0]
+
+      if (keys.size === 0) {
+       setFilterValue('');
+      }
+
       props.onChange && props.onChange({
-        selected,
+        selected: selectedKey,
         visibility
       })
     }
@@ -54,7 +64,33 @@ const SingleChoices = (props) => {
 
   const selectedCount = state.selectionManager.selectedKeys.size;
 
-  // console.log('state:', state );
+  const handleConfirmSelection = () => {
+    const selectedKey = state.selectionManager.firstSelectedKey;
+    const items = props.items || [];
+    const selectedItem = items.find(item => item.value === selectedKey);
+
+    if(selectedItem){
+      setFilterValue(selectedItem.label);
+      setIsConfirmed(true);
+    }
+    else
+      setFilterValue('');
+
+    props.onChange && props.onChange({
+      selected: selectedKey,
+      visibility
+    })
+  }
+
+  const handleSearchBlur = () => {
+    if(filterValue === '' && isConfirmed){
+      const selectedKey = state.selectionManager.firstSelectedKey;
+      const selectedItem = (props.items || []).find(item => item.value === selectedKey);
+      if (selectedItem) {
+        setFilterValue(selectedItem.label);
+      }
+    }
+  }
 
   const onToggleVisibility = (key) => {
     const newVisibility = {
@@ -80,10 +116,6 @@ const SingleChoices = (props) => {
     listBoxRef
   )
 
-  const handleSearchChange = (event) => {
-    setFilterValue(event.target.value);
-  }
-
   return (
     <div className="tf-enhanced-choice-single">
       { props.label &&
@@ -95,10 +127,16 @@ const SingleChoices = (props) => {
           { props.description }
         </Description> }
       <span className="tf-enhanced-choice__value">
-        {selectedCount} selected
+        {selectedCount === 0 ? (
+          'Not selected'
+        ) : isConfirmed ? (
+          'Selected' 
+        ) : (
+          <Button onPress={handleConfirmSelection}>Confirm selected</Button>
+        )}
       </span>
       <div className="tf-enhanced-choice-search">
-        <SearchField value={filterValue} onChange={setFilterValue} />
+        <SearchField value={filterValue} onChange={setFilterValue} onBlur={handleSearchBlur} />
       </div>
 
       <ul
