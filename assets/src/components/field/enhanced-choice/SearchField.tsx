@@ -4,12 +4,11 @@ import { useRef } from 'react';
 import { Button } from '../../base';
 
 const SearchField = (props) => {
- let {label} = props;
- let state = useSearchFieldState(props);
- let ref = useRef(null);
- let {labelProps, inputProps, clearButtonProps} = useSearchField(props, state, ref);
+ let { label } = props;
+ let state = useSearchFieldState( props );
+ let ref = useRef( null );
+ let { labelProps, inputProps, clearButtonProps } = useSearchField( props, state, ref );
 
-console.log(inputProps);
   return (
     <div className='tf-search'>
       <label {...labelProps}>{label}</label>
