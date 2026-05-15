@@ -87,11 +87,12 @@
   width: 100%;
 }
 
-.tf-enhanced-choice-checkbox {
+.tf-enhanced-choice-selection-indicator {
   display: flex;
   align-items: center;
   
-  input[type="checkbox"] {
+  input[type="checkbox"],
+  input[type="radio"] {
     margin: 0;
     cursor: pointer;
   }

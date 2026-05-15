@@ -1,7 +1,8 @@
 import { 
   useRef, 
   useState,
-  useMemo
+  useMemo,
+  useEffect
 } from 'react'
 
 import { 
@@ -19,75 +20,142 @@ import {
 
 import EnhancedOption from './EnhancedOption'
 import SearchField from './SearchField'
+import { initJSON } from '../../../utils'
 
 const SingleChoices = (props) => {
 
-  const [filterValue, setFilterValue] = useState('');
-  // const [value, setValue] = useState(props.value || null);
+  const { initialKey, initialVisibility } = useMemo(() => {
+    // console.log('initializing value from props:', props.value);
+    // console.log(typeof props.value);
+    let val = props.value;
+
+    if( typeof val === 'string' && val.trim() !== '' ) {
+      try {
+        const parsed = JSON.parse(val);
+        if(parsed && typeof parsed === 'object') val = JSON.parse(val);
+      } catch (e) {
+        // Not a JSON string, keep as is
+      }
+    }
+
+    if (!val) return { initialKey: null, initialVisibility: null };
+    
+    if (typeof val === 'string') {
+      return { initialKey: val, initialVisibility: {} };
+    }
+    
+    if (typeof val === 'object' && val.selected) {
+      return {
+        initialKey: val.selected,
+        initialVisibility: { [val.selected]: val.visibility !== false }
+      }
+    }
+    
+    return { initialKey: null, initialVisibility: {} };
+  }, [props.value]);
+
+  const initialItem = useMemo(() => 
+    (props.items || []).find(item => item.value === initialKey),
+    [props.items, initialKey]
+  );
+
+  console.log('initialItem:', initialItem);
+
+  const [filterValue, setFilterValue] = useState(initialItem?.label || ''); // for search input
+  const [searchTerm, setSearchTerm] = useState(''); // for search filtering
+  const [selectedKey, setSelectedKey] = useState(initialKey); // Local state for selection
   const { contains } = useFilter({ sensitivity: 'base' })
-  const [isConfirmed, setIsConfirmed] = useState(false);
-
-  // Initialize visibility state
-  const [visibility, setVisibility] = useState(props.value?.visibility ?? {})
-
+  const [isConfirmed, setIsConfirmed] = useState(!!initialKey);
+  const [visibility, setVisibility] = useState(initialVisibility)
+  console.log('selectedKey:', selectedKey);
   const filteredItems = useMemo(() => {
-    return props.items.filter(item => 
-      contains(item.label, filterValue)
+    return (props.items || []).filter(item => 
+      contains(item.label, searchTerm)
     ).map(item => ({
       ...item,
       key: item.value,
       rendered: item.label
     }))
-  }, [props.items, filterValue])
+  }, [props.items, searchTerm])
 
   const state = useListState({
     ...props,
     items: filteredItems,
     selectionMode: 'single',
     disallowEmptySelection: false,
-    children: (item) => <Item key={item.key}>{item.rendered}</Item>,
-    selectedKeys: props.value?.selected ? [props.value.selected] : (props.value && typeof props.value === 'string' ? [props.value] : []),
+    // children: (item) => <Item key={item.key}>{item.rendered}</Item>,
+    selectedKeys: selectedKey ? [selectedKey] : [], //? new Set([selectedKey]) : new Set(),
     onSelectionChange: (keys) => {
+      const nextKey = Array.from(keys)[0] || null;
+      setSelectedKey(nextKey);
       setIsConfirmed(false);
-      const selectedKey = Array.from(keys)[0]
+      
+      const selectedItem = (props.items || []).find(item => item.value === nextKey);
 
-      if (keys.size === 0) {
-       setFilterValue('');
+      if (selectedItem) {
+        setFilterValue(selectedItem.label);
+        setSearchTerm('');
       }
 
       props.onChange && props.onChange({
-        selected: selectedKey,
-        visibility
+        selected: nextKey,
+        visibility: nextKey ? visibility[nextKey] !== false : true
       })
     }
   })
 
+  useEffect(() => {
+    if (initialItem && filterValue === '') {
+      console.log('erase');
+      setFilterValue(initialItem.label);
+      setSearchTerm('');
+      setIsConfirmed(true);
+      // setSelectedKey(initialKey);
+    }
+  }, [initialItem]);
+
   const selectedCount = state.selectionManager.selectedKeys.size;
 
   const handleConfirmSelection = () => {
-    const selectedKey = state.selectionManager.firstSelectedKey;
+    const currentKey = state.selectionManager.firstSelectedKey;
     const items = props.items || [];
-    const selectedItem = items.find(item => item.value === selectedKey);
+    const selectedItem = items.find(item => item.value === currentKey);
 
     if(selectedItem){
       setFilterValue(selectedItem.label);
+      setSearchTerm('');
       setIsConfirmed(true);
     }
-    else
+    else {
       setFilterValue('');
+      setSearchTerm('');
+      setIsConfirmed(false);
+    }
 
     props.onChange && props.onChange({
-      selected: selectedKey,
-      visibility
+      selected: currentKey,
+      visibility: currentKey ? visibility[currentKey] !== false : true
     })
+  }
+
+  const handleSearchChange = (value) => {
+    setFilterValue(value);
+    setSearchTerm(value);
+
+    if (value === '') {
+      setSelectedKey(null);
+      // state.selectionManager.clearSelection();
+      setIsConfirmed(false);
+    }
   }
 
   const handleSearchBlur = () => {
     if(filterValue === '' && isConfirmed){
-      const selectedKey = state.selectionManager.firstSelectedKey;
-      const selectedItem = (props.items || []).find(item => item.value === selectedKey);
+      const currentKey = state.selectionManager.firstSelectedKey;
+      const selectedItem = (props.items || []).find(item => item.value === currentKey);
       if (selectedItem) {
         setFilterValue(selectedItem.label);
+        setSearchTerm('');
       }
     }
   }
@@ -99,10 +167,10 @@ const SingleChoices = (props) => {
     }
     setVisibility(newVisibility)
     
-    // Trigger change with updated visibility
+    const currentKey = Array.from(state.selectionManager.selectedKeys)[0];
     props.onChange && props.onChange({
-      selected: Array.from(state.selectedKeys)[0],
-      visibility: newVisibility
+      selected: currentKey,
+      visibility: currentKey ? newVisibility[currentKey] !== false : true
     })
   }
 
@@ -116,8 +184,26 @@ const SingleChoices = (props) => {
     listBoxRef
   )
 
+  const hiddenValue = useMemo(() => {
+    const currentKey = state.selectionManager.firstSelectedKey;
+    console.log('currentKey:', currentKey);
+    if (!currentKey || !isConfirmed) return '';
+
+    if (props.isVisibilityEnabled) {
+      console.log('calculating hidden value with visibility');
+      // const selectedItem = props.items?.find(item => item.value === currentKey);
+      return JSON.stringify({
+        selected: currentKey,
+        visibility: visibility[currentKey] !== false,
+      });
+    }
+
+    return currentKey;
+  }, [state.selectionManager.selectedKeys, visibility, props.items, props.isVisibilityEnabled, isConfirmed])
+console.log('hiddenValue:', hiddenValue);
   return (
     <div className="tf-enhanced-choice-single">
+      <input type="hidden" name={ props.name ?? '' } value={hiddenValue} />
       { props.label &&
         <Label labelProps={ labelProps } parent={ props }>
           { props.label }
@@ -136,7 +222,10 @@ const SingleChoices = (props) => {
         )}
       </span>
       <div className="tf-enhanced-choice-search">
-        <SearchField value={filterValue} onChange={setFilterValue} onBlur={handleSearchBlur} />
+
+        {/* we passing filterValue handleSearchChange and handleSearchBlur */}
+        <SearchField value={filterValue} onChange={handleSearchChange} onBlur={handleSearchBlur} />
+
       </div>
 
       <ul
@@ -152,13 +241,14 @@ const SingleChoices = (props) => {
               key={item.key} 
               item={item} 
               state={state} 
+              name={props.name}
               visibility={visibility}
+              isVisibilityEnabled={props.isVisibilityEnabled}
               onToggleVisibility={onToggleVisibility}
             />
           ))
         )}
       </ul>
-
     </div>
   )
 }

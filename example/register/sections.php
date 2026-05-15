@@ -154,8 +154,9 @@ $documentation->register_section('fields', [
       'title' => 'Enhanced choice',
       'path'  => 'fields/enhanced-choice',
       'fields'=> [
-        'enhanced_choice'          => [ 'json' => true ],
-        'enhanced_choice_multiple' => [ 'json' => true ]
+        'enhanced_choice'             => [ 'json' => true ],
+        'enhanced_choice_visibility'  => [ 'json' => true ],
+        'enhanced_choice_multiple'    => [ 'json' => true ]
       ]
     ],
     'field_group' => [
