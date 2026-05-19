@@ -15,18 +15,18 @@ import { Item, useListState } from 'react-stately'
 import { 
   Label,
   Description,
-  Button
+  Button,
+  Popover
 } from '../../base'
+
 
 import EnhancedOption from './EnhancedOption'
 import SearchField from './SearchField'
-import { initJSON } from '../../../utils'
+// import { initJSON } from '../../../utils'
 
 const SingleChoices = (props) => {
 
   const { initialKey, initialVisibility } = useMemo(() => {
-    // console.log('initializing value from props:', props.value);
-    // console.log(typeof props.value);
     let val = props.value;
 
     if( typeof val === 'string' && val.trim() !== '' ) {
@@ -38,7 +38,7 @@ const SingleChoices = (props) => {
       }
     }
 
-    if (!val) return { initialKey: null, initialVisibility: null };
+    if (!val) return { initialKey: null, initialVisibility: {} };
     
     if (typeof val === 'string') {
       return { initialKey: val, initialVisibility: {} };
@@ -59,15 +59,16 @@ const SingleChoices = (props) => {
     [props.items, initialKey]
   );
 
-  console.log('initialItem:', initialItem);
-
+  const inputRef = useRef();
+  const containerRef = useRef();
   const [filterValue, setFilterValue] = useState(initialItem?.label || ''); // for search input
   const [searchTerm, setSearchTerm] = useState(''); // for search filtering
   const [selectedKey, setSelectedKey] = useState(initialKey); // Local state for selection
-  const { contains } = useFilter({ sensitivity: 'base' })
+  const { contains } = useFilter({ sensitivity: 'base' });
   const [isConfirmed, setIsConfirmed] = useState(!!initialKey);
   const [visibility, setVisibility] = useState(initialVisibility)
-  console.log('selectedKey:', selectedKey);
+  const [isOpen, setIsOpen] = useState(false);
+
   const filteredItems = useMemo(() => {
     return (props.items || []).filter(item => 
       contains(item.label, searchTerm)
@@ -84,7 +85,7 @@ const SingleChoices = (props) => {
     selectionMode: 'single',
     disallowEmptySelection: false,
     // children: (item) => <Item key={item.key}>{item.rendered}</Item>,
-    selectedKeys: selectedKey ? [selectedKey] : [], //? new Set([selectedKey]) : new Set(),
+    selectedKeys: selectedKey ? [selectedKey] : [],
     onSelectionChange: (keys) => {
       const nextKey = Array.from(keys)[0] || null;
       setSelectedKey(nextKey);
@@ -95,6 +96,7 @@ const SingleChoices = (props) => {
       if (selectedItem) {
         setFilterValue(selectedItem.label);
         setSearchTerm('');
+        setIsOpen(false);
       }
 
       props.onChange && props.onChange({
@@ -106,7 +108,6 @@ const SingleChoices = (props) => {
 
   useEffect(() => {
     if (initialItem && filterValue === '') {
-      console.log('erase');
       setFilterValue(initialItem.label);
       setSearchTerm('');
       setIsConfirmed(true);
@@ -174,7 +175,7 @@ const SingleChoices = (props) => {
     })
   }
 
-  const listBoxRef = useRef()
+  const listBoxRef = useRef();
   const { listBoxProps, labelProps, descriptionProps } = useListBox(
     {
       ...props,
@@ -186,11 +187,9 @@ const SingleChoices = (props) => {
 
   const hiddenValue = useMemo(() => {
     const currentKey = state.selectionManager.firstSelectedKey;
-    console.log('currentKey:', currentKey);
     if (!currentKey || !isConfirmed) return '';
 
     if (props.isVisibilityEnabled) {
-      console.log('calculating hidden value with visibility');
       // const selectedItem = props.items?.find(item => item.value === currentKey);
       return JSON.stringify({
         selected: currentKey,
@@ -200,9 +199,9 @@ const SingleChoices = (props) => {
 
     return currentKey;
   }, [state.selectionManager.selectedKeys, visibility, props.items, props.isVisibilityEnabled, isConfirmed])
-console.log('hiddenValue:', hiddenValue);
+
   return (
-    <div className="tf-enhanced-choice-single">
+    <div className="tf-enhanced-choice-single" ref={containerRef}>
       <input type="hidden" name={ props.name ?? '' } value={hiddenValue} />
       { props.label &&
         <Label labelProps={ labelProps } parent={ props }>
@@ -222,33 +221,40 @@ console.log('hiddenValue:', hiddenValue);
         )}
       </span>
       <div className="tf-enhanced-choice-search">
-
         {/* we passing filterValue handleSearchChange and handleSearchBlur */}
-        <SearchField value={filterValue} onChange={handleSearchChange} onBlur={handleSearchBlur} />
-
+        <SearchField inputRef={inputRef} value={filterValue} onChange={handleSearchChange} onBlur={handleSearchBlur} isOpen={isOpen} setIsOpen={setIsOpen}/>
       </div>
-
-      <ul
-        { ...listBoxProps }
-        ref={ listBoxRef }
-        className="tf-enhanced-choice-list"
-      >
-        {state.collection.size === 0 ? (
-           <li className="tf-enhanced-choice-no-results">No results found</li>
-        ) : (
-          [...state.collection].map(item => (
-            <EnhancedOption 
-              key={item.key} 
-              item={item} 
-              state={state} 
-              name={props.name}
-              visibility={visibility}
-              isVisibilityEnabled={props.isVisibilityEnabled}
-              onToggleVisibility={onToggleVisibility}
-            />
-          ))
-        )}
-      </ul>
+        {
+          isOpen &&
+          <Popover
+            state={{ isOpen: isOpen, close: () => setIsOpen(false) }}
+            triggerRef={inputRef}
+            placement="bottom start"
+            style={{ width: containerRef?.current?.offsetWidth }}
+          >
+          <ul
+            { ...listBoxProps }
+            ref={ listBoxRef }
+            className="tf-enhanced-choice-list"
+          >
+            {state.collection.size === 0 ? (
+              <li className="tf-enhanced-choice-no-results">No results found</li>
+            ) : (
+              [...state.collection].map(item => (
+                <EnhancedOption 
+                  key={item.key}
+                  item={item}
+                  state={state}
+                  name={props.name}
+                  visibility={visibility}
+                  isVisibilityEnabled={props.isVisibilityEnabled}
+                  onToggleVisibility={onToggleVisibility}
+                />
+              ))
+            )}
+          </ul>
+          </Popover>
+        }
     </div>
   )
 }
