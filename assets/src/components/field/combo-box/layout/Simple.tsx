@@ -47,7 +47,18 @@ const Simple = forwardRef(({
         </Label> }
       <FocusScope autoFocus={ parent.autoFocus } restoreFocus>
         <div className="tf-combo-box-text" ref={ ref.current.wrapper }>
-          <input { ...inputProps } ref={ ref.current.input } readOnly={ parent.readOnly } />
+          <input
+            { ...inputProps }
+            ref={ ref.current.input }
+            readOnly={ parent.readOnly }
+            onClick={ () => {
+              if ( ! state.isOpen && ! parent.readOnly ) state.open()
+            } }
+            onChange={ value => {
+              inputProps.onChange( value )
+              if ( ! state.isOpen && ! parent.readOnly ) state.open()
+            } }
+          />
           { parent.showButton &&  
             <Button 
               type="action" 
