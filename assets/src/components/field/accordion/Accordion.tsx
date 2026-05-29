@@ -55,7 +55,7 @@ const Accordion = props => {
       <ExpandablePanel
         title={ props.title ?? false }
         headerLeft={ headerLeft }
-        behavior={ 'show' }
+        behavior={ uncontrolled ? 'hide' : 'remove' }
         isOpen={ props.isOpen ?? false }
       >
         <FieldGroup

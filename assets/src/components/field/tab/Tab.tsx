@@ -19,6 +19,11 @@ const Tab = props => {
   /**
    * In some cases, we use a Tab component but we
    * don't want the Tab itself to hold a value
+   *
+   * When component is uncontrolled, we also make sure to
+   * use <Content /> with behavior=hide instead of
+   * behavior=remove, to be sure fields are always rendered
+   * if used inside an html <form />
    */
   const uncontrolled = (props.uncontrolled ?? false) === true
 
@@ -60,6 +65,7 @@ const Tab = props => {
           <Content
             key={ tab.name }
             isActive={ tab.name === activeTab }
+            behavior={ uncontrolled ? 'hide' : 'remove' }
           >
             <FieldGroup
               { ...props }

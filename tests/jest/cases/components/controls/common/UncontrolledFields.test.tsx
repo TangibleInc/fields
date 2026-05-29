@@ -62,6 +62,87 @@ describe(
     expect(extractSubValue(type, JSON.parse(input[0].value))).toBe('on')
   })
 
+  /**
+   * In uncontrolled mode the parent doesn't bundle sub-field values,
+   * so each sub-field's own hidden input must stay in the DOM even
+   * when the accordion is collapsed or the tab is inactive, otherwise
+   * the form would lose data on submit
+   */
+  test.each([ 'accordion', 'tab' ])('%p keeps sub-fields mounted when collapsed / inactive in uncontrolled mode', async type => {
+
+    const user = userEvent.setup()
+    const args = buildArgs(type, true, 'off')
+
+    if (type === 'accordion') args.isOpen = false
+    if (type === 'tab') {
+      args.tabs['tab-2'] = {
+        title  : 'Title tab 2',
+        fields : [
+          { label : 'Subfield 2', type : 'switch', name : 'subfield2', value : 'off' }
+        ]
+      }
+    }
+
+    const { container } = render(
+      fields.render(args)
+    )
+
+    if (type === 'accordion') {
+      const subInput = container.querySelector('input[name="subfield1"]')
+      expect(subInput).toBeTruthy()
+      expect(subInput.value).toBe('off')
+    }
+
+    if (type === 'tab') {
+      expect(container.querySelector('input[name="subfield1"]')).toBeTruthy()
+      expect(container.querySelector('input[name="subfield2"]')).toBeTruthy()
+
+      await user.click(container.querySelectorAll('.tf-tab-item button')[1])
+
+      expect(container.querySelector('input[name="subfield1"]')).toBeTruthy()
+      expect(container.querySelector('input[name="subfield2"]')).toBeTruthy()
+    }
+  })
+
+  /**
+   * In controlled mode the parent's bundled JSON holds everything,
+   * so sub-fields can safely unmount when collapsed / inactive
+   */
+  test.each([ 'accordion', 'tab' ])('%p removes sub-fields from the DOM when collapsed / inactive in controlled mode', async type => {
+
+    const user = userEvent.setup()
+    const args = buildArgs(type, false, 'off')
+
+    if (type === 'accordion') args.isOpen = false
+    if (type === 'tab') {
+      args.value['tab-2'] = { subfield2 : 'off' }
+      args.tabs['tab-2'] = {
+        title  : 'Title tab 2',
+        fields : [
+          { label : 'Subfield 2', type : 'switch', name : 'subfield2' }
+        ]
+      }
+    }
+
+    const { container } = render(
+      fields.render(args)
+    )
+
+    if (type === 'accordion') {
+      expect(container.querySelector('input[name="subfield1"]')).toBeFalsy()
+    }
+
+    if (type === 'tab') {
+      expect(container.querySelector('input[name="subfield1"]')).toBeTruthy()
+      expect(container.querySelector('input[name="subfield2"]')).toBeFalsy()
+
+      await user.click(container.querySelectorAll('.tf-tab-item button')[1])
+
+      expect(container.querySelector('input[name="subfield1"]')).toBeFalsy()
+      expect(container.querySelector('input[name="subfield2"]')).toBeTruthy()
+    }
+  })
+
   test.each(types)('%p does not render a hidden input when uncontrolled, sub-fields manage their own values', async type => {
 
     const user = userEvent.setup()
