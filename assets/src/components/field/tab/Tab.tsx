@@ -15,24 +15,40 @@ const Tab = props => {
     Content,
     Title
   } = Tabs
-  
+
+  /**
+   * In some cases, we use a Tab component but we
+   * don't want the Tab itself to hold a value
+   */
+  const uncontrolled = (props.uncontrolled ?? false) === true
+
   const tabs = Object.keys(props.tabs ?? {}).map(
     key => ({ ...props.tabs[ key ], name: key })
   )
-    
-  const [activeTab, setActiveTab] = useState( tabs[0]?.name ?? false )
-  const [value, setValue] = useState( initJSON( props.value ) )
 
-  useEffect(() => props.onChange && props.onChange(value), [value])
+  const [activeTab, setActiveTab] = useState( tabs[0]?.name ?? false )
+  const [value, setValue] = useState(
+    uncontrolled ? {} : initJSON( props.value )
+  )
+
+  useEffect(() => {
+    if ( uncontrolled ) return;
+    props.onChange && props.onChange(value)
+  }, [value])
 
   return(
     <>
-      <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(value) } />
+      { ! uncontrolled &&
+        <input
+          type="hidden"
+          name={ props.name ?? '' }
+          value={ JSON.stringify( value ) }
+        /> }
       <Container>
         <Header>
           { tabs.map(tab => (
-            <Title 
-              key={ tab.name } 
+            <Title
+              key={ tab.name }
               isOpen={ tab.name === activeTab }
               onPress={ () => setActiveTab(tab.name) }
             >
@@ -47,9 +63,10 @@ const Tab = props => {
           >
             <FieldGroup
               { ...props }
-              name={ null } 
-              fields={ tab.fields } 
-              value={ value[ tab.name ] ?? {} }
+              name={ null }
+              fields={tab.fields}
+              uncontrolled={ uncontrolled }
+              value={ uncontrolled ? undefined : (value[ tab.name ] ?? {}) }
               onChange={ tabValue => setValue({
                 ...value,
                 [ tab.name ]: tabValue
