@@ -8,7 +8,7 @@ const uniqid = () => {
   return sec.toString(16).replace(/\./g, '').padEnd(14, '0')
 }
 
-const initJSON = (value, empty = false) => {
+const initJSON = (value, empty = false, type = false ) => {
 
   if( Array.isArray(value) || typeof value === 'object' ) {
     return value;
@@ -17,9 +17,13 @@ const initJSON = (value, empty = false) => {
   if( value === '' && empty ) return empty
 
   try {
-    return JSON.parse(value)
+    const parsedValue = JSON.parse(value)
+    if ( Array.isArray(parsedValue) || typeof parsedValue === 'object' ) {
+      return parsedValue;
+    }
+    throw new Error( 'Invalid JSON value: ' + value )
   } catch { 
-    return {}
+    return empty ?? {}
   }
 }
 
