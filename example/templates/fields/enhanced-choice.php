@@ -1,6 +1,6 @@
 <?php
 /**
- * Enhanced Choice field template
+ * Enhanced Choice field simple list
  */
 
 $choices = [
@@ -9,7 +9,7 @@ $choices = [
   'green'  => 'Green',
   'yellow' => 'Yellow',
   'purple' => 'Purple',
-  'orange' => 'Orange',
+  'orange' => 'Orange'
 ];
 
 $plugin->render_registation_message();
