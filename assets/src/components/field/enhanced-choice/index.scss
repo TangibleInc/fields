@@ -34,6 +34,8 @@
 }
 
 .tf-enhanced-choice-list {
+  width: 100%;
+  box-sizing: border-box;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -204,4 +206,19 @@
 .tf-search input::-webkit-search-cancel-button,
 .tf-search input::-webkit-search-decoration {
   -webkit-appearance: none;
+}
+
+.tf-enhanced-choice-radio {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 50%;
+  background: #fff;
+  transition: border-color 0.12s;
+ 
+  &.is-checked {
+    border-color: #2563eb;
+    background: radial-gradient(circle, #2563eb 40%, #fff 41%);
+  }
 }

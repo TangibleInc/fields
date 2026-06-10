@@ -1,262 +1,271 @@
-import { 
-  useRef, 
-  useState,
-  useMemo,
-  useEffect
-} from 'react'
+import { Item, useComboBoxState } from "react-stately";
+import { Button, Popover } from "../../base";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { useComboBox, useFilter } from "react-aria";
+import EnhancedListBox from "./EnhancedListBox";
 
-import { 
-  useListBox, 
-  useFilter,
-} from 'react-aria'
-
-import { Item, useListState } from 'react-stately'
-
-import { 
-  Label,
-  Description,
-  Button,
-  Popover
-} from '../../base'
-
-
-import EnhancedOption from './EnhancedOption'
-import SearchField from './SearchField'
-// import { initJSON } from '../../../utils'
+const renderItem = (item) => (
+  <Item key={item.key} textValue={item.label}>
+    {item.label}
+  </Item>
+);
 
 const SingleChoices = (props) => {
+  console.log('SingleChoices props:', props);
+  const { contains } = useFilter({ sensitivity: 'base' });
 
-  const { initialKey, initialVisibility } = useMemo(() => {
-    let val = props.value;
+  const buttonRef  = useRef(null);
+  const inputRef   = useRef(null);
+  const listBoxRef = useRef(null);
+  const popoverRef = useRef(null);
 
-    if( typeof val === 'string' && val.trim() !== '' ) {
-      try {
-        const parsed = JSON.parse(val);
-        if(parsed && typeof parsed === 'object') val = JSON.parse(val);
-      } catch (e) {
-        // Not a JSON string, keep as is
-      }
-    }
-
-    if (!val) return { initialKey: null, initialVisibility: {} };
-    
-    if (typeof val === 'string') {
-      return { initialKey: val, initialVisibility: {} };
-    }
-    
-    if (typeof val === 'object' && val.selected) {
-      return {
-        initialKey: val.selected,
-        initialVisibility: { [val.selected]: val.visibility !== false }
-      }
-    }
-    
-    return { initialKey: null, initialVisibility: {} };
-  }, [props.value]);
-
-  const initialItem = useMemo(() => 
-    (props.items || []).find(item => item.value === initialKey),
-    [props.items, initialKey]
+  const findItem = useCallback(
+    (val) => (props.items || []).find(item => item.value === val),
+    [props.items]
   );
 
-  const inputRef = useRef();
-  const containerRef = useRef();
-  const [filterValue, setFilterValue] = useState(initialItem?.label || ''); // for search input
-  const [searchTerm, setSearchTerm] = useState(''); // for search filtering
-  const [selectedKey, setSelectedKey] = useState(initialKey); // Local state for selection
-  const { contains } = useFilter({ sensitivity: 'base' });
-  const [isConfirmed, setIsConfirmed] = useState(!!initialKey);
-  const [visibility, setVisibility] = useState(initialVisibility)
+const [fieldState, setFieldState] = useState(() => {
+  if (props.isVisibilityEnabled && props.value) {
+    const parsed = JSON.parse(props.value);
+    return {
+      selectedKey: parsed.selected ?? null,
+      inputValue:  findItem(parsed.selected)?.label ?? '',
+      pendingKey:  null,
+    };
+  }
+
+  return {
+    selectedKey: props.value ?? null,
+    inputValue:  findItem(props.value)?.label ?? '',
+    pendingKey:  null,
+  };
+});
+
+const [visibility, setVisibility] = useState(() => {
+  if (props.isVisibilityEnabled && props.value) {
+    const parsed = JSON.parse(props.value);
+    return parsed.visibility ?? {};
+  }
+  return {};
+});
+
   const [isOpen, setIsOpen] = useState(false);
 
-  const filteredItems = useMemo(() => {
-    return (props.items || []).filter(item => 
-      contains(item.label, searchTerm)
-    ).map(item => ({
-      ...item,
-      key: item.value,
-      rendered: item.label
-    }))
-  }, [props.items, searchTerm])
+  const { inputValue, selectedKey, pendingKey } = fieldState;
 
-  const state = useListState({
-    ...props,
-    items: filteredItems,
-    selectionMode: 'single',
-    disallowEmptySelection: false,
-    // children: (item) => <Item key={item.key}>{item.rendered}</Item>,
-    selectedKeys: selectedKey ? [selectedKey] : [],
-    onSelectionChange: (keys) => {
-      const nextKey = Array.from(keys)[0] || null;
-      setSelectedKey(nextKey);
-      setIsConfirmed(false);
-      
-      const selectedItem = (props.items || []).find(item => item.value === nextKey);
+  const filteredItems = useMemo(() =>
+    (props.items || [])
+      .filter(item => contains(item.label, inputValue))
+      .map(item => ({
+        ...item,
+        key:      item.value,
+        rendered: item.label,
+      })),
+    [props.items, inputValue, contains]
+  );
 
-      if (selectedItem) {
-        setFilterValue(selectedItem.label);
-        setSearchTerm('');
-        setIsOpen(false);
-      }
+  const pendingLabel = useMemo(
+    () => pendingKey ? findItem(pendingKey)?.label ?? '' : null,
+    [pendingKey, findItem]
+  );  
 
-      props.onChange && props.onChange({
-        selected: nextKey,
-        visibility: nextKey ? visibility[nextKey] !== false : true
-      })
-    }
-  })
+  const onSelectionChange = useCallback((key) => {
+      setFieldState(prev => ({ ...prev, pendingKey: key }));
+  }, [findItem, props.onChange]);
 
-  useEffect(() => {
-    if (initialItem && filterValue === '') {
-      setFilterValue(initialItem.label);
-      setSearchTerm('');
-      setIsConfirmed(true);
-      // setSelectedKey(initialKey);
-    }
-  }, [initialItem]);
+  const onInputChange = useCallback((value) => {
+    setFieldState(prev => ({
+      ...prev,
+      selectedKey: value === '' ? null : prev.selectedKey,
+      pendingKey:  value === '' ? null : prev.pendingKey,
+      inputValue:  value,
+    }));
+    if (value !== '') setIsOpen(true);
+  }, []);
 
-  const selectedCount = state.selectionManager.selectedKeys.size;
+  const handleConfirm = useCallback((e) => {
+    e.preventDefault();
+    if (!pendingKey) return;
+    const selectedItem = findItem(pendingKey);
+    setFieldState({
+      inputValue:  selectedItem?.label ?? '',
+      selectedKey: pendingKey,
+      pendingKey:  null,
+    });
+    props.onChange?.(pendingKey);
+    setIsOpen(false); 
 
-  const handleConfirmSelection = () => {
-    const currentKey = state.selectionManager.firstSelectedKey;
-    const items = props.items || [];
-    const selectedItem = items.find(item => item.value === currentKey);
+  }, [pendingKey, findItem, props.onChange]);
 
-    if(selectedItem){
-      setFilterValue(selectedItem.label);
-      setSearchTerm('');
-      setIsConfirmed(true);
-    }
-    else {
-      setFilterValue('');
-      setSearchTerm('');
-      setIsConfirmed(false);
-    }
 
-    props.onChange && props.onChange({
-      selected: currentKey,
-      visibility: currentKey ? visibility[currentKey] !== false : true
-    })
-  }
+  const handleClear = useCallback((e) => {
+    e.preventDefault();
+    setFieldState({ selectedKey: null, inputValue: '', pendingKey: null });
+    props.onChange?.(null);
+    inputRef.current?.focus();
+  }, [props.onChange]);
 
-  const handleSearchChange = (value) => {
-    setFilterValue(value);
-    setSearchTerm(value);
+  const ariaLabel = props.label ?? props.name ?? 'Select';
 
-    if (value === '') {
-      setSelectedKey(null);
-      // state.selectionManager.clearSelection();
-      setIsConfirmed(false);
-    }
-  }
+  const state = useComboBoxState({
+    label:            ariaLabel,
+    items:            filteredItems,
+    inputValue,
+    selectedKey,
+    onInputChange,
+    onSelectionChange,
+    children:         renderItem,
+    isOpen,
+    onOpenChange:     setIsOpen,
+    shouldCloseOnBlur: false,
+  });
 
-  const handleSearchBlur = () => {
-    if(filterValue === '' && isConfirmed){
-      const currentKey = state.selectionManager.firstSelectedKey;
-      const selectedItem = (props.items || []).find(item => item.value === currentKey);
-      if (selectedItem) {
-        setFilterValue(selectedItem.label);
-        setSearchTerm('');
-      }
-    }
-  }
-
-  const onToggleVisibility = (key) => {
-    const newVisibility = {
-      ...visibility,
-      [key]: visibility[key] === false ? true : false
-    }
-    setVisibility(newVisibility)
-    
-    const currentKey = Array.from(state.selectionManager.selectedKeys)[0];
-    props.onChange && props.onChange({
-      selected: currentKey,
-      visibility: currentKey ? newVisibility[currentKey] !== false : true
-    })
-  }
-
-  const listBoxRef = useRef();
-  const { listBoxProps, labelProps, descriptionProps } = useListBox(
+  const { buttonProps, inputProps, listBoxProps, labelProps } = useComboBox(
     {
-      ...props,
-      'aria-label': props.label || 'Choices'
-    }, 
-    state, 
-    listBoxRef
-  )
+      label: ariaLabel,
+      inputRef,
+      buttonRef,
+      listBoxRef,
+      popoverRef,
+    },
+    state
+  );
+
+  const isConfirmed   = !!selectedKey && !state.isOpen;
+  const hasPending    = !!pendingKey && state.isOpen;
+  const isNotSelected = !selectedKey && !state.isOpen;
+
+  const onToggleVisibility = useCallback((key: string) => {
+    setVisibility(prev => ({
+      ...prev,
+      [key]: prev[key] === false ? true : false,
+    }));
+  }, []);
+  console.log(state);
 
   const hiddenValue = useMemo(() => {
-    const currentKey = state.selectionManager.firstSelectedKey;
-    if (!currentKey || !isConfirmed) return '';
-
     if (props.isVisibilityEnabled) {
-      // const selectedItem = props.items?.find(item => item.value === currentKey);
       return JSON.stringify({
-        selected: currentKey,
-        visibility: visibility[currentKey] !== false,
+        selected: selectedKey,
+        visibility
       });
     }
 
-    return currentKey;
-  }, [state.selectionManager.selectedKeys, visibility, props.items, props.isVisibilityEnabled, isConfirmed])
+    return selectedKey;
 
+  }, [selectedKey, visibility, props.items, props.isVisibilityEnabled, isConfirmed])
+
+  console.log(visibility);
   return (
-    <div className="tf-enhanced-choice-single" ref={containerRef}>
-      <input type="hidden" name={ props.name ?? '' } value={hiddenValue} />
-      { props.label &&
-        <Label labelProps={ labelProps } parent={ props }>
-          { props.label }
-        </Label> }
-      { props.description &&
-        <Description descriptionProps={ descriptionProps } parent={ props }>
-          { props.description }
-        </Description> }
-      <span className="tf-enhanced-choice__value">
-        {selectedCount === 0 ? (
-          'Not selected'
-        ) : isConfirmed ? (
-          'Selected' 
-        ) : (
-          <Button onPress={handleConfirmSelection}>Confirm selected</Button>
-        )}
-      </span>
-      <div className="tf-enhanced-choice-search">
-        {/* we passing filterValue handleSearchChange and handleSearchBlur */}
-        <SearchField inputRef={inputRef} value={filterValue} onChange={handleSearchChange} onBlur={handleSearchBlur} isOpen={isOpen} setIsOpen={setIsOpen}/>
-      </div>
-        {
-          isOpen &&
-          <Popover
-            state={{ isOpen: isOpen, close: () => setIsOpen(false) }}
-            triggerRef={inputRef}
-            placement="bottom start"
-            style={{ width: containerRef?.current?.offsetWidth }}
-          >
-          <ul
-            { ...listBoxProps }
-            ref={ listBoxRef }
-            className="tf-enhanced-choice-list"
-          >
-            {state.collection.size === 0 ? (
-              <li className="tf-enhanced-choice-no-results">No results found</li>
-            ) : (
-              [...state.collection].map(item => (
-                <EnhancedOption 
-                  key={item.key}
-                  item={item}
-                  state={state}
-                  name={props.name}
-                  visibility={visibility}
-                  isVisibilityEnabled={props.isVisibilityEnabled}
-                  onToggleVisibility={onToggleVisibility}
-                />
-              ))
-            )}
-          </ul>
-          </Popover>
-        }
-    </div>
-  )
-}
+    <div style={{ display: 'inline-flex', flexDirection: 'column', width: '100%' }}>
+      
+      <div className="tf-enhanced-choice-header">
+        <div className="tf-enhanced-choice-label-group">
+          {props.label && (
+            <label {...labelProps} className="tf-enhanced-choice-label-text">
+              {props.label}
+            </label>
+          )}
+          {props.description && (
+            <span className="tf-enhanced-choice-description">
+              {props.description}
+            </span>
+          )}
+        </div>
 
-export default SingleChoices
+        <div className="tf-enhanced-choice-status">
+
+          {hasPending && (
+            <button
+              type="button"
+              className="tf-enhanced-choice-confirm-btn"
+
+              onMouseDown={handleConfirm}
+            >
+              Confirm Selected
+            </button>
+          )}
+
+          {isConfirmed && (
+            <span className="tf-enhanced-choice-selected-badge">
+              Selected
+            </span>
+          )}
+
+          {isNotSelected && (
+            <span className="tf-enhanced-choice-not-selected-badge">
+              Not Selected
+            </span>
+          )}
+        </div>
+      </div>
+
+      <input type="hidden" name={props.name} value={hiddenValue ?? ''} />
+
+      <div className="tf-enhanced-choice-input-group">
+
+        <span className="tf-enhanced-choice-search-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.4"/>
+            <path d="M10 10L13 13" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+          </svg>
+        </span>
+
+        <input
+          {...inputProps}
+          ref={inputRef}
+          placeholder={props.placeholder ?? 'Search...'}
+          className="tf-enhanced-choice-input"
+          style={{ height: 32, boxSizing: 'border-box' }}
+          value={pendingLabel ?? inputProps.value}
+        />
+
+        {isConfirmed ? (
+          <button
+            type="button"
+            className="tf-enhanced-choice-clear-btn"
+            aria-label="Clear selection"
+            onMouseDown={handleClear}
+          >
+            ×
+          </button>
+        ) : (
+
+          <Button
+            {...buttonProps}
+            // type="button"
+            buttonRef={buttonRef}
+            style={{ height: 32 }}
+          >
+            <span aria-hidden="true" className="tf-enhanced-choice-chevron">
+              {state.isOpen ? '▲' : '▼'}
+            </span>
+          </Button>
+        )}
+
+        {state.isOpen && (
+          <Popover
+            state={state}
+            triggerRef={inputRef}
+            popoverRef={popoverRef}
+            isNonModal
+            placement="bottom start"
+          >
+            <EnhancedListBox
+              {...listBoxProps}
+              listBoxRef={listBoxRef}
+              state={state}
+              name={props.name}
+              pendingKey={pendingKey}
+              isVisibilityEnabled={props.isVisibilityEnabled}
+              onToggleVisibility={onToggleVisibility}
+              visibility={visibility}
+            />
+          </Popover>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default SingleChoices;

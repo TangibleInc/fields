@@ -6,8 +6,9 @@ import { RenderChoices } from '../../base'
 import './index.scss'
 
 export default (props) => {
-  const items = getOptions(props.choices ?? {})
-  return props.multiple 
-    ? <MultipleChoices { ...props } items={ items }>{ RenderChoices }</MultipleChoices>
-    : <SingleChoices { ...props } items={ items }>{ RenderChoices }</SingleChoices>
+  console.log('EnhancedChoice props:', props);
+  const items = getOptions(props.choices ?? {});
+  return props.multiple
+    ? <MultipleChoices {...props} items={items} />
+    : <SingleChoices  {...props} items={items} />;
 };
