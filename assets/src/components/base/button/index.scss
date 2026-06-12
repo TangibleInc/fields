@@ -79,10 +79,12 @@
  * Most of the time we expect this background to be the same color as
  * fields background in fields
  *
- * We have to use !important because rule we overwrite is set to important
+ * Set via TUI's --tui-button-bg token (rest state only) rather than the
+ * background property: TUI hover/active works by swapping the internal
+ * --_bg variable, so pinning background directly would disable hover.
  */
 button.tui-button.is-theme-secondary.is-style-outline {
-  background: $field-background !important;
+  --tui-button-bg: #{$field-background};
 }
 
 /* Icons */
