@@ -8,15 +8,24 @@ import { initJSON } from '../../../utils'
 import FieldGroupItem from './FieldGroupItem'
 
 /**
- * Display other field and save all values in a single json object 
+ * Display other field and save all values in a single json object
+ *
+ * When uncontrolled, each sub-field manages its own value and name
+ * independently — no bundled JSON value, no hidden input.
  */
 const FieldGroup = props => {
+
+  /**
+   * In some cases, we use a FieldGroup component but we
+   * don't want the FieldGroup itself to hold a value
+   */
+  const uncontrolled = (props.uncontrolled ?? false) === true
 
   const [onChangeCallback, setChangeCallback] = useState([])
   const [fieldUpdateCallback, setFieldUpdateCallback] = useState(false)
 
   const [value, setValue] = useState(
-    initJSON(props.value ?? '')
+    uncontrolled ? {} : initJSON(props.value ?? '')
   )
 
   /**
@@ -25,8 +34,8 @@ const FieldGroup = props => {
   const valueRef = useRef()
   valueRef.current = value
 
-  const setAttribute = (name, attributeValue) => { 
-    
+  const setAttribute = (name, attributeValue) => {
+
     setValue({
       ...value,
       [name]: attributeValue
@@ -36,9 +45,9 @@ const FieldGroup = props => {
 
     /**
      * Save the callback to use it in the useEffect so that it's executed
-     * after state update 
+     * after state update
      */
-    setFieldUpdateCallback(() => 
+    setFieldUpdateCallback(() =>
       () => {
         onChangeCallback.map(callback => callback(name))
       }
@@ -46,11 +55,13 @@ const FieldGroup = props => {
   }
 
   useEffect(() => {
-    
+
+    if( uncontrolled ) return;
+
     props.onChange && props.onChange(value)
 
     if( ! fieldUpdateCallback ) return;
-    
+
     fieldUpdateCallback()
     setFieldUpdateCallback(false)
   }, [value])
@@ -65,12 +76,18 @@ const FieldGroup = props => {
 
   return(
     <div className="tf-field-group">
-      <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
+      { ! uncontrolled && 
+        <input
+          type='hidden'
+          name={ props.name ?? '' }
+          value={ JSON.stringify( value ) }
+        /> }
       { fields.map((config, index) => (
         <div key={ index } className="tf-field-group-item">
           <FieldGroupItem
             values={ value }
             config={ config }
+            uncontrolled={ uncontrolled }
             onChange={ value => setAttribute(config.name, value) }
             /**
              * Used by visbility and dependent values to detect changes and access data
@@ -80,7 +97,7 @@ const FieldGroup = props => {
                * The field value can either be from a subvalue or from another field value
                */
               getValue: name => (
-               hasField(name)
+                ! uncontrolled && hasField(name)
                   ? (valueRef.current[name] ?? '')
                   : (props.data.getValue(name) ?? '')
               ),
@@ -91,7 +108,7 @@ const FieldGroup = props => {
               watcher: evaluationCallback => {
                 setChangeCallback(prevValue => [
                   ...prevValue,
-                  name => evaluationCallback(name) 
+                  name => evaluationCallback(name)
                 ])
               }
             }}

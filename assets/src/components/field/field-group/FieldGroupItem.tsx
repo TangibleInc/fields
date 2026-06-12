@@ -6,19 +6,21 @@ const FieldGroupItem = ({
   config,
   values,
   onChange,
-  data
+  data,
+  uncontrolled
 }) => {
 
   const elements = Object.keys(types._types.element)
   const isElement = elements.includes(config.type ?? '')
+  const isControlled = ! isElement && ! uncontrolled
 
   const Component = isElement ? Element : Control
-  const controlProps = ! isElement
+  const controlProps = isControlled
     ? {
       value    : values[ config.name ] ?? '',
       onChange : onChange
     } : {}
-  
+
   return(
     <Component
       itemType={ isElement ? 'subelement' : 'subfield' }
