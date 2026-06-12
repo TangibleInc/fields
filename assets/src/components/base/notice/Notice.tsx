@@ -10,6 +10,12 @@ export interface FieldsNoticeProps {
   type?: 'success' | 'error' | 'warning' | 'info'
   onDismiss?: () => void
   className?: string
+  /**
+   * Stripe + inline default to true: the primary consumer is wp-admin,
+   * where notices are a colored edge stripe with inline content.
+   */
+  stripe?: boolean
+  inline?: boolean
 }
 
 const typeToTheme: Record<string, TuiNoticeTheme> = {
@@ -20,7 +26,7 @@ const typeToTheme: Record<string, TuiNoticeTheme> = {
 }
 
 const Notice = forwardRef<HTMLElement, FieldsNoticeProps>(function Notice(
-  { message, type, onDismiss, className },
+  { message, type, onDismiss, className, stripe = true, inline = true },
   ref
 ) {
   const theme = type ? (typeToTheme[type] ?? 'info') : undefined
@@ -30,6 +36,8 @@ const Notice = forwardRef<HTMLElement, FieldsNoticeProps>(function Notice(
     <TuiNotice
       ref={ref as never}
       theme={theme}
+      stripe={stripe}
+      inline={inline}
       dismissible={!!onDismiss}
       onDismiss={onDismiss}
       className={classes}
