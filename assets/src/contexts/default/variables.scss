@@ -54,13 +54,13 @@ $label-font-style: inherit;
 $label-font-weight: inherit;
 $label-font-color: inherit;
 $label-text-transform: inherit;
-$label-spacer: revert;
+$label-spacer: var(--tui-spacing-xs);
 
 $description-font-size: inherit;
 $description-font-style: inherit;
 $description-font-weight: inherit;
 $description-font-color: inherit;
-$description-margin-top: revert;
+$description-margin-top: var(--tui-spacing-xs);
 $description-margin-bottom: revert;
 
 $button-background: white;

@@ -16,11 +16,11 @@ $field-font-size: 16px;
 
 $label-font-size: 14px;
 $label-font-weight: 600;
-$label-spacer: 10px;
+$label-spacer: var(--tui-spacing-xs);
 
 $description-font-size: 12px;
 $description-font-color: $global-theme-gray-40;
-$description-margin-top: $global-spacer-sm;
+$description-margin-top: var(--tui-spacing-xs);
 
 $button-border-color: $global-theme-color;
 $button-border: $button-border-size $button-border-type $button-border-color;
