@@ -40,3 +40,9 @@ export const WithoutButtons: Story = {
     hasButtons: false,
   }
 }
+
+export const ReadOnlyInput: Story = {
+  args: {
+    readOnly: true
+  }
+}
