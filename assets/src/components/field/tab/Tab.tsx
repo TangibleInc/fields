@@ -70,7 +70,7 @@ const Tab = props => {
             <FieldGroup
               { ...props }
               name={ null }
-              fields={tab.fields}
+              fields={ tab.fields }
               uncontrolled={ uncontrolled }
               value={ uncontrolled ? undefined : (value[ tab.name ] ?? {}) }
               onChange={ tabValue => setValue({
