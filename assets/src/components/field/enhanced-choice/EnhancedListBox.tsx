@@ -1,9 +1,12 @@
-import { useListBox } from "react-aria"; // FIX — useListBox was used but never imported
+import { useListBox } from "react-aria";
 import EnhancedOption from "./EnhancedOption";
 
-const EnhancedListBox = ({ listBoxRef, state, name, pendingKey, ...props }) => {
+const EnhancedListBox = ({ listBoxRef, state, name, pendingKey, pendingKeys, onSelectionChange, ...props }) => {
 
   const { listBoxProps } = useListBox(props, state, listBoxRef);
+
+  const isPendingKey = (key) =>
+    pendingKeys ? pendingKeys.includes(key) : pendingKey === key;
 
   return (
     <ul
@@ -22,7 +25,8 @@ const EnhancedListBox = ({ listBoxRef, state, name, pendingKey, ...props }) => {
                   item={child}
                   state={state}
                   name={name}
-                  isPending={pendingKey === child.key}
+                  isPending={isPendingKey(child.key)}
+                  onSelectionChange={onSelectionChange}
                   isVisibilityEnabled={props.isVisibilityEnabled}
                   onToggleVisibility={props.onToggleVisibility}
                   visibility={props.visibility}
@@ -37,7 +41,8 @@ const EnhancedListBox = ({ listBoxRef, state, name, pendingKey, ...props }) => {
             state={state}
             name={name}
             visibility={props.visibility}
-            isPending={pendingKey === item.key}
+            isPending={isPendingKey(item.key)}
+            onSelectionChange={onSelectionChange}
             isVisibilityEnabled={props.isVisibilityEnabled}
             onToggleVisibility={props.onToggleVisibility}
           />
