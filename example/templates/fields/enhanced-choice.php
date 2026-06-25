@@ -66,6 +66,23 @@ echo $fields->render_field('enhanced_choice_multiple', [
 
 <hr />
 
+<h3>Multiple Selection with Filter</h3>
+<?php
+echo $fields->render_field('enhanced_choice_multiple_with_filter', [
+  'type'        => 'enhanced-choice',
+  'multiple'    => true,
+  'filterCategories' => [ [ 'value' => 'a', 'label' => 'Category A' ] ],
+  'actionLabel' => 'Add License Type',
+  'label'       => 'Pick multiple colors',
+  'description' => 'Select multiple colors and toggle visibility for each',
+  'choices'     => $choices,
+  'placeholder' => 'Search colors...',
+  'isVisibilityEnabled' => true, // Optional, defaults to false
+]);
+?>
+
+<hr />
+
 <div class="tangible-settings-row">
   <?php submit_button() ?>
 </div>

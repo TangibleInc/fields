@@ -2,7 +2,16 @@ import { useRef } from 'react';
 import { useOption, mergeProps, useFocusRing } from 'react-aria';
 import Checkbox from '../checkbox/Checkbox';
 
-const EnhancedOption = ({ item, state, isVisibilityEnabled, name, visibility = {}, onToggleVisibility, isPending }) => {
+const EnhancedOption = ({
+  item,
+  state,
+  isVisibilityEnabled,
+  name,
+  visibility = {},
+  onToggleVisibility,
+  isPending,
+  onSelectionChange,
+}) => {
   const ref = useRef(null);
 
   const {
@@ -18,7 +27,6 @@ const EnhancedOption = ({ item, state, isVisibilityEnabled, name, visibility = {
   const isSingle  = state.selectionManager.selectionMode === 'single';
 
   const handleEyeClick = (e) => {
-    e.stopPropagation();
     e.preventDefault();
     onToggleVisibility?.(item.key);
   };
@@ -27,17 +35,28 @@ const EnhancedOption = ({ item, state, isVisibilityEnabled, name, visibility = {
     e.stopPropagation();
   };
 
-  const isMarked = isSelected || isPending;
- 
+  const isMarked = isSingle ? (isSelected || isPending) : isPending;
+
   let classes = 'tf-enhanced-choice-option';
   if (isMarked)   classes += ' is-selected';
   if (isFocused)  classes += ' is-focused';
   if (isDisabled) classes += ' is-disabled';
-  if (isPending && !isSelected) classes += ' is-pending';
+
+  const handleMultipleClick = (e) => {
+    e.preventDefault();
+    if (!isDisabled) onSelectionChange?.(item.key);
+  };
+
+  const liProps = isSingle
+    ? mergeProps(optionProps, focusProps)
+    : mergeProps(optionProps, focusProps, {
+        onClick:     handleMultipleClick,
+        onMouseDown: (e) => e.preventDefault(),
+      });
 
   return (
     <li
-      {...mergeProps(optionProps, focusProps)}
+      {...liProps}
       ref={ref}
       className={classes}
       data-focus-visible={isFocusVisible}
@@ -54,7 +73,7 @@ const EnhancedOption = ({ item, state, isVisibilityEnabled, name, visibility = {
             />
           ) : (
             <Checkbox
-              isSelected={isSelected}
+              isSelected={isMarked}
               isDisabled={isDisabled}
             />
           )}
