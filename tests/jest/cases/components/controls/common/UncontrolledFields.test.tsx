@@ -208,13 +208,13 @@ describe(
 
     expect(container.querySelectorAll('.tf-text').length).toBe(1)
 
-    await user.click(container.querySelector('.tf-switch-label'))
+    await user.click(container.querySelector('.tf-switch button[role="switch"]'))
 
     await waitFor(() =>
       expect(container.querySelectorAll('.tf-text').length).toBe(0)
     )
 
-    await user.click(container.querySelector('.tf-switch-label'))
+    await user.click(container.querySelector('.tf-switch button[role="switch"]'))
 
     await waitFor(() =>
       expect(container.querySelectorAll('.tf-text').length).toBe(1)
