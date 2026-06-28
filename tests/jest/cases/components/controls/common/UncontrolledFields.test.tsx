@@ -1,6 +1,6 @@
 import * as fields from '../../../../../../assets/src/index.tsx'
 import userEvent from '@testing-library/user-event'
-import { render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 
 /**
  * Accordion and Tab are wrapper of FieldGroups, they
@@ -165,5 +165,59 @@ describe(
 
     expect(subInput.value).toBe('on')
     expect(container.querySelectorAll(`input[name="${ type }-name"]`).length).toBe(0)
+  })
+
+  test.each(types)('%p support visibility conditions in uncontrolled mode', async type => {
+
+    const user = userEvent.setup()
+    const visibilityFields = [
+      {
+        label     : 'Subfield 1',
+        type      : 'switch',
+        name      : 'uncontrolled-subfield1',
+        value     : 'on'
+      },
+      {
+        label     : 'Subfield 2',
+        type      : 'text',
+        name      : 'uncontrolled-subfield2',
+        condition : {
+          action    : 'show',
+          condition : { 'uncontrolled-subfield1' : { '_eq' : 'on' } }
+        }
+      }
+    ]
+
+    const args = {
+      type,
+      name         : 'uncontrolled-field-name',
+      uncontrolled : true,
+      fields       : visibilityFields
+    }
+
+    if (type === 'accordion') args.isOpen = true
+
+    if (type === 'tab') {
+      args.tabs = { 'tab-1' : { title : 'Title tab 1', fields : visibilityFields } }
+      delete args.fields
+    }
+
+    const { container } = render(
+      fields.render(args)
+    )
+
+    expect(container.querySelectorAll('.tf-text').length).toBe(1)
+
+    await user.click(container.querySelector('.tf-switch-label'))
+
+    await waitFor(() =>
+      expect(container.querySelectorAll('.tf-text').length).toBe(0)
+    )
+
+    await user.click(container.querySelector('.tf-switch-label'))
+
+    await waitFor(() =>
+      expect(container.querySelectorAll('.tf-text').length).toBe(1)
+    )
   })
 })
