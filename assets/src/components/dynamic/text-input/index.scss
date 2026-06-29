@@ -74,6 +74,18 @@
 }
 
 .tf-dynamic-wrapper[data-dynamic="true"] {
+
+  > .tf-dynamic-text-input {
+    width: 100%;
+    padding-right: 25px;
+    min-height: $field-height;
+    box-sizing: border-box;
+    border-color: var(--tui-input-border, var(--tui-color-border));
+    border-radius: var(--tui-input-radius, var(--tui-radius-md));
+    font-size: var(--tui-control-font-size-md);
+    background: var(--tui-input-bg, var(--tui-color-bg-surface));
+  }
+
   .cm-editor {
     padding-right: 25px;
 

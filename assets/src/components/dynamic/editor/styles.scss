@@ -17,6 +17,12 @@
   }
 }
 
+// Prevent empty editor collapse
+.tf-dynamic-wrapper[data-dynamic="true"] .tui-input-group:has(.tf-dynamic-editor) {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 // When inside dynamic wrapper, make room for the insert button
 .tf-dynamic-wrapper[data-dynamic="true"] .tui-input-group .tf-dynamic-editor {
   .ProseMirror {
