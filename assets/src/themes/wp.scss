@@ -51,7 +51,7 @@
   --tui-focus-ring-color: #72aee6;
 }
 
-.tf-context-wp .tui-interface {
+.tf-context-wp.tui-interface {
   @include wp-tokens-light;
 
   --tui-focus-ring-offset: 1px;
@@ -97,45 +97,45 @@
  * Core keeps info notices on a plain surface rather than a tint — preserve
  * that; bg-surface adapts per color mode so no dark override is needed.
  */
-.tf-context-wp .tui-interface .tui-notice.is-theme-info {
+.tf-context-wp.tui-interface .tui-notice.is-theme-info {
   --tui-notice-bg: var(--tui-color-bg-surface);
 }
 
-:where(.tf-context-wp .tui-interface) :is(label, .tui-label) {
+:where(.tf-context-wp.tui-interface) :is(label, .tui-label) {
   font-weight: normal;
   font-size: calc(13 * var(--tui-fontSize-multiplier, calc(1rem / 16)));
 }
 
-.tf-context-wp .tui-interface .tui-field__label {
+.tf-context-wp.tui-interface .tui-field__label {
   font-weight: 500;
   font-size: calc(11 * var(--tui-fontSize-multiplier, calc(1rem / 16)));
   text-transform: uppercase;
 }
 
-.tf-context-wp .tui-interface .tui-select__option {
+.tf-context-wp.tui-interface .tui-select__option {
   border-radius: var(--tui-select-content-radius);
 }
 
-.tf-context-wp .tui-tooltip__arrow {
+.tf-context-wp.tui-tooltip__arrow {
   display: none;
 }
 
-.tf-context-wp .tui-interface .tui-tabs__tab {
+.tf-context-wp.tui-interface .tui-tabs__tab {
   font-size: 13px;
   font-weight: normal;
   min-height: 48px;
   padding-inline: 1em;
 }
 
-.tf-context-wp .tui-interface .tui-inline-choice input[type='radio'],
-.tf-context-wp .tui-interface .tui-inline-choice input[type='checkbox'] {
+.tf-context-wp.tui-interface .tui-inline-choice input[type='radio'],
+.tf-context-wp.tui-interface .tui-inline-choice input[type='checkbox'] {
   font-size: 1.5em;
   min-width: 1em;
   min-height: 1em;
   border-radius: var(--tui-input-radius);
 }
 
-.tf-context-wp .tui-interface .tui-inline-choice input[type='checkbox'] {
+.tf-context-wp.tui-interface .tui-inline-choice input[type='checkbox'] {
   &:checked {
     background-color: var(--_accent);
     border-color: var(--_accent);
@@ -151,13 +151,13 @@
   }
 }
 
-.tf-context-wp .tui-interface .tui-radio__description {
+.tf-context-wp.tui-interface .tui-radio__description {
   color: var(--tui-field-helper-fg, var(--tui-color-fg-secondary));
   font-size: var(--tui-typography-size-xs);
   line-height: 1.4;
 }
 
-.tf-context-wp .tui-interface .tui-segmented.is-variant-pill {
+.tf-context-wp.tui-interface .tui-segmented.is-variant-pill {
   --tui-segmented-radius: var(--tui-input-radius);
   --tui-segmented-border: var(--tui-color-border);
   --tui-segmented-bg: var(--tui-color-bg-surface);

@@ -19,8 +19,8 @@ const ContextFrame = ({
   colorScheme
 }: ContextFrameProps) => {
   return (
-    <div className={`${contextClass} ${modeClass}`} style={colorScheme ? { colorScheme } : undefined}>
-      <div className="tui-interface" data-theme={themeAttr}>
+    <div className={`${modeClass}`} style={colorScheme ? { colorScheme } : undefined}>
+      <div className={ `${contextClass} tui-interface` } data-theme={themeAttr}>
         <Story />
       </div>
     </div>
