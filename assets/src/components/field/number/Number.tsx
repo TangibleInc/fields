@@ -57,13 +57,16 @@ const NumberComponent = props => {
           ref={ inputRef } 
           inputProps={ inputProps }
         >
-          <input
-            { ...inputProps}
-            step={ props.step ?? 1 }
-            ref={ inputRef }
-            name={ props.name ?? '' }
-            disabled={ isDisabled }
-          />
+          <div className="tui-input-group">
+            <input
+              { ...inputProps}
+              className="tui-input tui-input-reset"
+              step={ props.step ?? 1 }
+              ref={ inputRef }
+              name={ props.name ?? '' }
+              disabled={ isDisabled }
+            />
+          </div>
           { hasButtons && <div className='tf-number-button-group'>
             <Button type="number" { ...incrementButtonProps } isDisabled={ isDisabled }>+</Button>
             <Button type="number" { ...decrementButtonProps } isDisabled={ isDisabled }>-</Button>

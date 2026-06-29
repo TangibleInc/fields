@@ -6,37 +6,20 @@
 
 .tf-combo-box-text {
   position: relative;
-  display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
-  @include field;
-  height: fit-content;
-  padding: 0;
   overflow: hidden;
 
-  input {
-    border: 0;
-    box-shadow: none;
-    width: 100%;
-
-    &:focus {
-      box-shadow: none;
-    }
-  }
-
-  .tf-button-action {
-    @include button;
-    border: 0;
-    background: none;
-    max-height: calc(#{$field-height} - 2px);
-  }
-
-  .tf-button-action span {
+  // Overwride/tweak default style for dropdown button
+  button.tui-button.is-theme-secondary.is-style-outline {
+    --tui-button-bg: transparent;
+    --tui-button-border: transparent;
+    --tui-button-fg: var(--tui-color-fg);
+    min-height: 0;
+    height: auto;
     padding: 0 2px;
-  }
-
-  &:focus-within {
-    @include field-focus;
+    flex: 0 0 auto;
+    cursor: pointer;
   }
 }
 
@@ -61,17 +44,25 @@
     flex: 1 1 auto;
   }
 
-  button:last-child {
+  // Overwride/tweak default style for x button for multiple mode items
+  button.tui-button:last-child {
+    --tui-button-bg: transparent;
+    --tui-button-border: transparent;
+    --tui-button-fg: #{$field-focus-color};
     cursor: pointer;
     color: $field-focus-color;
-    background-color: transparent;
-    border: none;
+    border-radius: 0;
     padding: 0;
+    min-height: 0;
+    height: auto;
+    line-height: 1;
 
-    &:focus{
+    &:hover,
+    &:focus {
+      --tui-button-bg: transparent;
+      --tui-button-border: transparent;
       outline: none;
     }
-
   }
 }
 
@@ -116,15 +107,15 @@
 .tf-multiple-combobox-values {
   display: flex;
   align-items: center;
-  padding: $field-padding;
-  box-sizing: border-box;
-  width: $field-width;
-  background-color: $field-background;
-  min-height: $field-height;
-  border: $field-border;
-  border-radius: $field-border-radius;
   flex-wrap: wrap;
+  flex: 1 1 auto;
   gap: $global-spacer-sm;
+  box-sizing: border-box;
+  min-height: $field-height;
+  padding: var(--tui-spacing-xxs) $field-padding-horizontal;
+  background-color: var(--tui-input-bg, var(--tui-color-bg-surface));
+  border: var(--tui-border-width, 1px) solid var(--tui-input-border, var(--tui-color-border));
+  border-radius: var(--tui-input-radius, var(--tui-radius-md));
 }
 
 .tf-multiple-combobox[data-enabled="false"] .tf-multiple-combobox-values {
@@ -132,7 +123,6 @@
 }
 
 .tf-combo-box-popover.tf-popover {
-  margin-left: -#{$field-border-width * 2};
   border: $field-border;
   border-bottom-left-radius: $field-border-radius;
   border-bottom-right-radius: $field-border-radius;  

@@ -6,7 +6,7 @@ $global-theme-color-darker-10: var(--wp-admin-theme-color-darker-10, var(--wp-co
 
 $global-theme-gray-30: #8c8f94;
 
-$field-height: 35px;
+$field-height: var(--tui-control-height-md, 32px);
 $field-width: 100%;
 $field-border-color: $global-theme-gray-30;
 $field-border: $field-border-width $field-border-style $field-border-color;

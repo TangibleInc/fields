@@ -46,9 +46,10 @@ const Simple = forwardRef(({
           { parent.label }
         </Label> }
       <FocusScope autoFocus={ parent.autoFocus } restoreFocus>
-        <div className="tf-combo-box-text" ref={ ref.current.wrapper }>
+        <div className="tf-combo-box-text tui-input-group" ref={ ref.current.wrapper }>
           <input
             { ...inputProps }
+            className="tui-input tui-input-reset"
             ref={ ref.current.input }
             readOnly={ parent.readOnly }
             onClick={ () => {
@@ -74,7 +75,7 @@ const Simple = forwardRef(({
           { state.isOpen && ! parent.readOnly &&
             <Popover
               state={ state }
-              triggerRef={ ref.current.input }
+              triggerRef={ ref.current.wrapper }
               popoverRef={ ref.current.popover }
               placement="bottom start"
               isNonModal

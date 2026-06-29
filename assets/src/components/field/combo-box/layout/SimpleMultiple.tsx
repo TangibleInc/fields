@@ -72,7 +72,7 @@ const SimpleMutliple = forwardRef(({
           { parent.label }
         </Label> }
       <div className="tf-multiple-combobox-container">
-        <div ref={ ref.current.input } className="tf-multiple-combobox-values" { ...inputProps }>
+        <div ref={ ref.current.input } { ...inputProps } className="tf-multiple-combobox-values">
           { values.length === 0
             ? parent.placeholder ?? 'No item selected'
             : values.map(

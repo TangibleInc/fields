@@ -32,7 +32,7 @@ const TimeField = (props) => {
           {props.label}
         </Label>
       }
-      <div {...fieldProps} className="tf-time-field tui-input">
+      <div {...fieldProps} className="tf-time-field tui-input-group">
         {state.segments.map((segment, i) => (
           <DateSegment key={i} segment={segment} state={state} />
         ))}

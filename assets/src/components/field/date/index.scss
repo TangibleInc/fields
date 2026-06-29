@@ -30,15 +30,7 @@
 }
 
 .tf-date-field {
-  @include field;
-  display: inline-flex;
   justify-content: center;
-  align-items: center;
-  height: fit-content;
-
-  &:focus-within {
-    border-color: $field-focus-color;
-  }
 }
 
 .tf-date-segment {
