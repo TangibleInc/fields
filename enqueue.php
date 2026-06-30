@@ -58,7 +58,7 @@ $fields->enqueue = function(array $config = []) use($fields) {
 
   wp_enqueue_style(
     'tangible-fields-tui',
-    framework\module_url( '/assets', __FILE__ ) . '/build/all.unlayered.css',
+    framework\module_url( '/assets', __FILE__ ) . '/build/all.unlayered.min.css',
     [],
     $fields->version
   );

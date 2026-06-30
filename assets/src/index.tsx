@@ -32,7 +32,7 @@ const renderComponent = (props, type = 'field') => (
 const renderField = props => (
   <ControlContext.Provider value={{
     name            : props.context ?? 'default',
-    wrapper         : `tf-context-${props.context ?? 'default'} tui-interface`,
+    wrapper         : `tf-interface tf-context-${props.context ?? 'default'} tui-interface`,
     getValue        : store.getValue.bind(store),
     portalContainer : props.portalContainer ?? document.body
   }}>
@@ -56,7 +56,7 @@ const renderField = props => (
 const renderElement = props => (
   <ControlContext.Provider value={{
     name            : props.context ?? 'default',
-    wrapper         : `tf-context-${props.context ?? 'default'} tui-interface`,
+    wrapper         : `tf-interface tf-context-${props.context ?? 'default'} tui-interface`,
     getValue        : store.getValue.bind(store),
     portalContainer : props.portalContainer ?? document.body
   }}>
