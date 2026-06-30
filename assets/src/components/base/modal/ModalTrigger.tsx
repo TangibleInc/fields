@@ -33,7 +33,7 @@ const ModalTrigger = props => {
               { content }
               <div className="tf-modal-actions">
                 <Button
-                  type="danger"
+                  type={ props.confirmType ?? 'danger' }
                   onPress={() => {
                     state.close()
                     if( props.onValidate ) props.onValidate()

@@ -88,7 +88,7 @@ const DynamicText = props => {
         </VisuallyHidden>
         <div
           ref={ input }
-          className="tf-dynamic-text-input tui-input"
+          className="tf-dynamic-text-input tui-input tf-text-suggestion-input"
           { ...inputProps }
         />
         <Button type="action" ref={ triggerRef } { ...triggerProps }>

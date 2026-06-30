@@ -75,6 +75,7 @@ const ConditionalPanel = props => {
         title       : 'Conditional rules',
         label       : 'Open conditional panel',
         confirmText : 'Save',
+        confirmType : 'primary',
         onCancel    : () => {
           setValue([ ...deepCopy(savedValue) ])
         },

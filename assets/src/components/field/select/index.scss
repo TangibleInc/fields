@@ -15,11 +15,8 @@
   }
 
   .tf-button-select {
-    @include field;
-    display: flex;
     justify-content: space-between;
-    align-items: center;
-    height: 100%;
+    cursor: pointer;
 
     &[disabled] {
       border-color: rgba(black, 0.1);
@@ -31,10 +28,5 @@
   .tf-select-icon {
     padding-left: 5px;
     font-size: 10px;
-  }
-
-  .tf-button-select {
-    cursor: pointer;
-    font-size: $field-font-size;
   }
 }

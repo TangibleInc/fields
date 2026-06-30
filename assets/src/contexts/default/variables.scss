@@ -72,7 +72,7 @@ $button-border-radius: 4px;
 $button-color: #505050;
 $button-padding: 0 12px;
 $button-height: 32px;
-$button-primary-color: $global-theme-color;
+$button-primary-color: var(--tui-theme-primary-base, #{$global-theme-color});
 $button-primary-text: inherit;
 
 $button-background--hover: white;

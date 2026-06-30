@@ -29,7 +29,7 @@ $button-color: $global-theme-color;
 $button-padding: 6px 12px;
 $button-height: 36px;
 
-$button-primary-color: $global-theme-color;
+$button-primary-color: var(--tui-theme-primary-base, #{$global-theme-color});
 $button-primary-text: white;
 
 $button-border-color--hover: $global-theme-color-darker-10;

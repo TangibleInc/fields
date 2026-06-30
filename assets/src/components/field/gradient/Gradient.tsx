@@ -95,14 +95,16 @@ const Gradient = props => {
           { props.label }
         </Label> }
       <div className="tf-gradient-container" ref={ wrapperRef }>
-        <input 
-          ref={gradientPopover}
-          type="text" 
-          className="tf-gradient-input"
-          value={ generateGradient() } 
-          onClick={ e => isOpen(true) }
-          readOnly // Added to remove warning (because value but no onChange event), but not sure it's an appropriate fix
-        />
+        <div className="tui-input-group">
+          <input
+            ref={ gradientPopover }
+            type="text"
+            className="tf-gradient-input tui-input tui-input-reset"
+            value={ generateGradient() }
+            onClick={ e => isOpen(true) }
+            readOnly // Added to remove warning (because value but no onChange event), but not sure it's an appropriate fix
+          />
+        </div>
         <input 
           type="hidden"
           ref={ input }
@@ -113,7 +115,7 @@ const Gradient = props => {
         { open && 
           <Popover
             state={{ isOpen: open, close: () => isOpen(false) }}
-            triggerRef={gradientPopover}
+            triggerRef={ wrapperRef }
             placement="bottom start"
             style={{ 
               width: wrapperRef?.current?.offsetWidth, 

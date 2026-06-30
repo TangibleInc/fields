@@ -5,6 +5,7 @@ type Mode = 'light' | 'dark' | 'auto'
 
 type ContextFrameProps = {
   Story: any
+  storyArgs: Record<string, unknown>
   contextClass: string
   modeClass: string
   themeAttr?: 'dark'
@@ -13,6 +14,7 @@ type ContextFrameProps = {
 
 const ContextFrame = ({
   Story,
+  storyArgs,
   contextClass,
   modeClass,
   themeAttr,
@@ -21,14 +23,17 @@ const ContextFrame = ({
   return (
     <div className={`${modeClass}`} style={colorScheme ? { colorScheme } : undefined}>
       <div className={ `${contextClass} tui-interface` } data-theme={themeAttr}>
-        <Story />
+        { /* Pass context to the field so portaled content (modals, popovers) re-applies the right wrapper */ }
+        <Story args={storyArgs} />
       </div>
     </div>
   )
 }
 
-export const withContext: Decorator = (Story, { globals, viewMode, id }) => {
-  const contextClass = `tf-context-${globals.context || 'default'}`
+export const withContext: Decorator = (Story, { globals, viewMode, id, args }) => {
+  const contextName = globals.context || 'default'
+  const contextClass = `tf-context-${contextName}`
+  const storyArgs = { ...args, context: contextName }
   const colorMode = (globals.colorMode || 'light') as Mode
   const [systemMode, setSystemMode] = useState<'light' | 'dark'>(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return 'light'
@@ -83,6 +88,7 @@ export const withContext: Decorator = (Story, { globals, viewMode, id }) => {
   return (
     <ContextFrame
       Story={Story}
+      storyArgs={storyArgs}
       contextClass={contextClass}
       modeClass={modeClass}
       themeAttr={themeAttr}

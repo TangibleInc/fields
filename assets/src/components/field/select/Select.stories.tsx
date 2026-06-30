@@ -60,6 +60,12 @@ export const WithCategories: Story = {
   }
 }
 
+export const WithDisabledItems: Story = {
+  args: {
+    disabledKeys: ['test2', 'test4'],
+  }
+}
+
 export const Multiple: Story = {
   args: {
     multiple: true,

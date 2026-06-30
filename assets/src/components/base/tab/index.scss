@@ -17,7 +17,7 @@ $tab-item-index-height: 40px;
   width: 100%;
   border-bottom: $field-border;
   border-bottom-color: rgba($field-border-color, 0.5);
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
 }
 
