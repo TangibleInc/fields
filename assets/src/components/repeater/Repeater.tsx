@@ -172,6 +172,7 @@ const Repeater = props => {
         </Button>
         <ModalTrigger
           title="Confirmation"
+          buttonProps={{ type: 'danger' }}
           label="Remove all"
           isDisabled={ items.length <= 0 }
           onValidate={ () => dispatch({ type: 'clear' })}

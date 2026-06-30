@@ -68,6 +68,13 @@ const DatePicker = forwardRef(({
     if ( tempRef.contains(event.target) ) {
       return;
     }
+    /**
+     * The calendar popover is portaled outside the ref — without this,
+     * clicking a date or navigating months closes the calendar
+     */
+    if ( event.target.closest('.tf-popover') ) {
+      return;
+    }
 
     state.setOpen( false )
   }

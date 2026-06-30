@@ -37,6 +37,7 @@ export default {
     return this._values[name] ?? ''
   },
   setValue(name, value) {
+    this._values[name] = value
     triggerEvent('_refreshFieldValue', {
       name  : name,
       value : value

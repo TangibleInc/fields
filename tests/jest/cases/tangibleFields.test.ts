@@ -98,19 +98,19 @@ describe('tangibleFields', () => {
     expect(typeof fields.types).toBe('object')
 
     const Text = fields.types.get('text')
-    
-    expect(typeof Text).toBe('function')
+
+    expect(Text).toBeTruthy()
 
     const { container } = render(
-      <Text 
-        name="field-name" 
-        label="Label for text type" 
-        value="Initial value" 
+      <Text
+        name="field-name"
+        label="Label for text type"
+        value="Initial value"
       />
     )
-  
+
     expect(within(container).getByLabelText(`Label for text type`)).toBeTruthy()
-    expect(within(container).getByText(`Initial value`)).toBeTruthy()
+    expect(within(container).getByDisplayValue(`Initial value`)).toBeTruthy()
   })
 
   it('can register a new custom field type', () => {

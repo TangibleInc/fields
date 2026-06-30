@@ -8,26 +8,26 @@ describe('Tooltip component', () => {
   })
 
   it('use the button layout by default with type=action', () => {
-    renderHasElement({ 
+    renderHasElement({
       type   : 'tooltip',
-    }, container => container.querySelector('.tf-button-action'))
+    }, container => container.querySelector('.tui-button.is-theme-secondary'))
   })
 
   it('supports the layout parameter set to button, and uses type=action by default', () => {
-    renderHasElement({ 
+    renderHasElement({
       type   : 'tooltip',
       layout : 'button'
-    }, container => container.querySelector('.tf-button-action'))
+    }, container => container.querySelector('.tui-button.is-theme-secondary'))
   })
 
   it('supports the buttonProps parameter', () => {
-    renderHasElement({ 
+    renderHasElement({
       type        : 'tooltip',
       layout      : 'button',
       buttonProps : {
         type : 'primary'
       }
-    }, container => container.querySelector('.tf-button-primary'))
+    }, container => container.querySelector('.tui-button.is-theme-primary'))
   })
 
   it('supports the render with custom JSX components passed as a child', () => {

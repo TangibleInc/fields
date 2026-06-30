@@ -3,7 +3,7 @@ import {
   useState,
   useContext
 } from 'react'
-import { ControlContext } from './index.tsx'
+import { ControlContext } from './context'
 
 import { triggerEvent } from './events'
 import { OverlayProvider } from 'react-aria'
@@ -67,7 +67,7 @@ const Control = ({
         <RenderWrapper
           itemType={ props.itemType ?? 'field' }
           name={ props.name ?? false }
-          setValue={ setValue }
+          setValue={ onChange }
         >
         { refreshRender =>
           <DependendWrapper

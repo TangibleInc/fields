@@ -10,6 +10,16 @@
   @include button;
 }
 
+/* TUI span fallback compatibility */
+.tui-interface span.tui-button {
+  cursor: pointer;
+}
+
+.tui-interface span.tui-button[aria-disabled='true'],
+.tui-interface span.tui-button.is-disabled {
+  cursor: not-allowed;
+}
+
 .tf-button-danger {
   color: $global-context-destructive;
   border-color: $global-context-destructive;
@@ -60,6 +70,21 @@
 
 .tf-button-text-primary {
   color: $button-primary-color;
+}
+
+/**
+ * Per default, background will be transparent for secondary button
+ * with outline button
+ *
+ * Most of the time we expect this background to be the same color as
+ * fields background in fields
+ *
+ * Set via TUI's --tui-button-bg token (rest state only) rather than the
+ * background property: TUI hover/active works by swapping the internal
+ * --_bg variable, so pinning background directly would disable hover.
+ */
+button.tui-button.is-theme-secondary.is-style-outline {
+  --tui-button-bg: #{$field-background};
 }
 
 /* Icons */

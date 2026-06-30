@@ -109,7 +109,7 @@ const Gallery = props => {
         </Button>
         {
           value.length > 0 && (
-            <Button type="action" onPress={ () => setValue([]) }>
+            <Button type="danger" onPress={ () => setValue([]) }>
               Clear gallery
             </Button>
           )

@@ -19,11 +19,7 @@
 .tf-color-container {
   position: relative;
   width: 100%;
-
-  input {
-    @include field;
-    box-sizing: border-box;
-  }
+  height: fit-content;
 }
 
 .tf-color-picker {

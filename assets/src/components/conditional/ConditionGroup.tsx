@@ -14,7 +14,7 @@ const ConditionGroup = props => {
         And
       </Button>
       <Button
-        type="danger"
+        type="icon-trash"
         onPress={ () => dispatch({ type: 'remove', item: i }) }
         isDisabled={ ! props.canDelete }
         contentVisuallyHidden

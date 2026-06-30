@@ -1,17 +1,15 @@
 import { useOverlayTriggerState } from 'react-stately'
 import { useOverlayTrigger } from 'react-aria'
 
-import { 
-  Button, 
-  Dialog, 
-  Modal 
-} from '../../base'
+import Button from '../button/Button'
+import Dialog from '../dialog/Dialog'
+import Modal from './Modal'
 
 const ModalTrigger = props => {
-  
+
   // Some props names are going to be different when generated from PHP
   const content = props.content ?? props.children
-  
+
   const state = useOverlayTriggerState(props)
   const { triggerProps, overlayProps } = useOverlayTrigger(
     { type: 'dialog' },
@@ -35,7 +33,7 @@ const ModalTrigger = props => {
               { content }
               <div className="tf-modal-actions">
                 <Button
-                  type="danger"
+                  type={ props.confirmType ?? 'danger' }
                   onPress={() => {
                     state.close()
                     if( props.onValidate ) props.onValidate()

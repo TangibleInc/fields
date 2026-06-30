@@ -56,7 +56,7 @@ describe(
     ).toBe('off')
 
     await user.click(
-      container.querySelector('.tf-switch-label')
+      container.querySelector('button[role="switch"]')
     )
 
     expect(extractSubValue(type, JSON.parse(input[0].value))).toBe('on')
@@ -160,7 +160,7 @@ describe(
     expect(subInput.value).toBe('off')
 
     await user.click(
-      container.querySelector('.tf-switch-label')
+      container.querySelector('button[role="switch"]')
     )
 
     expect(subInput.value).toBe('on')
@@ -208,13 +208,13 @@ describe(
 
     expect(container.querySelectorAll('.tf-text').length).toBe(1)
 
-    await user.click(container.querySelector('.tf-switch-label'))
+    await user.click(container.querySelector('.tf-switch button[role="switch"]'))
 
     await waitFor(() =>
       expect(container.querySelectorAll('.tf-text').length).toBe(0)
     )
 
-    await user.click(container.querySelector('.tf-switch-label'))
+    await user.click(container.querySelector('.tf-switch button[role="switch"]'))
 
     await waitFor(() =>
       expect(container.querySelectorAll('.tf-text').length).toBe(1)

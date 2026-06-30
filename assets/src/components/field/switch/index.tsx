@@ -5,7 +5,7 @@ import {
 
 import Switch from './Switch'
 
-export default props => {
+const SwitchField = props => {
   
   const valueOn = props.valueOn ?? 'on' 
   const valueOff = props.valueOff ?? 'off'
@@ -31,3 +31,5 @@ export default props => {
     </>
   )
 }
+
+export default SwitchField

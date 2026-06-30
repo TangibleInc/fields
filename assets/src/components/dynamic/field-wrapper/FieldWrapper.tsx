@@ -3,7 +3,7 @@ import {
   forwardRef 
 } from 'react'
 
-import { BaseWrapper } from '../'
+import BaseWrapper from '../base-wrapper/BaseWrapper'
 
 /**
  * Props needed:

@@ -10,15 +10,17 @@
 
 .tf-dimensions-container {
   display: flex;
-  width: fit-content;
+  width: 100%;
   position: relative;
   flex-wrap: wrap;
+  gap: var(--tui-spacing-xs);
 }
 
 .tf-dimensions-number-groups {
   display: flex;
   flex-direction: row;
-  max-width: $dimensions-number-group-width;
+  gap: var(--tui-spacing-xs);
+  flex: 1 1 0;
 
   .tf-number {
     flex: 1 1 calc($dimensions-number-group-width / 4);

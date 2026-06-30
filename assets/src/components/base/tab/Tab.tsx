@@ -48,7 +48,11 @@ const Title = props => (
     className={ 'tf-tab-item ' + (props.className ?? '') }
     data-open={ props.isOpen ?? false }
   >
-    <Button type={ 'text-action' } onPress={ props.onPress }>
+    <Button
+      type={ 'text-action' }
+      onPress={ props.onPress }
+      variant={ 'ghost' }
+    >
       { props.children }
     </Button>
   </div>
@@ -92,7 +96,7 @@ const RowTitle = props => (
 
 const RowLabel = props => (
   <div className={ 'tf-tab-row-title ' + (props.className ?? '') }>
-    <span className='tf-label'>
+    <span className='tf-label tui-field__label'>
       { props.children }
     </span>
   </div>
