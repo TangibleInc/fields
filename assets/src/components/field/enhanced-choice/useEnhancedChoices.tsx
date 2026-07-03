@@ -1,19 +1,62 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import { useFilter, useFocusRing } from "react-aria";
+import { useFilter } from "react-aria";
 
-export interface ComboboxItem {
+export interface ChoicesItem {
   value:        string;
   label:        string;
   description?: string;
+  category?:    string;
+  viewLink?:    string;
 }
 
+// Raw PHP choices formats:
+//   flat:    { red: 'Red', blue: 'Blue' }
+//   rich:    { red: { label: 'Red', viewLink: '/colors/red' } }
+//   grouped: [ { label: 'Warm Colors', items: { red: 'Red', orange: 'Orange' } } ]
+
+type RawFlatItem = string | { label: string; viewLink?: string; category?: string };
+type RawFlatChoices    = Record<string, RawFlatItem>;
+type RawGroupedChoices = { label: string; items: RawFlatChoices }[];
+type RawChoices        = RawFlatChoices | RawGroupedChoices;
+
+export interface GroupedChoiceItem {
+  label: string;
+  items: ChoicesItem[];
+}
+
+const normalizeFlatChoices = (choices: RawFlatChoices): ChoicesItem[] =>
+  Object.entries(choices).map(([value, item]) => {
+    if (typeof item === 'string') return { value, label: item };
+    return { value, label: item.label, viewLink: item.viewLink, category: item.category };
+  });
+
+const normalizeChoices = (choices: RawChoices): ChoicesItem[] | GroupedChoiceItem[] => {
+  if (Array.isArray(choices)) {
+    return (choices as RawGroupedChoices).map(group => ({
+      label: group.label,
+      items: normalizeFlatChoices(group.items),
+    }));
+  }
+  return normalizeFlatChoices(choices as RawFlatChoices);
+};
+
+// Helper to always get a flat list from either format (used by the hook internally)
+const flattenChoices = (choices: RawChoices): ChoicesItem[] => {
+  const normalized = normalizeChoices(choices);
+  if (Array.isArray(normalized) && normalized.length > 0 && 'items' in normalized[0]) {
+    return (normalized as GroupedChoiceItem[]).flatMap(g => g.items);
+  }
+  return normalized as ChoicesItem[];
+};
+
 interface BaseProps {
-  items:                ComboboxItem[];
-  label?:               string;
-  name?:                string;
-  description?:         string;
-  placeholder?:         string;
-  isVisibilityEnabled?: boolean;
+  items?:       ChoicesItem[];
+  choices?:     RawChoices;   // flat, rich, or grouped PHP format
+  label?:       string;
+  name?:        string;
+  description?: string;
+  placeholder?: string;
+  isViewable?:  boolean;
 }
 
 interface SingleProps extends BaseProps {
@@ -31,49 +74,54 @@ interface MultipleProps extends BaseProps {
 export type UseEnhancedChoicesProps = SingleProps | MultipleProps;
 
 const parseInitial = (props: UseEnhancedChoicesProps) => {
+  // console.log('mode',props);
   if (props.mode === 'single') {
-    if (props.isVisibilityEnabled && props.value) {
-      try {
-        const parsed = JSON.parse(props.value as string);
-        return {
-          selectedKey:  parsed.selected ?? null,
-          selectedKeys: [] as string[],
-          pendingKey:   null as string | null,
-          pendingKeys:  [] as string[],
-          visibility:   parsed.visibility ?? {},
-        };
-      } catch { }
-    }
+    // if (props.isVisibilityEnabled && props.value) {
+    //   try {
+    //     const parsed = JSON.parse(props.value as string);
+    //     return {
+    //       selectedKey:  parsed.selected ?? null,
+    //       selectedKeys: [] as string[],
+    //       pendingKey:   null as string | null,
+    //       pendingKeys:  [] as string[],
+    //       visibility:   parsed.visibility ?? {},
+    //     };
+    //   } catch { }
+    // }
     return {
       selectedKey:  props.value ?? null,
       selectedKeys: [] as string[],
       pendingKey:   null as string | null,
       pendingKeys:  [] as string[],
-      visibility:   {} as Record<string, boolean>,
+      // visibility:   {} as Record<string, boolean>,
     };
   }
 
   // multiple
-  if (props.isVisibilityEnabled && props.value) {
-    try {
-      const parsed = JSON.parse(props.value as unknown as string);
-      const keys = Array.isArray(parsed.selected) ? parsed.selected : [];
-      return {
-        selectedKey:  null,
-        selectedKeys: keys as string[],
-        pendingKey:   null as string | null,
-        pendingKeys:  keys as string[],
-        visibility:   parsed.visibility ?? {},
-      };
-    } catch { }
-  }
-  const keys = Array.isArray(props.value) ? props.value : [];
+  // if (props.mode === 'multiple' && props.value) {
+  //   try {
+  //     const parsed = JSON.parse(props.value as unknown as string);
+  //     console.log('parseInitial for multiple mode, parsed:', parsed);
+  //     const keys = Array.isArray(parsed.selected) ? parsed.selected : [];
+  //     console.log('parseInitial for multiple mode, keys:', keys);
+  //     return {
+  //       selectedKey:  null,
+  //       selectedKeys: keys as string[],
+  //       pendingKey:   null as string | null,
+  //       pendingKeys:  keys as string[],
+  //       // visibility:   parsed.visibility ?? {},
+  //     };
+  //   } catch { }
+  // }
+  const parsed = JSON.parse(props.value as unknown as string);
+  const keys = Array.isArray(parsed) ? parsed : [];
+  console.log('parseInitial for multiple mode, keys:', keys);
   return {
     selectedKey:  null,
     selectedKeys: keys,
     pendingKey:   null as string | null,
     pendingKeys:  keys,
-    visibility:   {} as Record<string, boolean>,
+    // visibility:   {} as Record<string, boolean>,
   };
 };
 
@@ -86,22 +134,46 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
   const popoverRef = useRef<HTMLDivElement>(null);
 
   const initial = useMemo(() => parseInitial(props), []);
-
+  // console.log('checking parseInitial for the multiple mode', parseInitial(props));
+// console.log('checking iniitial for the multiple mode', initial);
   const [selectedKey,   setSelectedKey]   = useState<string | null>(initial.selectedKey);
   const [selectedKeys,  setSelectedKeys]  = useState<string[]>(initial.selectedKeys);
   const [pendingKey,    setPendingKey]     = useState<string | null>(initial.pendingKey);
   const [pendingKeys,   setPendingKeys]    = useState<string[]>(initial.pendingKeys);
-  const [inputValue,    setInputValue]     = useState('');
   const [isOpen,        setIsOpen]         = useState(false);
   const [focusedIndex,  setFocusedIndex]   = useState(-1);
-  const [visibility,    setVisibility]     = useState<Record<string, boolean>>(initial.visibility);
+  // const [visibility,    setVisibility]     = useState<Record<string, boolean>>(initial.visibility);
 
   const isSingle  = props.mode === 'single';
   const ariaLabel = props.label ?? props.name ?? 'Select';
 
+  // Normalize choices from PHP format or use items directly
+  const normalizedItems = useMemo<ChoicesItem[]>(() => {
+    if (props.choices) return flattenChoices(props.choices);
+    return props.items ?? [];
+  }, [props.choices, props.items]);
+
+  // Pre-normalized groups, returned so MultipleChoices can use them directly
+  const normalizedGroups = useMemo<GroupedChoiceItem[] | null>(() => {
+    if (props.choices && Array.isArray(props.choices) && props.choices.length > 0) {
+      const normalized = normalizeChoices(props.choices);
+      if ('items' in normalized[0]) return normalized as GroupedChoiceItem[];
+    }
+    return null;
+  }, [props.choices]);
+
+  // Initialize inputValue to the saved label when a value is provided
+  const [inputValue, setInputValue] = useState(() => {
+    if (props.mode === 'single' && props.value) {
+      const items = props.choices ? flattenChoices(props.choices) : props.items ?? [];
+      return items.find(i => i.value === props.value)?.label ?? '';
+    }
+    return '';
+  });
+
   const filteredItems = useMemo(() =>
-    (props.items || []).filter(item => contains(item.label, inputValue)),
-    [props.items, inputValue, contains]
+    normalizedItems.filter(item => contains(item.label, inputValue)),
+    [normalizedItems, inputValue, contains]
   );
 
   const onInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,7 +200,7 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
     e.preventDefault();
     if (isSingle) {
       if (!pendingKey) return;
-      const label = props.items.find(i => i.value === pendingKey)?.label ?? '';
+      const label = normalizedItems.find(i => i.value === pendingKey)?.label ?? '';
       setSelectedKey(pendingKey);
       setInputValue(label);
       setPendingKey(null);
@@ -162,9 +234,9 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
     (props as MultipleProps).onChange?.(next);
   }, [selectedKeys, props.onChange]);
 
-  const onToggleVisibility = useCallback((key: string) => {
-    setVisibility(prev => ({ ...prev, [key]: prev[key] === false ? true : false }));
-  }, []);
+  // const onToggleVisibility = useCallback((key: string) => {
+  //   setVisibility(prev => ({ ...prev, [key]: prev[key] === false ? true : false }));
+  // }, []);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
@@ -220,14 +292,17 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
 
   const hiddenValue = useMemo(() => {
     if (isSingle) {
-      return props.isVisibilityEnabled
-        ? JSON.stringify({ selected: selectedKey, visibility })
-        : (selectedKey ?? '');
+      // return props.isVisibilityEnabled
+      //   ? JSON.stringify({ selected: selectedKey, visibility })
+      //   : (selectedKey ?? '');
+      return selectedKey?? '';
     }
-    return props.isVisibilityEnabled
-      ? JSON.stringify({ selected: selectedKeys, visibility })
-      : JSON.stringify(selectedKeys);
-  }, [isSingle, selectedKey, selectedKeys, visibility, props.isVisibilityEnabled]);
+    // return props.isVisibilityEnabled
+    //   ? JSON.stringify({ selected: selectedKeys })
+    //   : JSON.stringify(selectedKeys);
+
+    return JSON.stringify(selectedKeys);
+  }, [isSingle, selectedKey, selectedKeys]);
 
   const inputAriaProps = {
     role:    'combobox' as const,
@@ -263,7 +338,7 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
     setIsOpen,
     focusedIndex,
     setFocusedIndex,
-    visibility,
+    // visibility,
 
     // derived
     filteredItems,
@@ -282,7 +357,7 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
     handleConfirm,
     handleClear,
     handleRemoveChip,
-    onToggleVisibility,
+    // onToggleVisibility,
     handleKeyDown,
 
     // aria props (spread onto elements directly)
@@ -298,6 +373,7 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
 
     // helpers
     ariaLabel,
-    findItem: (val: string) => props.items.find(i => i.value === val),
+    findItem: (val: string) => normalizedItems.find(i => i.value === val),
+    normalizedGroups,
   };
 };

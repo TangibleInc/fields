@@ -1,12 +1,14 @@
-import { useState, useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useEnhancedChoices } from "./useEnhancedChoices";
 import Checkbox from "../checkbox/Checkbox";
+import { useState } from "react";
 
 interface FlatItem {
   value:        string;
   label:        string;
   description?: string;
-  category?:    string;  // used by filterCategories
+  category?:    string;
+  viewLink?:    string;
 }
 
 interface GroupedItem {
@@ -14,10 +16,10 @@ interface GroupedItem {
   items: FlatItem[];
 }
 
-interface FilterCategory {
-  value: string;
-  label: string;
-}
+// interface FilterCategory {
+//   value: string;
+//   label: string;
+// }
 
 interface MultipleChoicesProps {
   items:                FlatItem[] | GroupedItem[];
@@ -27,23 +29,16 @@ interface MultipleChoicesProps {
   description?:         string;
   placeholder?:         string;
   isGrouped?:           boolean;
-  isVisibilityEnabled?: boolean;
+  isViewable?:          boolean;
   onChange?:            (value: string[]) => void;
-  filterCategories?:    FilterCategory[];
-  actionLabel?:         string;
+  // filterCategories?:    FilterCategory[];
+  // actionLabel?:         string;
 }
 
 const EyeIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
     <circle cx="12" cy="12" r="3"/>
-  </svg>
-);
-
-const EyeOffIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-    <line x1="1" y1="1" x2="23" y2="23"/>
   </svg>
 );
 
@@ -62,17 +57,18 @@ const SearchIcon = () => (
 
 const MultipleChoices = (props: MultipleChoicesProps) => {
 
-  const [activeCategory, setActiveCategory] = useState('');
+  // console.log('MultipleChoices props:', props);
+  // const [activeCategory, setActiveCategory] = useState('');
 
   const flatItems = useMemo<FlatItem[]>(() => {
     if (!props.isGrouped) return props.items as FlatItem[];
     return (props.items as GroupedItem[]).flatMap(g => g.items);
   }, [props.items, props.isGrouped]);
 
-  const categoryFilteredItems = useMemo<FlatItem[]>(() => {
-    if (!activeCategory) return flatItems;
-    return flatItems.filter(item => item.category === activeCategory);
-  }, [flatItems, activeCategory]);
+  // const categoryFilteredItems = useMemo<FlatItem[]>(() => {
+  //   if (!activeCategory) return flatItems;
+  //   return flatItems.filter(item => item.category === activeCategory);
+  // }, [flatItems, activeCategory]);
 
   const {
     inputValue,
@@ -82,7 +78,6 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
     setIsOpen,
     focusedIndex,
     setFocusedIndex,
-    visibility,
     filteredItems,
     hiddenValue,
     isConfirmed,
@@ -94,7 +89,6 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
     handleConfirm,
     handleClear,
     handleRemoveChip,
-    onToggleVisibility,
     handleKeyDown,
     inputAriaProps,
     listBoxAriaProps,
@@ -103,7 +97,16 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
     buttonRef,
     listBoxRef,
     ariaLabel,
-  } = useEnhancedChoices({ ...props, items: categoryFilteredItems, mode: 'multiple' });
+    normalizedGroups,
+  } = useEnhancedChoices({ ...props, items: flatItems, mode: 'multiple' });
+
+  // console.log('MultipleChoices state:', {
+  //   inputValue,
+  //   selectedKeys,
+  //   pendingKeys,
+  //   isOpen,
+  //   focusedIndex,
+  //   filteredItems,});
 
   const [reviewMode, setReviewMode] = useState(false);
 
@@ -130,16 +133,21 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
     if (!props.isGrouped) {
       return [{ label: '', items: filteredItems as FlatItem[] }];
     }
-    return (props.items as GroupedItem[])
+    // Use normalizedGroups from hook if choices was a grouped PHP format
+    const source = normalizedGroups
+      ? normalizedGroups.map(g => ({ label: g.label, items: g.items as FlatItem[] }))
+      : props.items as GroupedItem[];
+
+    return source
       .map(group => ({
         ...group,
         items: group.items.filter(item =>
-          item.label.toLowerCase().includes(inputValue.toLowerCase()) &&
-          (!activeCategory || item.category === activeCategory)
+          item.label.toLowerCase().includes(inputValue.toLowerCase())
+          // && (!activeCategory || item.category === activeCategory)
         ),
       }))
       .filter(group => group.items.length > 0);
-  }, [props.isGrouped, props.items, filteredItems, inputValue, activeCategory]);
+  }, [props.isGrouped, props.items, filteredItems, inputValue, normalizedGroups]);
 
   const getGroupSelectAllState = useCallback((groupItems: FlatItem[]) => {
     const keys    = groupItems.map(i => i.value);
@@ -162,19 +170,36 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
   const hasPending     = isOpen && pendingKeys.length > 0;
   const isNotSelected_ = selectedKeys.length === 0 && !isOpen;
 
-  const renderVisibilityToggle = (key: string) => {
-    if (!props.isVisibilityEnabled) return null;
-    const isVisible = visibility[key] !== false;
+  // Global Select All
+  const globalSelectAllState = useMemo(() => {
+    const checked = filteredItems.filter(i => pendingKeys.includes(i.value));
+    if (checked.length === 0)                  return 'none';
+    if (checked.length === filteredItems.length) return 'all';
+    return 'some';
+  }, [filteredItems, pendingKeys]);
+
+  const handleGlobalSelectAll = useCallback(() => {
+    if (globalSelectAllState === 'all') {
+      filteredItems.forEach(i => { if (pendingKeys.includes(i.value))  onSelectionChange(i.value); });
+    } else {
+      filteredItems.forEach(i => { if (!pendingKeys.includes(i.value)) onSelectionChange(i.value); });
+    }
+  }, [globalSelectAllState, filteredItems, pendingKeys, onSelectionChange]);
+
+  const renderViewLink = (item: FlatItem) => {
+    if (!props.isViewable || !item.viewLink) return null;
     return (
-      <button
-        type="button"
-        className="tf-enhanced-choice-visibility-toggle"
-        aria-label={isVisible ? 'Hide item' : 'Show item'}
+      <a
+        href={item.viewLink}
+        className="tf-enhanced-choice-view-link"
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`View ${item.label}`}
         onMouseDown={(e) => e.stopPropagation()}
-        onClick={(e) => { e.stopPropagation(); onToggleVisibility(key); }}
+        onClick={(e) => e.stopPropagation()}
       >
-        {isVisible ? <EyeIcon /> : <EyeOffIcon />}
-      </button>
+        <EyeIcon />
+      </a>
     );
   };
 
@@ -200,7 +225,7 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
             <Checkbox isSelected={isPending} isDisabled={false} />
           </div>
           <div className="tf-enhanced-choice-label">{item.label}</div>
-          {renderVisibilityToggle(item.value)}
+          {renderViewLink(item)}
         </div>
       </li>
     );
@@ -305,10 +330,11 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
               aria-label="Toggle options"
               onMouseDown={(e) => { e.preventDefault(); setIsOpen(o => !o); }}
             >
-              {props.actionLabel
+              {/* {props.actionLabel
                 ? props.actionLabel
                 : <span aria-hidden="true" className="tf-enhanced-choice-chevron">{isOpen ? '▲' : '▼'}</span>
-              }
+              } */}
+              <span aria-hidden="true" className="tf-enhanced-choice-chevron">{isOpen ? '▲' : '▼'}</span>
             </button>
           )}
 
@@ -352,7 +378,7 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
 
                 <>
                   
-                  {props.filterCategories?.length && (
+                  {/* {props.filterCategories?.length && (
                     <div className="tf-enhanced-choice-popover-header">
                       <select
                         className="tf-enhanced-choice-category-select"
@@ -369,7 +395,7 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
                         ))}
                       </select>
                     </div>
-                  )}
+                  )} */}
 
                   <ul
                     {...listBoxAriaProps}
@@ -378,6 +404,26 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
                   >
                     {filteredItems.length === 0 && (
                       <li className="tf-enhanced-choice-empty">No results found.</li>
+                    )}
+
+                    {/* Global Select All — only when not grouped */}
+                    {!props.isGrouped && filteredItems.length > 0 && (
+                      <li
+                        role="presentation"
+                        className="tf-enhanced-choice-option tf-enhanced-choice-select-all"
+                        onMouseDown={(e) => { e.preventDefault(); handleGlobalSelectAll(); }}
+                      >
+                        <div className="tf-enhanced-choice-option-content">
+                          <div className="tf-enhanced-choice-selection-indicator" style={{ pointerEvents: 'none' }}>
+                            <Checkbox
+                              isSelected={globalSelectAllState === 'all'}
+                              isIndeterminate={globalSelectAllState === 'some'}
+                              isDisabled={false}
+                            />
+                          </div>
+                          <div className="tf-enhanced-choice-label">Select All</div>
+                        </div>
+                      </li>
                     )}
 
                     {groupedItems.map((group) => {

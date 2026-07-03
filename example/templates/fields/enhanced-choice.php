@@ -12,6 +12,39 @@ $choices = [
   'orange' => 'Orange'
 ];
 
+$choices_viewable = [
+  'red'    => [ 'label' => 'Red',    'viewLink' => '/colors/red'    ],
+  'blue'   => [ 'label' => 'Blue',   'viewLink' => '/colors/blue'   ],
+  'green'  => [ 'label' => 'Green',  'viewLink' => '/colors/green'  ],
+  'yellow' => [ 'label' => 'Yellow', 'viewLink' => '/colors/yellow' ],
+  'purple' => [ 'label' => 'Purple', 'viewLink' => '/colors/purple' ],
+  'orange' => [ 'label' => 'Orange', 'viewLink' => '/colors/orange' ],
+];
+
+$choices_grouped = [
+  [
+    'label' => 'Warm Colors',
+    'items' => [
+      'red'    => 'Red',
+      'orange' => 'Orange',
+      'yellow' => 'Yellow',
+    ],
+  ],
+  [
+    'label' => 'Cool Colors',
+    'items' => [
+      'blue'  => 'Blue',
+      'green' => 'Green',
+    ],
+  ],
+  [
+    'label' => 'Other',
+    'items' => [
+      'purple' => 'Purple',
+    ],
+  ],
+];
+
 $plugin->render_registation_message();
 ?>
 
@@ -20,10 +53,10 @@ $plugin->render_registation_message();
 <?php echo $fields->render_field('enhanced_choice', [
   'type'        => 'enhanced-choice',
   'label'       => 'Pick a color',
-  'description' => 'Select one color and toggle visibility if needed',
+  'description' => 'basic single selection',
   'choices'     => $choices,
   'placeholder' => 'Search colors...',
-  'isVisibilityEnabled'  => false, // Optional, defaults to false
+  'isViewable'  => false, // Optional, defaults to false
 ]);
 ?>
 
@@ -33,15 +66,15 @@ $plugin->render_registation_message();
   <?php submit_button() ?>
 </div>
 
-<h3>Basic Single Selection with visibility</h3>
+<h3>Basic Single Selection with view button</h3>
 <?php
 echo $fields->render_field('enhanced_choice_visibility', [
   'type'        => 'enhanced-choice',
   'label'       => 'Pick a color',
-  'description' => 'Select one color and toggle visibility if needed',
-  'choices'     => $choices,
+  'description' => 'with view link button',
+  'choices'     => $choices_viewable,
   'placeholder' => 'Search colors...',
-  'isVisibilityEnabled'  => true, // Optional, defaults to false
+  'isViewable'  => true, // Optional, defaults to false
 ]);
 ?>
 
@@ -57,27 +90,32 @@ echo $fields->render_field('enhanced_choice_multiple', [
   'type'        => 'enhanced-choice',
   'multiple'    => true,
   'label'       => 'Pick multiple colors',
-  'description' => 'Select multiple colors and toggle visibility for each',
+  'description' => 'multiple selection',
   'choices'     => $choices,
   'placeholder' => 'Search colors...',
-  'isVisibilityEnabled' => true, // Optional, defaults to false
+  'isViewable' => true, // Optional, defaults to false
 ]);
 ?>
 
 <hr />
 
-<h3>Multiple Selection with Filter</h3>
+<div class="tangible-settings-row">
+  <?php submit_button() ?>
+</div>
+
+<h3>Multiple Selection with grouped items</h3>
 <?php
-echo $fields->render_field('enhanced_choice_multiple_with_filter', [
+echo $fields->render_field('enhanced_choice_multiple_group_items', [
   'type'        => 'enhanced-choice',
   'multiple'    => true,
   'filterCategories' => [ [ 'value' => 'a', 'label' => 'Category A' ] ],
   'actionLabel' => 'Add License Type',
   'label'       => 'Pick multiple colors',
-  'description' => 'Select multiple colors and toggle visibility for each',
-  'choices'     => $choices,
+  'description' => 'Grouped items',
+  'choices'     => $choices_grouped,
   'placeholder' => 'Search colors...',
-  'isVisibilityEnabled' => true, // Optional, defaults to false
+  'isViewable' => true, // Optional, defaults to false
+  'isGrouped'     => true, // Optional, defaults to false
 ]);
 ?>
 
@@ -92,6 +130,8 @@ echo $fields->render_field('enhanced_choice_multiple_with_filter', [
 <?php 
 \tangible\see($fields->fetch_value('enhanced_choice')); 
 \tangible\see($fields->fetch_value('enhanced_choice_visibility'));
+\tangible\see($fields->fetch_value('enhanced_choice_multiple'));
+\tangible\see($fields->fetch_value('enhanced_choice_multiple_group_items'));
 ?>
 
 <h4>Code sample</h4>
