@@ -1,10 +1,28 @@
-import { useRef } from "react";
-// import { Popover } from "../../base";
+import { useCallback, useState } from "react";
 import { useEnhancedChoices } from "./useEnhancedChoices";
 
+const SearchIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.4"/>
+    <path d="M10 10L13 13" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+  </svg>
+);
+
+const PencilIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M2 7L5.5 10.5L12 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 const SingleChoices = (props) => {
-  const popoverRef = useRef(null);
-  // console.log(props);
+
   const {
     // state
     inputValue,
@@ -14,7 +32,6 @@ const SingleChoices = (props) => {
     setIsOpen,
     focusedIndex,
     setFocusedIndex,
-    // visibility,
 
     // derived
     filteredItems,
@@ -33,7 +50,7 @@ const SingleChoices = (props) => {
     onSelectionChange,
     handleConfirm,
     handleClear,
-    // onToggleVisibility,
+    handleConfirmCustom,
     handleKeyDown,
 
     // aria
@@ -45,19 +62,46 @@ const SingleChoices = (props) => {
     inputRef,
     buttonRef,
     listBoxRef,
+    popoverRef,
 
     // label
     ariaLabel,
   } = useEnhancedChoices({ ...props, mode: 'single' });
 
-  const selectedItem = findItem(selectedKey);
   const pendingLabel = pendingKey ? findItem(pendingKey)?.label ?? '' : null;
 
-  const initialInputValue = findItem(selectedKey)?.label ?? '';
+  const isCustomModeEnabled = props.isCustomModeEnabled ?? false;
+  const [isCustomMode, setIsCustomMode] = useState(false);
+  const [customDraft,  setCustomDraft]  = useState('');
+
+  const handleCustomModeToggle = useCallback(() => {
+    setIsOpen(false);
+    setIsCustomMode(true);
+    setCustomDraft('');
+  }, [setIsOpen]);
+
+  const handleCancelCustomMode = useCallback(() => {
+    setIsCustomMode(false);
+    setCustomDraft('');
+    setIsOpen(true);
+  }, [setIsOpen]);
+
+  const handleConfirmCustomVal = useCallback(() => {
+    if (customDraft.trim() === '') return;
+    handleConfirmCustom(customDraft.trim());
+    setIsCustomMode(false);
+    setCustomDraft('');
+  }, [customDraft, handleConfirmCustom]);
+
+  // handleConfirmCustom now adds the value as a real item to the list (via
+  // extraItems in the hook), so reopening the dropdown afterward will show
+  // it as a normal checked radio option — not just a raw string.
+  const showConfirmedUI = isConfirmed && !isCustomMode;
 
   return (
     <div style={{ display: 'inline-flex', flexDirection: 'column', width: '100%' }}>
 
+      {/* ── Header ── */}
       <div className="tf-enhanced-choice-header">
         <div className="tf-enhanced-choice-label-group">
           {props.label && (
@@ -76,7 +120,7 @@ const SingleChoices = (props) => {
         </div>
 
         <div className="tf-enhanced-choice-status">
-          {hasPending && (
+          {hasPending && !isCustomMode && (
             <button
               type="button"
               className="tf-enhanced-choice-confirm-btn"
@@ -85,12 +129,12 @@ const SingleChoices = (props) => {
               Confirm Selected
             </button>
           )}
-          {isConfirmed && (
+          {showConfirmedUI && (
             <span className="tf-enhanced-choice-selected-badge">
               Selected
             </span>
           )}
-          {isNotSelected && (
+          {isNotSelected && !isCustomMode && (
             <span className="tf-enhanced-choice-not-selected-badge">
               Not Selected
             </span>
@@ -102,53 +146,81 @@ const SingleChoices = (props) => {
 
       <div className="tf-enhanced-choice-input-group" style={{ position: 'relative' }}>
 
-        <span className="tf-enhanced-choice-search-icon" aria-hidden="true">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.4"/>
-            <path d="M10 10L13 13" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-          </svg>
-        </span>
-
-        <input
-          {...inputAriaProps}
-          id={`${ariaLabel}-input`}
-          ref={inputRef}
-          className="tf-enhanced-choice-input"
-          style={{ height: 32, boxSizing: 'border-box' }}
-          placeholder={props.placeholder ?? 'Search...'}
-          value={pendingLabel ?? inputValue}
-          onChange={onInputChange}
-          onKeyDown={handleKeyDown}
-          onFocus={() => !isConfirmed && setIsOpen(true)}
-        />
-
-        {isConfirmed ? (
-          <button
-            type="button"
-            className="tf-enhanced-choice-clear-btn"
-            aria-label="Clear selection"
-            onMouseDown={handleClear}
-          >
-            ×
-          </button>
-        ) : (
-          <button
-            ref={buttonRef}
-            type="button"
-            className="tf-enhanced-choice-chevron-btn"
-            aria-label="Toggle options"
-            onMouseDown={(e) => {
-              e.preventDefault();
-              setIsOpen(o => !o);
-            }}
-          >
-            <span aria-hidden="true" className="tf-enhanced-choice-chevron">
-              {isOpen ? '▲' : '▼'}
+        {isCustomMode ? (
+          <>
+            <span className="tf-enhanced-choice-search-icon" aria-hidden="true">
+              <PencilIcon />
             </span>
-          </button>
+
+            <input
+              className="tf-enhanced-choice-input"
+              style={{ height: 32, boxSizing: 'border-box', flex: 1 }}
+              placeholder="Enter custom value..."
+              value={customDraft}
+              onChange={(e) => setCustomDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter')  { e.preventDefault(); handleConfirmCustomVal(); }
+                if (e.key === 'Escape') { e.preventDefault(); handleCancelCustomMode(); }
+              }}
+              autoFocus
+            />
+
+            <button
+              type="button"
+              className="tf-enhanced-choice-cancel-btn"
+              onMouseDown={(e) => { e.preventDefault(); handleCancelCustomMode(); }}
+            >
+              ×
+            </button>
+          </>
+        ) : (
+          <>
+            <span className="tf-enhanced-choice-search-icon" aria-hidden="true">
+              {showConfirmedUI ? <CheckIcon /> : <SearchIcon />}
+            </span>
+
+            <input
+              {...inputAriaProps}
+              id={`${ariaLabel}-input`}
+              ref={inputRef}
+              className="tf-enhanced-choice-input"
+              style={{ height: 32, boxSizing: 'border-box' }}
+              placeholder={props.placeholder ?? 'Search...'}
+              value={pendingLabel ?? inputValue}
+              onChange={onInputChange}
+              onKeyDown={handleKeyDown}
+              onFocus={() => !isConfirmed && setIsOpen(true)}
+            />
+
+            {showConfirmedUI ? (
+              <button
+                type="button"
+                className="tf-enhanced-choice-clear-btn"
+                aria-label="Clear selection"
+                onMouseDown={handleClear}
+              >
+                ×
+              </button>
+            ) : (
+              <button
+                ref={buttonRef}
+                type="button"
+                className="tf-enhanced-choice-chevron-btn"
+                aria-label="Toggle options"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  setIsOpen(o => !o);
+                }}
+              >
+                <span aria-hidden="true" className="tf-enhanced-choice-chevron">
+                  {isOpen ? '▲' : '▼'}
+                </span>
+              </button>
+            )}
+          </>
         )}
 
-        {isOpen && (
+        {isOpen && !isCustomMode && (
           <div
             ref={popoverRef}
             className="tf-enhanced-choice-popover"
@@ -223,6 +295,30 @@ const SingleChoices = (props) => {
                   </li>
                 );
               })}
+
+              {isCustomModeEnabled && (
+                <li
+                  className="tf-enhanced-choice-custom-value-footer"
+                  role="presentation"
+                  onMouseDown={(e) => e.preventDefault()}
+                >
+                  <div className="tf-enhanced-choice-custom-value-text">
+                    <span className="tf-enhanced-choice-custom-value-label">
+                      Can't find what you're looking for?
+                    </span>
+                    <span className="tf-enhanced-choice-custom-value-sub">
+                      Create your own.
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    className="tf-enhanced-choice-custom-value-btn"
+                    onClick={handleCustomModeToggle}
+                  >
+                    Custom Value
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
         )}
