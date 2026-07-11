@@ -74,54 +74,27 @@ interface MultipleProps extends BaseProps {
 export type UseEnhancedChoicesProps = SingleProps | MultipleProps;
 
 const parseInitial = (props: UseEnhancedChoicesProps) => {
-  // console.log('mode',props);
   if (props.mode === 'single') {
-    // if (props.isVisibilityEnabled && props.value) {
-    //   try {
-    //     const parsed = JSON.parse(props.value as string);
-    //     return {
-    //       selectedKey:  parsed.selected ?? null,
-    //       selectedKeys: [] as string[],
-    //       pendingKey:   null as string | null,
-    //       pendingKeys:  [] as string[],
-    //       visibility:   parsed.visibility ?? {},
-    //     };
-    //   } catch { }
-    // }
     return {
       selectedKey:  props.value ?? null,
       selectedKeys: [] as string[],
       pendingKey:   null as string | null,
       pendingKeys:  [] as string[],
-      // visibility:   {} as Record<string, boolean>,
     };
   }
 
-  // multiple
-  // if (props.mode === 'multiple' && props.value) {
-  //   try {
-  //     const parsed = JSON.parse(props.value as unknown as string);
-  //     console.log('parseInitial for multiple mode, parsed:', parsed);
-  //     const keys = Array.isArray(parsed.selected) ? parsed.selected : [];
-  //     console.log('parseInitial for multiple mode, keys:', keys);
-  //     return {
-  //       selectedKey:  null,
-  //       selectedKeys: keys as string[],
-  //       pendingKey:   null as string | null,
-  //       pendingKeys:  keys as string[],
-  //       // visibility:   parsed.visibility ?? {},
-  //     };
-  //   } catch { }
-  // }
-  const parsed = JSON.parse(props.value as unknown as string);
-  const keys = Array.isArray(parsed) ? parsed : [];
-  console.log('parseInitial for multiple mode, keys:', keys);
+  let keys: string[] = [];
+  if (props.value) {
+    try {
+      const parsed = JSON.parse(props.value as unknown as string);
+      keys = Array.isArray(parsed) ? parsed : [];
+    } catch { }
+  }
   return {
     selectedKey:  null,
     selectedKeys: keys,
     pendingKey:   null as string | null,
     pendingKeys:  keys,
-    // visibility:   {} as Record<string, boolean>,
   };
 };
 
@@ -134,26 +107,22 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
   const popoverRef = useRef<HTMLDivElement>(null);
 
   const initial = useMemo(() => parseInitial(props), []);
-  // console.log('checking parseInitial for the multiple mode', parseInitial(props));
-// console.log('checking iniitial for the multiple mode', initial);
+
   const [selectedKey,   setSelectedKey]   = useState<string | null>(initial.selectedKey);
   const [selectedKeys,  setSelectedKeys]  = useState<string[]>(initial.selectedKeys);
-  const [pendingKey,    setPendingKey]     = useState<string | null>(initial.pendingKey);
-  const [pendingKeys,   setPendingKeys]    = useState<string[]>(initial.pendingKeys);
-  const [isOpen,        setIsOpen]         = useState(false);
-  const [focusedIndex,  setFocusedIndex]   = useState(-1);
-  // const [visibility,    setVisibility]     = useState<Record<string, boolean>>(initial.visibility);
+  const [pendingKey,    setPendingKey]    = useState<string | null>(initial.pendingKey);
+  const [pendingKeys,   setPendingKeys]   = useState<string[]>(initial.pendingKeys);
+  const [isOpen,        setIsOpen]        = useState(false);
+  const [focusedIndex,  setFocusedIndex]  = useState(-1);
 
   const isSingle  = props.mode === 'single';
   const ariaLabel = props.label ?? props.name ?? 'Select';
 
-  // Normalize choices from PHP format or use items directly
-  const normalizedItems = useMemo<ChoicesItem[]>(() => {
+  const baseItems = useMemo<ChoicesItem[]>(() => {
     if (props.choices) return flattenChoices(props.choices);
     return props.items ?? [];
   }, [props.choices, props.items]);
 
-  // Pre-normalized groups, returned so MultipleChoices can use them directly
   const normalizedGroups = useMemo<GroupedChoiceItem[] | null>(() => {
     if (props.choices && Array.isArray(props.choices) && props.choices.length > 0) {
       const normalized = normalizeChoices(props.choices);
@@ -162,11 +131,27 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
     return null;
   }, [props.choices]);
 
-  // Initialize inputValue to the saved label when a value is provided
+  // Seeded on mount if the saved value isn't found in the base list, so a
+  // previously-confirmed custom value still shows its label correctly.
+  const [extraItems, setExtraItems] = useState<ChoicesItem[]>(() => {
+    if (props.mode === 'single' && props.value) {
+      const foundInBase = baseItems.find(i => i.value === props.value);
+      if (!foundInBase) {
+        return [{ value: props.value, label: props.value }];
+      }
+    }
+    return [];
+  });
+
+  const normalizedItems = useMemo<ChoicesItem[]>(() =>
+    [...baseItems, ...extraItems],
+    [baseItems, extraItems]
+  );
+
   const [inputValue, setInputValue] = useState(() => {
     if (props.mode === 'single' && props.value) {
-      const items = props.choices ? flattenChoices(props.choices) : props.items ?? [];
-      return items.find(i => i.value === props.value)?.label ?? '';
+      const items = [...baseItems, ...extraItems];
+      return items.find(i => i.value === props.value)?.label ?? props.value;
     }
     return '';
   });
@@ -210,7 +195,23 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
       (props as MultipleProps).onChange?.(pendingKeys);
     }
     setIsOpen(false);
-  }, [isSingle, pendingKey, pendingKeys, props.items, props.onChange]);
+  }, [isSingle, pendingKey, pendingKeys, normalizedItems, props.onChange]);
+
+  // Custom value confirm adds a real item to extraItems, then selects it
+  // This makes the custom value behave exactly like any other list item:
+  // it shows up in filteredItems, gets a radio, and isItemSelected works on it.
+  const handleConfirmCustom = useCallback((value: string) => {
+    if (!isSingle) return;
+
+    setExtraItems(prev =>
+      prev.some(i => i.value === value) ? prev : [...prev, { value, label: value }]
+    );
+    setSelectedKey(value);
+    setInputValue(value);
+    setPendingKey(null);
+    (props as SingleProps).onChange?.(value);
+    setIsOpen(false);
+  }, [isSingle, props.onChange]);
 
   const handleClear = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -234,10 +235,6 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
     (props as MultipleProps).onChange?.(next);
   }, [selectedKeys, props.onChange]);
 
-  // const onToggleVisibility = useCallback((key: string) => {
-  //   setVisibility(prev => ({ ...prev, [key]: prev[key] === false ? true : false }));
-  // }, []);
-
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -251,7 +248,6 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
     if (e.key === 'Enter' && focusedIndex >= 0) {
       e.preventDefault();
       onSelectionChange(filteredItems[focusedIndex].value);
-      // auto-confirm on Enter in single mode
       if (isSingle) {
         const key   = filteredItems[focusedIndex].value;
         const label = filteredItems[focusedIndex].label;
@@ -291,39 +287,30 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
   }, [isSingle, pendingKey, pendingKeys]);
 
   const hiddenValue = useMemo(() => {
-    if (isSingle) {
-      // return props.isVisibilityEnabled
-      //   ? JSON.stringify({ selected: selectedKey, visibility })
-      //   : (selectedKey ?? '');
-      return selectedKey?? '';
-    }
-    // return props.isVisibilityEnabled
-    //   ? JSON.stringify({ selected: selectedKeys })
-    //   : JSON.stringify(selectedKeys);
-
+    if (isSingle) return selectedKey ?? '';
     return JSON.stringify(selectedKeys);
   }, [isSingle, selectedKey, selectedKeys]);
 
   const inputAriaProps = {
-    role:    'combobox' as const,
-    'aria-expanded':   isOpen,
-    'aria-haspopup':   'listbox' as const,
+    role:                'combobox' as const,
+    'aria-expanded':     isOpen,
+    'aria-haspopup':     'listbox' as const,
     'aria-autocomplete': 'list' as const,
-    'aria-label':      ariaLabel,
-    'aria-controls':   `${ariaLabel}-listbox`,
+    'aria-label':        ariaLabel,
+    'aria-controls':     `${ariaLabel}-listbox`,
     'aria-activedescendant':
       focusedIndex >= 0 ? `${ariaLabel}-option-${focusedIndex}` : undefined,
   };
 
   const listBoxAriaProps = {
-    role: 'listbox' as const,
-    id:   `${ariaLabel}-listbox`,
+    role:         'listbox' as const,
+    id:           `${ariaLabel}-listbox`,
     'aria-label': ariaLabel,
   };
 
   const getOptionAriaProps = (key: string, index: number) => ({
-    role:          'option' as const,
-    id:            `${ariaLabel}-option-${index}`,
+    role:            'option' as const,
+    id:              `${ariaLabel}-option-${index}`,
     'aria-selected': isItemSelected(key),
   });
 
@@ -338,7 +325,6 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
     setIsOpen,
     focusedIndex,
     setFocusedIndex,
-    // visibility,
 
     // derived
     filteredItems,
@@ -347,7 +333,7 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
     isNotSelected,
     hasPending,
 
-    // selection helpers (replaces useOption's selectionManager)
+    // selection helpers
     isItemSelected,
     isItemPending,
 
@@ -355,12 +341,12 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
     onInputChange,
     onSelectionChange,
     handleConfirm,
+    handleConfirmCustom,
     handleClear,
     handleRemoveChip,
-    // onToggleVisibility,
     handleKeyDown,
 
-    // aria props (spread onto elements directly)
+    // aria props
     inputAriaProps,
     listBoxAriaProps,
     getOptionAriaProps,
