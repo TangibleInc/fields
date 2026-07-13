@@ -16,6 +16,8 @@ import {
 
 const List = props => {
 
+  const directSelection = props?.directSelection ?? false
+
   const emptyItem = { 
     value: '', 
     _canDelete: true ,
@@ -38,7 +40,7 @@ const List = props => {
     descriptionProps 
   } = useField(props)
 
-  const addSelectedItem = () => {
+  const addItem = selected => {
     setItems([ 
       ...items, 
       { 
@@ -127,16 +129,19 @@ const List = props => {
             multiple={ false }
             onChange={ item => {
               if( ! item ) return;
-              setSelected( item )
-            }}
+              directSelection
+                ? addItem( item )
+                : setSelected( item )
+            } }
           />
-          <Button 
-            type="action" 
-            onPress={ addSelectedItem } 
-            isDisabled={ selected === '' }
-          >
-            Add
-          </Button>
+          { ! directSelection &&
+            <Button
+              type="action"
+              onPress={ () => addItem( selected ) }
+              isDisabled={ selected === '' }
+            >
+              Add
+            </Button> }
         </div>
       </div>
       { props.description &&

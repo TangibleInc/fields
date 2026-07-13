@@ -85,6 +85,7 @@ $fields->format_args = function(
       break;
 
     case 'list':
+      $args = $fields->format_value($args, 'direct_selection', 'directSelection');
       $args = $fields->format_value($args, 'use_visibility', 'useVisibility');
       // Fallthrough
     case 'combo_box':
