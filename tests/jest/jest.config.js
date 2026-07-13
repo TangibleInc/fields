@@ -8,6 +8,7 @@ export default {
   roots: ['<rootDir>/cases'],
   setupFiles: [
     './setup/config.ts',
+    './setup/css.ts',
     './setup/range.ts',
     './setup/timeout.ts'
   ],
