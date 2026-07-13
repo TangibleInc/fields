@@ -99,6 +99,7 @@
     "babel-plugin-transform-import-meta": "^2.3.3",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^9.1.2",
+    "css.escape": "^1.5.1",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "prop-types": "^15.8.1",
