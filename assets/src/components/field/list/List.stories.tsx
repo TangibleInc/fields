@@ -39,3 +39,9 @@ export const WithVisibility: Story = {
     useVisibility: true,
   }
 }
+
+export const DirectSelection: Story = {
+  args: {
+    directSelection: true,
+  }
+}
