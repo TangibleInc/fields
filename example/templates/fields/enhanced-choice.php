@@ -191,8 +191,10 @@ echo $fields->render_field('enhanced_choice_multiple_group_and_view', [
 <?php 
 \tangible\see($fields->fetch_value('enhanced_choice')); 
 \tangible\see($fields->fetch_value('enhanced_choice_visibility'));
+\tangible\see($fields->fetch_value('enhanced_choice_custom'));
 \tangible\see($fields->fetch_value('enhanced_choice_multiple'));
 \tangible\see($fields->fetch_value('enhanced_choice_multiple_group_items'));
+\tangible\see($fields->fetch_value('enhanced_choice_multiple_group_and_view'));
 ?>
 
 <h4>Code sample</h4>

@@ -468,3 +468,46 @@
     background: #1d4ed8;
   }
 }
+
+.tf-enhanced-choice-custom-value-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+  padding: 10px 12px;
+  // border-top: 1px solid #f3f4f6;
+  // background: #fafafa;
+}
+
+.tf-enhanced-choice-custom-value-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .tf-enhanced-choice-custom-value-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  }
+
+  .tf-enhanced-choice-custom-value-sub {
+    font-size: 12px;
+    color: #6b7280;
+  }
+}
+
+.tf-enhanced-choice-custom-value-btn {
+  border: none;
+  background: #2563eb;
+  border-radius: 5px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    background: #1d4ed8;
+  }
+}
