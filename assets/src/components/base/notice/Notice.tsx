@@ -1,10 +1,50 @@
-function Notice({ message, type, onDismiss }) {
-  return (
-    <div className={`tf-notice ${type} tf-is-dismissible`}>
-      <p>{message}</p>
-      <button type="button" className="tf-notice-dismiss" onClick={onDismiss}></button>
-    </div>
-  )
+import { forwardRef } from 'react'
+import type { ReactNode } from 'react'
+import { Notice as TuiNotice } from '@tangible/ui'
+import type { NoticeProps as TuiNoticeProps } from '@tangible/ui'
+
+type TuiNoticeTheme = NonNullable<TuiNoticeProps['theme']>
+
+export interface FieldsNoticeProps {
+  message?: ReactNode
+  type?: 'success' | 'error' | 'warning' | 'info'
+  onDismiss?: () => void
+  className?: string
+  /**
+   * Stripe + inline default to true: the primary consumer is wp-admin,
+   * where notices are a colored edge stripe with inline content.
+   */
+  stripe?: boolean
+  inline?: boolean
 }
+
+const typeToTheme: Record<string, TuiNoticeTheme> = {
+  error: 'danger',
+  success: 'success',
+  warning: 'warning',
+  info: 'info',
+}
+
+const Notice = forwardRef<HTMLElement, FieldsNoticeProps>(function Notice(
+  { message, type, onDismiss, className, stripe = true, inline = true },
+  ref
+) {
+  const theme = type ? (typeToTheme[type] ?? 'info') : undefined
+  const classes = ['tf-notice', className].filter(Boolean).join(' ')
+
+  return (
+    <TuiNotice
+      ref={ref as never}
+      theme={theme}
+      stripe={stripe}
+      inline={inline}
+      dismissible={!!onDismiss}
+      onDismiss={onDismiss}
+      className={classes}
+    >
+      <TuiNotice.Body>{message}</TuiNotice.Body>
+    </TuiNotice>
+  )
+})
 
 export default Notice

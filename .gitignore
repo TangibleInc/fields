@@ -5,11 +5,13 @@
 node_modules
 *.log
 *.local.js
+*.tsbuildinfo
 .env
 .env-*
 .DS_Store
 .idea/
 .rollup-plugin-visualizer.html
+.gitignore
 
 # Ignore lock files to allow any package manager
 bun.lock
@@ -26,3 +28,7 @@ yarn.lock
 *.swp
 
 *storybook.log
+
+.harness/
+.harness.yml
+.claude

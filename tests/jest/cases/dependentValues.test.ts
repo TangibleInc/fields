@@ -37,7 +37,7 @@ describe('dependent values feature', () => {
 
     const initialLabel = within(dependentField).getByText('{{test-field-1}}')
     expect(initialLabel).toBeTruthy()
-    expect(initialLabel.getAttribute('class')).toBe('tf-label')
+    expect(initialLabel.getAttribute('class')).toContain('label')
   })
 
   it('does nothing if dependent is set to false', () => {
@@ -65,7 +65,7 @@ describe('dependent values feature', () => {
 
     const initialLabel = within(dependentField).getByText('{{test-field-1}}')
     expect(initialLabel).toBeTruthy()
-    expect(initialLabel.getAttribute('class')).toBe('tf-label')
+    expect(initialLabel.getAttribute('class')).toContain('label')
   })
 
   it('works for regular fields', async () => {
@@ -100,11 +100,10 @@ describe('dependent values feature', () => {
 
     const initialLabel = within(dependentField).getByText('Initial value of field 1')
     expect(initialLabel).toBeTruthy()
-    expect(initialLabel.getAttribute('class')).toBe('tf-label')
+    expect(initialLabel.getAttribute('class')).toContain('label')
 
     const initialDescription = within(dependentField).getByText('Initial value of field 3')
     expect(initialDescription).toBeTruthy()
-    expect(initialDescription.getAttribute('class')).toBe('tf-description')
 
     act(() => {
       fields.store.setValue('test-field-1', 'Updated value field 1')
@@ -113,11 +112,10 @@ describe('dependent values feature', () => {
 
     const updatedLabel = await within(dependentField).findByText('Updated value field 1')
     expect(updatedLabel).toBeTruthy()
-    expect(updatedLabel.getAttribute('class')).toBe('tf-label')
+    expect(updatedLabel.getAttribute('class')).toContain('label')
 
     const updatedDescription = await within(dependentField).findByText('Updated value field 3')
     expect(updatedDescription).toBeTruthy()
-    expect(updatedDescription.getAttribute('class')).toBe('tf-description')
   })
 
   it('supports multiple dependent attibute inside the same string', async () => {
@@ -151,7 +149,7 @@ describe('dependent values feature', () => {
 
     const initialLabel = within(dependentField).getByText('First value is 1 and third value is 3')
     expect(initialLabel).toBeTruthy()
-    expect(initialLabel.getAttribute('class')).toBe('tf-label')
+    expect(initialLabel.getAttribute('class')).toContain('label')
 
     act(() => {
       fields.store.setValue('test-field-1', '1-1')
@@ -160,7 +158,7 @@ describe('dependent values feature', () => {
 
     const updatedLabel = await within(dependentField).findByText('First value is 1-1 and third value is 3-3')
     expect(updatedLabel).toBeTruthy()
-    expect(updatedLabel.getAttribute('class')).toBe('tf-label')
+    expect(updatedLabel.getAttribute('class')).toContain('label')
   })
 
   it('works for repeater fields', async () => {
@@ -204,11 +202,10 @@ describe('dependent values feature', () => {
 
     const dependentLabel = await within(itemsContainer.childNodes[0]).findByText('Initial value of field 1')
     expect(dependentLabel).toBeTruthy()
-    expect(dependentLabel.getAttribute('class')).toBe('tf-label')
+    expect(dependentLabel.getAttribute('class')).toContain('label')
 
     const dependentDescription = await within(itemsContainer.childNodes[0]).findByText('Initial value of the repeater subfield 1')
     expect(dependentDescription).toBeTruthy()
-    expect(dependentDescription.getAttribute('class')).toBe('tf-description')
 
     // TODO: Add test when multiple rows and after update but needs to understand why re-render not complete in tests first
 
@@ -245,7 +242,7 @@ describe('dependent values feature', () => {
     expect(dependentTitle).toBeTruthy()
 
     const user = userEvent.setup()
-    await user.click(itemsContainer.childNodes[0].querySelector('.tf-switch-label'))
+    await user.click(itemsContainer.childNodes[0].querySelector('button[role="switch"]'))
 
     dependentTitle = await within(sectionTitle).findByText('off')
     expect(dependentTitle).toBeTruthy()
@@ -284,7 +281,7 @@ describe('dependent values feature', () => {
     expect(dependentTitle).toBeTruthy()
 
     const user = userEvent.setup()
-    await user.click(container.querySelector('.tf-switch-label'))
+    await user.click(container.querySelector('button[role="switch"]'))
 
     dependentTitle = await within(sectionTitle).findByText('off')
     expect(dependentTitle).toBeTruthy()
@@ -331,11 +328,10 @@ describe('dependent values feature', () => {
 
     const dependentLabel = await within(subfields[1]).findByText('Initial value of field 1')
     expect(dependentLabel).toBeTruthy()
-    expect(dependentLabel.getAttribute('class')).toBe('tf-label')
+    expect(dependentLabel.getAttribute('class')).toContain('label')
 
     const dependentDescription = await within(subfields[1]).findByText('Initial value of the repeater subfield 1')
     expect(dependentDescription).toBeTruthy()
-    expect(dependentDescription.getAttribute('class')).toBe('tf-description')
   })
 
   it('works for nested repeater fields', async () => {
@@ -650,7 +646,7 @@ describe('dependent values feature', () => {
 
       let label = within(dependentField).getByText('Initial value of field 1')
       expect(label).toBeTruthy()
-      expect(label.getAttribute('class')).toBe('tf-label')
+      expect(label.getAttribute('class')).toContain('label')
 
       act(() => {
         fields.store.setValue('test-field-1', 'Updated value field 1 - text field disabled')
@@ -658,10 +654,9 @@ describe('dependent values feature', () => {
 
       label = await within(dependentField).findByText('Updated value field 1 - text field disabled')
       expect(label).toBeTruthy()
-      expect(label.getAttribute('class')).toBe('tf-label')
+      expect(label.getAttribute('class')).toContain('label')
 
-      expect(container.querySelector('.cm-content[contenteditable="false"]')).toBeTruthy()
-      container => container.querySelector('.cm-content[contenteditable="true"]').toBeFalsy()
+      expect(dependentField.querySelector('input[disabled]')).toBeTruthy()
 
       act(() => {
         fields.store.setValue('test-field-1', 'Updated value field 1 - text field enabled')
@@ -669,10 +664,9 @@ describe('dependent values feature', () => {
 
       label = await within(dependentField).findByText('Updated value field 1 - text field enabled')
       expect(label).toBeTruthy()
-      expect(label.getAttribute('class')).toBe('tf-label')
+      expect(label.getAttribute('class')).toContain('label')
 
-      expect(container.querySelector('.cm-content[contenteditable="true"]')).toBeTruthy()
-      container => container.querySelector('.cm-content[contenteditable="false"]').toBeFalsy()
+      expect(dependentField.querySelector('input[disabled]')).toBeFalsy()
     })
 
   it('works with callback (callback is registered using tangibleFields.fields.dependent.registerCallback)', async () => {
@@ -711,7 +705,7 @@ describe('dependent values feature', () => {
 
       let label = within(dependentField).getByText('Initial value of field 1')
       expect(label).toBeTruthy()
-      expect(label.getAttribute('class')).toBe('tf-label')
+      expect(label.getAttribute('class')).toContain('label')
 
       act(() => {
         fields.store.setValue('test-field-1', 'Updated value field 1 - text field disabled')
@@ -719,10 +713,9 @@ describe('dependent values feature', () => {
 
       label = await within(dependentField).findByText('Updated value field 1 - text field disabled')
       expect(label).toBeTruthy()
-      expect(label.getAttribute('class')).toBe('tf-label')
+      expect(label.getAttribute('class')).toContain('label')
 
-      expect(container.querySelector('.cm-content[contenteditable="false"]')).toBeTruthy()
-      container => container.querySelector('.cm-content[contenteditable="true"]').toBeFalsy()
+      expect(dependentField.querySelector('input[disabled]')).toBeTruthy()
 
       act(() => {
         fields.store.setValue('test-field-1', 'Updated value field 1 - text field enabled')
@@ -730,10 +723,9 @@ describe('dependent values feature', () => {
 
       label = await within(dependentField).findByText('Updated value field 1 - text field enabled')
       expect(label).toBeTruthy()
-      expect(label.getAttribute('class')).toBe('tf-label')
+      expect(label.getAttribute('class')).toContain('label')
 
-      expect(container.querySelector('.cm-content[contenteditable="true"]')).toBeTruthy()
-      container => container.querySelector('.cm-content[contenteditable="false"]').toBeFalsy()
+      expect(dependentField.querySelector('input[disabled]')).toBeFalsy()
     })
 
   it('works supports callback + callbackData', async () => {

@@ -35,14 +35,19 @@ const ColorField = forwardRef(({
 
   return(
     <div className="tf-color-container" ref={ wrapperRef }>
-      <input ref={ ref } { ...inputProps }
-        onClick={() => isOpen(true)}
-        value={ state.inputValue ?? '' }
-      />
+      <div className="tui-input-group">
+        <input
+          ref={ ref }
+          { ...inputProps }
+          className="tui-input tui-input-reset"
+          onClick={ () => isOpen(true) }
+          value={ state.inputValue ?? '' }
+        />
+      </div>
       { open &&
         <Popover
           state={{ isOpen: open, close: () => isOpen(false) }}
-          triggerRef={ref}
+          triggerRef={ wrapperRef }
           placement="bottom start"
           style={{ width: wrapperRef?.current?.offsetWidth }}
           className="tf-color-popover"

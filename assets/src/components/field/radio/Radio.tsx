@@ -1,24 +1,32 @@
-import {
-  useContext,
-  useRef
-} from 'react'
+import { forwardRef } from 'react'
+import { Radio as TuiRadio } from '@tangible/ui'
 
-import { RadioContext } from './RadioGroup'
-import { useRadio } from 'react-aria'
+export interface FieldsRadioProps {
+  value: string
+  children?: React.ReactNode
+  isDisabled?: boolean
+  className?: string
+  id?: string
+}
 
-const Radio = props => {
+const Radio = forwardRef<HTMLButtonElement, FieldsRadioProps>((props, ref) => {
 
-  const state = useContext(RadioContext)
-  const ref = useRef(null)
-
-  const { inputProps } = useRadio(props, state, ref)
+  const {
+    value,
+    children,
+    isDisabled,
+    className,
+  } = props
 
   return (
-    <label className="tf-radio">
-      <input {...inputProps} ref={ref} />
-      { props.children }
-    </label>
+    <TuiRadio
+      ref={ref}
+      value={value}
+      label={children}
+      disabled={Boolean(isDisabled)}
+      className={className}
+    />
   )
-}
+})
 
 export default Radio

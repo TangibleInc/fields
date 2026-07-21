@@ -5,13 +5,5 @@
 }
 
 .tf-time-field {
-  @include field;
-  display: inline-flex;
   justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-}
-
-.tf-time-field:focus-within {
-  border-color: $field-focus-color;
 }

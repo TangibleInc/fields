@@ -11,7 +11,7 @@ const Description = ({
   const content = props.content ?? children
   return(
     <Wrapper>
-      <div className="tf-description" { ...descriptionProps }>
+      <div className="tf-description tui-field__helper" { ...descriptionProps }>
         { content }
       </div>
     </Wrapper>

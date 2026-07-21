@@ -2,6 +2,7 @@
   display: flex;
   position: relative;
   align-items: center;
+  width: 100%;
 
   .tf-dynamic-wrapper-popover {
     position: absolute;
@@ -37,7 +38,7 @@
 }
 
 .tf-dynamic-wrapper.tf-dynamic-wrapper-buttons-inside {
-  width: fit-content;
+  width: $field-width;
   gap: 0;
 
   .tf-button-icon {

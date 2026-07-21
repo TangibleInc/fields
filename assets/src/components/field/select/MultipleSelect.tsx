@@ -70,7 +70,8 @@ const MultipleSelect = props => {
         </Label> }
       <Button
         type={ 'select' }
-        ref={PopoverRef}
+        className={ 'tui-input-group' }
+        ref={ PopoverRef }
         onPress={ () => isOpen( ! open ) }
       >
         <span className="tf-multiple-select__value">

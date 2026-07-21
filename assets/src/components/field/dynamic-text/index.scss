@@ -84,3 +84,20 @@
     }
   }
 }
+
+/**
+ * .tf-dynamic-text-input is shared with other component, we want rules
+ * changes to apply for the text-suggestion field only
+ */
+.tf-dynamic-text-input.tf-text-suggestion-input {
+  background: var(--tui-input-bg, var(--tui-color-bg-surface));
+  border: var(--tui-border-width, 1px) solid var(--tui-input-border, var(--tui-color-border));
+  border-radius: var(--tui-input-radius, var(--tui-radius-md));
+
+  &:focus-within {
+    border-color: var(--tui-input-border-focus, var(--tui-theme-primary-base));
+    box-shadow: none;
+    outline: var(--tui-focus-ring-width) solid var(--tui-focus-ring-color);
+    outline-offset: var(--tui-focus-ring-offset);
+  }
+}

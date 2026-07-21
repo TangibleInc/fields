@@ -1,4 +1,4 @@
-import { 
+import {
   useEffect,
   useRef,
   useState,
@@ -6,7 +6,8 @@ import {
 } from 'react'
 
 import { createInput, matchesMask } from '../../../codemirror/'
-import { BaseWrapper, FieldWrapper } from '..'
+import BaseWrapper from '../base-wrapper/BaseWrapper'
+import FieldWrapper from '../field-wrapper/FieldWrapper'
 
 const TextInput = forwardRef(({
   inputProps,

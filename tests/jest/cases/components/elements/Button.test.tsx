@@ -90,7 +90,7 @@ describe('Button component', () => {
   })
 
   it('support buttonType attribute', () => {
-  
+
     const { container } = render(
       fields.render({
         type       : 'button',
@@ -99,8 +99,23 @@ describe('Button component', () => {
         buttonType : 'submit'
       }, 'element')
     )
-    
+
     const button = within(container).getByText('Button text')
     expect(button.getAttribute('type')).toBe('submit')
+  })
+
+  it('renders TUI Button for a mapped layout', () => {
+    renderHasElement({
+      type    : 'button',
+      layout  : 'primary',
+      content : 'TUI Button'
+    }, container => container.querySelector('button.tui-button'))
+  })
+
+  it('falls back to LegacyButton for an unmapped layout', () => {
+    renderHasElement({
+      type   : 'button',
+      layout : 'legacy-only'
+    }, container => container.querySelector('.tf-button-legacy-only'))
   })
 })

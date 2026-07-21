@@ -1,10 +1,7 @@
-// Button.stories.js (or .mdx)
-
-// import { fn } from 'storybook/test'; // Keep if you use it for action logging
-import Button from './Button.tsx';
+import Button from './LegacyButton'
 
 export default {
-  title: 'Button',
+  title: 'Base/LegacyButton',
   component: Button,
   parameters: {
     layout: 'centered',

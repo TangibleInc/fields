@@ -48,7 +48,11 @@ const Title = props => (
     className={ 'tf-tab-item ' + (props.className ?? '') }
     data-open={ props.isOpen ?? false }
   >
-    <Button type={ 'text-action' } onPress={ props.onPress }>
+    <Button
+      type={ 'text-action' }
+      onPress={ props.onPress }
+      variant={ 'ghost' }
+    >
       { props.children }
     </Button>
   </div>
@@ -62,10 +66,17 @@ const Content = props => {
     if ( props.isActive !== isActive ) setIsActive( props.isActive )
   }, [ props.isActive ])
 
-  if ( ! isActive ) return;
+  /**
+   * When behavior is 'hide', keep inactive content mounted (display: none)
+   * so any hidden inputs are still submitted with the form
+   */
+  if ( ! isActive && props.behavior !== 'hide' ) return;
 
   return(
-    <div className={ 'tf-tab-content ' + (props.className ?? '') }>
+    <div
+      className={ 'tf-tab-content ' + (props.className ?? '') }
+      style={ ! isActive ? { display : 'none' } : undefined }
+    >
       { props.children }
     </div>
   )
@@ -85,7 +96,7 @@ const RowTitle = props => (
 
 const RowLabel = props => (
   <div className={ 'tf-tab-row-title ' + (props.className ?? '') }>
-    <span className='tf-label'>
+    <span className='tf-label tui-field__label'>
       { props.children }
     </span>
   </div>

@@ -3,7 +3,7 @@ import {
   createRoot 
 } from 'react-dom'
 
-import { createContext } from 'react'
+import { ControlContext } from './context'
 
 import {
   config,
@@ -23,11 +23,6 @@ import types from './types'
 import fields from './fields'
 import * as utils from './utils'
 
-/**
- * Used to detect the current context from child components
- */
-const ControlContext = createContext(null)
-
 const renderComponent = (props, type = 'field') => (
   type === 'element' 
     ? renderElement(props)
@@ -37,7 +32,7 @@ const renderComponent = (props, type = 'field') => (
 const renderField = props => (
   <ControlContext.Provider value={{
     name            : props.context ?? 'default',
-    wrapper         : `tf-context-${props.context ?? 'default'}`,
+    wrapper         : `tf-interface tf-context-${props.context ?? 'default'} tui-interface`,
     getValue        : store.getValue.bind(store),
     portalContainer : props.portalContainer ?? document.body
   }}>
@@ -61,7 +56,7 @@ const renderField = props => (
 const renderElement = props => (
   <ControlContext.Provider value={{
     name            : props.context ?? 'default',
-    wrapper         : `tf-context-${props.context ?? 'default'}`,
+    wrapper         : `tf-interface tf-context-${props.context ?? 'default'} tui-interface`,
     getValue        : store.getValue.bind(store),
     portalContainer : props.portalContainer ?? document.body
   }}>
@@ -142,6 +137,8 @@ export {
   types,
   utils,
   fields,
+  renderField as Field,
+  renderElement as Element,
   ControlContext,
   init,
   config,

@@ -7,6 +7,9 @@
   }
 
   .tf-dynamic-value-input {
+    width: $field-width;
+    min-height: $field-height;
+    padding: var(--tui-spacing-xxs) $field-padding-horizontal;
     box-sizing: border-box;
   }
 

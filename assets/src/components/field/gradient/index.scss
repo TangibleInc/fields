@@ -6,7 +6,9 @@
 }
 
 .tf-gradient-input {
-  @include field;
+  cursor: pointer;
+  // even if read only we keep regular background color
+  --tui-input-bg-readonly: transparent;
 }
 
 .tf-gradient-settings {

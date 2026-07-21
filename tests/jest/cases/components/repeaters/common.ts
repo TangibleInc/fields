@@ -377,7 +377,7 @@ const commonRepeaterTests = (layout, args = {}) => {
       await user.click(container.querySelector('.tf-button-repeater-overview-open'))
     }
 
-    await user.type(container.querySelector('.cm-line'), 'a')
+    await user.type(container.querySelector('input.tui-input'), 'a')
 
     expect(hasProps).toBe(true)
   })

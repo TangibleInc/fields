@@ -1,7 +1,10 @@
 .tf-label {
-  @include label;
+  display: flex;
+  margin-bottom: $label-spacer;
 }
 
 .tf-description {
-  @include description;
+  display: flex;
+  margin-top: $description-margin-top;
+  margin-bottom: $description-margin-bottom;
 }

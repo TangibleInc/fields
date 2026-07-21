@@ -1,0 +1,99 @@
+/**
+ * Dynamic Text ProseMirror styles
+ * Scoped under .tf-dynamic-editor to avoid collision with existing WYSIWYG editor
+ */
+.tf-dynamic-editor {
+
+  .ProseMirror {
+    outline: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    min-height: 1.5em;
+  }
+
+  .tf-dt-line {
+    line-height: 1.5;
+    min-height: 1.5em;
+  }
+
+  // Placeholder
+  .tf-dt-placeholder {
+    color: rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+    position: absolute;
+    user-select: none;
+  }
+
+  // Single-line mode
+  &.is-single-line .ProseMirror {
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    // Hide scrollbar but keep scrolling
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &.is-single-line .tf-dt-line {
+    display: inline;
+  }
+}
+
+// Dynamic value pill
+.tf-dynamic-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  background: rgba(99, 102, 241, 0.12);
+  color: #4338ca;
+  font-size: 0.875em;
+  line-height: 1.4;
+  vertical-align: baseline;
+  cursor: default;
+  user-select: none;
+  white-space: nowrap;
+
+  &__icon {
+    font-size: 0.85em;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  &__label {
+    strong {
+      font-weight: 600;
+    }
+  }
+
+  &__menu {
+    all: unset;
+    cursor: pointer;
+    padding: 0 0.15em;
+    border-radius: 2px;
+    font-size: 1em;
+    line-height: 1;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+      background: rgba(99, 102, 241, 0.15);
+    }
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 1px;
+    }
+  }
+
+  // Selected state (ProseMirror adds this class when atom is NodeSelection'd)
+  .ProseMirror-selectednode & {
+    background: rgba(99, 102, 241, 0.25);
+    outline: 2px solid #6366f1;
+    outline-offset: 1px;
+  }
+}

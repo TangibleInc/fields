@@ -59,6 +59,7 @@ const Select = props => {
       <Button
         type={ 'select' }
         { ...triggerProps }
+        className={ 'tui-input-group' }
         ref={ref}
         onKeyDown={ e => e.code === 'Space' 
           ? state.toggle() 

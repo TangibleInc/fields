@@ -1,0 +1,35 @@
+:root {
+  font-family: "Open Sans", "Inter", "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+body.tui-interface {
+  min-height: 100vh;
+  background-color: var(--tui-color-bg);
+  color: var(--tui-color-fg);
+}
+
+body.tui-interface.tf-color-mode-dark {
+  color-scheme: dark;
+}
+
+body.tui-interface.tf-color-mode-light {
+  color-scheme: light;
+}
+
+/* Docs story preview: wrapper fills frame */
+.docs-story .tui-interface {
+  min-height: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}

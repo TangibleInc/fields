@@ -1,4 +1,5 @@
 import Button from './button/Button'
+import LegacyButton from './button/LegacyButton'
 import Description from './field/Description'
 import Dialog from './dialog/Dialog'
 import ExpandablePanel from './expandable-panel/ExpandablePanel'
@@ -19,6 +20,7 @@ import Wrapper from './wrapper/Wrapper'
 
 export {
   Button,
+  LegacyButton,
   Description,
   Dialog,
   ExpandablePanel,

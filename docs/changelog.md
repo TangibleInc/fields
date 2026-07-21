@@ -1,3 +1,9 @@
+# Unreleased
+
+- **BREAKING — Text: prefix/suffix are no longer part of the saved value.** A text field with a `prefix` and/or `suffix` now saves only the user's input; the affixes are purely visual. Previously the saved value included the prefix and suffix. Rationale: affixes are presentation, and baking them into stored data meant changing display copy changed the data. Consumers that need the composed value should compose it from the saved value at read/save time. Previously-stored composed values are tolerated on read: affixes are stripped before input-mask validation.
+- Fields: Migrate Text, Textarea, Button, Switch, Radio, Checkbox and Notice to @tangible/ui components (legacy components remain available for comparison in Storybook)
+- Themes: WP - Sync with LMS admin theme, adopt WordPress 7.0 admin CSS variables with static fallbacks
+
 # 20250107
 
 - Dependent attributes
