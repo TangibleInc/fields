@@ -9,11 +9,12 @@ import {
   VisuallyHidden
  } from "react-aria"
 
-import { 
+import {
   Button,
-  Description, 
+  Description,
   Label
 } from "../../base"
+import { Tooltip } from '@tangible/ui'
 import { getConfig } from '../../../index.tsx'
 
 import { postMedia } from "../../../requests/media"
@@ -41,20 +42,31 @@ const FileUpload = (props) => {
   )
   const [notice, setNotice] = useState(false)
 
-  const { labelProps, fieldProps, descriptionProps } = useField(props)
+  const {
+    labelProps,
+    fieldProps,
+    descriptionProps
+  } = useField(props)
 
   useEffect(() => props.onChange && props.onChange(uploads), [uploads])
 
   const placeholder = props.placeholder ?? "No file selected"
   const maxUpload = props.maxUpload ?? false
 
+  const isMaxUploadReached = () =>
+    maxUpload !== false && uploads.length >= maxUpload
+
   const canUpload = () =>
-    (maxUpload === false || uploads.length < maxUpload) &&
-    !loading &&
-    file !== false
+    ! isMaxUploadReached()
+    && ! loading
+    && file !== false
 
   const canChooseFile = () =>
-    (maxUpload === false || uploads.length < maxUpload) && !loading
+    ! isMaxUploadReached() && !loading
+
+  const maxUploadText = () =>
+    props.maxUploadText ??
+    'Maximum number of files reached, delete one to add more'
 
   /**
    * We will upload the file with an ajax call, so that the value can just be
@@ -98,6 +110,27 @@ const FileUpload = (props) => {
 
     return allowedTypes.join(', ')
   }
+
+  const fileField = () => (
+    <div className={`tf-file-field${ isMaxUploadReached() ? ' is-disabled' : '' }`}>
+      <Button
+        type="action"
+        onPress={ () => ( isWpMediaDisabled() ? ref.current.click() : open()) }
+        isDisabled={ ! canChooseFile() }
+        aria-hidden="true"
+      >
+        { props.buttonText ?? 'Choose' }
+      </Button>
+      <div className="tf-file-text" aria-hidden="true">
+        { file.length > 0 ? file[0].name : placeholder }
+      </div>
+      { isWpMediaDisabled() && (
+        <Button type="action" onPress={upload} isDisabled={ ! canUpload() }>
+          {props.uploadText ?? "Upload"}
+        </Button>
+      )}
+    </div>
+  )
 
   const open = () => {
     const media = wp.media({
@@ -146,24 +179,16 @@ const FileUpload = (props) => {
             />
           ))}
         </ul>
-        <div className="tf-file-field">
-          <Button
-            type="action"
-            onPress={() => ( isWpMediaDisabled() ? ref.current.click() : open())}
-            isDisabled={!canChooseFile()}
-            aria-hidden="true"
-          >
-            {props.buttonText ?? "Choose"}
-          </Button>
-          <div className="tf-file-text" aria-hidden="true">
-            {file.length > 0 ? file[0].name : placeholder}
-          </div>
-          { isWpMediaDisabled() && (
-            <Button type="action" onPress={upload} isDisabled={!canUpload()}>
-              {props.uploadText ?? "Upload"}
-            </Button>
-          )}
-        </div>
+        { isMaxUploadReached()
+          ? <Tooltip>
+              <Tooltip.Trigger aria-label={ maxUploadText() }>
+                { fileField() }
+              </Tooltip.Trigger>
+              <Tooltip.Content side="top">
+                { maxUploadText() }
+              </Tooltip.Content>
+            </Tooltip>
+          : fileField() }
       </div>
       {notice && (
         <Notice message={notice} type="error" onDismiss={() => setNotice(false)} />

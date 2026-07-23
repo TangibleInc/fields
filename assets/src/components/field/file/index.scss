@@ -3,6 +3,14 @@
   align-items: center;
   width: fit-content;
   flex-wrap: wrap;
+
+  &.is-disabled {
+    cursor: not-allowed;
+
+    .tf-file-text {
+      opacity: var(--tui-opacity-disabled, 0.75);
+    }
+  }
 }
 
 .tf-file-text {
