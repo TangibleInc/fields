@@ -56,3 +56,24 @@ export const MaxUploads: Story = {
     maxUpload: 2,
   }
 }
+
+export const MaxUploadsReached: Story = {
+  args: {
+    maxUpload: 0,
+  }
+}
+
+export const MaxUploadsReachedCustomText: Story = {
+  args: {
+    maxUpload: 0,
+    maxUploadText: 'Remove a file before adding another one',
+  }
+}
+
+export const CustomButtonLabels: Story = {
+  args: {
+    wp_media: false,
+    buttonText: 'Select',
+    uploadText: 'Send',
+  }
+}
