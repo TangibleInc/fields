@@ -33,18 +33,32 @@ const FilePreview = props => {
   }
 
   const fileUrl = data.source_url
-  const fileExtension = fileUrl.split('/').pop().split('.').length === 2
-    ? fileUrl.split('/').pop().split('.')[1]
+  const fileName = fileUrl.split('/').pop()
+  const fileExtension = fileName.split('.').length === 2
+    ? fileName.split('.')[1]
     : ''
+
+  const title = data.title.rendered
+
+  /**
+   * The attachment title often already ends with the extension (file.csv),
+   * add it again would give file.csv.csv
+   */
+  const displayName = fileExtension && ! title.toLowerCase().endsWith(`.${fileExtension.toLowerCase()}`)
+    ? `${title}.${fileExtension}`
+    : title
 
   return(
     <li className="tf-file-item">
-      { data.media_type === 'image' && <img
-        loading="lazy" decoding="async"
-        src={fileUrl} alt={data.alt_text}
-        className="attachment-medium size-medium"
-      />}
-      <span>{`${data.title.rendered}${fileExtension !== '' ? '.' + fileExtension : ''}`}</span>
+      { data.media_type === 'image' &&
+        <img
+          loading="lazy"
+          decoding="async"
+          src={ fileUrl }
+          alt={ data.alt_text }
+          className="attachment-medium size-medium"
+          /> }
+      <span>{ displayName }</span>
       <Button type="danger" onPress={ () => props.remove() }>
         Remove
       </Button>

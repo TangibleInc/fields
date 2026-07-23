@@ -158,6 +158,50 @@ describe('File component', () => {
     expect(row.querySelector('button').disabled).toBe(false)
   })
 
+  it('appends the extension when the title omits it', async () => {
+    fields.config.fetchResponse = {
+      source_url: 'https://example.org/photo.png',
+      media_type: 'image',
+      alt_text: '',
+      title: { rendered: 'photo' }
+    }
+
+    const { container } = render(
+      fields.render({
+        name  : 'field-name',
+        type  : 'file',
+        label : 'Label',
+        value : [1]
+      })
+    )
+
+    await screen.findAllByRole('button', { name: 'Remove' })
+
+    expect(container.querySelector('.tf-file-item span').textContent).toBe('photo.png')
+  })
+
+  it('does not repeat the extension when the title already ends with it', async () => {
+    fields.config.fetchResponse = {
+      source_url: 'https://example.org/report.csv',
+      media_type: 'text',
+      alt_text: '',
+      title: { rendered: 'report.csv' }
+    }
+
+    const { container } = render(
+      fields.render({
+        name  : 'field-name',
+        type  : 'file',
+        label : 'Label',
+        value : [1]
+      })
+    )
+
+    await screen.findAllByRole('button', { name: 'Remove' })
+
+    expect(container.querySelector('.tf-file-item span').textContent).toBe('report.csv')
+  })
+
   it('re-enables the field when a file is removed', async () => {
     const user = userEvent.setup()
     const { container } = render(
