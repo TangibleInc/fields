@@ -143,6 +143,9 @@ class FormatField_TestCase extends WP_UnitTestCase {
       'file' => ['file', [
         'mime_types' => 'mimeTypes',
         'max_upload' => 'maxUpload',
+        'max_upload_text' => 'maxUploadText',
+        'button_text' => 'buttonText',
+        'upload_text' => 'uploadText',
       ]],
       'switch' => ['switch', [
         'value_on' => 'valueOn',
