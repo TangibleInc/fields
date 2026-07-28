@@ -60,7 +60,6 @@
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.36.5",
     "@floating-ui/react": "^0.27.19",
-    "@react-aria/color": "^3.0.6",
     "@tangible/ui": "0.0.14",
     "@tanstack/react-table": "^8.21.3",
     "baseline-browser-mapping": "^2.10.0",

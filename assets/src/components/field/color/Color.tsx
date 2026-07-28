@@ -4,8 +4,8 @@ import {
   useEffect
 } from 'react'
 
-import { useColorField } from '@react-aria/color'
-import { useColorFieldState } from '@react-stately/color'
+import { useColorField } from 'react-aria'
+import { useColorFieldState } from 'react-stately'
 import { FieldWrapper } from '../../dynamic/'
 
 import {
