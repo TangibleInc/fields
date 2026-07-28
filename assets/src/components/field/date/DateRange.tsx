@@ -73,7 +73,6 @@ const DateRange = (props) => {
 				name={ props.name ?? '' }
 				minValue={ minValue }
 				value={ dateValue }
-				hasFutureOnly={ hasFutureOnly }
 				onChange={ setDateValue }
 				onFocusChange={ props.onFocusChange ?? null }
 				state={ state }

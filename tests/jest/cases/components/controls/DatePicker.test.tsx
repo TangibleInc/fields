@@ -18,8 +18,7 @@ import {
 } from '@internationalized/date'
 
 /**
- * TODO: 
- * - Fix futureOnly feature and finish associated tests
+ * TODO:
  * - Support value upgrade from simple to date range
  */
 
@@ -232,17 +231,7 @@ describe('DatePicker component', () => {
   })
 
   it('supports futureOnly parameter', async () => {
-  
-    /**
-     * It seems that we have issues currently with the futureOnly paramater,
-     * when trying to change the date to past from the input it trigger an infinite re-render
-     * 
-     * TODO:
-     * - Fix infinite re-render
-     * - Check that can't change value to past date with arrows
-     * - Check that can't change value to past date from calendar
-     * - Check that can't set initial date to past from initial value
-     */
+
     const user = userEvent.setup()
     const { container } = render(
       fields.render({
@@ -256,23 +245,147 @@ describe('DatePicker component', () => {
     
     // Can't set to past value from typing
 
-    // await user.type(
-    //   screen.getByText('2050'),
-    //   '2000'
-    // )
+    await user.type(
+      within(container).getByText('2050'),
+      '2000'
+    )
 
-    // let input = container.querySelector('input[name="date-field"]')
-    // expect(input.value).toBe('2050-01-30')
-    
+    let input = container.querySelector('input[name="date-field"]')
+    expect(input.value).toBe('2050-01-30')
+
     // Can set to future value from typing
 
-    // await user.type(
-    //   screen.getByText('2050'),
-    //   '2100'
-    // )
+    await user.type(
+      within(container).getByText('2050'),
+      '2100'
+    )
 
-    // input = container.querySelector('input[name="date-field"]')
-    // expect(input.value).toBe('2100-01-30')
+    input = container.querySelector('input[name="date-field"]')
+    expect(input.value).toBe('2100-01-30')
+  })
+
+  it('reverts to the last future value when using arrows and futureOnly is true', async () => {
+
+    const user = userEvent.setup()
+    const dateToday = today( getLocalTimeZone() )
+    const { container } = render(
+      fields.render({
+        type       : 'date-picker',
+        label      : 'Label',
+        value      : dateToday.toString(),
+        name       : 'date-field',
+        futureOnly : true
+      })
+    )
+
+    const year = String( dateToday.year )
+
+    // Can't set to past value
+
+    within(container).getByText(year).focus()
+    await user.type(
+      within(container).getByText(year),
+      '[ArrowDown]'
+    )
+
+    let input = container.querySelector('input[name="date-field"]')
+    expect(input.value).toBe( dateToday.toString() )
+
+    // Can set to future value
+
+    within(container).getByText(year).focus()
+    await user.type(
+      within(container).getByText(year),
+      '[ArrowUp]'
+    )
+
+    input = container.querySelector('input[name="date-field"]')
+    expect(input.value).toBe( dateToday.add({ years: 1 }).toString() )
+  })
+
+  it('never reports a past value to onChange when futureOnly is true', async () => {
+
+    const changes = []
+    const user = userEvent.setup()
+    const dateToday = today( getLocalTimeZone() )
+    const { container } = render(
+      fields.render({
+        type       : 'date-picker',
+        label      : 'Label',
+        value      : dateToday.toString(),
+        name       : 'date-field',
+        futureOnly : true,
+        onChange   : value => changes.push(value)
+      })
+    )
+
+    const year = String( dateToday.year )
+
+    within(container).getByText(year).focus()
+    await user.type(
+      within(container).getByText(year),
+      '[ArrowDown]'
+    )
+    await user.type(
+      within(container).getByText(year),
+      '[ArrowUp]'
+    )
+
+    expect(changes).toEqual([
+      dateToday.toString(),
+      dateToday.add({ years: 1 }).toString()
+    ])
+  })
+
+  it('disables past dates in the calendar when futureOnly is true', async () => {
+
+    const user = userEvent.setup()
+    const dateToday = today( getLocalTimeZone() )
+    const { container } = render(
+      fields.render({
+        type       : 'date-picker',
+        label      : 'Label',
+        value      : dateToday.toString(),
+        name       : 'date-field',
+        futureOnly : true
+      })
+    )
+
+    await user.click(within(container).getByText('🗓'))
+
+    const calendar = document.querySelector('.tf-calendar')
+
+    // Previous month is entirely in the past
+
+    expect(within(calendar).getByLabelText('Previous').disabled).toBe(true)
+
+    /**
+     * The grid also contains hidden cells for the days of the previous and next months
+     */
+    const cells = [ ...calendar.querySelectorAll('.tf-calendar-cell:not([hidden])') ]
+    expect(cells.length).toBe( dateToday.calendar.getDaysInMonth(dateToday) )
+
+    cells.forEach((cell, index) => {
+      const day = index + 1
+      expect(cell.textContent).toBe( String(day) )
+      expect(cell.getAttribute('aria-disabled')).toBe( day < dateToday.day ? 'true' : null )
+    })
+  })
+
+  it('sets the initial value to today when it is in the past and futureOnly is true', () => {
+
+    const { container } = render(
+      fields.render({
+        type       : 'date-picker',
+        label      : 'Label',
+        value      : '2000-01-30',
+        name       : 'date-field',
+        futureOnly : true
+      })
+    )
+
+    const input = container.querySelector('input[name="date-field"]')
+    expect(input.value).toBe( today( getLocalTimeZone() ).toString() )
   })
 
   it('supports the dateRange parameter', async () => {

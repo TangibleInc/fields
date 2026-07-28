@@ -34,14 +34,32 @@ const Date = props => {
     : new CalendarDate('AD', '1', '1', '1')
 
   /**
+   * The field value must be a CalendarDate instance
+   * If futureOnly=true and value is in the past, we default to today date
+   */
+  const isPast = date => hasFutureOnly && date && date.compare(dateToday) < 0
+
+  const currentValue = formatValue(props.value, dateToday)
+  const stateValue = isPast(currentValue) ? dateToday : currentValue
+
+  /**
    * @see https://react-spectrum.adobe.com/react-stately/useDatePickerState.html
    */
   const state = useDatePickerState({
     ...props,
+    value: stateValue,
     /**
-     * useDatePickerState only accept a CalendarDate instance as a value
+     * react-stately/aria handle the state and make sure any change trigger
+     * onChange (keyboard, input, calendar...)
+     *
+     * Important to not return a past value if not allowed, will trigger an
+     * infinite re-render loop otherwise
      */
-    value: formatValue(props.value, dateToday),
+    onChange: newValue => props.onChange && props.onChange(
+      isPast(newValue)
+        ? stateValue.toString()
+        : ( newValue ? newValue.toString() : '' )
+    )
   })
 
   /**
@@ -70,13 +88,8 @@ const Date = props => {
       >
         <DatePicker
           ref={ ref }
-          minValue={ minValue }
           name={ props.name ?? '' }
-          value={ formatValue(value) }
           onChange={ setValue }
-          onFocusChange={ props.onFocusChange ?? false }
-          dynamic={ props.dynamic ?? false }
-          hasFutureOnly={ hasFutureOnly }
           state={ state }
           datePickerProps={{
             inputProps,
