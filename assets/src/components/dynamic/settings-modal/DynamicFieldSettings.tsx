@@ -299,7 +299,7 @@ const SettingsOverlay = ({ state, control, title, children }) => {
   const dialogRef = useRef(null)
 
   const { modalProps, underlayProps } = useModalOverlay({ isDismissable: true }, state, modalRef)
-  const { dialogProps } = useDialog({ role: 'dialog' }, dialogRef)
+  const { dialogProps, titleProps } = useDialog({ role: 'dialog' }, dialogRef)
 
   return (
     <Overlay portalContainer={control.portalContainer}>
@@ -319,7 +319,10 @@ const SettingsOverlay = ({ state, control, title, children }) => {
               {...dialogProps}
               ref={dialogRef}
             >
-              {title && <Title level={4}>{title}</Title>}
+              {title &&
+                <Title level={4} {...titleProps}>
+                  {title}
+                </Title>}
               <div className="tf-dialog-content">{children}</div>
             </div>
           </div>

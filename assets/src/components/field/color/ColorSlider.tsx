@@ -3,11 +3,11 @@ import { useRef } from 'react'
 import { 
   VisuallyHidden, 
   useLocale, 
-  useFocusRing 
+  useFocusRing,
+  useColorSlider
 } from 'react-aria'
 
-import { useColorSlider } from '@react-aria/color'
-import { useColorSliderState } from '@react-stately/color'
+import { useColorSliderState } from 'react-stately'
 
 /**
  * @see https://react-spectrum.adobe.com/react-aria/useColorSlider.html
