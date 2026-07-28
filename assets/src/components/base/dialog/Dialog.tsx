@@ -9,12 +9,12 @@ import Title from '../title/Title'
 const Dialog = ({ title, children, ...props }) => {
 
   const ref = useRef()
-  const { dialogProps } = useDialog(props, ref)
+  const { dialogProps, titleProps } = useDialog(props, ref)
 
   return(
     <div className='tf-dialog' { ...dialogProps } ref={ ref }>
-      { title && 
-        <Title level={4}>
+      { title &&
+        <Title level={4} { ...titleProps }>
           { title }
         </Title> }
       <div className='tf-dialog-content'>

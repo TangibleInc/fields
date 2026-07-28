@@ -1,7 +1,6 @@
 import { useRef } from 'react'
-import { useFocusRing } from 'react-aria'
-import { useColorArea } from '@react-aria/color'
-import { useColorAreaState } from '@react-stately/color'
+import { useFocusRing, useColorArea } from 'react-aria'
+import { useColorAreaState } from 'react-stately'
 
 /**
  * @see https://react-spectrum.adobe.com/react-aria/useColorArea.html#example 

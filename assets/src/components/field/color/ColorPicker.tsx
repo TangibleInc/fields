@@ -10,7 +10,7 @@ import {
   FocusScope
 } from 'react-aria'
 
-import { parseColor } from '@react-stately/color'
+import { parseColor } from 'react-stately'
 
 import ColorArea from './ColorArea'
 import ColorSlider from './ColorSlider'

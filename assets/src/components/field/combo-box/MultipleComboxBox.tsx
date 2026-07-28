@@ -61,7 +61,10 @@ const MultipleComboBox = props => {
     onSelectionChange : value => onSelectionChange(value, props, state),
     selectedKey       : getSelectedKey(props),
     defaultFilter     : contains,
-    disabledKeys      : getDisabledKeys(props)
+    disabledKeys      : getDisabledKeys(props),
+    // Uncontrolled in this context
+    value             : undefined,
+    onChange          : undefined
   })
 
   const {
