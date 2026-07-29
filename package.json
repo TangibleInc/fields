@@ -108,6 +108,7 @@
     "sass": "1.86.3",
     "storybook": "^10.5.5",
     "testra": "^2.1.5",
+    "tinymce": "^4.9.11",
     "typescript": "^5.9.2"
   }
 }
