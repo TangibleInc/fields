@@ -19,7 +19,8 @@ const config: StorybookConfig = {
    * script from the npm package for the editor field stories
    */
   staticDirs: [
-    { from: '../node_modules/tinymce', to: '/tinymce' }
+    { from: '../node_modules/tinymce', to: '/tinymce' },
+    { from: './static/images', to: '/images' }
   ],
   typescript: {
     reactDocgen: false
