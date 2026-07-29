@@ -14,6 +14,14 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {}
   },
+  /**
+   * TinyMce is served by WordPress from wp-includes, we serve the same
+   * script from the npm package for the editor field stories
+   */
+  staticDirs: [
+    { from: '../node_modules/tinymce', to: '/tinymce' },
+    { from: './static/images', to: '/images' }
+  ],
   typescript: {
     reactDocgen: false
   },

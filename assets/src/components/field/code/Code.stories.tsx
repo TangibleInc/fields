@@ -27,3 +27,12 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
+
+export const WithValue: Story = {
+  args: {
+    value: `<div class="example">
+    <h2>Title</h2>
+    <p>Only html syntax highlighting is supported</p>
+</div>`,
+  }
+}

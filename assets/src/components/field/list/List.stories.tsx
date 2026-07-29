@@ -34,9 +34,29 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 
+/**
+ * Items are saved as a JSON array, an item with _canDelete false can't be
+ * removed from the list
+ */
+export const WithValue: Story = {
+  args: {
+    value: JSON.stringify([
+      { value: 'test1', _canDelete: true, _enabled: true },
+      { value: 'test2', _canDelete: false, _enabled: true },
+    ]),
+  }
+}
+
+/**
+ * The visibility button toggles _enabled, a disabled item stays in the value
+ */
 export const WithVisibility: Story = {
   args: {
     useVisibility: true,
+    value: JSON.stringify([
+      { value: 'test1', _canDelete: true, _enabled: true },
+      { value: 'test2', _canDelete: true, _enabled: false },
+    ]),
   }
 }
 
