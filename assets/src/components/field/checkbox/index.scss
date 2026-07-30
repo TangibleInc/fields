@@ -6,7 +6,9 @@
 		margin-bottom: revert;
 	}
   
-	input[type="checkbox"] {
+	/* Legacy checkbox only — the background shorthand below would wipe the
+	   TUI checkbox's background-image checkmark */
+	input[type="checkbox"]:not(.tui-inline-choice__control) {
 	  box-shadow: 0 0 0 transparent;
 		border: $field-border-width $field-border-style $field-font-color;
 		margin-right: $label-spacer;

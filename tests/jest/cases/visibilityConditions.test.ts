@@ -42,7 +42,7 @@ describe('visibility conditions feature', () => {
     expect(within(container).queryByLabelText('Label text')).toBeFalsy()
 
     const user = userEvent.setup()
-    const topInput = container.querySelector('.tf-number-field').firstChild
+    const topInput = container.querySelector('.tf-number-field input')
     
     await act(async () => {
       await topInput.focus()
@@ -132,7 +132,7 @@ describe('visibility conditions feature', () => {
     expect(within(container).queryByLabelText('Text label')).toBeFalsy()
 
     const user = userEvent.setup()
-    const topInput = container.querySelector('.tf-number-field').firstChild
+    const topInput = container.querySelector('.tf-number-field input')
     
     await act(async () => {
       await topInput.focus()

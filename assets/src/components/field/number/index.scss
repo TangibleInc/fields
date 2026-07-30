@@ -2,23 +2,20 @@
   width: 100%;
 }
 
-.tf-number input {
-  @include field;
-  padding-top: 0;
-  padding-bottom: 0;
-  box-sizing: border-box;
-}
-
 .tf-number .tf-label {
   display: flex;
 }
 
 .tf-number-field {
   display: flex;
-  width: $field-width;
+  width: 100%;
   flex-direction: row;
   flex-wrap: nowrap;
   position: relative;
+
+  .tui-input {
+    padding-right: 2.5em;
+  }
 }
 
 .tf-number[data-enabled="false"] .tf-number-field {

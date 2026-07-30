@@ -54,9 +54,15 @@
 
 .tf-list-search {
   display: flex;
+  align-items: center;
+  gap: var(--tui-spacing-xs);
   width: $field-width;
 
   .tf-combo-box {
     flex: 1;
+  }
+
+  > button {
+    height: $field-height;
   }
 }

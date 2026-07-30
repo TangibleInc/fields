@@ -102,6 +102,62 @@ describe('List component', () => {
     expect(document.getElementsByClassName(`tf-list-box-option-disabled`).length).toEqual(1)
   })
 
+  test.each([
+    { directSelection: undefined, hasAddButton: true },
+    { directSelection: false,     hasAddButton: true },
+    { directSelection: true,      hasAddButton: false },
+  ])('renders add button according to directSelection (%p)', ({ directSelection, hasAddButton }) => {
+
+    const { container } = render(
+      fields.render({
+        type    : 'list',
+        label   : `Label for list`,
+        choices : {
+          test1 : 'Test1',
+          test2 : 'Test2',
+          test3 : 'Test3'
+        },
+        ...( directSelection !== undefined ? { directSelection } : {} )
+      }
+    ))
+
+    hasAddButton
+      ? expect(within(container).getByText('Add')).toBeTruthy()
+      : expect(within(container).queryByText('Add')).toBe(null)
+  })
+
+  it('adds item on selection when directSelection is enabled', async () => {
+
+    const user = userEvent.setup()
+    const { container } = render(
+      fields.render({
+        type            : 'list',
+        label           : `Label for list`,
+        directSelection : true,
+        choices : {
+          test1 : 'Test1',
+          test2 : 'Test2',
+          test3 : 'Test3'
+        }
+      }
+    ))
+
+    let items = container.getElementsByClassName(`tf-list-item`)
+    expect(items.length).toEqual(0)
+
+    await user.click(within(container).getByText('▼'))
+    await user.click(within(document).getByText('Test2'))
+
+    items = container.getElementsByClassName(`tf-list-item`)
+    expect(items.length).toEqual(1)
+    expect(items[0].textContent).toContain('Test2')
+
+    const input = container.querySelector('input[type=hidden]')
+    expect(JSON.parse(input.value)).toEqual([
+      { value: 'test2', _canDelete: true, _enabled: true }
+    ])
+  })
+
   it('supports visibility button', async () => {
 
     const user = userEvent.setup()
@@ -140,5 +196,4 @@ describe('List component', () => {
 
     expect(visibilityButtons[1].style.opacity).not.toEqual('0.5')
   })
-
 })

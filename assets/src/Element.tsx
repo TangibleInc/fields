@@ -3,7 +3,7 @@ import {
   useContext,
   useEffect
 } from 'react'
-import { ControlContext } from './index.tsx'
+import { ControlContext } from './context'
 
 import types from './types.ts'
 import DependendWrapper from './components/dependent/DependendWrapper'

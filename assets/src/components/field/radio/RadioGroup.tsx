@@ -1,61 +1,73 @@
-import { 
-  useEffect,
-  createContext
-} from 'react'
+import { forwardRef } from 'react'
 
-import { useRadioGroup } from 'react-aria'
-import { useRadioGroupState } from 'react-stately'
+import { RadioGroup as TuiRadioGroup, Field } from '@tangible/ui'
 
-import {
-  Description,
-  Label
-} from '../../base'
+export interface FieldsRadioGroupProps {
+  value?: string
+  onChange?: (value: string) => void
+  label?: string
+  labelVisuallyHidden?: boolean
+  description?: string
+  isDisabled?: boolean
+  isRequired?: boolean
+  name?: string
+  className?: string
+  children?: React.ReactNode
+}
 
 /**
  * <RadioGroup label="Radio label">
  *   <Radio value="2">Value 1</Radio>
  *   <Radio value="1">Value 2</Radio>
  * </RadioGroup>
- * 
- * @see https://react-spectrum.adobe.com/react-aria/useRadioGroup.html
  */
 
-const RadioContext = createContext(null)
-
-const RadioGroup = props => {
-
-  const state = useRadioGroupState(props)
+const RadioGroup = forwardRef<HTMLDivElement, FieldsRadioGroupProps>((props, ref) => {
 
   const {
-    radioGroupProps,
-    labelProps,
-    descriptionProps
-  } = useRadioGroup(props, state)
+    value,
+    onChange,
+    label,
+    labelVisuallyHidden,
+    description,
+    isDisabled,
+    isRequired,
+    name,
+    className,
+    children,
+  } = props
 
-  useEffect(() => {
-    props.onChange && props.onChange(state.selectedValue)
-  }, [state.selectedValue])
+  const controlledProps = value !== undefined
+    ? { value }
+    : { defaultValue: '' }
 
-  return(
-    <div className="tf-radio-group">
-      { props.label &&
-        <Label labelProps={ labelProps } parent={ props }>
-          { props.label }
-        </Label> }
-      <div className="tf-radio-group-container" { ...radioGroupProps }>
-        <RadioContext.Provider value={ state }>
-          { props.children }
-        </RadioContext.Provider>
-      </div>
-      { props.description &&
-        <Description descriptionProps={ descriptionProps } parent={ props }>
-          { props.description }
-        </Description> }
+  return (
+    <div ref={ref} className="tf-radio-group">
+      <Field
+        className={className}
+        required={Boolean(isRequired)}
+        disabled={Boolean(isDisabled)}
+      >
+        {label && 
+          <Field.Label hidden={Boolean(labelVisuallyHidden)}>
+            {label}
+          </Field.Label>}
+        <TuiRadioGroup
+          {...controlledProps}
+          disabled={Boolean(isDisabled)}
+          onValueChange={val => {
+            if (onChange) onChange(String(val))
+          }}
+        >
+          {children}
+        </TuiRadioGroup>
+        <input type="hidden" name={name ?? ''} value={value ?? ''} />
+        {description && (
+          <Field.HelperText>{description}</Field.HelperText>
+        )}
+      </Field>
     </div>
   )
-}
+})
 
-export {
-  RadioGroup,
-  RadioContext
-}
+export { RadioGroup }

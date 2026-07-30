@@ -20,10 +20,8 @@ import {
   Description
 } from '../../base'
 
-import { 
-  Text,
-  ComboBox
-} from '../'
+import Text from '../text/Text'
+import ComboBox from '../combo-box'
 
 import { createInput } from '../../../codemirror/'
 
@@ -88,7 +86,11 @@ const DynamicText = props => {
             value={ value }
           />
         </VisuallyHidden>
-        <div ref={ input } className="tf-dynamic-text-input" { ...inputProps }></div>
+        <div
+          ref={ input }
+          className="tf-dynamic-text-input tui-input tf-text-suggestion-input"
+          { ...inputProps }
+        />
         <Button type="action" ref={ triggerRef } { ...triggerProps }>
           Add
         </Button>
@@ -124,4 +126,3 @@ const DynamicText = props => {
 }
 
 export default DynamicText
-

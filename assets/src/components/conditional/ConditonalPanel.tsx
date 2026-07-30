@@ -75,6 +75,7 @@ const ConditionalPanel = props => {
         title       : 'Conditional rules',
         label       : 'Open conditional panel',
         confirmText : 'Save',
+        confirmType : 'primary',
         onCancel    : () => {
           setValue([ ...deepCopy(savedValue) ])
         },
@@ -86,8 +87,14 @@ const ConditionalPanel = props => {
 
   return(
     <>
-      <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(props.useModal ? savedValue : value) } />
-      <div className="tf-label" >{ props.label ?? '' }</div>
+      <input
+        type="hidden"
+        name={ props.name ?? '' }
+        value={ JSON.stringify(props.useModal ? savedValue : value) }
+      />
+      <div className="tf-label tui-field__label">
+        { props.label ?? '' }
+      </div>
       <Wrapper { ...wrapperProps }>
         <div className="tf-conditional-panel">
           <div className="tf-conditional-panel-container">

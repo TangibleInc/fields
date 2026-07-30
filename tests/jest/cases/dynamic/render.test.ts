@@ -3,7 +3,8 @@ import { userEvent } from '@testing-library/user-event'
 import { allowedTypes } from '../../../../assets/src/dynamic-values/index.ts'
 import {
   render,
-  within
+  within,
+  waitFor
 } from '@testing-library/react'
 
 /**
@@ -50,7 +51,7 @@ describe('dynamic values feature - render', () => {
     expect(within(container).queryByText('Clear')).toBeFalsy()
   })
 
-  test.each(testTypes)('%p type does render dynamic values UI if dynamic is true', type => {
+  test.each(testTypes)('%p type does render dynamic values UI if dynamic is true', async type => {
 
     const { container } = render(
       fields.render({
@@ -61,7 +62,9 @@ describe('dynamic values feature - render', () => {
       })
     )
 
-    expect(within(container).getByText('Insert')).toBeTruthy()
+    // Text type lazy-loads DynamicEditor, so we need to wait
+    const insertButton = await within(container).findByText('Insert')
+    expect(insertButton).toBeTruthy()
 
     // Special case for text, as it uses insert mode by default instead if replace like other types
     if( type === 'text' ) {
@@ -85,19 +88,25 @@ describe('dynamic values feature - render', () => {
       </>
     )
 
-    expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeFalsy()
+    const getDynamicContainer = () =>
+      document.querySelector('.tf-dynamic-wrapper-popover') ||
+      document.querySelector('.tf-modal-container')
 
-    await user.click(within(container).getByText('Insert'))
+    expect(getDynamicContainer()).toBeFalsy()
 
-    expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeTruthy()
+    const insertButton = await within(container).findByText('Insert')
+    await user.click(insertButton)
+
+    expect(getDynamicContainer()).toBeTruthy()
 
     await user.click(within(container).getByText('Test click outside'))
 
-    expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeFalsy()
+    expect(getDynamicContainer()).toBeFalsy()
 
-    await user.click(within(container).getByText('Insert'))
+    const insertButton2 = await within(container).findByText('Insert')
+    await user.click(insertButton2)
 
-    expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeTruthy()
+    expect(getDynamicContainer()).toBeTruthy()
   })
 
   test.each(testTypes)('%p type filters options by category', async type => {
@@ -126,11 +135,22 @@ describe('dynamic values feature - render', () => {
       </>
     )
 
-    expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeFalsy()
+    const getDynamicContainer = () =>
+      document.querySelector('.tf-dynamic-wrapper-popover') ||
+      document.querySelector('.tf-modal-container')
 
+    expect(getDynamicContainer()).toBeFalsy()
+
+    await waitFor(() => expect(document.querySelector('button.tf-dynamic-wrapper-insert')).toBeTruthy())
     await user.click(document.querySelector('button.tf-dynamic-wrapper-insert'))
 
-    expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeTruthy()
+    const dynContainer = getDynamicContainer()
+    expect(dynContainer).toBeTruthy()
+
+    // Text type opens a DynamicFieldSettings modal with a ComboBox that
+    // needs to be focused to show options (menuTrigger="focus")
+    const comboboxInput = dynContainer.querySelector('input[role="combobox"]')
+    if (comboboxInput) await user.click(comboboxInput)
 
     Object.keys(choices).forEach( name => {
       const item = within(document).getByText( choices[ name ] )
@@ -173,11 +193,22 @@ describe('dynamic values feature - render', () => {
       </>
     )
 
-    expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeFalsy()
+    const getDynamicContainer = () =>
+      document.querySelector('.tf-dynamic-wrapper-popover') ||
+      document.querySelector('.tf-modal-container')
 
+    expect(getDynamicContainer()).toBeFalsy()
+
+    await waitFor(() => expect(document.querySelector('button.tf-dynamic-wrapper-insert')).toBeTruthy())
     await user.click(document.querySelector('button.tf-dynamic-wrapper-insert'))
 
-    expect(document.querySelector('.tf-dynamic-wrapper-popover')).toBeTruthy()
+    const dynContainer = getDynamicContainer()
+    expect(dynContainer).toBeTruthy()
+
+    // Text type opens a DynamicFieldSettings modal with a ComboBox that
+    // needs to be focused to show options (menuTrigger="focus")
+    const comboboxInput = dynContainer.querySelector('input[role="combobox"]')
+    if (comboboxInput) await user.click(comboboxInput)
 
     Object.keys(choices).forEach( name => {
       const item = within(document).getByText( choices[ name ] )

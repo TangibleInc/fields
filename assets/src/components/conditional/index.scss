@@ -12,21 +12,19 @@
 .tf-conditional-panel-condition-actions {
   display: flex;
   gap: calc($global-spacer-sm / 2);
+  align-items: center;
 
-  .tf-button-action:first-child {
-    text-transform: uppercase;
+  .tf-button-icon-trash[disabled] {
+    pointer-events: auto;
+    cursor: not-allowed;
   }
+}
 
-  .tf-button-danger:last-child {
-    position: relative;
-
-    &:before {
-      content: '';
-      height: $button-border-size;
-      width: 100%;
-      background-color: $global-context-destructive;
-      width: 10px;
-      position: absolute;
-    }
-  }
+/**
+ * Some operator are very short (is, is not), and as the
+ * popover will use the same width we add a min-width to keep
+ * things readable
+ */
+.tf-conditional-panel-conditions .tf-select {
+  min-width: 160px;
 }

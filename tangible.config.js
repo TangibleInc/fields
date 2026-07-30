@@ -18,6 +18,37 @@ export default {
     },
 
     /**
+     * Copy styles from @tangible/ui, but prefix with .tf-interface to prevent
+     * conflict with other version of tangible-ui
+     * 
+     * .tui-interface         -> .tf-interface.tui-interface
+     * :where(.tui-interface) -> .tf-interface:where(.tui-interface)
+     * .tui-button            -> .tf-interface .tui-button
+     */
+    {
+      task: 'sass',
+      src: 'node_modules/@tangible/ui/styles/all.unlayered.css',
+      dest: 'assets/build/all.unlayered.min.css',
+      map: false,
+      postCssPlugins: [{
+        postcssPlugin: 'prefix-tui',
+        Rule(rule) {
+          const parent = rule.parent
+          if (parent?.type === 'atrule' && /keyframes$/i.test(parent.name)) return
+
+          rule.selectors = rule.selectors.map(selector => {
+            const trimmed = selector.trim()
+            if (trimmed.startsWith('.tf-interface')) return selector
+
+            return /^(:where\(\.tui-interface\)|\.tui-interface)/.test(trimmed)
+              ? '.tf-interface' + trimmed
+              : '.tf-interface ' + trimmed
+          })
+        }
+      }],
+    },
+
+    /**
      * Style: One stylesheet per context
      */
     {

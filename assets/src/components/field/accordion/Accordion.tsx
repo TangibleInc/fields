@@ -1,6 +1,6 @@
-import { 
+import {
   useState,
-  useEffect 
+  useEffect
 } from 'react'
 
 import { Switch } from '../../field'
@@ -10,45 +10,62 @@ import { initJSON } from '../../../utils'
 
 const Accordion = props => {
 
-  const [value, setValue] = useState(initJSON(props.value))
+  /**
+   * In some cases, we use a Accordion component but we
+   * don't want the Accordion itself to hold a value
+   */
+  const uncontrolled = (props.uncontrolled ?? false) === true
 
-  useEffect(() => props.onChange && props.onChange(value), [value])
+  const [value, setValue] = useState(
+    uncontrolled ? {} : initJSON(props.value)
+  )
+
+  useEffect(() => {
+    if ( uncontrolled ) return;
+    props.onChange && props.onChange(value)
+  }, [value])
 
   const isEnabled = isEnabled => {
     setValue({
-      ...value, 
+      ...value,
       enabled: isEnabled === true || isEnabled === 'on'
         ? 'on' : 'off'
     })
   }
 
-  const headerLeft = props.useSwitch
+  const headerLeft = ! uncontrolled && props.useSwitch
     ? <div onClick={ e => e.stopPropagation() }>
-        <Switch 
-          value={ value.enabled ?? 'off' } 
+        <Switch
+          value={ value.enabled ?? 'off' }
           onChange={ isEnabled }
           label={ 'Toggle accordion' }
           labelVisuallyHidden={ true }
         />
-      </div>  
+      </div>
     : null
 
   return(
     <div className='tf-accordion'>
-      <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(value) } />
-      <ExpandablePanel 
-        title={ props.title ?? false }  
+      { ! uncontrolled &&
+        <input
+          type='hidden'
+          name={ props.name ?? '' }
+          value={ JSON.stringify( value ) }
+        /> }
+      <ExpandablePanel
+        title={ props.title ?? false }
         headerLeft={ headerLeft }
-        behavior={ 'show' }
+        behavior={ uncontrolled ? 'hide' : 'remove' }
         isOpen={ props.isOpen ?? false }
       >
-        <FieldGroup 
+        <FieldGroup
           { ...props }
-          name={ null } 
-          fields={ props.fields } 
+          name={ null }
+          fields={ props.fields }
           value={ value }
           onChange={ setValue }
-        />  
+          uncontrolled={ uncontrolled }
+        />
       </ExpandablePanel>
     </div>
   )

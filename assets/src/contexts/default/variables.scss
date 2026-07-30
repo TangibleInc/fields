@@ -32,8 +32,8 @@ $global-context-destructive: #CC1818;
 $field-padding-vertical: $global-spacer-xs;
 $field-padding-horizontal: $global-spacer-sm; 
 $field-padding: $field-padding-vertical $field-padding-horizontal;
-$field-height: 32px;
-$field-width: 192px;
+$field-height: var(--tui-control-height-md, 40px);
+$field-width: 100%;
 $field-border-width: 1px;
 $field-border-style: solid;
 $field-border-color: $global-theme-gray-30;
@@ -54,13 +54,13 @@ $label-font-style: inherit;
 $label-font-weight: inherit;
 $label-font-color: inherit;
 $label-text-transform: inherit;
-$label-spacer: revert;
+$label-spacer: var(--tui-spacing-xs);
 
 $description-font-size: inherit;
 $description-font-style: inherit;
 $description-font-weight: inherit;
 $description-font-color: inherit;
-$description-margin-top: revert;
+$description-margin-top: var(--tui-spacing-xs);
 $description-margin-bottom: revert;
 
 $button-background: white;
@@ -72,7 +72,7 @@ $button-border-radius: 4px;
 $button-color: #505050;
 $button-padding: 0 12px;
 $button-height: 32px;
-$button-primary-color: $global-theme-color;
+$button-primary-color: var(--tui-theme-primary-base, #{$global-theme-color});
 $button-primary-text: inherit;
 
 $button-background--hover: white;

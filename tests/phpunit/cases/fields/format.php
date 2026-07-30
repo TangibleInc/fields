@@ -174,7 +174,8 @@ class FormatField_TestCase extends WP_UnitTestCase {
         'search_url' => 'searchUrl',
         'ajax_action' => 'ajaxAction',
         'map_results' => 'mapResults',
-        'use_visibility' => 'useVisibility'
+        'use_visibility' => 'useVisibility',
+        'direct_selection' => 'directSelection'
       ]],
       'wysiwyg' =>  ['wysiwyg', [
         'raw_view' => 'rawView'
