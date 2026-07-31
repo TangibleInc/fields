@@ -1,4 +1,11 @@
-.tf-multiple-select,
+// The `select` field type is now TUI's Select / MultiSelect (see Single.tsx /
+// Multiple.tsx) — its styling lives in @tangible/ui; this just sizes it.
+.tf-select-field {
+  width: 100%;
+}
+
+// .tf-select is still the internal react-aria Select used by gradient /
+// dimensions / simple-dimension.
 .tf-select {
   width: $field-width;
   position: relative;
