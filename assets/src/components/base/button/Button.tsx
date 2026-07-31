@@ -44,7 +44,6 @@ type ForwardedTuiProps = Omit<
   | 'rightIconName'
   | 'leftIcon'
   | 'rightIcon'
-  | 'iconSize'
   | 'href'
   | 'target'
   | 'rel'
@@ -65,7 +64,6 @@ export interface FieldsButtonProps extends ForwardedTuiProps {
   rightIconName?: TuiButtonProps['rightIconName']
   leftIcon?: TuiButtonProps['leftIcon']
   rightIcon?: TuiButtonProps['rightIcon']
-  iconSize?: TuiButtonProps['iconSize']
   href?: TuiButtonProps['href']
   target?: TuiButtonProps['target']
   rel?: TuiButtonProps['rel']
@@ -109,7 +107,6 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
     rightIconName,
     leftIcon,
     rightIcon,
-    iconSize,
     href,
     target,
     rel,
@@ -312,7 +309,6 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
       rightIconName={rightIconName}
       leftIcon={leftIcon}
       rightIcon={rightIcon}
-      iconSize={iconSize}
       href={href}
       target={target}
       rel={rel}
