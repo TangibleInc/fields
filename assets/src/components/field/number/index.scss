@@ -19,7 +19,7 @@
 }
 
 .tf-number[data-enabled="false"] .tf-number-field {
-  opacity: 0.5;
+  opacity: var(--tui-opacity-disabled, 0.5);
 }
 
 .tf-number-button-group {
@@ -30,8 +30,8 @@
   top: $field-border-width;
   right: $field-border-width;
   bottom: $field-border-width;
-  padding: $field-padding;
   height: auto;
+  border-inline-start: var(--tui-border-width, 1px) solid var(--tui-color-divider, var(--tui-color-border));
 
   .tf-button-number {
     @include button;
@@ -44,11 +44,12 @@
     border: 0;
     min-width: 2em;
     height: 50%;
-    line-height: 0;
-    background-color: #eee;
+    color: var(--tui-color-fg-muted);
+    background-color: var(--tui-color-bg-surface);
 
     &:hover {
-      background-color: #e2e2e2;
+      background-color: var(--tui-color-bg-muted);
+      color: var(--tui-color-fg);
     }
 
     &:first-child {
