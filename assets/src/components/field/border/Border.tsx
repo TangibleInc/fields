@@ -55,6 +55,7 @@ const Border = (props: any) => {
                 units={units}
                 value={value.dimensions}
                 readOnly={props.readOnly}
+                min={0}
               />
             </div>
             <div className="tf-border-color-picker-container">

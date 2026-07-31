@@ -13,6 +13,15 @@ const SIDES = ['top', 'left', 'right', 'bottom'] as const
 const Dimensions = (props: any) => {
   const units: string[] = props.units ?? ['px']
   const showToggle = props.linked === 'toggle' || props.linked === undefined
+  // Optional lower bound (Border passes 0 — widths can't be negative). When set,
+  // also block the minus key so a negative can't be typed at all.
+  const min: number | undefined = props.min
+  const blockNegative =
+    min != null
+      ? (e: any) => {
+          if (e.key === '-') e.preventDefault()
+        }
+      : undefined
 
   const [value, setValue] = useState<any>(() =>
     initJSON(props.value ?? '', {
@@ -59,6 +68,8 @@ const Dimensions = (props: any) => {
                 <TextInput
                   key={side}
                   type="number"
+                  min={min}
+                  onKeyDown={blockNegative}
                   value={value[side] ?? 0}
                   onChange={(e) =>
                     isLinked() ? setLinkedPosition(e.target.value) : setAttribute(side, e.target.value)

@@ -34,6 +34,8 @@ const SimpleDimension = (props: any) => {
           <div role="group" className="tf-dimension-row">
             <TextInput
               type="number"
+              min={props.min}
+              onKeyDown={props.min != null ? (e: any) => e.key === '-' && e.preventDefault() : undefined}
               value={value.value ?? 0}
               onChange={(e) => setAttr('value', e.target.value)}
               aria-label="Dimension number"
