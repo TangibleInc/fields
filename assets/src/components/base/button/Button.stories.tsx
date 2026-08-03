@@ -26,10 +26,6 @@ const meta = {
       control: 'select',
       options: ['xs', 'sm', 'md', 'lg']
     },
-    iconSize: {
-      control: 'select',
-      options: ['xs', 'sm', 'md', 'lg']
-    },
     leftIconName: {
       control: 'text'
     },
@@ -54,7 +50,6 @@ const meta = {
     content: 'Button',
     testId: 'base-button',
     size: 'md',
-    iconSize: 'sm',
     loading: false,
     fullWidth: false
   }
