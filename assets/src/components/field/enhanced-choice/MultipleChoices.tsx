@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useEnhancedChoices } from "./useEnhancedChoices";
-import Checkbox from "../checkbox/Checkbox";
+// import Checkbox from "../checkbox/Checkbox";
+import { Checkbox as TuiCheckbox } from '@tangible/ui';
 import { useState } from "react";
 
 interface FlatItem {
@@ -222,7 +223,8 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
       >
         <div className="tf-enhanced-choice-option-content">
           <div className="tf-enhanced-choice-selection-indicator" style={{ pointerEvents: 'none' }}>
-            <Checkbox isSelected={isPending} isDisabled={false} />
+            {/* <Checkbox isSelected={isPending} isDisabled={false} /> */}
+            <Checkbox checked={isPending} disabled={false} />
           </div>
           <div className="tf-enhanced-choice-label">{item.label}</div>
           {renderViewLink(item)}
@@ -415,10 +417,15 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
                       >
                         <div className="tf-enhanced-choice-option-content">
                           <div className="tf-enhanced-choice-selection-indicator" style={{ pointerEvents: 'none' }}>
-                            <Checkbox
+                            {/* <Checkbox
                               isSelected={globalSelectAllState === 'all'}
                               isIndeterminate={globalSelectAllState === 'some'}
                               isDisabled={false}
+                            /> */}
+                            <Checkbox
+                              checked={globalSelectAllState === 'all'}
+                              indeterminate={globalSelectAllState === 'some'}
+                              disabled={false}
                             />
                           </div>
                           <div className="tf-enhanced-choice-label">Select All</div>
@@ -444,9 +451,9 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
                                 <div className="tf-enhanced-choice-option-content">
                                   <div className="tf-enhanced-choice-selection-indicator" style={{ pointerEvents: 'none' }}>
                                     <Checkbox
-                                      isSelected={selectAllState === 'all'}
-                                      isIndeterminate={selectAllState === 'some'}
-                                      isDisabled={false}
+                                      checked={selectAllState === 'all'}
+                                      indeterminate={selectAllState === 'some'}
+                                      disabled={false}
                                     />
                                   </div>
                                   <div className="tf-enhanced-choice-label">Select All</div>
