@@ -8,12 +8,14 @@ import {
 import { useNumberFieldState } from 'react-stately'
 import { FieldWrapper } from '../../dynamic'
 
-import { 
-  useLocale, 
-  useNumberField 
+import {
+  useLocale,
+  useNumberField
 } from 'react-aria'
 
-import { 
+import { Icon } from '@tangible/ui'
+
+import {
   Button,
   Description,
   Label
@@ -68,8 +70,14 @@ const NumberComponent = props => {
             />
           </div>
           { hasButtons && <div className='tf-number-button-group'>
-            <Button type="number" { ...incrementButtonProps } isDisabled={ isDisabled }>+</Button>
-            <Button type="number" { ...decrementButtonProps } isDisabled={ isDisabled }>-</Button>
+            {/* react-aria's increment/decrement props already carry localized
+                aria-labels, so the chevron icons stay decorative. */}
+            <Button type="number" { ...incrementButtonProps } isDisabled={ isDisabled }>
+              <Icon name="system/chevron-up-small" />
+            </Button>
+            <Button type="number" { ...decrementButtonProps } isDisabled={ isDisabled }>
+              <Icon name="system/chevron-down-small" />
+            </Button>
           </div> }
         </FieldWrapper>
       </div>
