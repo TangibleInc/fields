@@ -1,0 +1,4 @@
+// Styles for the deprecated (pre-TUI) controls, kept renderable alongside their
+// replacements. Imported from components/index.scss so the context variables and
+// mixins are in scope.
+@import './fields/combo-box/index.scss';

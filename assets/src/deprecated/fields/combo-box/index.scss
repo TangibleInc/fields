@@ -1,0 +1,132 @@
+.tf-combo-box {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.tf-combo-box-text {
+  position: relative;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  overflow: hidden;
+
+  // Overwride/tweak default style for dropdown button
+  button.tui-button.is-theme-secondary.is-style-outline {
+    --tui-button-bg: transparent;
+    --tui-button-border: transparent;
+    --tui-button-fg: var(--tui-color-fg);
+    min-height: 0;
+    height: auto;
+    padding: 0 2px;
+    flex: 0 0 auto;
+    cursor: pointer;
+  }
+}
+
+.tf-combo-box-item {
+  border: 1px solid transparent; 
+	background-color: $global-theme-color-lighter-05;
+	color: $field-focus-color;
+	border-radius: $field-border-radius;
+	font-size: 13px;
+	font-weight: bold;
+	line-height: 1.4;
+  padding: 0.25em 0.5em;
+  display: inline-flex;
+  gap: 0.35em;
+  align-items: center;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  span:first-child {
+    padding-right: 5px;
+    text-overflow: ellipsis;
+    flex: 1 1 auto;
+  }
+
+  // Overwride/tweak default style for x button for multiple mode items
+  button.tui-button:last-child {
+    --tui-button-bg: transparent;
+    --tui-button-border: transparent;
+    --tui-button-fg: #{$field-focus-color};
+    cursor: pointer;
+    color: $field-focus-color;
+    border-radius: 0;
+    padding: 0;
+    min-height: 0;
+    height: auto;
+    line-height: 1;
+
+    &:hover,
+    &:focus {
+      --tui-button-bg: transparent;
+      --tui-button-border: transparent;
+      outline: none;
+    }
+  }
+}
+
+// Multiple variant
+
+.tf-multiple-combobox-container {
+  display: flex;
+  gap: $global-spacer-sm;
+  position: relative;
+}
+
+.tf-multiple-combobox-container > .tf-popover {
+  width: $field-width;
+  position: absolute;
+  z-index: $popover-index;
+  left: 0;
+  top: 100%;
+
+  .tf-combo-box {
+    width: 100%;
+  }
+
+  .tf-list-box-option {
+
+    &:not(.tf-list-box-option-selected,.tf-list-box-option-disabled):hover {
+      &::after {
+        content: "\002B";
+        margin-left: auto;
+      }
+    }
+  }
+}
+
+.tf-multiple-combobox {
+  position: relative;
+
+  & > .tf-label {
+    display: flex;
+  }
+}
+
+.tf-multiple-combobox-values {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+  gap: $global-spacer-sm;
+  box-sizing: border-box;
+  min-height: $field-height;
+  padding: var(--tui-spacing-xxs) $field-padding-horizontal;
+  background-color: var(--tui-input-bg, var(--tui-color-bg-surface));
+  border: var(--tui-border-width, 1px) solid var(--tui-input-border, var(--tui-color-border));
+  border-radius: var(--tui-input-radius, var(--tui-radius-md));
+}
+
+.tf-multiple-combobox[data-enabled="false"] .tf-multiple-combobox-values {
+  opacity: 0.5;
+}
+
+.tf-combo-box-popover.tf-popover {
+  border: $field-border;
+  border-bottom-left-radius: $field-border-radius;
+  border-bottom-right-radius: $field-border-radius;  
+  border-color: $field-focus-color;
+  box-shadow: 0 0 0 1px $field-focus-color;
+  outline: 2px solid transparent;
+}
