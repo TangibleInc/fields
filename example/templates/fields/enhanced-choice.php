@@ -68,7 +68,8 @@ $plugin->render_registation_message();
 
 <h3>Basic Single Selection</h3>
 
-<?php echo $fields->render_field('enhanced_choice', [
+<?php 
+echo $fields->render_field('enhanced_choice', [
   'type'        => 'enhanced-choice',
   'label'       => 'Pick a color',
   'description' => 'basic single selection',
@@ -76,6 +77,7 @@ $plugin->render_registation_message();
   'placeholder' => 'Search colors...',
   'isViewable'  => false, // Optional, defaults to false
 ]);
+
 ?>
 
 <hr />

@@ -77,6 +77,7 @@ const getTypes = () => {
       'color-picker'      : Color,
       'conditional-panel' : ConditionalPanel,
       'combo-box'         : ComboBox,
+      'enhanced-choice'    : EnhancedChoice,
       'date-picker'       : Date,
       'dimensions'        : Dimensions,
       'field-group'       : FieldGroup,

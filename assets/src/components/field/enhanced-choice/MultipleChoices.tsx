@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { useEnhancedChoices } from "./useEnhancedChoices";
-// import Checkbox from "../checkbox/Checkbox";
-import { Checkbox as TuiCheckbox } from '@tangible/ui';
+import { Button, Chip, Icon, IconButton, TextInput, Checkbox as TuiCheckbox } from '@tangible/ui';
 import { useState } from "react";
 
 interface FlatItem {
@@ -17,11 +16,6 @@ interface GroupedItem {
   items: FlatItem[];
 }
 
-// interface FilterCategory {
-//   value: string;
-//   label: string;
-// }
-
 interface MultipleChoicesProps {
   items:                FlatItem[] | GroupedItem[];
   value?:               string[];
@@ -32,44 +26,14 @@ interface MultipleChoicesProps {
   isGrouped?:           boolean;
   isViewable?:          boolean;
   onChange?:            (value: string[]) => void;
-  // filterCategories?:    FilterCategory[];
-  // actionLabel?:         string;
 }
 
-const EyeIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-    <circle cx="12" cy="12" r="3"/>
-  </svg>
-);
-
-const CheckIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <path d="M2 7L5.5 10.5L12 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-const SearchIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-    <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.4"/>
-    <path d="M10 10L13 13" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-  </svg>
-);
-
 const MultipleChoices = (props: MultipleChoicesProps) => {
-
-  // console.log('MultipleChoices props:', props);
-  // const [activeCategory, setActiveCategory] = useState('');
 
   const flatItems = useMemo<FlatItem[]>(() => {
     if (!props.isGrouped) return props.items as FlatItem[];
     return (props.items as GroupedItem[]).flatMap(g => g.items);
   }, [props.items, props.isGrouped]);
-
-  // const categoryFilteredItems = useMemo<FlatItem[]>(() => {
-  //   if (!activeCategory) return flatItems;
-  //   return flatItems.filter(item => item.category === activeCategory);
-  // }, [flatItems, activeCategory]);
 
   const {
     inputValue,
@@ -100,14 +64,6 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
     ariaLabel,
     normalizedGroups,
   } = useEnhancedChoices({ ...props, items: flatItems, mode: 'multiple' });
-
-  // console.log('MultipleChoices state:', {
-  //   inputValue,
-  //   selectedKeys,
-  //   pendingKeys,
-  //   isOpen,
-  //   focusedIndex,
-  //   filteredItems,});
 
   const [reviewMode, setReviewMode] = useState(false);
 
@@ -144,7 +100,6 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
         ...group,
         items: group.items.filter(item =>
           item.label.toLowerCase().includes(inputValue.toLowerCase())
-          // && (!activeCategory || item.category === activeCategory)
         ),
       }))
       .filter(group => group.items.length > 0);
@@ -199,7 +154,7 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
       >
-        <EyeIcon />
+        <Icon name="lms/visible" size="md" aria-hidden="true" />
       </a>
     );
   };
@@ -224,7 +179,7 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
         <div className="tf-enhanced-choice-option-content">
           <div className="tf-enhanced-choice-selection-indicator" style={{ pointerEvents: 'none' }}>
             {/* <Checkbox isSelected={isPending} isDisabled={false} /> */}
-            <Checkbox checked={isPending} disabled={false} />
+            <TuiCheckbox checked={isPending} disabled={false} />
           </div>
           <div className="tf-enhanced-choice-label">{item.label}</div>
           {renderViewLink(item)}
@@ -250,13 +205,13 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
 
         <div className="tf-enhanced-choice-status">
           {hasPending && !reviewMode && (
-            <button
-              type="button"
-              className="tf-enhanced-choice-view-selected-btn"
-              onMouseDown={handleViewSelected}
-            >
-              View Selected ({pendingKeys.length})
-            </button>
+            <Button
+              label={`View Selected (${pendingKeys.length})`}
+              variant="link"
+              size="xs"
+              theme="primary"
+              onClick={handleViewSelected}
+            />
           )}
 
           {selectedKeys.length > 0 && !isOpen && (
@@ -278,67 +233,53 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
       <div
         className="tf-enhanced-choice-input-group tf-enhanced-choice-input-group--multi"
         style={{ position: 'relative' }}
-        onMouseDown={() => inputRef.current?.focus()}
       >
-          <span className="tf-enhanced-choice-search-icon" aria-hidden="true">
-            {isConfirmed ? <CheckIcon /> : <SearchIcon />}
-          </span>
 
-          {selectedKeys.map(key => {
-            const item = findItem(key);
-            if (!item) return null;
-            return (
-              <span key={key} className="tf-enhanced-choice-chip">
-                {item.label}
-                <button
-                  type="button"
-                  className="tf-enhanced-choice-chip-remove"
-                  aria-label={`Remove ${item.label}`}
-                  onMouseDown={(e) => { e.preventDefault(); handleRemoveChip(key); }}
-                >
-                  ×
-                </button>
-              </span>
-            );
-          })}
-
-          <input
-            {...inputAriaProps}
-            id={`${ariaLabel}-input`}
-            ref={inputRef}
-            className="tf-enhanced-choice-input tf-enhanced-choice-input--inline"
-            style={{ flex: 1, minWidth: 80, height: 32, boxSizing: 'border-box' }}
-            placeholder={selectedKeys.length === 0 ? (props.placeholder ?? 'Search...') : ''}
-            value={inputValue}
-            onChange={onInputChange}
-            onKeyDown={handleKeyDown}
-            onFocus={() => setIsOpen(true)}
-          />
-
-          {selectedKeys.length > 0 ? (
-            <button
-              type="button"
-              className="tf-enhanced-choice-clear-btn"
-              aria-label="Clear all"
-              onMouseDown={handleClear}
-            >
-              ×
-            </button>
-          ) : (
-            <button
-              ref={buttonRef}
-              type="button"
-              className="tf-enhanced-choice-chevron-btn"
-              aria-label="Toggle options"
-              onMouseDown={(e) => { e.preventDefault(); setIsOpen(o => !o); }}
-            >
-              {/* {props.actionLabel
-                ? props.actionLabel
-                : <span aria-hidden="true" className="tf-enhanced-choice-chevron">{isOpen ? '▲' : '▼'}</span>
-              } */}
-              <span aria-hidden="true" className="tf-enhanced-choice-chevron">{isOpen ? '▲' : '▼'}</span>
-            </button>
-          )}
+        <TextInput
+          {...inputAriaProps}
+          id={`${ariaLabel}-input`}
+          ref={inputRef}
+          className="tf-enhanced-choice-input--inline"
+          placeholder={selectedKeys.length === 0 ? (props.placeholder ?? 'Search...') : ''}
+          value={inputValue}
+          onChange={onInputChange}
+          onKeyDown={handleKeyDown}
+          onFocus={() => setIsOpen(true)}
+          prefix={
+              <>
+                {isConfirmed ? 
+                  <Icon name="system/check" size="xxl" /> : 
+                  <Icon name="system/search" size="xxl" />
+                }
+                {selectedKeys.length > 0 && (
+                <span style={{display: 'flex', flexWrap: 'wrap', gap: 'var(--tui-spacing-xxs)'}}>
+                  {selectedKeys.map(key => {
+                    const item = findItem(key);
+                    if (!item) return null;
+                    return (
+                      <Chip key={key} size="xs" theme="primary" onRemove={() => handleRemoveChip(key)} removeLabel={`Remove ${item.label}`}>
+                        {item.label}
+                      </Chip>
+                    );
+                  })}
+                </span>
+                )}
+              </>
+            }
+            suffix={
+              selectedKeys.length > 0 ? (
+                <IconButton label="Clear all" icon="system/close" onClick={handleClear} size="xs" />
+              ) : (
+                <IconButton
+                  ref={buttonRef}
+                  label="Toggle options"
+                  icon={isOpen ? 'system/chevron-up' : 'system/chevron-down'}
+                  onClick={() => setIsOpen(o => !o)}
+                  size="xs"
+                />
+              )
+            }
+        />
 
           {isOpen && (
             <div
@@ -354,51 +295,27 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
                     return (
                       <div key={key} className="tf-enhanced-choice-review-row">
                         <span className="tf-enhanced-choice-review-label">{item.label}</span>
-                        <button
-                          type="button"
-                          className="tf-enhanced-choice-review-remove"
-                          aria-label={`Remove ${item.label}`}
+                        <IconButton
+                          icon="system/close"
+                          label={`Remove ${item.label}`}
+                          variant="ghost"
+                          size="xs"
                           onClick={() => handleReviewRemove(key)}
-                        >
-                          ×
-                        </button>
+                        />
+
                       </div>
                     );
                   })}
                   <div className="tf-enhanced-choice-review-footer">
                     <span className="tf-enhanced-choice-review-question">Are you sure?</span>
-                    <button type="button" className="tf-enhanced-choice-cancel-btn" onClick={handleCancelReview}>
-                      Cancel
-                    </button>
-                    <button type="button" className="tf-enhanced-choice-confirm-selected-btn" onClick={handleConfirmSelected}>
-                      Confirm Selected
-                    </button>
+                    <Button label="Cancel" variant="ghost" size="xs" onClick={handleCancelReview} />
+                    <Button label="Confirm Selected" variant="solid" theme="primary" size="xs" onClick={handleConfirmSelected} />
                   </div>
                 </div>
 
               ) : (
 
                 <>
-                  
-                  {/* {props.filterCategories?.length && (
-                    <div className="tf-enhanced-choice-popover-header">
-                      <select
-                        className="tf-enhanced-choice-category-select"
-                        value={activeCategory}
-                        onChange={(e) => setActiveCategory(e.target.value)}
-                        aria-label="Filter by category"
-                        onMouseDown={(e) => e.stopPropagation()}
-                      >
-                        <option value="">All</option>
-                        {props.filterCategories.map(cat => (
-                          <option key={cat.value} value={cat.value}>
-                            {cat.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )} */}
-
                   <ul
                     {...listBoxAriaProps}
                     ref={listBoxRef}
@@ -408,7 +325,7 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
                       <li className="tf-enhanced-choice-empty">No results found.</li>
                     )}
 
-                    {/* Global Select All — only when not grouped */}
+                    {/* Global Select All only when not grouped */}
                     {!props.isGrouped && filteredItems.length > 0 && (
                       <li
                         role="presentation"
@@ -417,12 +334,7 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
                       >
                         <div className="tf-enhanced-choice-option-content">
                           <div className="tf-enhanced-choice-selection-indicator" style={{ pointerEvents: 'none' }}>
-                            {/* <Checkbox
-                              isSelected={globalSelectAllState === 'all'}
-                              isIndeterminate={globalSelectAllState === 'some'}
-                              isDisabled={false}
-                            /> */}
-                            <Checkbox
+                            <TuiCheckbox
                               checked={globalSelectAllState === 'all'}
                               indeterminate={globalSelectAllState === 'some'}
                               disabled={false}
@@ -450,7 +362,7 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
                               >
                                 <div className="tf-enhanced-choice-option-content">
                                   <div className="tf-enhanced-choice-selection-indicator" style={{ pointerEvents: 'none' }}>
-                                    <Checkbox
+                                    <TuiCheckbox
                                       checked={selectAllState === 'all'}
                                       indeterminate={selectAllState === 'some'}
                                       disabled={false}
@@ -458,7 +370,7 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
                                   </div>
                                   <div className="tf-enhanced-choice-label">Select All</div>
                                 </div>
-                              </div>
+                              </div>                    
                             </div>
                           )}
 
