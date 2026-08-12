@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { useEnhancedChoices } from "./useEnhancedChoices";
-import { TextInput, IconButton, Icon, Button } from "@tangible/ui";
+import { TextInput, IconButton, Icon, Button, Chip } from "@tangible/ui";
 
 const SingleChoices = (props) => {
 
@@ -41,7 +41,6 @@ const SingleChoices = (props) => {
 
     // refs
     inputRef,
-    buttonRef,
     listBoxRef,
     popoverRef,
 
@@ -82,7 +81,7 @@ const SingleChoices = (props) => {
   return (
     <div style={{ display: 'inline-flex', flexDirection: 'column', width: '100%' }}>
 
-      {/* ── Header ── */}
+      {/* Header */}
       <div className="tf-enhanced-choice-header">
         <div className="tf-enhanced-choice-label-group">
           {props.label && (
@@ -111,14 +110,10 @@ const SingleChoices = (props) => {
             />
           )}
           {showConfirmedUI && (
-            <span className="tf-enhanced-choice-selected-badge">
-              Selected
-            </span>
+            <Chip size="xs" theme="primary" >Selected</Chip>
           )}
           {isNotSelected && !isCustomMode && (
-            <span className="tf-enhanced-choice-not-selected-badge">
-              Not Selected
-            </span>
+            <Chip size="xs" theme="secondary">Not Selected</Chip>
           )}
         </div>
       </div>
@@ -130,7 +125,6 @@ const SingleChoices = (props) => {
         {isCustomMode ? (
           <>
             <TextInput
-              {...inputAriaProps}
               id={`${ariaLabel}-input`}
               placeholder="Enter custom value..."
               value={customDraft}
@@ -141,7 +135,7 @@ const SingleChoices = (props) => {
               }}
               autoFocus
               prefix={<Icon name="lms/edit-externally" size="xxl" />}
-              suffix={<IconButton label="Clear selection" icon="system/close" onClick={handleCancelCustomMode} />}
+              suffix={<IconButton label="Clear selection" icon="system/close" onClick={handleCancelCustomMode} size="xs" />}
             />
           </>
         ) : (
@@ -150,11 +144,10 @@ const SingleChoices = (props) => {
               {...inputAriaProps}
               id={`${ariaLabel}-input`}
               ref={inputRef}
-              // className="tf-enhanced-choice-input"
               prefix={showConfirmedUI ? <Icon name="system/check" size="xxl" /> : <Icon name="system/search" size="xxl" /> }
               suffix={showConfirmedUI
                 ? <IconButton size="xs" label="Clear selection" icon="system/close" onClick={handleClear} />
-                : <IconButton size="xs" ref={buttonRef} label="Toggle options" icon={isOpen ? 'system/chevron-up' : 'system/chevron-down'} onClick={() => setIsOpen(o => !o)} />
+                : <IconButton size="xs" label="Toggle options" icon={isOpen ? 'system/chevron-up' : 'system/chevron-down'} onClick={() => setIsOpen(o => !o)} />
               }
               placeholder={props.placeholder ?? 'Search...'}
               value={pendingLabel ?? inputValue}

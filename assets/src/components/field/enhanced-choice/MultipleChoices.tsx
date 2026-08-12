@@ -59,7 +59,6 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
     listBoxAriaProps,
     getOptionAriaProps,
     inputRef,
-    buttonRef,
     listBoxRef,
     ariaLabel,
     normalizedGroups,
@@ -124,7 +123,6 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
   }, [getGroupSelectAllState, pendingKeys, onSelectionChange]);
 
   const hasPending     = isOpen && pendingKeys.length > 0;
-  const isNotSelected_ = selectedKeys.length === 0 && !isOpen;
 
   // Global Select All
   const globalSelectAllState = useMemo(() => {
@@ -178,7 +176,6 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
       >
         <div className="tf-enhanced-choice-option-content">
           <div className="tf-enhanced-choice-selection-indicator" style={{ pointerEvents: 'none' }}>
-            {/* <Checkbox isSelected={isPending} isDisabled={false} /> */}
             <TuiCheckbox checked={isPending} disabled={false} />
           </div>
           <div className="tf-enhanced-choice-label">{item.label}</div>
@@ -215,15 +212,11 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
           )}
 
           {selectedKeys.length > 0 && !isOpen && (
-            <span className="tf-enhanced-choice-selected-badge">
-              {selectedKeys.length} Selected
-            </span>
+            <Chip size="xs" theme="primary">{selectedKeys.length} Selected</Chip>
           )}
 
-          {isNotSelected_ && (
-            <span className="tf-enhanced-choice-not-selected-badge">
-              0 Selected
-            </span>
+          {isNotSelected && (
+            <Chip size="xs" theme="secondary">0 Selected</Chip>
           )}
         </div>
       </div>
@@ -271,7 +264,6 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
                 <IconButton label="Clear all" icon="system/close" onClick={handleClear} size="xs" />
               ) : (
                 <IconButton
-                  ref={buttonRef}
                   label="Toggle options"
                   icon={isOpen ? 'system/chevron-up' : 'system/chevron-down'}
                   onClick={() => setIsOpen(o => !o)}

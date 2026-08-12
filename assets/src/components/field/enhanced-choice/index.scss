@@ -29,24 +29,6 @@
   flex-shrink: 0;
 }
 
-.tf-enhanced-choice-selected-badge {
-  font-size: 12px;
-  font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  background: #eff6ff;
-  color: #2563eb;
-}
-
-.tf-enhanced-choice-not-selected-badge {
-  font-size: 12px;
-  font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  background: #f9fafb;
-  color: #6b7280;
-}
-
 .tf-enhanced-choice-popover {
   position: absolute;
   top: calc(100% + 4px);
@@ -133,25 +115,6 @@
   font-size: 14px;
   user-select: none;
   color: #111827;
-}
-
-.tf-enhanced-choice-visibility-toggle {
-  background: none;
-  border: none;
-  padding: 4px;
-  cursor: pointer;
-  color: #6b7280;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  flex-shrink: 0;
-  transition: background-color 0.15s;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-    color: #111827;
-  }
 }
 
 .tf-enhanced-choice-radio {

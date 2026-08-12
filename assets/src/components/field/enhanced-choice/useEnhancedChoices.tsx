@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import { useFilter } from "react-aria";
 
 export interface ChoicesItem {
   value:        string;
@@ -99,10 +98,10 @@ const parseInitial = (props: UseEnhancedChoicesProps) => {
 };
 
 export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
-  const { contains } = useFilter({ sensitivity: 'base' });
+  // const { contains } = useFilter({ sensitivity: 'base' });
 
   const inputRef   = useRef<HTMLInputElement>(null);
-  const buttonRef  = useRef<HTMLButtonElement>(null);
+  // const buttonRef  = useRef<HTMLButtonElement>(null);
   const listBoxRef = useRef<HTMLUListElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
 
@@ -157,8 +156,8 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
   });
 
   const filteredItems = useMemo(() =>
-    normalizedItems.filter(item => contains(item.label, inputValue)),
-    [normalizedItems, inputValue, contains]
+    normalizedItems.filter(item => item.label.toLowerCase().includes(inputValue.toLowerCase())),
+    [normalizedItems, inputValue]
   );
 
   const onInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -353,7 +352,6 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
 
     // refs
     inputRef,
-    buttonRef,
     listBoxRef,
     popoverRef,
 
