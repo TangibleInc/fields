@@ -1,10 +1,8 @@
 import MultipleChoices from "./MultipleChoices";
 import SingleChoices from "./SingleChoices";
 import { getOptions } from '../../../utils'
-import { RenderChoices } from '../../base'
 
 export default (props) => {
-  // console.log('EnhancedChoice props:', props);
   const items = getOptions(props.choices ?? {});
   return props.multiple
     ? <MultipleChoices {...props} items={items} />
