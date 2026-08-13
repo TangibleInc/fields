@@ -213,7 +213,7 @@ export const AsyncWithMappedResults: Story = {
  * combobox state and the multiple API (add, remove, values)
  */
 const CustomLayout = forwardRef((props, ref) => (
-  <div className="tf-combo-box">
+  <div className="tf-combo-box tf-deprecated-control">
     <div className="tf-combo-box-text tui-input-group">
       <input
         { ...props.inputProps }

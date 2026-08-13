@@ -1,4 +1,13 @@
-// Styles for the deprecated (pre-TUI) controls, kept renderable alongside their
-// replacements. Imported from components/index.scss so the context variables and
-// mixins are in scope.
-@import './fields/combo-box/index.scss';
+/**
+ * We add the .tf-deprecated-control class on the container of
+ * deprecated controls (we don't want deprecated style to conflict
+ * with newer components)
+ *
+ * Still included in the main stylesheet for now, but might be moved
+ * into a separated one at some point
+ *
+ * @see src/components/index.scss
+ */
+.tf-deprecated-control {
+  @import './fields/combo-box/index.scss';
+}

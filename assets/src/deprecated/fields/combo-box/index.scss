@@ -1,4 +1,4 @@
-.tf-combo-box {
+&.tf-combo-box {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -96,7 +96,7 @@
   }
 }
 
-.tf-multiple-combobox {
+&.tf-multiple-combobox {
   position: relative;
 
   & > .tf-label {
@@ -118,11 +118,11 @@
   border-radius: var(--tui-input-radius, var(--tui-radius-md));
 }
 
-.tf-multiple-combobox[data-enabled="false"] .tf-multiple-combobox-values {
+&.tf-multiple-combobox[data-enabled="false"] .tf-multiple-combobox-values {
   opacity: 0.5;
 }
 
-.tf-combo-box-popover.tf-popover {
+&.tf-combo-box-popover.tf-popover {
   border: $field-border;
   border-bottom-left-radius: $field-border-radius;
   border-bottom-right-radius: $field-border-radius;  

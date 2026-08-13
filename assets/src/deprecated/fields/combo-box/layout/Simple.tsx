@@ -40,7 +40,7 @@ const Simple = forwardRef(({
   })
 
   return(
-    <div className="tf-combo-box" { ...focusWithinProps }>
+    <div className="tf-combo-box tf-deprecated-control" { ...focusWithinProps }>
       { parent.label &&
         <Label labelProps={ labelProps } parent={ parent }>
           { parent.label }
@@ -80,7 +80,7 @@ const Simple = forwardRef(({
               placement="bottom start"
               isNonModal
               style={{ width: ref.current.wrapper?.current?.offsetWidth }}
-              className={ 'tf-combo-box-popover' }
+              className={ 'tf-combo-box-popover tf-deprecated-control' }
             >
               <ListBox
                 loadingState={ parent.loadingState ?? 'idle' }
