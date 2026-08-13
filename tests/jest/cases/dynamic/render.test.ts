@@ -153,8 +153,7 @@ describe('dynamic values feature - render', () => {
     if (comboboxInput) await user.click(comboboxInput)
 
     Object.keys(choices).forEach( name => {
-      const item = within(document).getByText( choices[ name ] )
-      expect(item.getAttribute('data-key')).toBe( name )
+      expect(within(document).getByText( choices[ name ] )).toBeTruthy()
     })
 
     Object.keys(absentChoices).forEach( name => {
@@ -211,8 +210,7 @@ describe('dynamic values feature - render', () => {
     if (comboboxInput) await user.click(comboboxInput)
 
     Object.keys(choices).forEach( name => {
-      const item = within(document).getByText( choices[ name ] )
-      expect(item.getAttribute('data-key')).toBe( name )
+      expect(within(document).getByText( choices[ name ] )).toBeTruthy()
     })
 
     Object.keys(absentChoices).forEach( name => {

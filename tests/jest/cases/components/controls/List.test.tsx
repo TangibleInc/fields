@@ -4,13 +4,18 @@ import {
   screen,
   within
 } from '@testing-library/react'
-import { 
+import {
+  getFieldElement,
   rendersWithMinimal,
   rendersWithoutLabelThrowWarning
 } from '../../../utils/fields.ts'
 import { userEvent } from '@testing-library/user-event'
 
 describe('List component', () => {
+
+  const openChoices = (user, container) => (
+    user.click(container.querySelector('input[role="combobox"]'))
+  )
 
   it('renders with minimal config', () => rendersWithMinimal({ type: 'list' }))
   it('renders when no label but throws a warning', () => rendersWithoutLabelThrowWarning({ type: 'list' }))
@@ -25,7 +30,7 @@ describe('List component', () => {
       }
     ))
   
-    const classes = container.firstChild.firstChild.classList
+    const classes = getFieldElement(container).classList
   
     expect(classes.contains(`tf-list`)).toEqual(true)
   
@@ -82,11 +87,11 @@ describe('List component', () => {
     let visibilityButtons = document.getElementsByClassName(`tf-button-icon-eye`) 
     expect(visibilityButtons.length).toEqual(0)
 
-    await user.click(within(container).getByText('▼'))
-    
+    await openChoices(user, container)
+
     // Already selected items should be disabled
-    expect(document.getElementsByClassName(`tf-list-box-option`).length).toEqual(3)
-    expect(document.getElementsByClassName(`tf-list-box-option-disabled`).length).toEqual(2)
+    expect(document.querySelectorAll(`.tui-combobox__option`).length).toEqual(3)
+    expect(document.querySelectorAll(`.tui-combobox__option[data-disabled="true"]`).length).toEqual(2)
 
     await user.click(deleteButtons[0])
 
@@ -96,10 +101,10 @@ describe('List component', () => {
     deleteButtons = document.getElementsByClassName(`tf-button-icon-trash`) 
     expect(deleteButtons.length).toEqual(0)
 
-    await user.click(within(container).getByText('▼'))
+    await openChoices(user, container)
 
-    expect(document.getElementsByClassName(`tf-list-box-option`).length).toEqual(3)
-    expect(document.getElementsByClassName(`tf-list-box-option-disabled`).length).toEqual(1)
+    expect(document.querySelectorAll(`.tui-combobox__option`).length).toEqual(3)
+    expect(document.querySelectorAll(`.tui-combobox__option[data-disabled="true"]`).length).toEqual(1)
   })
 
   test.each([
@@ -145,7 +150,7 @@ describe('List component', () => {
     let items = container.getElementsByClassName(`tf-list-item`)
     expect(items.length).toEqual(0)
 
-    await user.click(within(container).getByText('▼'))
+    await openChoices(user, container)
     await user.click(within(document).getByText('Test2'))
 
     items = container.getElementsByClassName(`tf-list-item`)
