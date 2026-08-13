@@ -70,7 +70,7 @@ describe('ComboBox component', () => {
     const { container } = render(
       fields.render({
         name        : 'field-name',
-        type        : 'combo-box',
+        type        : 'deprecated-combo-box',
         label       : 'I am the label',
         description : 'I am the description',
         choices     : choices.config,
@@ -99,7 +99,7 @@ describe('ComboBox component', () => {
       <>
         { fields.render({
           name     : 'field-name',
-          type     : 'combo-box',
+          type     : 'deprecated-combo-box',
           label    : 'Label',
           choices  : choices.config,
           multiple : type === 'multiple'
@@ -167,7 +167,7 @@ describe('ComboBox component', () => {
       <>
         { fields.render({
           name      : 'field-name',
-          type      : 'combo-box',
+          type      : 'deprecated-combo-box',
           label     : 'Label',
           isAsync   : true,
           searchUrl : 'https://search.com/endpoint',
@@ -219,7 +219,7 @@ describe('ComboBox component', () => {
     const { container } = render(
       fields.render({
         name      : 'field-name',
-        type      : 'combo-box',
+        type      : 'deprecated-combo-box',
         label     : 'Label',
         isAsync   : true,
         searchUrl : 'https://search.com/endpoint',
@@ -252,7 +252,7 @@ describe('ComboBox component', () => {
     const { container } = render(
       fields.render({
         name     : 'field-name',
-        type     : 'combo-box',
+        type     : 'deprecated-combo-box',
         label    : 'Label',
         choices  : choices.config,
         multiple : type === 'multiple',
@@ -294,7 +294,7 @@ describe('ComboBox component', () => {
       <>
         { fields.render({
           name      : 'field-name',
-          type      : 'combo-box',
+          type      : 'deprecated-combo-box',
           label     : 'Label',
           isAsync   : true,
           searchUrl : 'https://search.com/endpoint',
@@ -356,7 +356,7 @@ describe('ComboBox component', () => {
     const { container } = render(
       fields.render({
         name      : 'field-name',
-        type      : 'combo-box',
+        type      : 'deprecated-combo-box',
         label     : 'Label',
         multiple  : type === 'multiple',
         choices   : choices,
@@ -383,7 +383,7 @@ describe('ComboBox component', () => {
     const { container } = render(
       fields.render({
         name     : 'field-name',
-        type     : 'combo-box',
+        type     : 'deprecated-combo-box',
         label    : 'Label',
         choices  : choices.config,
         multiple : type === 'multiple',
@@ -412,7 +412,7 @@ describe('ComboBox component', () => {
     const { container } = render(
       fields.render({
         name     : 'field-name',
-        type     : 'combo-box',
+        type     : 'deprecated-combo-box',
         label    : 'Label',
         choices  : choices.config,
         multiple : 'multiple',

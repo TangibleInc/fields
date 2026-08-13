@@ -4,6 +4,14 @@ import {
 } from '@testing-library/react'
 import * as fields from '../../../assets/src/index.tsx'
 
+/**
+ * TUI renders its portal root as the first child of the interface wrapper,
+ * the field itself is the next element
+ */
+const getFieldElement = container => (
+  [ ...container.firstChild.children ].find(element => element.id !== 'tui-portal-root')
+)
+
 const rendersWithMinimal = ({
   type,
   expectedClass
@@ -16,7 +24,7 @@ const rendersWithMinimal = ({
     }
   ))
   
-  const classes = container.firstChild.firstChild.classList
+  const classes = getFieldElement(container).classList
   expect(classes.contains(expectedClass ?? `tf-${type}`)).toEqual(true)
 }
 
@@ -33,7 +41,7 @@ const rendersWithoutLabelThrowWarning = ({
     }
   ))
   
-  const classes = container.firstChild.firstChild.classList
+  const classes = getFieldElement(container).classList
 
   expect(classes.contains(expectedClass ?? `tf-${type}`)).toEqual(true)
   expect(console.warn).toHaveBeenCalled()
@@ -52,7 +60,7 @@ const rendersLabelAndDescription = ({
     }
   ))
 
-  const classes = container.firstChild.firstChild.classList
+  const classes = getFieldElement(container).classList
 
   expect(classes.contains(expectedClass ?? `tf-${type}`)).toEqual(true)
 
@@ -80,6 +88,7 @@ const renderHasNotElement = (config, getElement) => {
 } 
 
 export {
+  getFieldElement,
   rendersWithMinimal,
   rendersWithoutLabelThrowWarning,
   rendersLabelAndDescription,
