@@ -51,7 +51,7 @@ export function renderComboOptions(
         </Option>
       ))}
       {groups.map((g) => (
-        <Group key={g.value}>
+        <Group key={g.key}>
           <Label>{g.label}</Label>
           {(g.choices ?? []).map((o) => (
             <Option key={o.value} value={o.value} disabled={isDisabled(o.value)}>

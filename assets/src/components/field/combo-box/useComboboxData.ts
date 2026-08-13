@@ -5,11 +5,12 @@ import { getOptions } from '../../../utils'
 /**
  * Option shapes produced by getOptions():
  *  - flat:    { value, label }
- *  - grouped: { value, label, choices: [{ value, label }] }
+ *  - grouped: { key, label, choices: [{ value, label }] }
  */
 export type ComboboxOption = {
   value: string | number
   label: string
+  key?: string
   choices?: ComboboxOption[]
 }
 
