@@ -32,6 +32,7 @@ import {
 } from './components/field/'
 
 import {
+  ButtonGroup as DeprecatedButtonGroup,
   ComboBox as DeprecatedComboBox,
   Select as DeprecatedSelect
 } from './deprecated/fields/'
@@ -95,8 +96,9 @@ const getTypes = () => {
       /**
        * @see assets/src/deprecated/fields
        */
-      'deprecated-combo-box' : DeprecatedComboBox,
-      'deprecated-select'    : DeprecatedSelect
+      'deprecated-button-group' : DeprecatedButtonGroup,
+      'deprecated-combo-box'    : DeprecatedComboBox,
+      'deprecated-select'       : DeprecatedSelect
     },
     element: {
       'button'            : Button,

@@ -9,6 +9,7 @@
  * @see src/components/index.scss
  */
 .tf-deprecated-control {
+  @import './fields/button-group/index.scss';
   @import './fields/combo-box/index.scss';
   @import './fields/select/index.scss';
 }
