@@ -8,22 +8,25 @@ import {
   renderHasNotElement
 } from '../../../utils/fields.ts'
 
-describe('Button group component', () => {
+describe('Deprecated button group component', () => {
 
-  it('renders with minimal config', () => rendersWithMinimal({ type: 'button-group' }))
-  it('renders when no label but throws a warning', () => rendersWithoutLabelThrowWarning({ type: 'button-group' }))
-  it('renders label and description', () => rendersLabelAndDescription({ type: 'button-group' }))
-  
+  const type = 'deprecated-button-group'
+  const expectedClass = 'tf-button-group'
+
+  it('renders with minimal config', () => rendersWithMinimal({ type, expectedClass }))
+  it('renders when no label but throws a warning', () => rendersWithoutLabelThrowWarning({ type, expectedClass }))
+  it('renders label and description', () => rendersLabelAndDescription({ type, expectedClass }))
+
   it('renders', () => {
-    
-      render( 
+
+      render(
         <>
           { fields.render({
             label   : 'Button group',
             name    : 'button-group-name',
-            type    : 'button-group',
+            type    : type,
             choices : {
-              choice1 : 'Choice 1', 
+              choice1 : 'Choice 1',
               choice2 : 'Choice 2'
             }
           }) }
@@ -40,13 +43,13 @@ describe('Button group component', () => {
 
   it('supports readOnly', () => {
 
-    const config = { 
+    const config = {
       label   : 'Button group',
-      type    : 'button-group',
+      type    : type,
       choices : {
-        choice1 : 'Choice 1', 
+        choice1 : 'Choice 1',
         choice2 : 'Choice 2'
-      }, 
+      },
     }
 
     renderHasElement(config, container => container.querySelector('.tf-button-group-container'))
