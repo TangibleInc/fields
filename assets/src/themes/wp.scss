@@ -77,6 +77,8 @@
   --tui-input-radius: 2px;
   --tui-select-trigger-radius: 2px;
   --tui-select-content-radius: 2px;
+  --tui-multiselect-trigger-radius: 2px;
+  --tui-multiselect-content-radius: 2px;
   --tui-accordion-radius: 4px;
   --tui-chip-radius: 8px;
   --tui-card-radius: 4px;
@@ -112,7 +114,8 @@
   text-transform: uppercase;
 }
 
-.tf-context-wp.tui-interface .tui-select__option {
+.tf-context-wp.tui-interface .tui-select__option,
+.tf-context-wp.tui-interface .tui-multiselect__option {
   border-radius: var(--tui-select-content-radius);
 }
 

@@ -17,7 +17,7 @@ import {
   Popover,
   Label,
   Description
-} from '../../base'
+} from '../../../components/base'
 
 import { initSet } from '../../../utils'
 
@@ -62,7 +62,7 @@ const MultipleSelect = props => {
     />
 
   return(
-    <div className="tf-multiple-select" ref={ wrapperRef }>
+    <div className="tf-multiple-select tf-deprecated-control" ref={ wrapperRef }>
       <input type="hidden" name={ props.name ?? '' } value={ [...selected].join(',') } />
       { props.label &&
         <Label labelProps={ labelProps } parent={ props }>
