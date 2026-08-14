@@ -72,9 +72,9 @@ const bulkActionsRepeaterTests = (layout, args = {}) => {
 
     // open select, chose delete action, click apply, confirm modal
     const bulkActionContainer = container.querySelector('.tf-repeater-bulk-actions')
-    await user.click(within(bulkActionContainer).getByText('▼'))
+    await user.click(bulkActionContainer.querySelector('.tui-select__trigger'))
     await user.click(
-      within(document.querySelector('.tf-popover ')).getByText('Delete')
+      within(document.querySelector('.tui-select__content')).getByText('Delete')
     )
     await user.click(within(bulkActionContainer).getByText('Apply'))
     await user.click(
