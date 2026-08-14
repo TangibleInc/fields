@@ -24,7 +24,10 @@ const FieldGroupItem = ({
   const controlProps = isElement
     ? {}
     : (uncontrolled
-      ? { onChange: value => store._setValueFromControl(config.name, value) }
+      ? {
+          onChange     : value => store._setValueFromControl(config.name, value),
+          onStoreValue : value => store._setValueFromControl(config.name, value)
+        }
       : { value: values[ config.name ] ?? '', onChange })
 
   return(

@@ -18,6 +18,7 @@ const Control = ({
   visibility,
   data,
   afterInitialization = false,
+  onStoreValue = false,
   ...props
 }) => {
 
@@ -48,16 +49,19 @@ const Control = ({
 
   const onChange = newValue => {
 
+    /**
+     * The store is updated here so that it is already up to date for the
+     * listeners of the event below, which read values from it
+     */
+    if( onStoreValue ) onStoreValue(newValue)
+
     setValue(newValue)
 
-    // The timeout make sure the event is dispatched after the state changed
-    setTimeout(() => {
-      triggerEvent('valueChange', {
-        name          : props.name ?? false,
-        props         : props,
-        value         : newValue,
-        previousValue : value
-      })
+    triggerEvent('valueChange', {
+      name          : props.name ?? false,
+      props         : props,
+      value         : newValue,
+      previousValue : value
     })
   }
 

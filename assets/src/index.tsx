@@ -36,8 +36,9 @@ const renderField = props => (
     getValue        : store.getValue.bind(store),
     portalContainer : props.portalContainer ?? document.body
   }}>
-    <Control 
-      { ...props } 
+    <Control
+      { ...props }
+      onStoreValue={ value => store._setValueFromControl(props.name, value) }
       onChange={ value => {
         store._setValueFromControl(props.name, value)
         if( props.onChange ) props.onChange(value)

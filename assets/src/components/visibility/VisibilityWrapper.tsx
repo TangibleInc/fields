@@ -52,7 +52,7 @@ const VisibilityWrapper = ({
       // Avoid unnecessary evaluations
       if( ! triggerFields.includes(field.name) ) return;
       
-      setTimeout(evaluateVisibility)
+      evaluateVisibility()
     })
 
     /**
