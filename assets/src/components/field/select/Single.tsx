@@ -11,7 +11,7 @@ import { renderSelectOptions } from './renderOptions'
 const Single = (props: any) => {
   const options = getOptions(props.choices ?? {})
   const [value, setValue] = useState<string | number | undefined>(props.value || undefined)
-  const disabled = Boolean(props.readOnly)
+  const disabled = Boolean(props.isDisabled || props.readOnly)
 
   const handleChange = (next: string | number | undefined) => {
     setValue(next)
