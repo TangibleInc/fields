@@ -22,18 +22,21 @@ import {
  * - Support value upgrade from simple to date range
  */
 
-describe('DatePicker component', () => {
+describe('Deprecated DatePicker component', () => {
 
-  it('renders with minimal config', () => rendersWithMinimal({ type: 'date-picker' }))
-  it('renders when no label but throws a warning', () => rendersWithoutLabelThrowWarning({ type: 'date-picker' }))
-  it('renders label and description', () => rendersLabelAndDescription({ type: 'date-picker' }))
+  const type = 'deprecated-date-picker'
+  const expectedClass = 'tf-date-picker'
+
+  it('renders with minimal config', () => rendersWithMinimal({ type, expectedClass }))
+  it('renders when no label but throws a warning', () => rendersWithoutLabelThrowWarning({ type, expectedClass }))
+  it('renders label and description', () => rendersLabelAndDescription({ type, expectedClass }))
   
   it('opens and closes the calendar on click on the button', async () => {
 
     const user = userEvent.setup()
     const { container } = render(
       fields.render({
-        type  : 'date-picker',
+        type  : 'deprecated-date-picker',
         label : 'Label for date_picker'
       }
     ))
@@ -55,7 +58,7 @@ describe('DatePicker component', () => {
     const { container } = render(
       <>
         { fields.render({
-          type  : 'date-picker',
+          type  : 'deprecated-date-picker',
           label : 'Label for date_picker'
         }) }
         <div>Test click outside</div>
@@ -76,7 +79,7 @@ describe('DatePicker component', () => {
     const user = userEvent.setup()
     const { container } = render(
       fields.render({
-        type  : 'date-picker',
+        type  : 'deprecated-date-picker',
         label : 'Label',
         value : '2020-01-30',
         name  : 'date-field'
@@ -122,7 +125,7 @@ describe('DatePicker component', () => {
     const user = userEvent.setup()
     const { container } = render(
       fields.render({
-        type  : 'date-picker',
+        type  : 'deprecated-date-picker',
         label : 'Label',
         value : '2020-01-30',
         name  : 'date-field'
@@ -171,7 +174,7 @@ describe('DatePicker component', () => {
     const user = userEvent.setup()
     const { container } = render(
       fields.render({
-        type  : 'date-picker',
+        type  : 'deprecated-date-picker',
         label : 'Label',
         value : '2020-01-30',
         name  : 'date-field'
@@ -235,7 +238,7 @@ describe('DatePicker component', () => {
     const user = userEvent.setup()
     const { container } = render(
       fields.render({
-        type       : 'date-picker',
+        type       : 'deprecated-date-picker',
         label      : 'Label',
         value      : '2050-01-30',
         name       : 'date-field',
@@ -270,7 +273,7 @@ describe('DatePicker component', () => {
     const dateToday = today( getLocalTimeZone() )
     const { container } = render(
       fields.render({
-        type       : 'date-picker',
+        type       : 'deprecated-date-picker',
         label      : 'Label',
         value      : dateToday.toString(),
         name       : 'date-field',
@@ -310,7 +313,7 @@ describe('DatePicker component', () => {
     const dateToday = today( getLocalTimeZone() )
     const { container } = render(
       fields.render({
-        type       : 'date-picker',
+        type       : 'deprecated-date-picker',
         label      : 'Label',
         value      : dateToday.toString(),
         name       : 'date-field',
@@ -343,7 +346,7 @@ describe('DatePicker component', () => {
     const dateToday = today( getLocalTimeZone() )
     const { container } = render(
       fields.render({
-        type       : 'date-picker',
+        type       : 'deprecated-date-picker',
         label      : 'Label',
         value      : dateToday.toString(),
         name       : 'date-field',
@@ -376,7 +379,7 @@ describe('DatePicker component', () => {
 
     const { container } = render(
       fields.render({
-        type       : 'date-picker',
+        type       : 'deprecated-date-picker',
         label      : 'Label',
         value      : '2000-01-30',
         name       : 'date-field',
@@ -393,7 +396,7 @@ describe('DatePicker component', () => {
     const user = userEvent.setup()
     const { container } = render(
       fields.render({
-        type      : 'date-picker',
+        type      : 'deprecated-date-picker',
         label     : 'Label',
         name      : 'date-field',
         dateRange : true,
@@ -437,7 +440,7 @@ describe('DatePicker component', () => {
     const user = userEvent.setup()
     const { container } = render(
       fields.render({
-        type       : 'date-picker',
+        type       : 'deprecated-date-picker',
         label      : 'Label',
         name       : 'date-field',
         dateRange  : true,
@@ -491,7 +494,7 @@ describe('DatePicker component', () => {
     const user = userEvent.setup()
     const { container } = render(
       fields.render({
-        type        : 'date-picker',
+        type        : 'deprecated-date-picker',
         label       : 'Label',
         name        : 'date-field',
         dateRange   : true,
@@ -539,7 +542,7 @@ describe('DatePicker component', () => {
     const user = userEvent.setup()
     const { container } = render(
       fields.render({
-        type       : 'date-picker',
+        type       : 'deprecated-date-picker',
         label      : 'Label',
         name       : 'date-field',
         dateRange  : true,
@@ -574,7 +577,7 @@ describe('DatePicker component', () => {
   
     const { container } = render(
       fields.render({
-        type      : 'date-picker',
+        type      : 'deprecated-date-picker',
         label     : 'Label',
         name      : 'date-field',
         dateRange : true,
