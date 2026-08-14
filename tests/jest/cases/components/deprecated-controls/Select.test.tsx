@@ -6,18 +6,21 @@ import {
   renderHasNotElement
 } from '../../../utils/fields.ts'
 
-describe('Select component', () => {
+describe('Deprecated select component', () => {
 
-  it('renders when no label but throws a warning', () => rendersWithoutLabelThrowWarning({ type: 'select' }))
-  
+  it('renders when no label but throws a warning', () => rendersWithoutLabelThrowWarning({
+    type          : 'deprecated-select',
+    expectedClass : 'tf-select'
+  }))
+
   it('renders', () => {
-    
-    render( 
+
+    render(
       <>
         { fields.render({
           label   : 'Select',
           name    : 'select-name',
-          type    : 'select',
+          type    : 'deprecated-select',
           choices : {
             choice1 : 'Choice 1', 
             choice2 : 'Choice 2'
@@ -44,7 +47,7 @@ describe('Select component', () => {
           label       : 'Label for select',
           description : 'Description for select',
           name        : 'select-name',
-          type        : 'select',
+          type        : 'deprecated-select',
           choices     : {
             choice1 : 'Choice 1', 
             choice2 : 'Choice 2'
@@ -67,8 +70,8 @@ describe('Select component', () => {
 
   it('supports readOnly', () => {
 
-    const config = { 
-      type    : 'select', 
+    const config = {
+      type    : 'deprecated-select',
       label   : 'Label',
       choices : {
         choice1 : 'Choice 1', 
