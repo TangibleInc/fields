@@ -10,7 +10,7 @@ import { getOptions } from '../../../utils'
 const ButtonGroup = (props: any) => {
   const options = getOptions(props.choices ?? {})
   const [value, setValue] = useState<string | number | undefined>(props.value ?? undefined)
-  const disabled = Boolean(props.readOnly)
+  const disabled = Boolean(props.isDisabled || props.readOnly)
   const disabledKeys = (props.disabledKeys ?? []).map(String)
 
   const handleChange = (next: string | number) => {
