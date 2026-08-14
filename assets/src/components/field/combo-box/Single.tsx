@@ -19,9 +19,6 @@ const Single = (props: any) => {
   const { options, loading, isAsync, onInputChange, ensureLoaded } = useComboboxData(props)
 
   const selectedKey = isAsync ? props.value?.value ?? undefined : props.value || undefined
-  const initialLabel = isAsync ? props.value?.label ?? '' : String(props.value ?? '')
-
-  const [inputValue, setInputValue] = useState(initialLabel)
 
   // value -> label map; seeded from the initial value, merged from options.
   const labelMapRef = useRef<Map<string, string>>(new Map())
@@ -30,6 +27,14 @@ const Single = (props: any) => {
   }
   for (const opt of flatten(options)) labelMapRef.current.set(String(opt.value), opt.label)
   const labelFor = (key: string | number) => labelMapRef.current.get(String(key)) ?? String(key)
+
+  const initialLabel = isAsync
+    ? props.value?.label ?? ''
+    : selectedKey !== undefined
+      ? labelFor(selectedKey)
+      : ''
+
+  const [inputValue, setInputValue] = useState(initialLabel)
 
   const disabled = Boolean(props.readOnly)
 
