@@ -1,14 +1,13 @@
 import Date from './Date'
-import DateRange from './DateRange'
-import { CalendarContextProvider } from './calendar/DateRangeCalendarContext'
+import DeprecatedDate from '../../../deprecated/fields/date/'
 
-export default props => {
-    //for now, we're only using context on DateRange
-    if( props.dateRange ) return (
-        <CalendarContextProvider value={props.value}>
-            <DateRange {...props} /> 
-        </CalendarContextProvider>
-    )
-
-    return <Date {...props} />
-}
+/**
+ * The date range is not migrated to TUI yet
+ *
+ * @see src/deprecated/fields/date
+ */
+export default props => (
+  props.dateRange
+    ? <DeprecatedDate { ...props } />
+    : <Date { ...props } />
+)

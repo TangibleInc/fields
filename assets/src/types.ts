@@ -34,6 +34,7 @@ import {
 import {
   ButtonGroup as DeprecatedButtonGroup,
   ComboBox as DeprecatedComboBox,
+  Date as DeprecatedDate,
   Select as DeprecatedSelect
 } from './deprecated/fields/'
 
@@ -98,6 +99,7 @@ const getTypes = () => {
        */
       'deprecated-button-group' : DeprecatedButtonGroup,
       'deprecated-combo-box'    : DeprecatedComboBox,
+      'deprecated-date-picker'  : DeprecatedDate,
       'deprecated-select'       : DeprecatedSelect
     },
     element: {

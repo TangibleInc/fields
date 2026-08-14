@@ -5,7 +5,7 @@ import {
 } from 'react'
 
 import { useDateRangePicker } from 'react-aria'
-import { Button, Dialog, Popover } from '../../base'
+import { Button, Dialog, Popover } from '../../../components/base'
 import { useCalendarContext } from './calendar/DateRangeCalendarContext'
 import DateField from './DateField'
 import Calendar from './calendar/Calendar'
@@ -68,7 +68,12 @@ const DateRangePicker = forwardRef(({
       </div>
       {state.isOpen &&
         (
-          <Popover state={state} triggerRef={ref} placement="bottom start">
+          <Popover
+            state={state}
+            triggerRef={ref}
+            placement="bottom start"
+            className="tf-date-picker-popover tf-deprecated-control"
+          >
             <Dialog {...dialogProps}>
               <Calendar
                 {...calendarProps }

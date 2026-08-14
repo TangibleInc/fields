@@ -6,6 +6,7 @@
 .tf-popover {
   background: $field-background;
   border: $field-border;
+  border-radius: $field-border-radius;
   color: $field-font-color;
   z-index: $popover-index;
 }

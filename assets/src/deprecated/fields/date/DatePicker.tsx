@@ -7,7 +7,7 @@ import {
   Button, 
   Dialog,
   Popover
-} from '../../base'
+} from '../../../components/base'
 
 import Calendar from './calendar/Calendar'
 import DateField from './DateField'
@@ -80,7 +80,12 @@ const DatePicker = forwardRef(({
         </Button>
       </div>
       { state.isOpen &&
-        <Popover state={state} triggerRef={ref} placement="bottom start">
+        <Popover
+          state={state}
+          triggerRef={ref}
+          placement="bottom start"
+          className="tf-date-picker-popover tf-deprecated-control"
+        >
           <Dialog {...dialogProps}>
             <Calendar {...calendarProps} />
           </Dialog>
