@@ -1,20 +1,14 @@
+// simple-dimension = TUI TextInput (number) + TUI Select (unit). Controls are
+// TUI-styled; this just lays them out in a row.
 .tf-simple-dimensions {
-  display: flex;
-  flex-direction: column;
-
-  .tf-select,
-  .tf-select .tf-button-select {
-    width: auto;
+  .tf-dimension-row {
+    display: flex;
+    gap: var(--tui-spacing-xs);
+    align-items: center;
   }
-}
 
-.tf-simple-dimensions-container {
-  display: flex;
-  width: 100%;
-  position: relative;
-  gap: var(--tui-spacing-xs);
-
-  > div:first-child {
+  .tf-dimension-number {
     flex: 1 1 auto;
+    min-width: 0;
   }
 }

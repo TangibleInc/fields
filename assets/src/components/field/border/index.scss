@@ -1,3 +1,14 @@
-.tf-border-dimensions-container {
-    margin: 0 0 5px 0;
+// border = the TUI dimensions composite + the (react-aria) Color field, laid
+// out side by side.
+.tf-border {
+  .tf-border-container {
+    display: flex;
+    gap: var(--tui-spacing-sm);
+    align-items: flex-start;
+  }
+
+  .tf-border-dimensions-container {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
 }

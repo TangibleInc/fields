@@ -4,7 +4,6 @@ import {
   useEffect
 } from 'react'
 
-import { useDateRangePicker } from 'react-aria'
 import { Button, Dialog, Popover } from '../../../components/base'
 import { useCalendarContext } from './calendar/DateRangeCalendarContext'
 import DateField from './DateField'
@@ -34,6 +33,11 @@ const DateRangePicker = forwardRef(({
     } 
   }, [props.value])
 
+  /**
+   * The hook is called by the parent, which owns the label
+   *
+   * @see ./DateRange.tsx
+   */
   const {
     groupProps,
     startFieldProps,
@@ -42,7 +46,7 @@ const DateRangePicker = forwardRef(({
     dialogProps,
     calendarProps,
     inputProps,
-  } = useDateRangePicker( props, state, ref )
+  } = dateRangePickerProps
 
   const getStringValue = () => (
     (state.value && state.value.start && state.value.end) 

@@ -1,0 +1,142 @@
+import { 
+  useState,
+  useEffect 
+} from 'react'
+
+import { Item } from 'react-stately'
+import { useField } from 'react-aria'
+
+import {
+  Label,
+  Description,
+  Button
+} from '../../../components/base'
+
+import Number from '../../../components/field/number/Number'
+import Select from '../select/Select'
+
+import { initJSON } from '../../../utils'
+
+const Dimensions = props => {
+
+  const units = props.units ?? ['px']
+  const showToggle = props.linked === 'toggle' || props.linked === undefined
+
+  const {
+    labelProps, 
+    fieldProps, // Not sure where to use this one
+    descriptionProps
+  }= useField(props)
+  
+  const [value, setValue] = useState( 
+    initJSON(
+      props.value ?? '',
+      {
+        top      : 0,
+        left     : 0,
+        right    : 0,
+        bottom   : 0,
+        unit     : units[0],
+        isLinked : false
+      }
+    )
+  )
+
+  useEffect(() => props.onChange && props.onChange(value), [value])
+
+  /**
+   * Sync all values with top when isLinked change to true
+   */
+  useEffect(() => {
+    value.isLinked && setLinkedPosition(value.top)
+  }, [value.isLinked]);
+
+  const setAttribute = (number, position) => {
+    setValue({
+      ...value,
+      [position]: number,
+    })
+  }
+
+  const setLinkedPosition = number => {
+    setValue({
+      ...value,
+      top    : number,
+      left   : number,
+      right  : number,
+      bottom : number,
+    })
+  }
+
+  const setIsLinked = state => {
+    setValue({
+      ...value,
+      isLinked: state,
+    })
+  }
+
+  /**
+   * We only rely on saved value when toggle is enabled, in other cases props change
+   * won't be taken into account if we change between true and false
+   */
+  const isLinked = () => (
+    showToggle 
+      ? (value.isLinked ?? false)
+      : props.linked
+  )
+
+  let groupClasses = 'tf-dimensions-number-groups'
+  if( isLinked() ) groupClasses += ' tf-dimensions-number-groups-linked'
+
+  return(
+    <div className="tf-dimensions tf-deprecated-control">
+      { props.label &&
+        <Label labelProps={ labelProps } parent={ props }>
+          { props.label }
+        </Label> }
+      <input type="hidden" name={ props.name ?? '' } value={ JSON.stringify(value) } { ...fieldProps } />
+      <div className="tf-dimensions-container">
+        <div className={ groupClasses }>
+          { ['top', 'left', 'right', 'bottom'].map(position => (
+            <Number 
+              key={ position }
+              value={ value[position] ?? 0 } 
+              name={ position }
+              description={ false }
+              label={ `Value for ${position} position` }
+              labelVisuallyHidden={ true }
+              onChange={ number => isLinked()
+                ? setLinkedPosition(number)
+                : setAttribute(number, position) }
+            />
+          )) }
+        </div>
+        <Select 
+          label={ `Dimensions unit` }
+          labelVisuallyHidden={ true }
+          description={ false }
+          selectedKey={ value.unit ?? 'px' } 
+          onSelectionChange={ unit => setAttribute(unit, 'unit') }
+          placeholder={ 'unit' }
+        >
+          { units.map(unit =>(
+            <Item key={ unit }>{ unit }</Item>
+          )) }
+        </Select>
+        { showToggle &&
+          <Button
+            type={"action"}
+            leftIconName={ value.isLinked ? 'system/link' : 'system/unlink' }
+            onPress={ () => setIsLinked(!value.isLinked) }
+          />
+        }
+      </div>
+      { props.description &&
+        <Description descriptionProps={ descriptionProps } parent={ props }>
+          { props.description }
+        </Description> }
+    </div>
+  )
+}
+
+export default Dimensions
