@@ -1,60 +1,75 @@
-import { 
-  useEffect,
-  createContext
-} from 'react'
-
-import { useRadioGroup } from 'react-aria'
-import { useRadioGroupState } from 'react-stately'
+import { useState } from 'react'
+import { Field, SegmentedControl } from '@tangible/ui'
 import { getOptions } from '../../../utils'
 
-import ButtonOption from './ButtonOption'
-import {
-  Description,
-  Label
-} from '../../base'
-
-const ButtonGroupContext = createContext(null)
-
 /**
- * @see https://react-spectrum.adobe.com/react-aria/useRadioGroup.html
+ * button-group is a single-select radiogroup rendered as segments — now on TUI's
+ * SegmentedControl. Value contract preserved: the selected key. A hidden input
+ * carries it for form submission (react-aria's native radios did this before).
  */
-
-const ButtonGroup = props => {
-
-  const state = useRadioGroupState(props)
+const ButtonGroup = (props: any) => {
   const options = getOptions(props.choices ?? {})
+  const [value, setValue] = useState<string | number | undefined>(props.value ?? undefined)
+  const disabled = Boolean(props.isDisabled || props.readOnly)
+  const disabledKeys = (props.disabledKeys ?? []).map(String)
 
-  const {
-    radioGroupProps,
-    labelProps,
-    descriptionProps
-  } = useRadioGroup(props, state)
+  const handleChange = (next: string | number) => {
+    setValue(next)
+    props.onChange?.(next)
+  }
 
-  useEffect(() => { 
-    props.onChange && props.onChange(state.selectedValue)
-  }, [state.selectedValue])
-
-  return(
+  return (
     <div className="tf-button-group">
-      { props.label &&
-        <Label labelProps={ labelProps } parent={ props }>
-          { props.label }
-        </Label> }
-      <div className="tf-button-group-container" { ...radioGroupProps }>
-        <ButtonGroupContext.Provider value={ state }>
-          { options.map(option => (
-            <ButtonOption key={ option.value } context={ ButtonGroupContext } { ...option } >
-              { props.use_dashicon
-                ? <span className={ `dashicons dashicons-${option.label}`}></span>
-                : option.label }
-            </ButtonOption>
-          )) }
-        </ButtonGroupContext.Provider>
-      </div>
-      { props.description &&
-        <Description descriptionProps={ descriptionProps } parent={ props }>
-          { props.description }
-        </Description> }
+      <input type="hidden" name={props.name ?? ''} value={value ?? ''} />
+      <Field
+        className={props.className}
+        disabled={disabled}
+        required={Boolean(props.isRequired)}
+        error={Boolean(props.isInvalid)}
+      >
+        {props.label && (
+          <Field.Label hidden={Boolean(props.labelVisuallyHidden)}>{props.label}</Field.Label>
+        )}
+        <Field.Control>
+          <SegmentedControl
+            value={value}
+            onValueChange={handleChange}
+            disabled={disabled}
+            wrap
+            // Field.Control injects aria-labelledby when a Field.Label is present;
+            // this is the fallback for the label-less case (SegmentedControl
+            // requires one of aria-label / aria-labelledby).
+            aria-label={props.label ?? 'Options'}
+          >
+            {options.map((option) =>
+              props.use_dashicon ? (
+                <SegmentedControl.Item
+                  key={option.value}
+                  value={option.value}
+                  disabled={disabledKeys.includes(String(option.value))}
+                  aria-label={String(option.label)}
+                  icon={<span className={`dashicons dashicons-${option.label}`} />}
+                />
+              ) : (
+                <SegmentedControl.Item
+                  key={option.value}
+                  value={option.value}
+                  disabled={disabledKeys.includes(String(option.value))}
+                >
+                  {option.label}
+                </SegmentedControl.Item>
+              )
+            )}
+          </SegmentedControl>
+        </Field.Control>
+        {props.description && (
+          <Field.HelperText
+            className={props.descriptionVisuallyHidden ? 'tui-visually-hidden' : undefined}
+          >
+            {props.description}
+          </Field.HelperText>
+        )}
+      </Field>
     </div>
   )
 }

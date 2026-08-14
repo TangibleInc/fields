@@ -39,33 +39,32 @@ describe('WYSIWYG component', () => {
       })
     )
 
-    const visualToggle = within(container).getByText('Visual')
-    const rawToggle = within(container).getByText('Raw')
+    const getToggle = name => within(container).getByRole('radio', { name })
+
+    const visualToggle = getToggle('Visual')
+    const rawToggle = getToggle('Raw')
 
     expect(visualToggle).toBeTruthy()
     expect(rawToggle).toBeTruthy()
 
-    expect(visualToggle.classList.contains('tf-button-group-option-selected')).toBeTruthy()
-    expect(rawToggle.classList.contains('tf-button-group-option-selected')).toBeFalsy()
+    expect(visualToggle.getAttribute('aria-checked')).toEqual('true')
+    expect(rawToggle.getAttribute('aria-checked')).toEqual('false')
 
     expect(container.querySelector('.tf-editor-visual-view')).toBeTruthy()
     expect(container.querySelector('.tf-code')).toBeFalsy()
 
     await user.click(rawToggle)
 
-    expect(visualToggle.classList.contains('tf-button-group-option-selected')).toBeFalsy()
-    expect(rawToggle.classList.contains('tf-button-group-option-selected')).toBeTruthy()
+    expect(getToggle('Visual').getAttribute('aria-checked')).toEqual('false')
+    expect(getToggle('Raw').getAttribute('aria-checked')).toEqual('true')
 
     expect(container.querySelector('.tf-editor-visual-view')).toBeFalsy()
     expect(container.querySelector('.tf-code')).toBeTruthy()
 
-    await user.click(visualToggle)
+    await user.click(getToggle('Visual'))
 
-    expect(visualToggle).toBeTruthy()
-    expect(rawToggle).toBeTruthy()
-
-    expect(visualToggle.classList.contains('tf-button-group-option-selected')).toBeTruthy()
-    expect(rawToggle.classList.contains('tf-button-group-option-selected')).toBeFalsy()
+    expect(getToggle('Visual').getAttribute('aria-checked')).toEqual('true')
+    expect(getToggle('Raw').getAttribute('aria-checked')).toEqual('false')
 
     expect(container.querySelector('.tf-editor-visual-view')).toBeTruthy()
     expect(container.querySelector('.tf-code')).toBeFalsy()

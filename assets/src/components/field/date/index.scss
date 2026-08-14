@@ -1,56 +1,8 @@
+/**
+ * Sizing only, the control style comes from TUI
+ *
+ * @see @tangible/ui/styles/components/date-picker.scss
+ */
 .tf-date-picker {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.tf-popover {
-  display: flex;
-  justify-content: center;
-  width: auto;
-  border-radius: $field-border-radius;
-  border: $field-border;
-
-  @import './calendar/';
-}
-
-.tf-date-group {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: $global-spacer-sm;
-
-  .tf-button-action {
-    height: $field-height;
-  }  
-}
-
-.tf-date-field-container {
   width: 100%;
-}
-
-.tf-date-field {
-  justify-content: center;
-}
-
-.tf-date-segment {
-  padding: 0 2px;
-  font-variant-numeric: tabular-nums;
-  text-align: end;
-
-  &:focus {
-    color: white;
-    background: $field-focus-color;
-    outline: none;
-    border-radius: 2px;
-  }
-
-  span { 
-    display: none; 
-  }
-  
-}
-
-.tf-date-segment-placeholder span {
-  display: flex;
 }

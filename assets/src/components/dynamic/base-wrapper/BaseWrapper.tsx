@@ -5,9 +5,11 @@ import {
   useMemo
 } from 'react'
 
-import { 
+import {
   DismissButton,
+  useOverlay,
   useOverlayTrigger,
+  mergeProps,
 } from 'react-aria'
 
 import { getConfig } from '../../../index.tsx'
@@ -48,6 +50,15 @@ const BaseWrapper = props => {
     { type: 'dialog' },
     state,
     triggerRef
+  )
+
+  const { overlayProps: dismissProps } = useOverlay(
+    {
+      isOpen        : state.isOpen,
+      onClose       : state.close,
+      isDismissable : true
+    },
+    overlayRef
   )
 
   useEffect(() => {
@@ -174,8 +185,18 @@ const BaseWrapper = props => {
         >
           Clear
         </Button> }
-      { state.isOpen && (
-        <div className="tf-dynamic-wrapper-popover" ref={ overlayRef } { ...overlayProps }>
+      {state.isOpen &&
+        /**
+         * tui-interface class needed to keeps the combobox
+         * list inside the popover
+         *
+         * @see getPortalRootFor() in @tangible/ui/utils/portal.js
+         */
+        (<div
+          className="tf-dynamic-wrapper-popover tui-interface"
+          ref={ overlayRef }
+          { ...mergeProps(overlayProps, dismissProps) }
+        >
           { settingsForm
             ? <div className="tf-dynamic-wrapper-popover-form">
                 <Title level={4}>
@@ -215,11 +236,6 @@ const BaseWrapper = props => {
                 autoFocus={ true }
                 showButton={ false }
                 onChange={ saveDynamicValue }
-                onFocusChange={ isFocus =>
-                  isFocus 
-                    ? (! state.isOpen && state.open())
-                    : state.close() 
-                }
               /> }
           <DismissButton onDismiss={ state.close } />
         </div>

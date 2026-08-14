@@ -1,50 +1,7 @@
-.tf-button-group label {
+// button-group is now TUI's SegmentedControl (see ButtonGroup.tsx) — all of its
+// styling lives in @tangible/ui. The field wrapper needs nothing beyond letting
+// the control size itself.
+.tf-button-group {
   display: flex;
-}
-
-.tf-button-group .tf-button-group-option {
-  @include button;
-  
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
-  border-radius: 0;
-  color: $field-focus-color;
-  margin: 0;
-  
-  &:first-child {
-    border-top-left-radius: $button-border-radius;
-    border-bottom-left-radius: $button-border-radius;
-  }
-
-  &:not(:first-child) {
-    margin-left: (-$button-border-size);
-  }
-
-  &:last-child {
-    border-top-right-radius: $button-border-radius;
-    border-bottom-right-radius: $button-border-radius;
-  }
-
-  &.tf-button-group-option-selected {
-    color: $field-background;
-    background: $field-focus-color;
-    border-color: $field-focus-color;
-  }
-  
-	&:focus-within {
-		position: relative;
-		z-index: 1;
-	}
-
-  .dashicons {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-.tf-button-group-container[aria-disabled="true"] .tf-button-group-option {
-  opacity: 0.5;
-  pointer-events: none;
+  flex-direction: column;
 }

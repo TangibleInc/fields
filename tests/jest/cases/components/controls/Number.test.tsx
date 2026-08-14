@@ -14,6 +14,13 @@ import {
 
 describe('Number component', () => {
 
+  /**
+   * The stepper buttons render decorative chevron icons, so they are matched
+   * by the aria-label react-aria builds from the field label.
+   */
+  const incrementLabel = 'Increase Label'
+  const decrementLabel = 'Decrease Label'
+
   it('renders with minimal config', () => rendersWithMinimal({ type: 'number' }))
   it('renders when no label but throws a warning', () => rendersWithoutLabelThrowWarning({ type: 'number' }))
   it('renders label and description', () => rendersLabelAndDescription({ type: 'number' }))
@@ -22,14 +29,14 @@ describe('Number component', () => {
 
     const config = { type: 'number', label: 'Label' }
 
-    renderHasElement(config, container => within(container).getByText('+'))
-    renderHasElement(config, container => within(container).getByText('-'))
+    renderHasElement(config, container => within(container).getByLabelText(incrementLabel))
+    renderHasElement(config, container => within(container).getByLabelText(decrementLabel))
 
-    renderHasElement({ ...config, hasButtons: true }, container => within(container).getByText('+'))
-    renderHasElement({ ...config, hasButtons: true }, container => within(container).getByText('-'))
+    renderHasElement({ ...config, hasButtons: true }, container => within(container).getByLabelText(incrementLabel))
+    renderHasElement({ ...config, hasButtons: true }, container => within(container).getByLabelText(decrementLabel))
 
-    renderHasNotElement({ ...config, hasButtons: false }, container => within(container).queryByText('+'))
-    renderHasNotElement({ ...config, hasButtons: false }, container => within(container).queryByText('-'))
+    renderHasNotElement({ ...config, hasButtons: false }, container => within(container).queryByLabelText(incrementLabel))
+    renderHasNotElement({ ...config, hasButtons: false }, container => within(container).queryByLabelText(decrementLabel))
   })
 
   test.each([
@@ -50,8 +57,8 @@ describe('Number component', () => {
     const input = container.querySelector('.tf-number').querySelector('input')
     expect( input.hasAttribute('disabled') ).toBe(args.result)
 
-    expect( within(container).getByText('+').hasAttribute('disabled') ).toBe(args.result)
-    expect( within(container).getByText('-').hasAttribute('disabled') ).toBe(args.result)
+    expect( within(container).getByLabelText(incrementLabel).hasAttribute('disabled') ).toBe(args.result)
+    expect( within(container).getByLabelText(decrementLabel).hasAttribute('disabled') ).toBe(args.result)
   })
 
   test.each([
@@ -125,7 +132,7 @@ describe('Number component', () => {
     )
 
     const input = container.querySelector('.tf-number input')
-    const incrementButton = within(container).getByText('+')
+    const incrementButton = within(container).getByLabelText(incrementLabel)
 
     expect( input.value ).toBe('1')
 
@@ -150,7 +157,7 @@ describe('Number component', () => {
     )
 
     const input = container.querySelector('.tf-number input')
-    const incrementButton = within(container).getByText('+')
+    const incrementButton = within(container).getByLabelText(incrementLabel)
 
     await user.click(incrementButton)
     expect( input.value ).toBe('4')

@@ -6,7 +6,7 @@ import {
 import { 
 	Description, 
 	Label 
-} from '../../base'
+} from '../../../components/base'
 
 import { 
 	today, 
@@ -15,7 +15,7 @@ import {
 } from '@internationalized/date'
 
 import DateRangePicker from './DateRangePicker'
-import { FieldWrapper } from '../../dynamic'
+import { FieldWrapper } from '../../../components/dynamic'
 import { useDateRangePickerState } from 'react-stately'
 import { useDateRangePicker } from 'react-aria'
 import { useCalendarContext } from './calendar/DateRangeCalendarContext'
@@ -58,7 +58,7 @@ const DateRange = (props) => {
     } = useDateRangePicker({...props, minValue: minValue}, state, ref)
 
 	return (
-	<div className="tf-date-picker">
+	<div className="tf-date-picker tf-deprecated-control">
 		{ props.label &&
   		<Label labelProps={ labelProps } parent={ props }>
   			{ props.label }

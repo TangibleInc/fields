@@ -307,10 +307,9 @@ const SettingsOverlay = ({ state, control, title, children }) => {
         <div
           className="tf-modal"
           {...underlayProps}
-          style={{ zIndex: 1000000 }}
         >
           <div
-            className="tf-modal-container"
+            className="tf-modal-container tui-interface"
             ref={modalRef}
             {...modalProps}
           >
