@@ -32,10 +32,13 @@ import {
 } from './components/field/'
 
 import {
+  Border as DeprecatedBorder,
   ButtonGroup as DeprecatedButtonGroup,
   ComboBox as DeprecatedComboBox,
   Date as DeprecatedDate,
-  Select as DeprecatedSelect
+  Dimensions as DeprecatedDimensions,
+  Select as DeprecatedSelect,
+  SimpleDimension as DeprecatedSimpleDimension
 } from './deprecated/fields/'
 
 import {
@@ -97,10 +100,13 @@ const getTypes = () => {
       /**
        * @see assets/src/deprecated/fields
        */
-      'deprecated-button-group' : DeprecatedButtonGroup,
-      'deprecated-combo-box'    : DeprecatedComboBox,
-      'deprecated-date-picker'  : DeprecatedDate,
-      'deprecated-select'       : DeprecatedSelect
+      'deprecated-border'           : DeprecatedBorder,
+      'deprecated-button-group'     : DeprecatedButtonGroup,
+      'deprecated-combo-box'        : DeprecatedComboBox,
+      'deprecated-date-picker'      : DeprecatedDate,
+      'deprecated-dimensions'       : DeprecatedDimensions,
+      'deprecated-select'           : DeprecatedSelect,
+      'deprecated-simple-dimension' : DeprecatedSimpleDimension
     },
     element: {
       'button'            : Button,

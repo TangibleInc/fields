@@ -1,0 +1,20 @@
+&.tf-simple-dimensions {
+  display: flex;
+  flex-direction: column;
+
+  .tf-select,
+  .tf-select .tf-button-select {
+    width: auto;
+  }
+}
+
+.tf-simple-dimensions-container {
+  display: flex;
+  width: 100%;
+  position: relative;
+  gap: var(--tui-spacing-xs);
+
+  > div:first-child {
+    flex: 1 1 auto;
+  }
+}
