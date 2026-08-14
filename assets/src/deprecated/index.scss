@@ -1,0 +1,14 @@
+/**
+ * We add the .tf-deprecated-control class on the container of
+ * deprecated controls (we don't want deprecated style to conflict
+ * with newer components)
+ *
+ * Still included in the main stylesheet for now, but might be moved
+ * into a separated one at some point
+ *
+ * @see src/components/index.scss
+ */
+.tf-deprecated-control {
+  @import './fields/combo-box/index.scss';
+  @import './fields/select/index.scss';
+}

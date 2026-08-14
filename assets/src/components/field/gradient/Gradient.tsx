@@ -19,7 +19,7 @@ import {
 import { Item } from 'react-stately'
 
 import ColorPicker from '../color/ColorPicker'
-import Select from '../select/Select'
+import Select from '../../../deprecated/fields/select/Select'
 import Number from '../number/Number'
 
 const Gradient = props => {

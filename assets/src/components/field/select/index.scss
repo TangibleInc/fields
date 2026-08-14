@@ -1,32 +1,5 @@
-.tf-multiple-select,
-.tf-select {
-  width: $field-width;
-  position: relative;
-  display: inline-block;
-  
-  & > .tf-label {
-    display: flex;
-  }
-
-  &__value {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  .tf-button-select {
-    justify-content: space-between;
-    cursor: pointer;
-
-    &[disabled] {
-      border-color: rgba(black, 0.1);
-      color: rgba(black, 0.4);
-      background: rgba(white, 0.5)
-    }
-  }
-
-  .tf-select-icon {
-    padding-left: 5px;
-    font-size: 10px;
-  }
+// The `select` field type is now TUI's Select / MultiSelect (see Single.tsx /
+// Multiple.tsx) — its styling lives in @tangible/ui; this just sizes it.
+.tf-select-field {
+  width: 100%;
 }

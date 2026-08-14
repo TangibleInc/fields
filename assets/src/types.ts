@@ -32,6 +32,11 @@ import {
 } from './components/field/'
 
 import {
+  ComboBox as DeprecatedComboBox,
+  Select as DeprecatedSelect
+} from './deprecated/fields/'
+
+import {
   Button,
   Label,
   ListBox,
@@ -85,7 +90,13 @@ const getTypes = () => {
       'wysiwyg'           : Editor,
       'editor'            : Editor, // alias of wysiwyg
       'textarea'          : TextArea,
-      'time-picker'       : TimePicker
+      'time-picker'       : TimePicker,
+
+      /**
+       * @see assets/src/deprecated/fields
+       */
+      'deprecated-combo-box' : DeprecatedComboBox,
+      'deprecated-select'    : DeprecatedSelect
     },
     element: {
       'button'            : Button,

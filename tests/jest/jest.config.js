@@ -10,6 +10,7 @@ export default {
     './setup/config.ts',
     './setup/css.ts',
     './setup/range.ts',
+    './setup/scroll.ts',
     './setup/timeout.ts'
   ],
   // Explicitly point babel-jest at our config so it applies to node_modules too

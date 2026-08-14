@@ -426,7 +426,7 @@ describe('conditional panel', () => {
 
     const rowField = document.querySelectorAll('.tf-repeater-bare-row .tf-repeater-bare-item-field')
     expect(rowField[0].querySelector('.tf-date-picker')).toBeTruthy()
-    expect(rowField[1].querySelector('.tf-select')).toBeTruthy()
+    expect(rowField[1].querySelector('.tf-select-field')).toBeTruthy()
     expect(rowField[2].querySelector('.tf-color')).toBeTruthy()
 
   }, 10000)
