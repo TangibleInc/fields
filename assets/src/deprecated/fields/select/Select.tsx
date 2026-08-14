@@ -12,7 +12,7 @@ import {
   Popover,
   Label,
   Description
-} from '../../base'
+} from '../../../components/base'
 
 /**
  * <Select label='Favorite Color'>
@@ -45,7 +45,7 @@ const Select = props => {
   } = useSelect(props, state, ref)
   
   return(
-    <div className="tf-select" ref={ wrapperRef }>
+    <div className="tf-select tf-deprecated-control" ref={ wrapperRef }>
       { props.label &&
         <Label labelProps={ labelProps } parent={ props }>
           { props.label }

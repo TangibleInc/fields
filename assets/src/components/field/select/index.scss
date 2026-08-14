@@ -3,37 +3,3 @@
 .tf-select-field {
   width: 100%;
 }
-
-// .tf-select is still the internal react-aria Select used by gradient /
-// dimensions / simple-dimension.
-.tf-select {
-  width: $field-width;
-  position: relative;
-  display: inline-block;
-  
-  & > .tf-label {
-    display: flex;
-  }
-
-  &__value {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  .tf-button-select {
-    justify-content: space-between;
-    cursor: pointer;
-
-    &[disabled] {
-      border-color: rgba(black, 0.1);
-      color: rgba(black, 0.4);
-      background: rgba(white, 0.5)
-    }
-  }
-
-  .tf-select-icon {
-    padding-left: 5px;
-    font-size: 10px;
-  }
-}
