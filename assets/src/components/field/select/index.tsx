@@ -1,29 +1,13 @@
-import { getOptions } from '../../../utils'
-import { RenderChoices } from '../../base'
-
-import Select from './Select'
-import MultipleSelect from './MultipleSelect'
+import Single from './Single'
+import Multiple from './Multiple'
 
 /**
- * Export used when initialized from a php functions, or inside a repeater
- * 
- * @see control-list.js
+ * select entry. Routes to the single- or multi-select TUI wrapper.
+ *
+ * Value contract (unchanged from the react-aria implementation):
+ *  - single:   value (string)          hidden: value
+ *  - multiple: onChange([...keys])     hidden: "a,b,c"
+ *
+ * @see control-list.js (PHP side reads the hidden input)
  */
-export default props => (
-  props.multiple
-    ? <MultipleSelect 
-        items={ getOptions(props.choices ?? {}) } 
-        { ...props }
-        onChange={ props.onChange }
-      >
-        { RenderChoices }
-      </MultipleSelect>
-    : <Select 
-        selectedKey={ props.value } 
-        onSelectionChange={ props.onChange } 
-        items={ getOptions(props.choices ?? {}) } 
-        { ...props }
-      >
-        { RenderChoices }
-      </Select>
-)
+export default (props: any) => (props.multiple ? <Multiple {...props} /> : <Single {...props} />)

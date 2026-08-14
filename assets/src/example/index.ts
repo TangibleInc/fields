@@ -1,5 +1,4 @@
 import { initExample } from './register-custom-type'
-import { initCombobox } from './combobox-layout'
 
 /**
  * Settings page: Change context on select change
@@ -22,11 +21,6 @@ window.addEventListener('load', () => {
    * Example for custom field type registration
    */
   if( document.getElementById('tf-example-custom-types') ) initExample()
-
-  /**
-   * Example for combobox with a custom layout
-   */
-  if( document.getElementById('tf-example-custom-combobox-layout') ) initCombobox()
 
   /**
    * Specific to dynamic value list page - Handle list selection

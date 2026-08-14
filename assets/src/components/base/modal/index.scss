@@ -1,6 +1,9 @@
 .tf-modal {
+  // Default value is 1000, which is below the WordPress admin bar (99999)
+  --tui-layer-modal: 1000000;
+
   position: fixed;
-  z-index: 9990;
+  z-index: var(--tui-layer-modal);
   top: 0;
   left: 0;
   bottom: 0;

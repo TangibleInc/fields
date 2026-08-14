@@ -10,11 +10,11 @@ import {
   DismissButton 
 } from 'react-aria'
 
-import { 
+import {
   Button,
   Label,
   Description
-} from '../../../base'
+} from '../../../../components/base'
 
 import { useOverlayTriggerState } from 'react-stately'
 import ComboBox from './../ComboBox'
@@ -66,7 +66,7 @@ const SimpleMutliple = forwardRef(({
     : parent.choices
 
   return (
-    <div className="tf-multiple-combobox" data-enabled={ ! parent.readOnly }>
+    <div className="tf-multiple-combobox tf-deprecated-control" data-enabled={ ! parent.readOnly }>
       { parent.label &&
         <Label labelProps={ labelProps } parent={ parent }>
           { parent.label }

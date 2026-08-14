@@ -1,4 +1,3 @@
-import { forwardRef } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 import { Field } from '../../../index'
@@ -205,69 +204,5 @@ export const AsyncWithMappedResults: Story = {
       },
     },
     choices: undefined,
-  }
-}
-
-/**
- * A custom react component can be used to render the field, it receives the
- * combobox state and the multiple API (add, remove, values)
- */
-const CustomLayout = forwardRef((props, ref) => (
-  <div className="tf-combo-box">
-    <div className="tf-combo-box-text tui-input-group">
-      <input
-        { ...props.inputProps }
-        className="tui-input tui-input-reset"
-        ref={ ref.current.input }
-      />
-    </div>
-    <ul style={{ listStyle: 'none', margin: '0.5rem 0 0', padding: 0 }}>
-      { [ ...props.state.collection ].map(item => {
-
-        const isSelected = props.multiple.values.includes(item.key)
-
-        return (
-          <li key={ item.key }>
-            <button
-              type="button"
-              onClick={ () => (
-                isSelected
-                  ? props.multiple.remove(props.multiple.values.indexOf(item.key))
-                  : props.multiple.add(item.key)
-              ) }
-              style={{
-                display: 'flex',
-                gap: '0.5rem',
-                width: '100%',
-                padding: '0.25rem 0',
-                border: 0,
-                background: 'none',
-                cursor: 'pointer',
-                color: 'inherit',
-                font: 'inherit',
-                fontWeight: isSelected ? 600 : 400
-              }}
-            >
-              { item.textValue }
-              { isSelected && <span aria-hidden="true">✓</span> }
-            </button>
-          </li>
-        )
-      }) }
-    </ul>
-  </div>
-))
-
-export const CustomRender: Story = {
-  args: {
-    label: 'Custom combobox',
-    multiple: true,
-    layout: CustomLayout,
-    choices: {
-      value1: 'Example value 1',
-      value2: 'Second example value',
-      value3: 'An example: third part',
-      value4: 'The last example (4)',
-    },
   }
 }

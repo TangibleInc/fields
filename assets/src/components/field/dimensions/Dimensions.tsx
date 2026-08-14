@@ -14,7 +14,7 @@ import {
 
 
 import Number from '../number/Number'
-import Select from '../select/Select'
+import Select from '../../../deprecated/fields/select/Select'
 
 import { initJSON } from '../../../utils'
 
