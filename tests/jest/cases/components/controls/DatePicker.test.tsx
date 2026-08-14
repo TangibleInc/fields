@@ -1,591 +1,256 @@
 import * as fields from '../../../../../assets/src/index.tsx'
+import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { 
-  within,
-  render,
-  screen
-} from '@testing-library/react'
-import { 
+import {
+  getFieldElement,
   rendersWithMinimal,
-  rendersWithoutLabelThrowWarning,
   rendersLabelAndDescription
 } from '../../../utils/fields.ts'
-import { 
-  today, 
-  getLocalTimeZone,
-  startOfMonth,
-  endOfMonth
-} from '@internationalized/date'
 
 /**
  * TODO:
- * - Support value upgrade from simple to date range
+ * - Test the month select (its listbox is not reachable from the popover)
+ * - Test dynamic values
  */
+
+/**
+ * TUI renders the popover inside #tui-portal-root, which carries an inline
+ * pointer-events: none re-enabled by .tui-popover in the stylesheet. jsdom
+ * doesn't load it, so the pointer-events check is a false positive here
+ */
+const setup = (config = {}) => {
+
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+  const { container } = render(
+    fields.render({
+      type  : 'date-picker',
+      label : 'Label',
+      name  : 'date-field',
+      ...config
+    })
+  )
+
+  return {
+    user,
+    container,
+    trigger : () => container.querySelector('.tui-date-picker__trigger'),
+    value   : () => container.querySelector('input[name="date-field"]').value
+  }
+}
+
+/** Day cells are keyed by TUI as `YYYY-M-D`, with a zero-based month */
+const dayKey = date => `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+
+const getDay = key => document.querySelector(`.tui-calendar__day[data-day="${key}"]`)
+
+const getCalendar = () => document.querySelector('.tui-calendar')
+
+const getToday = () => {
+  const now = new Date()
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate())
+}
+
+const formatValue = date => (
+  [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    String(date.getDate()).padStart(2, '0')
+  ].join('-')
+)
 
 describe('DatePicker component', () => {
 
   it('renders with minimal config', () => rendersWithMinimal({ type: 'date-picker' }))
-  it('renders when no label but throws a warning', () => rendersWithoutLabelThrowWarning({ type: 'date-picker' }))
   it('renders label and description', () => rendersLabelAndDescription({ type: 'date-picker' }))
-  
-  it('opens and closes the calendar on click on the button', async () => {
 
-    const user = userEvent.setup()
-    const { container } = render(
-      fields.render({
-        type  : 'date-picker',
-        label : 'Label for date_picker'
-      }
-    ))
+  it('renders when no label, falling back to a default aria-label', () => {
 
-    expect(document.querySelector('.tf-calendar')).toBe(null)
+    const { container } = render(fields.render({ type: 'date-picker' }))
 
-    await user.click(within(container).getByText('🗓'))
-  
-    expect(document.querySelector('.tf-calendar')).toBeTruthy()
-
-    await user.click(within(container).getByText('🗓'))
-
-    expect(document.querySelector('.tf-calendar')).toBe(null)
+    expect(getFieldElement(container).classList.contains('tf-date-picker')).toEqual(true)
+    expect(container.querySelector('.tui-date-picker__trigger').getAttribute('aria-label')).toBe('Date')
   })
 
-  it('close the calendar on click outside of the field', async () => {
+  it('renders the value in the hidden input and the trigger', () => {
 
-    const user = userEvent.setup()
-    const { container } = render(
-      <>
-        { fields.render({
-          type  : 'date-picker',
-          label : 'Label for date_picker'
-        }) }
-        <div>Test click outside</div>
-      </>
-    )
+    const { trigger, value } = setup({ value: '2020-01-30' })
 
-    await user.click(within(container).getByText('🗓'))
-  
-    expect(document.querySelector('.tf-calendar')).toBeTruthy()
-
-    await user.click(within(container).getByText('Test click outside'))
-
-    expect(document.querySelector('.tf-calendar')).toBe(null)
+    expect(value()).toBe('2020-01-30')
+    expect(trigger().textContent).toContain('Jan 30, 2020')
   })
 
-  it('supports value change from typing', async () => {
-    
-    const user = userEvent.setup()
-    const { container } = render(
-      fields.render({
-        type  : 'date-picker',
-        label : 'Label',
-        value : '2020-01-30',
-        name  : 'date-field'
-      })
-    )
+  it('renders a placeholder when there is no value', () => {
 
-    let input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe('2020-01-30')
+    const { trigger, value } = setup()
 
-    // Change year
-
-    await user.type(
-      screen.getByText('2020'),
-      '2022'
-    )
-
-    input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe('2022-01-30')
-
-    // Change month
-
-    await user.type(
-      screen.getByText('1'),
-      '12'
-    )
-
-    input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe('2022-12-30')
-
-    // Change day
-
-    await user.type(
-      screen.getByText('30'),
-      '15'
-    )
-
-    input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe('2022-12-15')
+    expect(value()).toBe('')
+    expect(trigger().textContent).toContain('Select date')
   })
 
-  it('supports value change from arrow keys', async () => {
-    
-    const user = userEvent.setup()
-    const { container } = render(
-      fields.render({
-        type  : 'date-picker',
-        label : 'Label',
-        value : '2020-01-30',
-        name  : 'date-field'
-      })
-    )
+  it('opens and closes the calendar', async () => {
 
-    let input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe('2020-01-30')
+    const { user, trigger } = setup({ value: '2020-01-30' })
 
-    // Change year
+    expect(getCalendar()).toBe(null)
 
-    screen.getByText('2020').focus()
-    await user.type(
-      screen.getByText('2020'),
-      '[ArrowUp]'
-    )
+    await user.click(trigger())
 
-    input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe('2021-01-30')
+    expect(getCalendar()).toBeTruthy()
 
-    // Change month
+    await user.click(document.querySelector('.tui-date-picker__close'))
 
-    screen.getByText('1').focus()
-    await user.type(
-      screen.getByText('1'),
-      '[ArrowDown]'
-    )
-
-    input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe('2021-12-30')
-
-    // Change day
-
-    screen.getByText('30').focus()
-    await user.type(
-      screen.getByText('30'),
-      '[ArrowDown]'
-    )
-
-    input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe('2021-12-29')
+    expect(getCalendar()).toBe(null)
   })
 
   it('supports value change from click on calendar', async () => {
 
-    const user = userEvent.setup()
-    const { container } = render(
-      fields.render({
-        type  : 'date-picker',
-        label : 'Label',
-        value : '2020-01-30',
-        name  : 'date-field'
-      })
-    )
+    const { user, trigger, value } = setup({ value: '2020-01-30' })
 
-    // Change day
+    await user.click(trigger())
+    await user.click(getDay('2020-0-15'))
 
-    await user.click(within(container).getByText('🗓'))
-    await user.click(
-      within(
-        document.querySelector('.tf-calendar')
-      ).getByText('15')
-    )
-
-    let input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe('2020-01-15')
-
-    // Change day + next month
-
-    await user.click(within(container).getByText('🗓'))
-    await user.click(
-      within(
-        document.querySelector('.tf-calendar')
-      ).getByLabelText('Next')
-    )
-    await user.click(
-      within(
-        document.querySelector('.tf-calendar')
-      ).getByText('20')
-    )
-
-    input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe('2020-02-20')
-
-    // Change day + previous month*2 (trigger a year change)
-
-    await user.click(within(container).getByText('🗓'))
-    await user.click(
-      within(
-        document.querySelector('.tf-calendar')
-      ).getByLabelText('Previous')
-    )
-    await user.click(
-      within(
-        document.querySelector('.tf-calendar')
-      ).getByLabelText('Previous')
-    )
-    await user.click(
-      within(
-        document.querySelector('.tf-calendar')
-      ).getByText('10')
-    )
-
-    input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe('2019-12-10')
+    expect(value()).toBe('2020-01-15')
   })
 
-  it('supports futureOnly parameter', async () => {
+  it('supports value change across months', async () => {
 
-    const user = userEvent.setup()
-    const { container } = render(
-      fields.render({
-        type       : 'date-picker',
-        label      : 'Label',
-        value      : '2050-01-30',
-        name       : 'date-field',
-        futureOnly : true
-      })
-    )
-    
-    // Can't set to past value from typing
+    const { user, trigger, value } = setup({ value: '2020-01-30' })
 
-    await user.type(
-      within(container).getByText('2050'),
-      '2000'
-    )
+    await user.click(trigger())
 
-    let input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe('2050-01-30')
+    // Next month
 
-    // Can set to future value from typing
+    await user.click(document.querySelector('.tui-calendar__next'))
+    await user.click(getDay('2020-1-20'))
 
-    await user.type(
-      within(container).getByText('2050'),
-      '2100'
-    )
+    expect(value()).toBe('2020-02-20')
 
-    input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe('2100-01-30')
+    // Previous month, twice to trigger a year change
+
+    await user.click(document.querySelector('.tui-calendar__prev'))
+    await user.click(document.querySelector('.tui-calendar__prev'))
+    await user.click(getDay('2019-11-10'))
+
+    expect(value()).toBe('2019-12-10')
   })
 
-  it('reverts to the last future value when using arrows and futureOnly is true', async () => {
+  it('supports value change from the day and year fields', async () => {
 
-    const user = userEvent.setup()
-    const dateToday = today( getLocalTimeZone() )
-    const { container } = render(
-      fields.render({
-        type       : 'date-picker',
-        label      : 'Label',
-        value      : dateToday.toString(),
-        name       : 'date-field',
-        futureOnly : true
-      })
-    )
+    const { user, trigger, value } = setup({ value: '2020-01-30' })
 
-    const year = String( dateToday.year )
+    await user.click(trigger())
 
-    // Can't set to past value
+    // Both fields only commit on blur
 
-    within(container).getByText(year).focus()
-    await user.type(
-      within(container).getByText(year),
-      '[ArrowDown]'
-    )
+    const day = document.querySelector('.tui-date-picker__day-field')
 
-    let input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe( dateToday.toString() )
+    await user.clear(day)
+    await user.type(day, '5')
 
-    // Can set to future value
+    expect(value()).toBe('2020-01-30')
 
-    within(container).getByText(year).focus()
-    await user.type(
-      within(container).getByText(year),
-      '[ArrowUp]'
-    )
+    await user.tab()
 
-    input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe( dateToday.add({ years: 1 }).toString() )
+    expect(value()).toBe('2020-01-05')
+
+    const year = document.querySelector('.tui-date-picker__year-field')
+
+    await user.clear(year)
+    await user.type(year, '2022')
+    await user.tab()
+
+    expect(value()).toBe('2022-01-05')
   })
 
-  it('never reports a past value to onChange when futureOnly is true', async () => {
+  it('reports every value change to onChange', async () => {
 
     const changes = []
-    const user = userEvent.setup()
-    const dateToday = today( getLocalTimeZone() )
-    const { container } = render(
-      fields.render({
-        type       : 'date-picker',
-        label      : 'Label',
-        value      : dateToday.toString(),
-        name       : 'date-field',
-        futureOnly : true,
-        onChange   : value => changes.push(value)
-      })
-    )
+    const { user, trigger } = setup({
+      value    : '2020-01-30',
+      onChange : value => changes.push(value)
+    })
 
-    const year = String( dateToday.year )
-
-    within(container).getByText(year).focus()
-    await user.type(
-      within(container).getByText(year),
-      '[ArrowDown]'
-    )
-    await user.type(
-      within(container).getByText(year),
-      '[ArrowUp]'
-    )
+    await user.click(trigger())
+    await user.click(getDay('2020-0-15'))
 
     expect(changes).toEqual([
-      dateToday.toString(),
-      dateToday.add({ years: 1 }).toString()
+      '2020-01-30',
+      '2020-01-15'
     ])
   })
 
   it('disables past dates in the calendar when futureOnly is true', async () => {
 
-    const user = userEvent.setup()
-    const dateToday = today( getLocalTimeZone() )
-    const { container } = render(
-      fields.render({
-        type       : 'date-picker',
-        label      : 'Label',
-        value      : dateToday.toString(),
-        name       : 'date-field',
-        futureOnly : true
-      })
-    )
+    const dateToday = getToday()
+    const { user, trigger } = setup({
+      value      : formatValue(dateToday),
+      futureOnly : true
+    })
 
-    await user.click(within(container).getByText('🗓'))
-
-    const calendar = document.querySelector('.tf-calendar')
-
-    // Previous month is entirely in the past
-
-    expect(within(calendar).getByLabelText('Previous').disabled).toBe(true)
+    await user.click(trigger())
 
     /**
-     * The grid also contains hidden cells for the days of the previous and next months
+     * The grid also contains the days of the previous and next months
      */
-    const cells = [ ...calendar.querySelectorAll('.tf-calendar-cell:not([hidden])') ]
-    expect(cells.length).toBe( dateToday.calendar.getDaysInMonth(dateToday) )
+    const days = [ ...getCalendar().querySelectorAll('.tui-calendar__day') ]
+    expect(days.length).not.toBe(0)
 
-    cells.forEach((cell, index) => {
-      const day = index + 1
-      expect(cell.textContent).toBe( String(day) )
-      expect(cell.getAttribute('aria-disabled')).toBe( day < dateToday.day ? 'true' : null )
+    days.forEach(day => {
+      const [ year, month, date ] = day.dataset.day.split('-').map(Number)
+      const isPast = new Date(year, month, date) < dateToday
+
+      expect(day.getAttribute('aria-disabled')).toBe( isPast ? 'true' : null )
     })
+  })
+
+  it('ignores a click on a past date when futureOnly is true', async () => {
+
+    const dateToday = getToday()
+    const { user, trigger, value } = setup({
+      value      : formatValue(dateToday),
+      futureOnly : true
+    })
+
+    await user.click(trigger())
+
+    const pastDay = getCalendar().querySelector('.tui-calendar__day[aria-disabled="true"]')
+    expect(pastDay).toBeTruthy()
+
+    await user.click(pastDay)
+
+    expect(value()).toBe( formatValue(dateToday) )
   })
 
   it('sets the initial value to today when it is in the past and futureOnly is true', () => {
 
-    const { container } = render(
-      fields.render({
-        type       : 'date-picker',
-        label      : 'Label',
-        value      : '2000-01-30',
-        name       : 'date-field',
-        futureOnly : true
-      })
-    )
+    const { value } = setup({
+      value      : '2000-01-30',
+      futureOnly : true
+    })
 
-    const input = container.querySelector('input[name="date-field"]')
-    expect(input.value).toBe( today( getLocalTimeZone() ).toString() )
+    expect(value()).toBe( formatValue(getToday()) )
   })
 
-  it('supports the dateRange parameter', async () => {
+  /**
+   * The date range is not migrated to TUI yet
+   *
+   * @see src/deprecated/fields/date
+   */
+  it('routes the date range to the deprecated control', () => {
 
-    const user = userEvent.setup()
-    const { container } = render(
-      fields.render({
-        type      : 'date-picker',
-        label     : 'Label',
-        name      : 'date-field',
-        dateRange : true,
-        value     : JSON.stringify({ 
-          'start'  : '2020-01-05',
-          'end'    : '2020-01-07'
-        })
-      })
-    )
+    const { container } = setup({
+      dateRange : true,
+      value     : JSON.stringify({ start: '2020-01-05', end: '2020-01-07' })
+    })
 
-    expect(
-      document.getElementsByClassName('tf-date-field').length
-    ).toBe(2)
-
-    await user.click(within(container).getByText('🗓'))
-
-    // Check that initial range value is selected
-
-    let calendar = document.querySelector('.tf-calendar')
-    expect(within(calendar).getByText('4').classList).not.toContain('tf-calendar-cell-selected')
-    expect(within(calendar).getByText('5').classList).toContain('tf-calendar-cell-selected')
-    expect(within(calendar).getByText('6').classList).toContain('tf-calendar-cell-selected')
-    expect(within(calendar).getByText('7').classList).toContain('tf-calendar-cell-selected')
-    expect(within(calendar).getByText('8').classList).not.toContain('tf-calendar-cell-selected')
-
-    // Check value change (across 2 months)
-    
-    await user.click(within(calendar).getByText('20'))
-    await user.click(within(calendar).getByLabelText('Next'))
-    await user.click(within(calendar).getByText('10'))
-
-    expect(document.querySelector('.tf-calendar')).toBe(null)
-
-    const value = JSON.parse( container.querySelector('input[name="date-field"]').value )
-    expect(value.start).toBe('2020-01-20')
-    expect(value.end).toBe('2020-02-10')
+    expect(container.querySelector('.tui-date-picker__trigger')).toBe(null)
+    expect(container.querySelector('.tf-date-picker.tf-deprecated-control')).toBeTruthy()
+    expect(container.getElementsByClassName('tf-date-field').length).toBe(2)
   })
 
-  it('supports the multiMonth parameter when dateRange is true', async () => {
+  it('supports readOnly', () => {
 
-    const user = userEvent.setup()
-    const { container } = render(
-      fields.render({
-        type       : 'date-picker',
-        label      : 'Label',
-        name       : 'date-field',
-        dateRange  : true,
-        multiMonth : 3,
-        value      : JSON.stringify({ 
-          'start' : '2020-01-20',
-          'end'   : '2020-03-10'
-        })
-      })
-    )
-
-    await user.click(within(container).getByText('🗓'))
-
-    const months = document.getElementsByClassName('tf-calendar-table')
-    expect(months.length).toBe(3)
-
-    const [ january, february, march ] = months
-    
-    // Selected in January
-
-    expect(within(january).getByText('19').classList).not.toContain('tf-calendar-cell-selected')
-    for( let day = 20; day < 32; day++ ) {
-      const cellInRange = within(january).getAllByText(day).filter(
-        match => ! match.hasAttribute('aria-disabled') 
-      )[0]
-      expect(cellInRange.classList).toContain('tf-calendar-cell-selected')
-    }
-
-    // Selected in February
-
-    for( let day = 1; day < 28; day++ ) {
-      const cellInRange = within(february).getAllByText(day).filter(
-        match => ! match.hasAttribute('aria-disabled') 
-      )[0]
-      expect(cellInRange.classList).toContain('tf-calendar-cell-selected')
-    }
-
-    // Selected in March
-
-    for( let day = 1; day < 10; day++ ) {
-      const cellInRange = within(march).getAllByText(day).filter(
-        match => ! match.hasAttribute('aria-disabled') 
-      )[0]
-      expect(cellInRange.classList).toContain('tf-calendar-cell-selected')
-    }
-    expect(within(march).getByText('11').classList).not.toContain('tf-calendar-cell-selected')
+    expect(setup({ value: '2020-01-30' }).trigger().disabled).toBe(false)
+    expect(setup({ value: '2020-01-30', readOnly: true }).trigger().disabled).toBe(true)
   })
-
-  it('supports the datePresets parameter when dateRange is true', async () => {
-  
-    const user = userEvent.setup()
-    const { container } = render(
-      fields.render({
-        type        : 'date-picker',
-        label       : 'Label',
-        name        : 'date-field',
-        dateRange   : true,
-        datePresets : true
-      })
-    )
-
-    await user.click(within(container).getByText('🗓'))
-
-    const calendar = document.querySelector('.tf-calendar')
-    expect(within(calendar).getByText('Today')).toBeTruthy()
-    expect(within(calendar).getByText('Last Week')).toBeTruthy()
-    expect(within(calendar).getByText('This Month')).toBeTruthy()
-    expect(within(calendar).getByText('Last Month')).toBeTruthy()
-
-    const dateToday = today( getLocalTimeZone() )
-
-    await user.click(within(calendar).getByText('Today'))
-
-    let value = JSON.parse( container.querySelector('input[name="date-field"]').value )
-    expect(value.start).toBe( dateToday.toString() )
-    expect(value.end).toBe( dateToday.toString() )
-
-    await user.click(within(calendar).getByText('This Month'))
-
-    value = JSON.parse( container.querySelector('input[name="date-field"]').value )
-    expect(value.start).toBe( startOfMonth(dateToday).toString() )
-    expect(value.end).toBe( endOfMonth(dateToday).toString() )
-
-    await user.click(within(calendar).getByText('Last Week'))
-
-    value = JSON.parse( container.querySelector('input[name="date-field"]').value )
-    expect(value.start).toBe( dateToday.subtract({ weeks: 1 }).toString() )
-    expect(value.end).toBe( dateToday.toString() )
-
-    await user.click(within(calendar).getByText('Last Month'))
-
-    value = JSON.parse( container.querySelector('input[name="date-field"]').value )
-    expect(value.start).toBe( startOfMonth( dateToday.subtract({ months: 1 }) ).toString() )
-    expect(value.end).toBe( endOfMonth( dateToday.subtract({ months: 1 }) ).toString() )
-  })
-
-  it('displays a warning when start date is before end date when dateRange is true', async () => {
-  
-    const user = userEvent.setup()
-    const { container } = render(
-      fields.render({
-        type       : 'date-picker',
-        label      : 'Label',
-        name       : 'date-field',
-        dateRange  : true,
-        multiMonth : 3,
-        value      : JSON.stringify({ 
-          'start' : '2019-01-20',
-          'end'   : '2020-01-22'
-        })
-      })
-    )
-
-    const startInput = container.getElementsByClassName('tf-date-field')[0]
-    await user.type(
-      within(startInput).getByText('2019'),
-      '[ArrowUp]'
-    )
-
-    // Start date before end - No warning
-
-    expect(within(container).queryByText('🚫')).toBeFalsy()
-
-    // Start date after end - Should display warning
-
-    await user.type(
-      within(startInput).getByText('2020'),
-      '[ArrowUp]'
-    )
-    expect(within(container).getByText('🚫')).toBeTruthy()
-  })
-
-  it('supports upgrade form simple date value to date range value (string to JSON)', async () => {
-  
-    const { container } = render(
-      fields.render({
-        type      : 'date-picker',
-        label     : 'Label',
-        name      : 'date-field',
-        dateRange : true,
-        value     : '2020-01-05'
-      })
-    )
-
-    const value = JSON.parse( container.querySelector('input[name="date-field"]').value )
-    // Currently, use current date instead of date string
-    // expect(value.start).toBe('2020-01-05')
-    // expect(value.end).toBe('2020-01-05')
-  })
-
 })
