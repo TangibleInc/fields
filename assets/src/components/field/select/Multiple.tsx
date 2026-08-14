@@ -21,7 +21,7 @@ const parseValues = (value: any): (string | number)[] => {
 const Multiple = (props: any) => {
   const options = getOptions(props.choices ?? {})
   const [values, setValues] = useState<(string | number)[]>(() => parseValues(props.value))
-  const disabled = Boolean(props.readOnly)
+  const disabled = Boolean(props.isDisabled || props.readOnly)
 
   const handleChange = (next: (string | number)[]) => {
     setValues(next)
