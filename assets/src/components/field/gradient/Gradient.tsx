@@ -18,7 +18,9 @@ import {
 
 import { Item } from 'react-stately'
 
-import ColorPicker from '../color/ColorPicker'
+// The legacy react-aria color picker lives with the deprecated fields now —
+// this (still-legacy) gradient field follows it there in its own migration.
+import ColorPicker from '../../../deprecated/fields/color/ColorPicker'
 import Select from '../../../deprecated/fields/select/Select'
 import Number from '../number/Number'
 

@@ -5,7 +5,7 @@ import {
   forwardRef
 } from 'react'
 
-import { Popover } from '../../base'
+import { Popover } from '../../../components/base'
 import ColorPicker from './ColorPicker'
 
 const ColorField = forwardRef(({
