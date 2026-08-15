@@ -206,6 +206,11 @@
     --tui-notice-fg: var(--tui-color-fg);
     --tui-notice-border: transparent;
     --tui-notice-border-width: 1px;
+    /* Inner gaps per .elementor-control-notice (icon gap 8px, content gap
+       6px). Reads --tui-notice-gap/-para-gap, added to TUI after 0.2.5 —
+       inert until fields picks up that release, then live automatically. */
+    --tui-notice-gap: 8px;
+    --tui-notice-para-gap: 6px;
     font-size: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
     font-style: italic;
     font-weight: 300;
