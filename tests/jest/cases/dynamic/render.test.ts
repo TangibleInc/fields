@@ -32,8 +32,8 @@ describe('dynamic values feature - render', () => {
       })
     )
 
-    expect(within(container).queryByText('Insert')).toBeFalsy()
-    expect(within(container).queryByText('Clear')).toBeFalsy()
+    expect(within(container).queryByRole('button', { name: /insert/i })).toBeFalsy()
+    expect(within(container).queryByRole('button', { name: /clear/i })).toBeFalsy()
   })
 
   test.each(testTypes)('%p type do not render dynamic values UI if dynamic is false', type => {
@@ -47,8 +47,8 @@ describe('dynamic values feature - render', () => {
       })
     )
 
-    expect(within(container).queryByText('Insert')).toBeFalsy()
-    expect(within(container).queryByText('Clear')).toBeFalsy()
+    expect(within(container).queryByRole('button', { name: /insert/i })).toBeFalsy()
+    expect(within(container).queryByRole('button', { name: /clear/i })).toBeFalsy()
   })
 
   test.each(testTypes)('%p type does render dynamic values UI if dynamic is true', async type => {
@@ -63,14 +63,14 @@ describe('dynamic values feature - render', () => {
     )
 
     // Text type lazy-loads DynamicEditor, so we need to wait
-    const insertButton = await within(container).findByText('Insert')
+    const insertButton = await within(container).findByRole('button', { name: /insert/i })
     expect(insertButton).toBeTruthy()
 
     // Special case for text, as it uses insert mode by default instead if replace like other types
     if( type === 'text' ) {
-      expect(within(container).queryByText('Clear')).toBeFalsy()
+      expect(within(container).queryByRole('button', { name: /clear/i })).toBeFalsy()
     }
-    else expect(within(container).getByText('Clear')).toBeTruthy()
+    else expect(within(container).getByRole('button', { name: /clear/i })).toBeTruthy()
   })
 
   test.each(testTypes)('%p type open dynamic value combobox when clicking on insert button', async type => {
@@ -89,13 +89,14 @@ describe('dynamic values feature - render', () => {
     )
 
     const getDynamicContainer = () =>
+      document.querySelector('.tui-search-select__panel') ||
       document.querySelector('.tf-dynamic-wrapper-popover') ||
       document.querySelector('.tf-modal-container') ||
       document.querySelector('.tui-modal')
 
     expect(getDynamicContainer()).toBeFalsy()
 
-    const insertButton = await within(container).findByText('Insert')
+    const insertButton = await within(container).findByRole('button', { name: /insert/i })
     await user.click(insertButton)
 
     expect(getDynamicContainer()).toBeTruthy()
@@ -108,7 +109,7 @@ describe('dynamic values feature - render', () => {
 
     expect(getDynamicContainer()).toBeFalsy()
 
-    const insertButton2 = await within(container).findByText('Insert')
+    const insertButton2 = await within(container).findByRole('button', { name: /insert/i })
     await user.click(insertButton2)
 
     expect(getDynamicContainer()).toBeTruthy()
@@ -141,6 +142,7 @@ describe('dynamic values feature - render', () => {
     )
 
     const getDynamicContainer = () =>
+      document.querySelector('.tui-search-select__panel') ||
       document.querySelector('.tf-dynamic-wrapper-popover') ||
       document.querySelector('.tf-modal-container') ||
       document.querySelector('.tui-modal')
@@ -154,12 +156,10 @@ describe('dynamic values feature - render', () => {
     expect(dynContainer).toBeTruthy()
 
     // Text type opens a DynamicFieldSettings modal whose picker is a
-    // SearchSelect — open its panel to show the options. Other types keep the
-    // legacy popover ComboBox, which opens on input focus.
+    // SearchSelect trigger; other types open the SearchSelect panel directly
+    // with options already visible — no further interaction needed.
     const picker = dynContainer.querySelector('.tui-search-select__trigger')
     if (picker) await user.click(picker)
-    const comboboxInput = dynContainer.querySelector('input[role="combobox"]')
-    if (comboboxInput) await user.click(comboboxInput)
 
     Object.keys(choices).forEach( name => {
       expect(within(document).getByText( choices[ name ] )).toBeTruthy()
@@ -202,6 +202,7 @@ describe('dynamic values feature - render', () => {
     )
 
     const getDynamicContainer = () =>
+      document.querySelector('.tui-search-select__panel') ||
       document.querySelector('.tf-dynamic-wrapper-popover') ||
       document.querySelector('.tf-modal-container') ||
       document.querySelector('.tui-modal')
@@ -215,12 +216,10 @@ describe('dynamic values feature - render', () => {
     expect(dynContainer).toBeTruthy()
 
     // Text type opens a DynamicFieldSettings modal whose picker is a
-    // SearchSelect — open its panel to show the options. Other types keep the
-    // legacy popover ComboBox, which opens on input focus.
+    // SearchSelect trigger; other types open the SearchSelect panel directly
+    // with options already visible — no further interaction needed.
     const picker = dynContainer.querySelector('.tui-search-select__trigger')
     if (picker) await user.click(picker)
-    const comboboxInput = dynContainer.querySelector('input[role="combobox"]')
-    if (comboboxInput) await user.click(comboboxInput)
 
     Object.keys(choices).forEach( name => {
       expect(within(document).getByText( choices[ name ] )).toBeTruthy()
@@ -248,8 +247,8 @@ describe('dynamic values feature - render', () => {
       })
     )
 
-    expect(within(container).queryByText('Insert')).toBeFalsy()
-    expect(within(container).queryByText('Clear')).toBeFalsy()
+    expect(within(container).queryByRole('button', { name: /insert/i })).toBeFalsy()
+    expect(within(container).queryByRole('button', { name: /clear/i })).toBeFalsy()
   })
 
   /**
@@ -270,8 +269,8 @@ describe('dynamic values feature - render', () => {
       })
     )
 
-    expect(within(container).queryByText('Clear')).toBeFalsy()
-    expect(within(container).getByText('Insert')).toBeTruthy()
+    expect(within(container).queryByRole('button', { name: /clear/i })).toBeFalsy()
+    expect(within(container).getByRole('button', { name: /insert/i })).toBeTruthy()
   })
 
   it('can use remove when using replace mode for text type', async () => {
@@ -290,13 +289,13 @@ describe('dynamic values feature - render', () => {
       })
     )
 
-    expect(within(container).queryByText('Insert')).toBeFalsy()
-    expect(within(container).getByText('Clear')).toBeTruthy()
+    expect(within(container).queryByRole('button', { name: /insert/i })).toBeFalsy()
+    expect(within(container).getByRole('button', { name: /clear/i })).toBeTruthy()
 
-    await user.click(within(container).getByText('Clear'))
+    await user.click(within(container).getByRole('button', { name: /clear/i }))
 
-    expect(within(container).getByText('Insert')).toBeTruthy()
-    expect(within(container).queryByText('Clear')).toBeFalsy()
+    expect(within(container).getByRole('button', { name: /insert/i })).toBeTruthy()
+    expect(within(container).queryByRole('button', { name: /clear/i })).toBeFalsy()
   })
 
   it('can use insert for text type', () => {
@@ -313,8 +312,8 @@ describe('dynamic values feature - render', () => {
       })
     )
 
-    expect(within(container).getByText('Insert')).toBeTruthy()
-    expect(within(container).queryByText('Clear')).toBeFalsy()
+    expect(within(container).getByRole('button', { name: /insert/i })).toBeTruthy()
+    expect(within(container).queryByRole('button', { name: /clear/i })).toBeFalsy()
   })
 
 })

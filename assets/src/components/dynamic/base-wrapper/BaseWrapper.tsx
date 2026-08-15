@@ -16,8 +16,8 @@ import { getConfig } from '../../../index.tsx'
 import Control from '../../../Control'
 
 import { useOverlayTriggerState } from 'react-stately'
+import { IconButton, SearchSelect } from '@tangible/ui'
 import { Button, Title } from '../../base'
-import ComboBox from '../../field/combo-box'
 
 /**
  * Accepted props:
@@ -39,9 +39,16 @@ const BaseWrapper = props => {
 
   const triggerRef = useRef()
   const overlayRef = useRef()
+  const wrapperRef = useRef(null)
 
   const [value, setValue] = useState(false)
   const [settingsForm, setSettingsForm] = useState(false)
+  /**
+   * SearchSelect's onOpenChange(false) fires in the same event batch as the
+   * selection that may have just revealed the settings form — read the
+   * fresh value through a ref so we don't close the trigger state under it.
+   */
+  const settingsFormRef = useRef(false)
   const [settings, setSettings] = useState({})
   const [valueChange, setValueChange] = useState(false)
 
@@ -85,8 +92,9 @@ const BaseWrapper = props => {
     if( ! Array.isArray(args) || args.length === 0 ) {
       return selectAndClose(valueName)
     }
-    
-    setSettingsForm(args) 
+
+    settingsFormRef.current = args
+    setSettingsForm(args)
   }
 
   const selectAndClose = value => {
@@ -99,11 +107,12 @@ const BaseWrapper = props => {
   }
 
   const resetAndClose = () => {
-    
+
     setValue(false)
+    settingsFormRef.current = false
     setSettingsForm(false)
     setSettings(false)
-    
+
     state.close()
   }
 
@@ -163,32 +172,104 @@ const BaseWrapper = props => {
 
   const classes = `tf-dynamic-wrapper tf-dynamic-wrapper-buttons-${buttonType} ${props.className ?? ''}`
 
+  /**
+   * The value picker: TUI SearchSelect in external-trigger mode — the insert
+   * button opens the panel anchored under the whole field (no intermediate
+   * popover-with-a-combobox). Values with settings still route to the
+   * settings form below via saveDynamicValue.
+   */
+  const picker = (
+    <SearchSelect
+      open={ state.isOpen && !settingsForm }
+      onOpenChange={ open => {
+        if( !open && !settingsFormRef.current ) state.close()
+      } }
+      onValueChange={ value => saveDynamicValue(String(value)) }
+      anchorRef={ wrapperRef }
+      restoreFocusRef={ triggerRef }
+      aria-label="Insert dynamic value"
+    >
+      <SearchSelect.Content>
+        { choices.map(category => (
+          <SearchSelect.Group key={ category.name }>
+            <SearchSelect.Label>{ category.name }</SearchSelect.Label>
+            { Object.entries(category.choices).map(([key, label]) => (
+              <SearchSelect.Option key={ key } value={ key }>
+                { String(label) }
+              </SearchSelect.Option>
+            )) }
+          </SearchSelect.Group>
+        )) }
+      </SearchSelect.Content>
+    </SearchSelect>
+  )
+
+  const insertIconButton = (
+    <IconButton
+      icon="system/bolt-plus-fill"
+      label="Insert dynamic value"
+      variant="ghost"
+      theme="secondary"
+      size="sm"
+      className="tf-dynamic-wrapper-insert"
+      ref={ triggerRef }
+      { ...triggerProps }
+      /* IconButton is a native button (onClick); react-aria's onPress in
+         triggerProps is inert on it, so activation is wired explicitly */
+      onClick={ () => state.open() }
+    />
+  )
+
+  const clearIconButton = (
+    <IconButton
+      icon="system/close"
+      label="Clear dynamic value"
+      variant="ghost"
+      theme="secondary"
+      size="sm"
+      className="tf-dynamic-wrapper-clear"
+      disabled={ props.remove?.isDisabled }
+      onClick={ props.remove?.onPress }
+    />
+  )
+
   return(
-    <div className={ classes } data-dynamic="true">
-      { props.children }
-      { hasInsert && 
-        <Button 
-          type={ buttonType === 'outside' ? 'action' : 'icon' } 
-          className="tf-dynamic-wrapper-insert" 
-          ref={ triggerRef } 
-          contentVisuallyHidden={ buttonType === 'inside' } 
-          { ...triggerProps }
-        > 
-        Insert
-      </Button> }
-      { hasClear &&
-        <Button 
-          type={ buttonType === 'outside' ? 'action' : 'icon' }
-          className="tf-dynamic-wrapper-clear"
-          contentVisuallyHidden={ buttonType === 'inside' }
-          { ...props.remove } 
-        >
-          Clear
-        </Button> }
-      {state.isOpen &&
+    <div className={ classes } data-dynamic="true" ref={ wrapperRef }>
+      { buttonType === 'inside'
+        /* Field + affordances read as ONE control: an input group with the
+           icon buttons as suffix appends */
+        ? <div className="tui-input-group tf-dynamic-group">
+            { props.children }
+            { hasInsert &&
+              <span className="tui-input-group__suffix">{ insertIconButton }</span> }
+            { hasClear &&
+              <span className="tui-input-group__suffix">{ clearIconButton }</span> }
+          </div>
+        : <>
+            { props.children }
+            { hasInsert &&
+              <Button
+                type="action"
+                className="tf-dynamic-wrapper-insert"
+                ref={ triggerRef }
+                { ...triggerProps }
+              >
+                Insert
+              </Button> }
+            { hasClear &&
+              <Button
+                type="action"
+                className="tf-dynamic-wrapper-clear"
+                { ...props.remove }
+              >
+                Clear
+              </Button> }
+          </> }
+      { picker }
+      {state.isOpen && settingsForm &&
         /**
-         * tui-interface class needed to keeps the combobox
-         * list inside the popover
+         * Settings sub-form for values that declare fields. tui-interface
+         * class keeps TUI portals inside the popover.
          *
          * @see getPortalRootFor() in @tangible/ui/utils/portal.js
          */
@@ -198,7 +279,7 @@ const BaseWrapper = props => {
           { ...mergeProps(overlayProps, dismissProps) }
         >
           { settingsForm
-            ? <div className="tf-dynamic-wrapper-popover-form">
+            && <div className="tf-dynamic-wrapper-popover-form">
                 <Title level={4}>
                   Dynamic value settings
                 </Title>
@@ -228,15 +309,7 @@ const BaseWrapper = props => {
                     Close
                   </Button>
                 </div>
-              </div>
-            : <ComboBox 
-                choices={ choices }
-                label={ 'Select dynamic value to insert' }
-                labelVisuallyHidden={ true }
-                autoFocus={ true }
-                showButton={ false }
-                onChange={ saveDynamicValue }
-              /> }
+              </div> }
           <DismissButton onDismiss={ state.close } />
         </div>
       ) }

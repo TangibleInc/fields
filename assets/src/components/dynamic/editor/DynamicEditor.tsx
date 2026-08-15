@@ -8,7 +8,7 @@ import { getConfig } from '../../../index.tsx'
 import { useProseMirrorEditor } from '../../../prosemirror/dynamic-text/use-prosemirror-editor'
 import { DynamicFieldSettings } from '../settings-modal'
 import FieldWrapper from '../field-wrapper/FieldWrapper'
-import { Button } from '../../base'
+import { IconButton } from '@tangible/ui'
 
 interface DynamicEditorProps {
   value: string
@@ -223,6 +223,20 @@ const DynamicEditor = ({
         {suffix && (
           <span className="tui-input-group__suffix">{suffix}</span>
         )}
+        {/* Insert affordance: an input-group append, not a floating button */}
+        {!readOnly && (
+          <span className="tui-input-group__suffix">
+            <IconButton
+              icon="system/bolt-plus-fill"
+              label="Insert dynamic value"
+              variant="ghost"
+              theme="secondary"
+              size="sm"
+              className="tf-dynamic-wrapper-insert"
+              onClick={handleInsertClick}
+            />
+          </span>
+        )}
       </div>
 
       {/* Hidden input for native form submission */}
@@ -232,17 +246,6 @@ const DynamicEditor = ({
         value={value}
       />
 
-      {/* Insert button */}
-      {!readOnly && (
-        <Button
-          type="icon"
-          className="tf-dynamic-wrapper-insert"
-          contentVisuallyHidden={true}
-          onPress={handleInsertClick}
-        >
-          Insert
-        </Button>
-      )}
 
       {/* Settings modal */}
       <DynamicFieldSettings

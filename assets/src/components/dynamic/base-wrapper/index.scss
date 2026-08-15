@@ -41,39 +41,15 @@
   width: $field-width;
   gap: 0;
 
-  .tf-button-icon {
-    position: absolute;
-    cursor: pointer;
-    top: 50%;
-    transform: translateY(-50%);
-    right: $field-border-width;
-    border: none;
-    background: transparent;
-    height: $field-height;
-    
-    color: var(--tui-color-fg-muted, #50575e);
-    transition: color var(--tui-motion-duration, 0.15s) var(--tui-motion-timing, ease);
+  // Field + affordances read as one control: the TUI input group carries the
+  // chrome and the insert/clear IconButtons sit in suffix append slots.
+  .tui-input-group.tf-dynamic-group {
+    width: 100%;
+  }
 
-    &:hover {
-      color: var(--tui-color-fg, #1e1e1e);
-    }
-
-    // TUI system/bolt-plus-fill via mask so the icon follows currentColor
-    // (the old base64 background was baked dark and vanished in dark contexts)
-    &:before {
-      content: "";
-      display: block;
-      inline-size: 1.25em;
-      block-size: 1.25em;
-      margin: 0 5px;
-      background-color: currentColor;
-      mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22black%22%3E%3Cpath d=%22M13.522 11h3.487c.416 0 .79.26.91.647a.95.95 0 0 1-.25 1.106l-.603.527a4.5 4.5 0 0 0-5.957 5.208l-1.447 1.265a1 1 0 0 1-1.58-1.147L10.489 13H6.973a.995.995 0 0 1-.909-.647 1 1 0 0 1 .278-1.106l8.005-7a1.002 1.002 0 0 1 1.58 1.147z%22/%3E%3Cpath fill-rule=%22evenodd%22 d=%22M15.5 21a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m2.5-3.5a.577.577 0 0 1-.577.577h-1.346v1.346a.577.577 0 1 1-1.154 0v-1.346h-1.346a.577.577 0 0 1 0-1.154h1.346v-1.346a.577.577 0 1 1 1.154 0v1.346h1.346c.32 0 .577.258.577.577%22 clip-rule=%22evenodd%22/%3E%3C/svg%3E") no-repeat center / contain;
-    }
-
-    &.cm-content[contenteditable="false"] {
-      &::before {
-        display: none;
-      }
-    }
+  .tui-input-group__suffix {
+    display: inline-flex;
+    align-items: center;
+    padding-inline: 2px;
   }
 }

@@ -1,11 +1,12 @@
 .tf-dynamic-field-wrapper.tf-dynamic-wrapper {
 
-  // Replace-mode value bar: the whole field becomes a dynamic-value pill
-  // (bolt + label) on a tinted input-shaped surface.
+  // Replace-mode value bar (standalone / buttons-outside): the whole field
+  // becomes a dynamic-value pill (bolt + label) on a tinted input-shaped
+  // surface.
   .tf-dynamic-value-display {
     display: flex;
     align-items: center;
-    width: $field-width;
+    flex: 1 1 auto;
     min-height: $field-height;
     padding: var(--tui-spacing-xxs) $field-padding-horizontal;
     box-sizing: border-box;
@@ -20,14 +21,25 @@
     }
   }
 
-  // TUI system/close via mask so the clear icon follows currentColor
-  .tf-button-icon.tf-dynamic-wrapper-clear::before {
-    content: "";
-    display: block;
-    inline-size: 1em;
-    block-size: 1em;
-    margin: 0 5px;
-    background-color: currentColor;
-    mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22black%22%3E%3Cpath fill-rule=%22evenodd%22 d=%22m12 12.868-6.462 6.655-1.076-1.046 6.493-6.685-6.089-6.27 1.077-1.045L12 10.715l6.057-6.238 1.076 1.045-6.088 6.27 6.493 6.685-1.076 1.046z%22 clip-rule=%22evenodd%22/%3E%3C/svg%3E") no-repeat center / contain;
+  // Inside an input group the GROUP carries the chrome — tint the whole bar
+  // (icon buttons included) and strip the display's own box.
+  .tf-dynamic-group:has(.tf-dynamic-value-display) {
+    background: var(--tui-theme-primary-subtlest, rgba(99, 102, 241, 0.12));
+    border-color: var(--tui-theme-primary-subtle, rgba(99, 102, 241, 0.25));
+  }
+
+  .tf-dynamic-group .tf-dynamic-value-display {
+    border: none;
+    background: transparent;
+    min-height: calc(#{$field-height} - 2 * #{$field-border-width});
+  }
+
+  // Replace-mode empty state: the readOnly input inside the group goes flush
+  .tf-dynamic-group .tf-dynamic-text-input {
+    flex: 1 1 auto;
+    border: none;
+    background: transparent;
+    outline: none;
+    min-width: 0;
   }
 }
