@@ -90,6 +90,8 @@
   --tui-button-radius: 3px;
   --tui-icon-button-radius: 3px;
   --tui-input-radius: 3px;
+  --tui-switch-track-height: 20px;
+  --tui-switch-track-width: 48px;
   --tui-select-trigger-radius: 3px;
   --tui-select-content-radius: 3px;
   --tui-multiselect-trigger-radius: 3px;
@@ -101,6 +103,17 @@
   --tui-input-fg: var(--tui-color-fg);
   --tui-input-bg: var(--tui-color-bg);
   --tui-select-trigger-bg: var(--tui-color-bg);
+  --tui-switch-accent: #f3bafd;
+
+  /* Combobox/multicombobox position their chevron on the WRAPPER, which
+     inherits the interface base font (16px) instead of the input's control
+     font — Select's chevron sits inside the trigger and gets 12px for free.
+     Pin them to the control font so all dropdown chevrons match. (Root cause
+     is a TUI sizing gap; this is the context-level correction.) */
+  .tui-combobox__icon,
+  .tui-multicombobox__icon {
+    font-size: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  }
 
   /* Text-like fields focus NEUTRAL (Elementor darkens the border, no accent):
      the focused border follows the per-mode grey focus ring. Only the
