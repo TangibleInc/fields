@@ -115,6 +115,16 @@
     font-size: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
   }
 
+  /* Chips in token fields size from the GLOBAL typography ladder (sm = 14px),
+     detached from the control font. Fractional em of the host control instead:
+     the chip's own block padding eats the difference, so text + padding fit
+     the 28px control at any context font. (Candidate TUI-level fix: chips
+     inside token fields should always size em-relative to their control.) */
+  .tui-multiselect__chip,
+  .tui-multicombobox .tui-chip {
+    font-size: 0.85em;
+  }
+
   /* Text-like fields focus NEUTRAL (Elementor darkens the border, no accent):
      the focused border follows the per-mode grey focus ring. Only the
      selection controls below keep the magenta ring. */

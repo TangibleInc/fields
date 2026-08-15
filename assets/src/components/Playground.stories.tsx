@@ -56,6 +56,7 @@ const Playground = ({ context }: { context?: string }) => (
         label="Select (multiple)"
         multiple={true}
         choices={choices}
+        value={['one', 'two']}
       />
       <Field context={context} type="combo-box" name="pg-combo" label="Combo box" choices={choices} />
       <Field context={context} type="button-group" name="pg-buttons" label="Button group" choices={choices} value="one" />
