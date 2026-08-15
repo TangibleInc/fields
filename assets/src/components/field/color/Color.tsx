@@ -44,7 +44,7 @@ const Color = props => {
     props.onChange && props.onChange(value)
   }, [value])
 
-  const disabled = Boolean(props.readOnly)
+  const disabled = Boolean(props.isDisabled || props.readOnly)
   const defaultFormat = FORMAT_MAP[props.format as keyof typeof FORMAT_MAP] ?? 'hex'
 
   return (
