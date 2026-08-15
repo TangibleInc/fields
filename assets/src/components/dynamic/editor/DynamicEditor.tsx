@@ -17,6 +17,8 @@ interface DynamicEditorProps {
   defaultValue?: string
   onChange: (value: string) => void
   dynamic: any // DynamicAPI from dynamicValuesAPI()
+  /** Control size — threads to the input group's is-size-* ladder. */
+  size?: 'sm' | 'md' | 'lg'
   name?: string
   placeholder?: string
   readOnly?: boolean
@@ -32,6 +34,7 @@ const DynamicEditor = ({
   defaultValue,
   onChange,
   dynamic,
+  size = 'md',
   name,
   placeholder,
   readOnly = false,
@@ -208,6 +211,7 @@ const DynamicEditor = ({
       <Wrapper
         dynamic={dynamic}
         value={value}
+        size={size}
         onValueSelection={onChange}
         onValueRemove={() => onChange('')}
         inputProps={inputProps}
@@ -259,7 +263,11 @@ const DynamicEditor = ({
       {/* tui-input-group: consistent prefix/input/suffix wrapper from TUI */}
       <div
         ref={groupRef}
-        className={`tui-input-group ${readOnly ? 'is-disabled' : ''}`}
+        className={[
+          'tui-input-group',
+          size !== 'md' && `is-size-${size}`,
+          readOnly && 'is-disabled',
+        ].filter(Boolean).join(' ')}
         onClick={handleGroupClick}
       >
         {prefix && (

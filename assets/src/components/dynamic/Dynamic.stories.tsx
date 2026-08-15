@@ -316,6 +316,35 @@ export const DatePicker: Story = {
 /**
  * Dynamic values restricted to a specific category
  */
+export const Sizes: Story = {
+  name: 'Sizes (sm / md / lg)',
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 480 }}>
+      {(['sm', 'md', 'lg'] as const).map(size => (
+        <Field
+          key={`insert-${size}`}
+          type="text"
+          label={`Text ${size} (insert)`}
+          name={`sized-insert-${size}`}
+          size={size}
+          dynamic={true}
+        />
+      ))}
+      {(['sm', 'md', 'lg'] as const).map(size => (
+        <Field
+          key={`replace-${size}`}
+          type="text"
+          label={`Text ${size} (replace)`}
+          name={`sized-replace-${size}`}
+          size={size}
+          value="[[post-title]]"
+          dynamic={{ mode: 'replace', types: ['text'] }}
+        />
+      ))}
+    </div>
+  ),
+}
+
 export const RestrictedCategories: Story = {
   args: {
     type: 'text',

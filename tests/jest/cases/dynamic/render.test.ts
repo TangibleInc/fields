@@ -234,6 +234,23 @@ describe('dynamic values feature - render', () => {
     })
   })
 
+  test.each(['insert', 'replace'])('size param threads to the dynamic group (%p mode)', async mode => {
+
+    const { container } = render(
+      fields.render({
+        label   : 'Label name',
+        type    : 'text',
+        name    : 'name',
+        size    : 'sm',
+        dynamic : { mode, types: [ 'text' ] }
+      })
+    )
+
+    await waitFor(() =>
+      expect(container.querySelector('.tui-input-group.is-size-sm')).toBeTruthy()
+    )
+  })
+
   it('does not crash if using dynamic on an unsupportede field type', () => {
 
     const { container } = render(

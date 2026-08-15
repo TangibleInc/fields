@@ -102,6 +102,7 @@ const BaseWrapper = props => {
    * - Inside the input (only used for text currently)
    */
   const buttonType = props.buttonType ?? 'outside'
+  const size       = props.size ?? 'md'
   const hasInsert  = !( props.readOnly || props.inputMasking ) && (buttonType === 'outside' || (! props.remove || props.remove.isDisabled))
   const hasClear   = !( props.readOnly || props.inputMasking ) && (buttonType === 'outside' || (props.remove && props.remove.isDisabled === false))
 
@@ -174,7 +175,11 @@ const BaseWrapper = props => {
       { buttonType === 'inside'
         /* Field + affordances read as ONE control: an input group with the
            icon buttons as suffix appends */
-        ? <div className="tui-input-group tf-dynamic-group">
+        ? <div className={[
+            'tui-input-group',
+            'tf-dynamic-group',
+            size !== 'md' && `is-size-${size}`,
+          ].filter(Boolean).join(' ')}>
             { props.children }
             { hasInsert &&
               <span className="tui-input-group__suffix">{ insertIconButton }</span> }
