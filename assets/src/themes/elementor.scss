@@ -36,12 +36,32 @@
   --tui-color-border: #d5d8dc;
   --tui-color-divider: #e6e9ec;
 
+  /* Semantic scales mapped to Elementor's palette: base = --e-a-color-X,
+     strong/stronger = their button hover/active ladders. Light subtle tints
+     keep TUI's defaults (Elementor's bg tints are dark-mode values). */
+  --tui-theme-info-base: #2563eb;
+  --tui-theme-info-strong: #134cca;
+  --tui-theme-info-stronger: #0e3b9c;
+  --tui-theme-success-base: #0a875a;
+  --tui-theme-success-strong: #06583a;
+  --tui-theme-success-stronger: #03281b;
+  --tui-theme-warning-base: #f59e0b;
+  --tui-theme-warning-strong: #c57f08;
+  --tui-theme-warning-stronger: #945f06;
+  --tui-theme-danger-base: #dc2626;
+  --tui-theme-danger-strong: #b21d1d;
+  --tui-theme-danger-stronger: #861616;
+
   --tui-focus-ring-color: #69727d;
+
+  /* Dropdown option hover wash (Elementor's light hover grey). */
+  --tf-option-hover: #f1f2f3;
 }
 
 @mixin elementor-tokens-dark {
-  /* Magenta scale mirrored for dark: subtles go deep, stronger goes lighter */
-  --tui-theme-primary-subtlest: #380b39;
+  /* Magenta scale mirrored for dark: subtles go deep, stronger goes lighter.
+     Subtlest is Elementor's own dark primary tint (--e-a-bg-primary). */
+  --tui-theme-primary-subtlest: #310132;
   --tui-theme-primary-subtler: #521254;
   --tui-theme-primary-subtle: #831f86;
   --tui-theme-primary-base: #d004d4;
@@ -66,7 +86,22 @@
   --tui-color-fill: #2c2f33;
   --tui-color-fill-strong: #3f444b;
 
+  /* Semantic scales, dark: same Elementor bases; subtlest = Elementor's own
+     dark tints (--e-a-bg-*), which the notice backgrounds resolve to. */
+  --tui-theme-info-base: #2563eb;
+  --tui-theme-info-subtlest: #0a1a3d;
+  --tui-theme-success-base: #0a875a;
+  --tui-theme-success-subtlest: #032317;
+  --tui-theme-warning-base: #f59e0b;
+  --tui-theme-warning-subtlest: #311808;
+  --tui-theme-danger-base: #dc2626;
+  --tui-theme-danger-subtlest: #390a0a;
+
   --tui-focus-ring-color: #9da5ae;
+
+  /* Dropdown option hover wash: fill-subtle (#26292c) EQUALS the dark popover
+     surface, so hovers were invisible — use the step-up grey instead. */
+  --tf-option-hover: #3f444b;
 }
 
 @mixin elementor-control-remaps {
@@ -124,6 +159,28 @@
   .tui-multicombobox .tui-chip {
     font-size: 0.85em;
   }
+
+  /* Popover surfaces scale with the panel's 12px controls too: dropdown
+     options and the calendar all key their type off typography-size-sm/xs
+     rather than the control ladder — rescope those tokens per surface, and
+     shrink the calendar's day/month cells from the 2.5rem default. */
+  .tui-select__content,
+  .tui-multiselect__content,
+  .tui-combobox__content,
+  .tui-multicombobox__content,
+  .tui-popover,
+  .tui-calendar {
+    --tui-typography-size-sm: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+    --tui-typography-size-xs: calc(11 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  }
+
+  --tui-calendar-cell-size: 2rem;
+
+  /* Option hover follows the per-mode wash (combobox falls back through
+     select's token; multicombobox has its own). */
+  --tui-select-option-bg-hover: var(--tf-option-hover);
+  --tui-multiselect-option-bg-hover: var(--tf-option-hover);
+  --tui-multicombobox-option-bg-hover: var(--tf-option-hover);
 
   /* Text-like fields focus NEUTRAL (Elementor darkens the border, no accent):
      the focused border follows the per-mode grey focus ring. Only the
