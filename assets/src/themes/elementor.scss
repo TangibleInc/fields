@@ -95,6 +95,22 @@
   --tui-input-bg: var(--tui-color-bg);
   --tui-select-trigger-bg: var(--tui-color-bg);
 
+  /* Text-like fields focus NEUTRAL (Elementor darkens the border, no accent):
+     the focused border follows the per-mode grey focus ring. Only the
+     selection controls below keep the magenta ring. */
+  --tui-input-border-focus: var(--tui-focus-ring-color);
+  --tui-select-trigger-border-focus: var(--tui-focus-ring-color);
+  --tui-multiselect-trigger-border-focus: var(--tui-focus-ring-color);
+  --tui-combobox-input-border-focus: var(--tui-focus-ring-color);
+  --tui-multicombobox-control-border-focus: var(--tui-focus-ring-color);
+
+  .tui-checkbox,
+  .tui-radio,
+  .tui-switch,
+  .tui-inline-choice {
+    --tui-focus-ring-color: var(--tui-theme-primary-base);
+  }
+
   /* Segmented groups (Normal | Hover | Active): full-width bordered segments,
      the active one filled with a NEUTRAL — panel chrome stays monochrome even
      though the primary scale is magenta. Both modes' sampled active fill
