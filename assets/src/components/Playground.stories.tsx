@@ -51,7 +51,7 @@ const Playground = () => (
         choices={choices}
       />
       <Field type="combo-box" name="pg-combo" label="Combo box" choices={choices} />
-      <Field type="button-group" name="pg-buttons" label="Button group" choices={choices} />
+      <Field type="button-group" name="pg-buttons" label="Button group" choices={choices} value="one" />
       <Field type="radio" name="pg-radio" label="Radio" choices={choices} value="one" />
       <Field type="checkbox" name="pg-checkbox" label="Checkbox" value={true} />
       <Field type="switch" name="pg-switch" label="Switch" value="on" />

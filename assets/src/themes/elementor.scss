@@ -108,6 +108,10 @@
     --tui-segmented-item-radius: 0;
     --tui-segmented-item-padding: var(--tui-spacing-xxs) var(--tui-spacing-sm);
     --tui-segmented-item-bg-active: var(--tui-color-border);
+    /* The neutral active fill is light grey in light mode — the default
+       on-accent white text has no contrast there. Panel fg works on both
+       modes' fills (near-black on #d5d8dc, light grey on #3f444b). */
+    --tui-segmented-item-fg-active: var(--tui-color-fg);
   }
 }
 
