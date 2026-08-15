@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 import { Field } from '../index'
+import { Notice } from '@tangible/ui'
 
 /**
  * A theming playground: one page with a broad spread of controls, for
@@ -65,6 +66,12 @@ const Playground = ({ context }: { context?: string }) => (
     </div>
 
     <div style={{ ...column, gridColumn: '1 / -1' }}>
+      {(['info', 'success', 'warning', 'danger'] as const).map(theme => (
+        <Notice key={theme} theme={theme}>
+          <Notice.Head title={`Notice (${theme})`} />
+          <Notice.Body>A theme-coloured notice for context theming.</Notice.Body>
+        </Notice>
+      ))}
       <Field context={context} type="dimensions" name="pg-dimensions" label="Dimensions" />
       <Field context={context} type="simple-dimension" name="pg-simple-dimension" label="Simple dimension" />
       <Field context={context} type="alignment-matrix" name="pg-alignment" label="Alignment matrix" />

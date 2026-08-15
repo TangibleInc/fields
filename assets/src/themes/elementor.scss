@@ -118,10 +118,45 @@
     --tui-focus-ring-color: var(--tui-theme-primary-base);
   }
 
+  /* Notices, per .elementor-control-notice: NO tinted background — panel bg,
+     a 1px border in the TYPE colour, body text in panel fg (only the icon and
+     border carry the type colour), 12px italic content. Elementor's own
+     --e-a-color-* tokens win in the real editor; TUI scales fall back. */
+  .tui-notice {
+    --tui-notice-bg: transparent;
+    --tui-notice-fg: var(--tui-color-fg);
+    --tui-notice-border-width: 1px;
+    font-size: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+    font-style: italic;
+
+    .tui-button {
+      font-style: normal;
+    }
+  }
+  .tui-notice.is-theme-info {
+    --tui-notice-border: var(--e-a-color-info, var(--tui-theme-info-base));
+  }
+  .tui-notice.is-theme-success {
+    --tui-notice-border: var(--e-a-color-success, var(--tui-theme-success-base));
+  }
+  .tui-notice.is-theme-warning {
+    --tui-notice-border: var(--e-a-color-warning, var(--tui-theme-warning-base));
+  }
+  .tui-notice.is-theme-danger {
+    --tui-notice-border: var(--e-a-color-danger, var(--tui-theme-danger-base));
+  }
+
   /* Segmented groups (Normal | Hover | Active): full-width bordered segments,
      the active one filled with a NEUTRAL — panel chrome stays monochrome even
      though the primary scale is magenta. Both modes' sampled active fill
      equals the border grey. */
+  .tui-segmented {
+    /* Root font-size keys the items' ems; SegmentedControl reads
+       typography-size-sm (14px) rather than the control ladder — pin it to
+       the panel's 12px like every other control. */
+    font-size: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  }
+
   .tui-segmented.is-variant-pill {
     --tui-segmented-radius: var(--tui-input-radius);
     --tui-segmented-border: var(--tui-color-border);
