@@ -14,15 +14,22 @@
   background: var(--tf-dynamic-pill-bg);
   color: var(--tf-dynamic-pill-fg);
   font-size: 0.875em;
+  margin-inline: 0.25em;
+  margin-block: 2px;
   line-height: 1.4;
   vertical-align: baseline;
   cursor: default;
   user-select: none;
   white-space: nowrap;
 
+
+  &.ProseMirror-selectednode {
+    outline: var(--tui-focus-ring-width, 2px) solid var(--tui-focus-ring-color, currentColor);
+  }
+
   &__icon {
     display: inline-flex;
-    font-size: 0.85em;
+    font-size: 1.25em;
     line-height: 1;
     flex-shrink: 0;
     color: var(--tf-dynamic-pill-accent);

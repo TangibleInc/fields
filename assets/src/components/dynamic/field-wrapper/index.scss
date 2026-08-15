@@ -17,8 +17,13 @@
     .tf-dynamic-pill {
       background: none;
       padding: 0;
+      margin: 0;
       font-size: 1em;
     }
+  }
+
+  &.tf-dynamic-wrapper-buttons-inside .tf-dynamic-group {
+    padding-inline-end: var(--tui-spacing-xxs);
   }
 
   // Inside an input group the GROUP carries the chrome — tint the whole bar
@@ -34,7 +39,7 @@
     // The GROUP owns the control height (min-height 40) and block padding —
     // the display's own min-height/padding stacked on top of it (40 → 48)
     min-height: 0;
-    padding-block: 0;
+    padding: 0;
   }
 
   // Replace-mode empty state: the readOnly input inside the group goes flush
