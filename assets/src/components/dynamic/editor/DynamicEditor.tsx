@@ -2,13 +2,15 @@ import {
   useState,
   useCallback,
   useMemo,
+  useRef,
 } from 'react'
 
 import { getConfig } from '../../../index.tsx'
 import { useProseMirrorEditor } from '../../../prosemirror/dynamic-text/use-prosemirror-editor'
 import { DynamicFieldSettings } from '../settings-modal'
 import FieldWrapper from '../field-wrapper/FieldWrapper'
-import { IconButton } from '@tangible/ui'
+import { buildGroupedChoices, valueHasSettings } from '../choices'
+import { IconButton, SearchSelect } from '@tangible/ui'
 
 interface DynamicEditorProps {
   value: string
@@ -42,8 +44,14 @@ const DynamicEditor = ({
   const { dynamics } = getConfig()
 
   const [modalOpen, setModalOpen] = useState(false)
+  const [pickerOpen, setPickerOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | undefined>()
   const [editingRaw, setEditingRaw] = useState<string | undefined>()
+
+  // External-trigger SearchSelect wiring: the panel anchors under the whole
+  // input group; focus returns to the bolt-plus IconButton.
+  const groupRef = useRef<HTMLDivElement | null>(null)
+  const insertButtonRef = useRef<HTMLButtonElement | null>(null)
 
   /**
    * Build a label resolver from the dynamic values config.
@@ -122,13 +130,45 @@ const DynamicEditor = ({
   )
 
   /**
-   * Handle insert button click — open modal in insert mode.
+   * Insert button — ALWAYS opens the insert panel (SearchSelect). The
+   * settings modal is reserved for editing (kebab/double-click) and for
+   * picked values that declare settings.
    */
   const handleInsertClick = useCallback(() => {
     setEditingId(undefined)
     setEditingRaw(undefined)
-    setModalOpen(true)
-  }, [])
+    setPickerOpen(!pickerOpen)
+  }, [pickerOpen])
+
+  const choices = useMemo(
+    () => buildGroupedChoices(dynamic, dynamics),
+    [dynamic, dynamics]
+  )
+
+  /**
+   * A value picked from the insert panel: insert immediately, unless it
+   * declares settings — then route to the settings modal prefilled with it.
+   */
+  const handlePickerSelect = useCallback(
+    (picked: string | number) => {
+      const valueName = String(picked)
+
+      if (valueHasSettings(dynamics, valueName)) {
+        setEditingId(undefined)
+        setEditingRaw(valueName)
+        setModalOpen(true)
+        return
+      }
+
+      let raw = dynamic.stringify(valueName, false)
+      // The serialiser re-adds the [[ ]] delimiters
+      if (raw.startsWith('[[') && raw.endsWith(']]')) {
+        raw = raw.slice(2, -2)
+      }
+      insertDynamicValue(raw)
+    },
+    [dynamic, dynamics, insertDynamicValue]
+  )
 
   /**
    * Handle modal submit — either insert new or update existing.
@@ -168,7 +208,8 @@ const DynamicEditor = ({
           type="text"
           className="tf-dynamic-text-input"
           value={value}
-          readOnly
+          onChange={e => onChange(e.target.value)}
+          readOnly={readOnly}
           placeholder={placeholder}
         />
       </Wrapper>
@@ -205,6 +246,7 @@ const DynamicEditor = ({
     >
       {/* tui-input-group: consistent prefix/input/suffix wrapper from TUI */}
       <div
+        ref={groupRef}
         className={`tui-input-group ${readOnly ? 'is-disabled' : ''}`}
         onClick={handleGroupClick}
       >
@@ -227,12 +269,15 @@ const DynamicEditor = ({
         {!readOnly && (
           <span className="tui-input-group__suffix">
             <IconButton
+              ref={insertButtonRef}
               icon="system/bolt-plus-fill"
               label="Insert dynamic value"
               variant="ghost"
               theme="secondary"
               size="sm"
               className="tf-dynamic-wrapper-insert"
+              aria-haspopup="dialog"
+              aria-expanded={pickerOpen}
               onClick={handleInsertClick}
             />
           </span>
@@ -247,7 +292,31 @@ const DynamicEditor = ({
       />
 
 
-      {/* Settings modal */}
+      {/* Insert panel — anchored under the field */}
+      <SearchSelect
+        open={pickerOpen}
+        onOpenChange={setPickerOpen}
+        onValueChange={handlePickerSelect}
+        anchorRef={groupRef}
+        restoreFocusRef={insertButtonRef}
+        aria-label="Insert dynamic value"
+      >
+        <SearchSelect.Content>
+          {choices.map(category => (
+            <SearchSelect.Group key={category.name}>
+              <SearchSelect.Label>{category.name}</SearchSelect.Label>
+              {Object.entries(category.choices).map(([key, label]) => (
+                <SearchSelect.Option key={key} value={key}>
+                  {String(label)}
+                </SearchSelect.Option>
+              ))}
+            </SearchSelect.Group>
+          ))}
+        </SearchSelect.Content>
+      </SearchSelect>
+
+      {/* Settings modal — editing (kebab/double-click) and picked values
+          that declare settings */}
       <DynamicFieldSettings
         open={modalOpen}
         onOpenChange={setModalOpen}
