@@ -37,9 +37,10 @@
     }
   }
 
-  &.is-single-line .tf-dt-line {
-    display: inline;
-  }
+  // NOTE: .tf-dt-line stays display:block in single-line mode — inline made
+  // ProseMirror's trailing <br> create a second line box (empty editor 48px
+  // tall, jumping to 24px on first keystroke). The single-line plugin
+  // guarantees one line node, and PM's overflow-x handles the nowrap scroll.
 }
 
 // Dynamic value pill styles live in components/dynamic/pill.scss —

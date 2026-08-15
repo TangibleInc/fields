@@ -43,3 +43,13 @@
     padding-inline: 2px;
   }
 }
+
+// Appended affordances scale WITH the host control — one visual step down,
+// clamped to the 24px WCAG target floor. A fixed t-shirt size can't track
+// context control-height remaps (Elementor's 28px md would overflow even xs);
+// control 40px → 30px button, exactly filling the group's content box.
+.tf-dynamic-wrapper .tui-input-group__suffix .tui-icon-button.tui-icon-button {
+  --tf-append-size: max(1.5rem, calc(var(--tui-control-height-md, 2.5rem) - 2 * var(--tui-spacing-xxs, 4px) - 2 * var(--tui-border-width, 1px)));
+  width: var(--tf-append-size);
+  height: var(--tf-append-size);
+}

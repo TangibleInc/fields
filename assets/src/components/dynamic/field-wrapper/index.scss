@@ -31,7 +31,10 @@
   .tf-dynamic-group .tf-dynamic-value-display {
     border: none;
     background: transparent;
-    min-height: calc(#{$field-height} - 2 * #{$field-border-width});
+    // The GROUP owns the control height (min-height 40) and block padding —
+    // the display's own min-height/padding stacked on top of it (40 → 48)
+    min-height: 0;
+    padding-block: 0;
   }
 
   // Replace-mode empty state: the readOnly input inside the group goes flush
