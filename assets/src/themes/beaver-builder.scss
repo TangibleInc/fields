@@ -2,16 +2,16 @@
  * Beaver Builder context theme overrides (TUI token remapping).
  * Keep context-specific styling centralized here instead of per-component files.
  *
- * Starting point built from builder-panel screenshots (light + dark) and
- * builder-forms.bundle.min.css. BB's design system runs on --fl-builder-*
- * custom properties (radius, target-size, input-bg-color, accent-color, …)
- * defined in the core builder bundle — every value here references the BB var
- * first so the real builder drives it, with fallbacks sampled from the panels
- * (dark fallbacks are eye-read; the live builder overrides them anyway).
+ * BB's design system runs on --fl-builder-* custom properties (radius 6px,
+ * target-size 36px, input/panel/platter/heading bgs, accent
+ * hsl(194,100%,41%), hue-210 grey ladders, font-family) — every value here
+ * references the BB var first so the live builder drives it, with fallbacks
+ * taken from builder-css.bundle.min.css's own skin definitions (both modes).
  *
- * BB blue family from their own CSS: #00a0d2 (focus), #0086b0, #3aa4cc.
  * Unlike Elementor, BB focuses text fields with the accent blue, so no
- * neutral-focus split here.
+ * neutral-focus split here. Aside for later: BB marks DYNAMIC values purple
+ * (--fl-builder-dynamic-accent-color: #6221a2) and global values orange
+ * (#ff9600) — relevant to the fields dynamic-value treatment someday.
  *
  * The legacy per-component overrides in contexts/beaver-builder/components/
  * still apply to the not-yet-migrated react-aria fields; this file themes the
@@ -19,73 +19,76 @@
  */
 
 @mixin bb-tokens-light {
-  --tui-theme-primary-subtlest: #e9f5fa;
-  --tui-theme-primary-subtler: #c8e6f1;
-  --tui-theme-primary-subtle: #9ad2e4;
-  --tui-theme-primary-base: var(--fl-builder-accent-color, #0086b0);
-  --tui-theme-primary-strong: #006e93;
-  --tui-theme-primary-stronger: #005876;
-  --tui-theme-primary-strongest: #003c50;
+  /* BB accent ladder from their own definitions: accent hsl(194,100%,41%),
+     hover 37%, selected 34%. */
+  --tui-theme-primary-subtlest: #e6f6fb;
+  --tui-theme-primary-subtler: #c2e8f4;
+  --tui-theme-primary-subtle: #8fd4ea;
+  --tui-theme-primary-base: var(--fl-builder-accent-color, #00a3d1);
+  --tui-theme-primary-strong: var(--fl-builder-accent-color-hover, #0093bd);
+  --tui-theme-primary-stronger: #0087ad;
+  --tui-theme-primary-strongest: #005c77;
 
-  --tui-color-bg: var(--fl-builder-panel-bg-color, #fcfcfd);
+  --tui-color-bg: var(--fl-builder-panel-bg-color, #fbfcfd);
   --tui-color-bg-surface: var(--fl-builder-input-bg-color, #ffffff);
-  --tui-color-bg-elevated: var(--fl-builder-platter-bg-color, #ffffff);
-  --tui-color-bg-muted: var(--fl-builder-heading-bg-color, #f0f2f5);
-  --tui-color-fg: var(--fl-builder-input-color, #333333);
+  --tui-color-bg-elevated: #ffffff;
+  --tui-color-bg-muted: var(--fl-builder-platter-bg-color, #eff2f5);
+  --tui-color-fg: var(--fl-builder-input-color, #000000);
   --tui-color-fg-secondary: #525961;
-  --tui-color-fg-muted: var(--fl-builder-dim-color, #a7b1bb);
-  --tui-color-border: var(--fl-builder-outline-color, #dfe3e8);
-  --tui-color-divider: var(--fl-builder-divider-color, #e7ebef);
+  --tui-color-fg-muted: var(--fl-builder-dim-color, #7e8b98);
+  --tui-color-border: var(--fl-builder-outline-color, #d2dae3);
+  --tui-color-divider: var(--fl-builder-divider-color, #bfcbd8);
 
-  --tui-color-fill-subtle: #f0f2f5;
-  --tui-color-fill: #e7ebef;
-  --tui-color-fill-strong: #d4dade;
+  --tui-color-fill-subtle: #eff2f5;
+  --tui-color-fill: #e4e9ee;
+  --tui-color-fill-strong: #d2dae3;
 
-  --tui-focus-ring-color: var(--fl-builder-selected-color, #00a0d2);
+  --tui-focus-ring-color: var(--fl-builder-selected-color, #0087ad);
 
   /* Dropdown option hover wash */
-  --tf-option-hover: #f0f2f5;
+  --tf-option-hover: #eff2f5;
 }
 
 @mixin bb-tokens-dark {
-  /* Dark fallbacks are eye-read from the dark-skin panel — the live builder's
-     --fl-builder-* values take precedence wherever they exist. */
-  --tui-theme-primary-subtlest: #0b2836;
-  --tui-theme-primary-subtler: #123c51;
-  --tui-theme-primary-subtle: #1b5875;
-  --tui-theme-primary-base: var(--fl-builder-accent-color, #35a6de);
-  --tui-theme-primary-strong: #5cb8e6;
-  --tui-theme-primary-stronger: #8fd0f0;
-  --tui-theme-primary-strongest: #c5e7f8;
+  /* Dark fallbacks from BB's own skin definitions: panel #23282e, inputs
+     RECESSED darker (#181b20), heading #101216, outline hsl(210,11%,25%).
+     The accent is shared across skins. */
+  --tui-theme-primary-subtlest: #062e3a;
+  --tui-theme-primary-subtler: #0a4254;
+  --tui-theme-primary-subtle: #0e566e;
+  --tui-theme-primary-base: var(--fl-builder-accent-color, #00a3d1);
+  --tui-theme-primary-strong: #33b5da;
+  --tui-theme-primary-stronger: #66c8e4;
+  --tui-theme-primary-strongest: #b3e4f2;
 
-  --tui-color-bg: var(--fl-builder-panel-bg-color, #14171a);
-  --tui-color-bg-surface: var(--fl-builder-input-bg-color, #1d2125);
-  --tui-color-bg-elevated: var(--fl-builder-platter-bg-color, #22262b);
-  --tui-color-bg-muted: var(--fl-builder-heading-bg-color, #1b1f23);
-  --tui-color-fg: var(--fl-builder-input-color, #d5d9dd);
+  --tui-color-bg: var(--fl-builder-panel-bg-color, #23282e);
+  --tui-color-bg-surface: var(--fl-builder-input-bg-color, #181b20);
+  --tui-color-bg-elevated: var(--fl-builder-box-background, #23282e);
+  --tui-color-bg-muted: var(--fl-builder-heading-bg-color, #101216);
+  --tui-color-fg: var(--fl-builder-input-color, #ffffff);
   --tui-color-fg-secondary: #c3c8cd;
-  --tui-color-fg-muted: var(--fl-builder-dim-color, #8f969e);
-  --tui-color-border: var(--fl-builder-outline-color, #34393f);
-  --tui-color-divider: var(--fl-builder-divider-color, #2a2f34);
+  --tui-color-fg-muted: var(--fl-builder-dim-color, #7e8b98);
+  --tui-color-border: var(--fl-builder-outline-color, #393f47);
+  --tui-color-divider: var(--fl-builder-divider-color, #343a41);
 
   /* Control fills — see the nested-wrapper gotcha in wp.scss/elementor.scss */
-  --tui-color-fill-subtle: #22262b;
-  --tui-color-fill: #2c3138;
-  --tui-color-fill-strong: #3a4148;
+  --tui-color-fill-subtle: #262c33;
+  --tui-color-fill: #2e353d;
+  --tui-color-fill-strong: #393f47;
 
-  --tui-focus-ring-color: var(--fl-builder-selected-color, #35a6de);
+  --tui-focus-ring-color: var(--fl-builder-selected-color, #33b5da);
 
-  --tf-option-hover: #34393f;
+  --tf-option-hover: #393f47;
 }
 
 @mixin bb-control-remaps {
   --tui-focus-ring-offset: 0px;
   --tui-focus-ring-width: 1.5px;
 
-  /* BB's panel runs roomy 40px controls (their target-size) at ~14px type */
-  --tui-control-height-sm: 32px;
-  --tui-control-height-md: var(--fl-builder-target-size, 40px);
-  --tui-control-height-lg: 48px;
+  /* BB's panel runs 36px controls (their target-size) at ~14px type */
+  --tui-control-height-sm: 28px;
+  --tui-control-height-md: var(--fl-builder-target-size, 36px);
+  --tui-control-height-lg: 44px;
   --tui-control-font-size-sm: calc(13 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
   --tui-control-font-size-md: calc(14 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
   --tui-control-font-size-lg: calc(15 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
@@ -130,7 +133,7 @@
 
 /* Panel labels: sentence case at panel ink, BB's font stack on the root. */
 @mixin bb-labels {
-  font-family: var(--fl-builder-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+  font-family: var(--fl-builder-font-family, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
 
   :is(label, .tui-label, .tui-field__label) {
     font-weight: 400;
