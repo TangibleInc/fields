@@ -1,0 +1,77 @@
+// Dynamic value pill — TUI-tokenised: contexts remap the accent by setting
+// --tf-dynamic-pill-* (or just their TUI theme scale) instead of fighting hex.
+.tf-dynamic-pill {
+  --tf-dynamic-pill-bg: var(--tui-theme-primary-subtlest, rgba(99, 102, 241, 0.12));
+  --tf-dynamic-pill-fg: var(--tui-theme-primary-strong, #4338ca);
+  --tf-dynamic-pill-accent: var(--tui-theme-primary-base, #6366f1);
+  --tf-dynamic-pill-bg-selected: var(--tui-theme-primary-subtle, rgba(99, 102, 241, 0.25));
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0.1em 0.4em;
+  border-radius: var(--tui-radius-sm, 4px);
+  background: var(--tf-dynamic-pill-bg);
+  color: var(--tf-dynamic-pill-fg);
+  font-size: 0.875em;
+  line-height: 1.4;
+  vertical-align: baseline;
+  cursor: default;
+  user-select: none;
+  white-space: nowrap;
+
+  &__icon {
+    display: inline-flex;
+    font-size: 0.85em;
+    line-height: 1;
+    flex-shrink: 0;
+    color: var(--tf-dynamic-pill-accent);
+
+    svg {
+      display: block;
+    }
+  }
+
+  &__label {
+    strong {
+      font-weight: var(--tui-typography-weight-medium, 600);
+    }
+  }
+
+  &__menu {
+    all: unset;
+    cursor: pointer;
+    padding: 0 0.15em;
+    border-radius: var(--tui-radius-xs, 2px);
+    font-size: 1em;
+    line-height: 1;
+    opacity: 0.6;
+    transition: opacity var(--tui-motion-duration, 0.15s) var(--tui-motion-timing, ease);
+
+    &:hover {
+      opacity: 1;
+      background: color-mix(in srgb, var(--tf-dynamic-pill-accent) 15%, transparent);
+    }
+
+    &:focus-visible {
+      opacity: 1;
+      outline: var(--tui-focus-ring-width, 2px) solid var(--tui-focus-ring-color, currentColor);
+      outline-offset: 1px;
+    }
+  }
+
+  // Selected state (ProseMirror adds this class when atom is NodeSelection'd)
+  .ProseMirror-selectednode & {
+    background: var(--tf-dynamic-pill-bg-selected);
+    outline: 2px solid var(--tf-dynamic-pill-accent);
+    outline-offset: 1px;
+  }
+
+  @media (forced-colors: active) {
+    border: 1px solid CanvasText;
+
+    .ProseMirror-selectednode & {
+      outline-color: Highlight;
+    }
+  }
+}

@@ -51,10 +51,23 @@
     background: transparent;
     height: $field-height;
     
+    color: var(--tui-color-fg-muted, #50575e);
+    transition: color var(--tui-motion-duration, 0.15s) var(--tui-motion-timing, ease);
+
+    &:hover {
+      color: var(--tui-color-fg, #1e1e1e);
+    }
+
+    // TUI system/bolt-plus-fill via mask so the icon follows currentColor
+    // (the old base64 background was baked dark and vanished in dark contexts)
     &:before {
-      content: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTMiIGhlaWdodD0iMTciIHZpZXdCb3g9IjAgMCAxMyAxNyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcuNTIxNTggNi45OTk4N0gxMS4wMDg3QzExLjQyNDYgNi45OTk4NyAxMS43OTk5IDcuMjU5MjQgMTEuOTE4OCA3LjY0NjczQzEyLjA5MDggOC4wMzczNSAxMS45ODEzIDguNDc3OTcgMTEuNjY4NiA4Ljc1Mjk3TDExLjA2NTkgOS4yNzk5MkMxMC41NzgyIDkuMDk4OTEgMTAuMDUwNyA5IDkuNSA5QzcuMDE0NzIgOSA1IDExLjAxNDcgNSAxMy41QzUgMTMuODM5NSA1LjAzNzU5IDE0LjE3MDIgNS4xMDg4NCAxNC40ODgxTDMuNjYyMzEgMTUuNzUyOEMzLjMwODkxIDE2LjA1OTEgMi43OTE5NCAxNi4wODQxIDIuNDE0MTQgMTUuODA5MUMyLjAzNjAzIDE1LjUzNDEgMS44OTg0MyAxNS4wMzQxIDIuMDgyNjMgMTQuNjA2TDQuNDg3OTUgOC45OTk4NEgwLjk3MjdDMC41ODM5NTggOC45OTk4NCAwLjIxMDYzNSA4Ljc0MDQ3IDAuMDYzOTg4NSA4LjM1Mjk3Qy0wLjA4MjY1NzcgNy45NjIzNSAwLjAyODAzNTMgNy41MjE3NCAwLjM0MTg5NCA3LjI0Njc0TDguMzQ3MjMgMC4yNDc0MjNDOC43MDA2MyAtMC4wNjAwMDkyIDkuMjE2NjYgLTAuMDgzNDE1MSA5LjU5NTA4IDAuMTkxMDQ5QzkuOTczNSAwLjQ2NTYwNyAxMC4xMTExIDAuOTY0NjYxIDkuOTI2NTkgMS4zOTQwM0w3LjUyMTU4IDYuOTk5ODdaIiBmaWxsPSIjMUUxRTFFIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNOS41IDE3QzExLjQzMyAxNyAxMyAxNS40MzMgMTMgMTMuNUMxMyAxMS41NjcgMTEuNDMzIDEwIDkuNSAxMEM3LjU2NyAxMCA2IDExLjU2NyA2IDEzLjVDNiAxNS40MzMgNy41NjcgMTcgOS41IDE3Wk0xMiAxMy41MDAxQzEyIDEzLjgxOSAxMS43NDE2IDE0LjA3NzIgMTEuNDIzMSAxNC4wNzcySDEwLjA3NjlWMTUuNDIzM0MxMC4wNzY5IDE1Ljc0MjIgOS44MTg1NyAxNiA5LjUgMTZDOS4xODE0MyAxNiA4LjkyMzA4IDE1Ljc0MjIgOC45MjMwOCAxNS40MjMzVjE0LjA3NzJINy41NzY5MkM3LjI1ODM1IDE0LjA3NzIgNyAxMy44MTkgNyAxMy41MDAxQzcgMTMuMTgxMSA3LjI1ODM1IDEyLjkyMzMgNy41NzY5MiAxMi45MjMzSDguOTIzMDhWMTEuNTc3MUM4LjkyMzA4IDExLjI1ODIgOS4xODE0MyAxMSA5LjUgMTFDOS44MTg1NyAxMSAxMC4wNzY5IDExLjI1ODIgMTAuMDc2OSAxMS41NzcxVjEyLjkyMzNIMTEuNDIzMUMxMS43NDIyIDEyLjkyMzIgMTIgMTMuMTgxIDEyIDEzLjUwMDFaIiBmaWxsPSIjMUUxRTFFIi8+Cjwvc3ZnPgo=);
-      line-height: 1;
-      padding: 0px 5px;
+      content: "";
+      display: block;
+      inline-size: 1.25em;
+      block-size: 1.25em;
+      margin: 0 5px;
+      background-color: currentColor;
+      mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22black%22%3E%3Cpath d=%22M13.522 11h3.487c.416 0 .79.26.91.647a.95.95 0 0 1-.25 1.106l-.603.527a4.5 4.5 0 0 0-5.957 5.208l-1.447 1.265a1 1 0 0 1-1.58-1.147L10.489 13H6.973a.995.995 0 0 1-.909-.647 1 1 0 0 1 .278-1.106l8.005-7a1.002 1.002 0 0 1 1.58 1.147z%22/%3E%3Cpath fill-rule=%22evenodd%22 d=%22M15.5 21a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m2.5-3.5a.577.577 0 0 1-.577.577h-1.346v1.346a.577.577 0 1 1-1.154 0v-1.346h-1.346a.577.577 0 0 1 0-1.154h1.346v-1.346a.577.577 0 1 1 1.154 0v1.346h1.346c.32 0 .577.258.577.577%22 clip-rule=%22evenodd%22/%3E%3C/svg%3E") no-repeat center / contain;
     }
 
     &.cm-content[contenteditable="false"] {

@@ -1,19 +1,33 @@
 .tf-dynamic-field-wrapper.tf-dynamic-wrapper {
 
-  .tf-dynamic-value-input:disabled {
-    border-color: rgba(black, 0.1);
-    color: rgba(black, 0.4);
-    background: rgba(white, 0.5)
-  }
-
-  .tf-dynamic-value-input {
+  // Replace-mode value bar: the whole field becomes a dynamic-value pill
+  // (bolt + label) on a tinted input-shaped surface.
+  .tf-dynamic-value-display {
+    display: flex;
+    align-items: center;
     width: $field-width;
     min-height: $field-height;
     padding: var(--tui-spacing-xxs) $field-padding-horizontal;
     box-sizing: border-box;
+    background: var(--tui-theme-primary-subtlest, rgba(99, 102, 241, 0.12));
+    border: $field-border-width solid var(--tui-theme-primary-subtle, rgba(99, 102, 241, 0.25));
+    border-radius: var(--tui-input-radius, var(--tui-radius-md, 4px));
+
+    .tf-dynamic-pill {
+      background: none;
+      padding: 0;
+      font-size: 1em;
+    }
   }
 
+  // TUI system/close via mask so the clear icon follows currentColor
   .tf-button-icon.tf-dynamic-wrapper-clear::before {
-    content: "⨯";
+    content: "";
+    display: block;
+    inline-size: 1em;
+    block-size: 1em;
+    margin: 0 5px;
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22black%22%3E%3Cpath fill-rule=%22evenodd%22 d=%22m12 12.868-6.462 6.655-1.076-1.046 6.493-6.685-6.089-6.27 1.077-1.045L12 10.715l6.057-6.238 1.076 1.045-6.088 6.27 6.493 6.685-1.076 1.046z%22 clip-rule=%22evenodd%22/%3E%3C/svg%3E") no-repeat center / contain;
   }
 }

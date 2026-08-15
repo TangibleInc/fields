@@ -1,7 +1,9 @@
-import { 
+import {
   useState,
-  forwardRef 
+  forwardRef
 } from 'react'
+
+import { Icon } from '@tangible/ui'
 
 import BaseWrapper from '../base-wrapper/BaseWrapper'
 
@@ -52,19 +54,25 @@ const FieldWrapper = forwardRef(({
       readOnly={ props.readOnly ?? false }
     >
       { isDynamic
-        ? 
+        ?
           <>
-           <input 
-              type="text" 
-              className="tf-dynamic-value-input" 
-              value={ getLabel(props.value) }
-              disabled
-            />
-            <input 
+            {/* The whole field renders as a dynamic-value pill (was a
+                disabled text input showing the label) */}
+            <div className="tf-dynamic-value-display">
+              <span className="tf-dynamic-pill">
+                <span className="tf-dynamic-pill__icon" aria-hidden="true">
+                  <Icon name="system/bolt-fill" />
+                </span>
+                <span className="tf-dynamic-pill__label">
+                  <strong>{ getLabel(props.value) }</strong>
+                </span>
+              </span>
+            </div>
+            <input
               { ...inputProps }
               name={ props.name ?? '' }
               value={ props.value ?? '' }
-              type="hidden" 
+              type="hidden"
               ref={ ref }
             />
           </>

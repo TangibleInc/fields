@@ -90,7 +90,8 @@ describe('dynamic values feature - render', () => {
 
     const getDynamicContainer = () =>
       document.querySelector('.tf-dynamic-wrapper-popover') ||
-      document.querySelector('.tf-modal-container')
+      document.querySelector('.tf-modal-container') ||
+      document.querySelector('.tui-modal')
 
     expect(getDynamicContainer()).toBeFalsy()
 
@@ -99,7 +100,11 @@ describe('dynamic values feature - render', () => {
 
     expect(getDynamicContainer()).toBeTruthy()
 
-    await user.click(within(container).getByText('Test click outside'))
+    // TUI Modal (text type) dismisses via its backdrop element; the legacy
+    // popover dismisses via a document-level outside-click listener.
+    const backdrop = document.querySelector('.tui-modal__backdrop')
+    if (backdrop) await user.click(backdrop)
+    else await user.click(within(container).getByText('Test click outside'))
 
     expect(getDynamicContainer()).toBeFalsy()
 
@@ -137,7 +142,8 @@ describe('dynamic values feature - render', () => {
 
     const getDynamicContainer = () =>
       document.querySelector('.tf-dynamic-wrapper-popover') ||
-      document.querySelector('.tf-modal-container')
+      document.querySelector('.tf-modal-container') ||
+      document.querySelector('.tui-modal')
 
     expect(getDynamicContainer()).toBeFalsy()
 
@@ -147,8 +153,11 @@ describe('dynamic values feature - render', () => {
     const dynContainer = getDynamicContainer()
     expect(dynContainer).toBeTruthy()
 
-    // Text type opens a DynamicFieldSettings modal with a ComboBox that
-    // needs to be focused to show options (menuTrigger="focus")
+    // Text type opens a DynamicFieldSettings modal whose picker is a
+    // SearchSelect — open its panel to show the options. Other types keep the
+    // legacy popover ComboBox, which opens on input focus.
+    const picker = dynContainer.querySelector('.tui-search-select__trigger')
+    if (picker) await user.click(picker)
     const comboboxInput = dynContainer.querySelector('input[role="combobox"]')
     if (comboboxInput) await user.click(comboboxInput)
 
@@ -194,7 +203,8 @@ describe('dynamic values feature - render', () => {
 
     const getDynamicContainer = () =>
       document.querySelector('.tf-dynamic-wrapper-popover') ||
-      document.querySelector('.tf-modal-container')
+      document.querySelector('.tf-modal-container') ||
+      document.querySelector('.tui-modal')
 
     expect(getDynamicContainer()).toBeFalsy()
 
@@ -204,8 +214,11 @@ describe('dynamic values feature - render', () => {
     const dynContainer = getDynamicContainer()
     expect(dynContainer).toBeTruthy()
 
-    // Text type opens a DynamicFieldSettings modal with a ComboBox that
-    // needs to be focused to show options (menuTrigger="focus")
+    // Text type opens a DynamicFieldSettings modal whose picker is a
+    // SearchSelect — open its panel to show the options. Other types keep the
+    // legacy popover ComboBox, which opens on input focus.
+    const picker = dynContainer.querySelector('.tui-search-select__trigger')
+    if (picker) await user.click(picker)
     const comboboxInput = dynContainer.querySelector('input[role="combobox"]')
     if (comboboxInput) await user.click(comboboxInput)
 

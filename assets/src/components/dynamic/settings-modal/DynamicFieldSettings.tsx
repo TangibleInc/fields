@@ -6,17 +6,13 @@ import {
   useContext,
 } from 'react'
 
-import {
-  Overlay,
-  useModalOverlay,
-  useDialog,
-} from 'react-aria'
-import { useOverlayTriggerState } from 'react-stately'
+import { Modal, SearchSelect, Field, TextInput, Icon } from '@tangible/ui'
 
 import { ControlContext } from '../../../context'
 import { getConfig } from '../../../index.tsx'
-import { Button, Title } from '../../base'
-import ComboBox from '../../field/combo-box'
+import { Button } from '../../base'
+import { RadioGroup } from '../../field/radio/RadioGroup'
+import Radio from '../../field/radio/Radio'
 import Control from '../../../Control'
 
 interface DynamicFieldSettingsProps {
@@ -43,16 +39,25 @@ const DynamicFieldSettings = ({
   const { dynamics } = getConfig()
   const control = useContext(ControlContext)
 
-  const state = useOverlayTriggerState({
-    isOpen: open,
-    onOpenChange,
-  })
-
-  // Sync external open state
+  /**
+   * TUI Modal portals itself, which would land outside the global context
+   * class (tf-context-{name}) — recreate the wrapper the react-aria overlay
+   * used to provide by giving the Modal a container that carries the
+   * context classes (control.wrapper already includes tui-interface).
+   *
+   * @see renderField() in ./src/index.jsx
+   */
+  const [modalContainer, setModalContainer] = useState<HTMLElement | null>(null)
   useEffect(() => {
-    if (open && !state.isOpen) state.open()
-    if (!open && state.isOpen) state.close()
-  }, [open])
+    const host = control?.portalContainer ?? document.body
+    const el = document.createElement('div')
+    el.className = control?.wrapper ?? 'tui-interface'
+    host.appendChild(el)
+    setModalContainer(el)
+    return () => {
+      host.removeChild(el)
+    }
+  }, [])
 
   const [mode, setMode] = useState<FieldMode>('builtin')
   const [selectedValue, setSelectedValue] = useState('')
@@ -106,7 +111,7 @@ const DynamicFieldSettings = ({
   }, [open, editingRaw])
 
   /**
-   * Build choices for the combobox from dynamic categories
+   * Build grouped choices for the picker from dynamic categories
    */
   const choices = useMemo(() => {
     const allowedTypes = dynamic.getTypes()
@@ -188,146 +193,136 @@ const DynamicFieldSettings = ({
     onOpenChange(false)
   }
 
-  if (!state.isOpen) return null
-
-  return (
-    <SettingsOverlay
-      state={state}
-      control={control}
-      title="Dynamic Field Settings"
-    >
-      <div className="tf-dynamic-settings">
-        {/* Mode toggle */}
-        <div className="tf-dynamic-settings__mode">
-          <label className="tf-dynamic-settings__radio">
-            <input
-              type="radio"
-              name="dynamic-field-mode"
-              value="builtin"
-              checked={mode === 'builtin'}
-              onChange={() => setMode('builtin')}
-            />
-            Built-in
-          </label>
-          <label className="tf-dynamic-settings__radio">
-            <input
-              type="radio"
-              name="dynamic-field-mode"
-              value="custom"
-              checked={mode === 'custom'}
-              onChange={() => setMode('custom')}
-            />
-            Custom
-          </label>
-        </div>
-
-        {/* Built-in mode */}
-        {mode === 'builtin' && (
-          <div className="tf-dynamic-settings__builtin">
-            <ComboBox
-              choices={choices}
-              label="Select dynamic value"
-              labelVisuallyHidden={false}
-              value={selectedValue}
-              onChange={handleBuiltinSelect}
-              showButton={true}
-            />
-            {settingsForm && (
-              <div className="tf-dynamic-settings__fields">
-                {settingsForm.map(field => (
-                  <div
-                    key={field.name}
-                    className="tf-dynamic-settings__field"
-                  >
-                    <Control
-                      {...field}
-                      value={settings[field.name] ?? ''}
-                      onChange={settingValue =>
-                        updateSettings(field.name, settingValue)
-                      }
-                      visibility={{
-                        condition: field.condition?.condition ?? false,
-                        action: field.condition?.action ?? 'show',
-                      }}
-                      data={{
-                        getValue: name =>
-                          settingsRef.current[name] ?? '',
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Custom mode */}
-        {mode === 'custom' && (
-          <div className="tf-dynamic-settings__custom">
-            <label className="tf-dynamic-settings__label">
-              Custom key
-              <input
-                type="text"
-                className="tf-dynamic-settings__input"
-                value={customValue}
-                onChange={e => setCustomValue(e.target.value)}
-                placeholder="e.g. post_meta::field=author"
-              />
-            </label>
-          </div>
-        )}
-
-        {/* Actions */}
-        <div className="tf-dynamic-settings__actions">
-          <Button type="action" onPress={handleCancel}>
-            Cancel
-          </Button>
-          <Button type="action" onPress={handleSubmit}>
-            {isEditing ? 'Update Field' : 'Add Field'}
-          </Button>
-        </div>
-      </div>
-    </SettingsOverlay>
+  // The category the selected value belongs to — the trigger renders the
+  // dynamic-pill treatment (bolt + category + label) like the design.
+  const selectedCategory = useMemo(
+    () => choices.find(category => selectedValue in category.choices)?.name,
+    [choices, selectedValue]
   )
-}
+  const selectedLabel = selectedValue
+    ? dynamics.values[selectedValue]?.label ?? selectedValue
+    : ''
 
-/**
- * Modal overlay wrapper, mirrors Fields' Modal pattern.
- */
-const SettingsOverlay = ({ state, control, title, children }) => {
-  const modalRef = useRef(null)
-  const dialogRef = useRef(null)
-
-  const { modalProps, underlayProps } = useModalOverlay({ isDismissable: true }, state, modalRef)
-  const { dialogProps, titleProps } = useDialog({ role: 'dialog' }, dialogRef)
+  if (!modalContainer) return null
 
   return (
-    <Overlay portalContainer={control.portalContainer}>
-      <div className={control.wrapper}>
-        <div
-          className="tf-modal"
-          {...underlayProps}
-        >
-          <div
-            className="tf-modal-container tui-interface"
-            ref={modalRef}
-            {...modalProps}
+    <Modal
+      open={open}
+      onClose={handleCancel}
+      size="md"
+      container={modalContainer}
+      aria-labelledby="tf-dynamic-settings-title"
+      showCloseButton
+      className="tf-dynamic-settings-dialog"
+    >
+      <Modal.Head>
+        <h3 id="tf-dynamic-settings-title" style={{ margin: 0 }}>
+          Dynamic Field Settings
+        </h3>
+      </Modal.Head>
+      <Modal.Body>
+        <div className="tf-dynamic-settings">
+          {/* Mode toggle */}
+          <RadioGroup
+            label="Field Type"
+            value={mode}
+            onChange={value => setMode(value as FieldMode)}
+            name="dynamic-field-mode"
+            className="tf-dynamic-settings__mode"
           >
-            <div
-              className="tf-dialog"
-              {...dialogProps}
-              ref={dialogRef}
-            >
-              {title &&
-                <Title level={4} {...titleProps}>
-                  {title}
-                </Title>}
-              <div className="tf-dialog-content">{children}</div>
+            <Radio value="builtin">Built-in</Radio>
+            <Radio value="custom">Custom</Radio>
+          </RadioGroup>
+
+          {/* Built-in mode */}
+          {mode === 'builtin' && (
+            <div className="tf-dynamic-settings__builtin">
+              <Field>
+                <Field.Label as="span">Select Type &amp; Meta Key</Field.Label>
+                <Field.Control>
+                  <SearchSelect
+                    value={selectedValue || undefined}
+                    onValueChange={value => handleBuiltinSelect(String(value))}
+                    placeholder="Choose a dynamic value"
+                  >
+                    <SearchSelect.Trigger>
+                      {selectedValue ? (
+                        <span className="tf-dynamic-trigger-value">
+                          <Icon name="system/bolt-fill" size="sm" />
+                          <strong>{selectedCategory}</strong> {selectedLabel}
+                        </span>
+                      ) : undefined}
+                    </SearchSelect.Trigger>
+                    <SearchSelect.Content>
+                      {choices.map(category => (
+                        <SearchSelect.Group key={category.name}>
+                          <SearchSelect.Label>{category.name}</SearchSelect.Label>
+                          {Object.entries(category.choices).map(([key, label]) => (
+                            <SearchSelect.Option key={key} value={key}>
+                              {String(label)}
+                            </SearchSelect.Option>
+                          ))}
+                        </SearchSelect.Group>
+                      ))}
+                    </SearchSelect.Content>
+                  </SearchSelect>
+                </Field.Control>
+              </Field>
+              {settingsForm && (
+                <div className="tf-dynamic-settings__fields">
+                  {settingsForm.map(field => (
+                    <div
+                      key={field.name}
+                      className="tf-dynamic-settings__field"
+                    >
+                      <Control
+                        {...field}
+                        value={settings[field.name] ?? ''}
+                        onChange={settingValue =>
+                          updateSettings(field.name, settingValue)
+                        }
+                        visibility={{
+                          condition: field.condition?.condition ?? false,
+                          action: field.condition?.action ?? 'show',
+                        }}
+                        data={{
+                          getValue: name =>
+                            settingsRef.current[name] ?? '',
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          </div>
+          )}
+
+          {/* Custom mode */}
+          {mode === 'custom' && (
+            <div className="tf-dynamic-settings__custom">
+              <Field>
+                <Field.Label>Custom key</Field.Label>
+                <Field.Control>
+                  <TextInput
+                    value={customValue}
+                    onValueChange={value => setCustomValue(value)}
+                    placeholder="e.g. post_meta::field=author"
+                  />
+                </Field.Control>
+              </Field>
+            </div>
+          )}
         </div>
-      </div>
-    </Overlay>
+      </Modal.Body>
+      <Modal.Foot className="tf-dynamic-settings__actions">
+        <Button type="action" onPress={handleCancel}>
+          Cancel
+        </Button>
+        <Button type="primary" onPress={handleSubmit}>
+          {isEditing ? 'Update Field' : 'Add Field'}
+        </Button>
+      </Modal.Foot>
+    </Modal>
   )
 }
 
