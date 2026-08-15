@@ -1,0 +1,146 @@
+/*
+ * Elementor context theme overrides (TUI token remapping).
+ * Keep context-specific styling centralized here instead of per-component files.
+ *
+ * Starting point built from editor-panel screenshots (light + dark) — palette
+ * values sampled from the panels and cross-checked against Elementor's UI
+ * greys, then confirmed against Elementor's editor.min.css (--e-a-* tokens:
+ * txt #515962, border-bold #d5d8dc, radius 3px). The editor chrome is
+ * deliberately MONOCHROME: active states are near-black (light) / light-grey
+ * (dark); Elementor's magenta (--e-a-color-primary-bold: #d004d4) is reserved
+ * for "global value" indicators — a candidate for the dynamic-value bolt
+ * treatment, NOT the primary accent.
+ *
+ * The legacy per-component overrides in contexts/elementor/components/ still
+ * apply to the not-yet-migrated react-aria fields; this file themes the
+ * TUI-based ones.
+ */
+
+@mixin elementor-tokens-light {
+  /* Monochrome interactive scale — Elementor light active states are black. */
+  --tui-theme-primary-subtlest: #f1f2f3;
+  --tui-theme-primary-subtler: #e6e9ec;
+  --tui-theme-primary-subtle: #d5d8dc;
+  --tui-theme-primary-base: #0c0d0e;
+  --tui-theme-primary-strong: #3f444b;
+  --tui-theme-primary-stronger: #515962;
+  --tui-theme-primary-strongest: #0c0d0e;
+
+  --tui-color-bg-surface: #ffffff;
+  --tui-color-bg: #ffffff;
+  --tui-color-bg-elevated: #ffffff;
+  --tui-color-bg-muted: #f1f2f3;
+  --tui-color-fg: #0c0d0e;
+  --tui-color-fg-secondary: #515962;
+  --tui-color-fg-muted: #818a96;
+  --tui-color-border: #d5d8dc;
+  --tui-color-divider: #e6e9ec;
+
+  --tui-focus-ring-color: #69727d;
+}
+
+@mixin elementor-tokens-dark {
+  --tui-theme-primary-subtlest: #26292c;
+  --tui-theme-primary-subtler: #2c2f33;
+  --tui-theme-primary-subtle: #3f444b;
+  --tui-theme-primary-base: #d5d8dc;
+  --tui-theme-primary-strong: #e6e9ec;
+  --tui-theme-primary-stronger: #f1f2f3;
+  --tui-theme-primary-strongest: #ffffff;
+
+  --tui-color-bg: #1f2124;
+  --tui-color-bg-surface: #1f2124;
+  --tui-color-bg-elevated: #26292c;
+  --tui-color-bg-muted: #26292c;
+  --tui-color-fg: #d5d8dc;
+  --tui-color-fg-secondary: #d5d8dc;
+  --tui-color-fg-muted: #9da5ae;
+  --tui-color-border: #3f444b;
+  --tui-color-divider: #3f444b;
+
+  --tui-focus-ring-color: #9da5ae;
+}
+
+@mixin elementor-control-remaps {
+  --tui-focus-ring-offset: 0px;
+  --tui-focus-ring-width: 1px;
+
+  --tui-typography-weight-bold: 600;
+
+  /* Elementor's panel runs on 12px controls in tight rows */
+  --tui-control-height-sm: 24px;
+  --tui-control-height-md: 28px;
+  --tui-control-height-lg: 36px;
+  --tui-control-font-size-sm: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-control-font-size-md: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-control-font-size-lg: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size-xs: calc(11 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size-sm: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size-lg: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-weight: 500;
+  --tui-button-radius: 3px;
+  --tui-icon-button-radius: 3px;
+  --tui-input-radius: 3px;
+  --tui-select-trigger-radius: 3px;
+  --tui-select-content-radius: 3px;
+  --tui-multiselect-trigger-radius: 3px;
+  --tui-multiselect-content-radius: 3px;
+  --tui-accordion-radius: 0;
+  --tui-chip-radius: 3px;
+  --tui-card-radius: 3px;
+  --tui-notice-radius: 3px;
+  --tui-input-fg: var(--tui-color-fg);
+  --tui-input-bg: var(--tui-color-bg);
+  --tui-select-trigger-bg: var(--tui-color-bg);
+
+  /* Segmented groups (Normal | Hover | Active): full-width bordered segments,
+     the active one filled with a neutral — not an accent. */
+  .tui-segmented.is-variant-pill {
+    --tui-segmented-radius: var(--tui-input-radius);
+    --tui-segmented-border: var(--tui-color-border);
+    --tui-segmented-bg: transparent;
+    --tui-segmented-padding: 0;
+    --tui-segmented-gap: 0;
+    --tui-segmented-item-radius: 0;
+    --tui-segmented-item-padding: var(--tui-spacing-xxs) var(--tui-spacing-sm);
+    --tui-segmented-item-bg-active: var(--tui-theme-primary-subtle);
+  }
+}
+
+/* Panel labels: 12px sentence case, secondary grey (no uppercase). */
+@mixin elementor-labels {
+  :is(label, .tui-label, .tui-field__label) {
+    font-weight: 400;
+    font-size: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+    text-transform: none;
+    color: var(--tui-color-fg-secondary);
+  }
+}
+
+.tf-context-elementor.tui-interface,
+.tf-context-elementor .tui-interface {
+  @include elementor-tokens-light;
+  @include elementor-control-remaps;
+  @include elementor-labels;
+}
+
+/* Dark: via data-theme (storybook toolbar, host-controlled interfaces)… */
+.tf-context-elementor.tui-interface[data-theme='dark'],
+.tf-context-elementor .tui-interface[data-theme='dark'] {
+  @include elementor-tokens-dark;
+}
+
+/* …and via Elementor's own editor theme detection (matching the legacy
+   context mechanism in contexts/elementor/index.scss). */
+body.elementor-editor-active:has(#e-theme-ui-dark-css[media='all']) .tf-context-elementor.tui-interface,
+body.elementor-editor-active:has(#e-theme-ui-dark-css[media='all']) .tf-context-elementor .tui-interface {
+  @include elementor-tokens-dark;
+}
+
+body.elementor-editor-active:has(#e-theme-ui-dark-css[media='(prefers-color-scheme: dark)']) .tf-context-elementor.tui-interface,
+body.elementor-editor-active:has(#e-theme-ui-dark-css[media='(prefers-color-scheme: dark)']) .tf-context-elementor .tui-interface {
+  @media (prefers-color-scheme: dark) {
+    @include elementor-tokens-dark;
+  }
+}
