@@ -5,11 +5,11 @@
  * Starting point built from editor-panel screenshots (light + dark) — palette
  * values sampled from the panels and cross-checked against Elementor's UI
  * greys, then confirmed against Elementor's editor.min.css (--e-a-* tokens:
- * txt #515962, border-bold #d5d8dc, radius 3px). The editor chrome is
- * deliberately MONOCHROME: active states are near-black (light) / light-grey
- * (dark); Elementor's magenta (--e-a-color-primary-bold: #d004d4) is reserved
- * for "global value" indicators — a candidate for the dynamic-value bolt
- * treatment, NOT the primary accent.
+ * txt #515962, border-bold #d5d8dc, radius 3px). Elementor's magenta
+ * (--e-a-color-primary-bold: #d004d4) is the primary accent — its own CSS
+ * fills checked controls with it — while the panel CHROME (tabs, segmented
+ * state switchers) stays neutral, so the segmented active fill maps to the
+ * border grey rather than the primary scale.
  *
  * The legacy per-component overrides in contexts/elementor/components/ still
  * apply to the not-yet-migrated react-aria fields; this file themes the
@@ -17,14 +17,14 @@
  */
 
 @mixin elementor-tokens-light {
-  /* Monochrome interactive scale — Elementor light active states are black. */
-  --tui-theme-primary-subtlest: #f1f2f3;
-  --tui-theme-primary-subtler: #e6e9ec;
-  --tui-theme-primary-subtle: #d5d8dc;
-  --tui-theme-primary-base: #0c0d0e;
-  --tui-theme-primary-strong: #3f444b;
-  --tui-theme-primary-stronger: #515962;
-  --tui-theme-primary-strongest: #0c0d0e;
+  /* Elementor magenta scale, built around --e-a-color-primary-bold */
+  --tui-theme-primary-subtlest: #fbe8fb;
+  --tui-theme-primary-subtler: #f7d1f7;
+  --tui-theme-primary-subtle: #eda7ed;
+  --tui-theme-primary-base: #d004d4;
+  --tui-theme-primary-strong: #a803ab;
+  --tui-theme-primary-stronger: #830286;
+  --tui-theme-primary-strongest: #5c015e;
 
   --tui-color-bg-surface: #ffffff;
   --tui-color-bg: #ffffff;
@@ -40,13 +40,14 @@
 }
 
 @mixin elementor-tokens-dark {
-  --tui-theme-primary-subtlest: #26292c;
-  --tui-theme-primary-subtler: #2c2f33;
-  --tui-theme-primary-subtle: #3f444b;
-  --tui-theme-primary-base: #d5d8dc;
-  --tui-theme-primary-strong: #e6e9ec;
-  --tui-theme-primary-stronger: #f1f2f3;
-  --tui-theme-primary-strongest: #ffffff;
+  /* Magenta scale mirrored for dark: subtles go deep, stronger goes lighter */
+  --tui-theme-primary-subtlest: #380b39;
+  --tui-theme-primary-subtler: #521254;
+  --tui-theme-primary-subtle: #831f86;
+  --tui-theme-primary-base: #d004d4;
+  --tui-theme-primary-strong: #e04ce3;
+  --tui-theme-primary-stronger: #ec8bee;
+  --tui-theme-primary-strongest: #f7d1f7;
 
   --tui-color-bg: #1f2124;
   --tui-color-bg-surface: #1f2124;
@@ -95,7 +96,9 @@
   --tui-select-trigger-bg: var(--tui-color-bg);
 
   /* Segmented groups (Normal | Hover | Active): full-width bordered segments,
-     the active one filled with a neutral — not an accent. */
+     the active one filled with a NEUTRAL — panel chrome stays monochrome even
+     though the primary scale is magenta. Both modes' sampled active fill
+     equals the border grey. */
   .tui-segmented.is-variant-pill {
     --tui-segmented-radius: var(--tui-input-radius);
     --tui-segmented-border: var(--tui-color-border);
@@ -104,7 +107,7 @@
     --tui-segmented-gap: 0;
     --tui-segmented-item-radius: 0;
     --tui-segmented-item-padding: var(--tui-spacing-xxs) var(--tui-spacing-sm);
-    --tui-segmented-item-bg-active: var(--tui-theme-primary-subtle);
+    --tui-segmented-item-bg-active: var(--tui-color-border);
   }
 }
 
