@@ -59,6 +59,13 @@
   --tui-color-border: #3f444b;
   --tui-color-divider: #3f444b;
 
+  /* Control fills (hover washes, option hover, off tracks) — without these a
+     nested wrapper falls back to TUI's LIGHT fills (near-white option hover
+     under dark text in portaled dropdowns). */
+  --tui-color-fill-subtle: #26292c;
+  --tui-color-fill: #2c2f33;
+  --tui-color-fill-strong: #3f444b;
+
   --tui-focus-ring-color: #9da5ae;
 }
 
@@ -131,11 +138,16 @@
   }
 }
 
-/* Panel labels: 12px sentence case, secondary grey (no uppercase). */
+/* Panel labels, per Elementor's own control styles: --control-title-size
+   (fallback 12px), line-height 1, 5px inline-end margin, editor font stack. */
 @mixin elementor-labels {
+  font-family: var(--e-a-font-family, Roboto, Arial, Helvetica, sans-serif);
+
   :is(label, .tui-label, .tui-field__label) {
     font-weight: 400;
-    font-size: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+    font-size: var(--control-title-size, 12px);
+    line-height: 1;
+    margin-inline-end: 5px;
     text-transform: none;
     color: var(--tui-color-fg-secondary);
   }
@@ -148,9 +160,15 @@
   @include elementor-labels;
 }
 
-/* Dark: via data-theme (storybook toolbar, host-controlled interfaces)… */
+/* Dark: via data-theme (storybook toolbar, host-controlled interfaces).
+   The nested-interface selectors matter: portaled content re-applies a
+   .tui-interface wrapper WITHOUT data-theme, and a nested interface re-matches
+   TUI's light token block directly (beating inheritance from the dark
+   ancestor) — so dark must cascade into nested wrappers explicitly. */
 .tf-context-elementor.tui-interface[data-theme='dark'],
-.tf-context-elementor .tui-interface[data-theme='dark'] {
+.tf-context-elementor .tui-interface[data-theme='dark'],
+.tf-context-elementor.tui-interface[data-theme='dark'] .tui-interface,
+.tui-interface[data-theme='dark'] .tf-context-elementor.tui-interface {
   @include elementor-tokens-dark;
 }
 

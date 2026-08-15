@@ -48,6 +48,13 @@
   --tui-color-border: #50575e;
   --tui-color-divider: #3c434a;
 
+  /* Control fills (hover washes, option hover, off tracks) — without these a
+     nested wrapper falls back to TUI's LIGHT fills (near-white option hover
+     under dark text in portaled dropdowns). */
+  --tui-color-fill-subtle: #2c3338;
+  --tui-color-fill: #3c434a;
+  --tui-color-fill-strong: #50575e;
+
   --tui-focus-ring-color: #72aee6;
 }
 
@@ -113,9 +120,13 @@
 /* Compound AND descendant: the context class usually sits ON the interface
    element itself (storybook decorator, field wrappers), but portaled content
    re-applies the wrapper a level down. The old descendant-only selector never
-   matched the common case, so wp dark tokens silently failed to apply. */
+   matched the common case, so wp dark tokens silently failed to apply.
+   The nested-interface selectors cascade dark into portaled wrappers, which
+   carry no data-theme of their own and would re-match TUI's light tokens. */
 .tf-context-wp.tui-interface[data-theme='dark'],
-.tf-context-wp .tui-interface[data-theme='dark'] {
+.tf-context-wp .tui-interface[data-theme='dark'],
+.tf-context-wp.tui-interface[data-theme='dark'] .tui-interface,
+.tui-interface[data-theme='dark'] .tf-context-wp.tui-interface {
   @include wp-tokens-dark;
 }
 

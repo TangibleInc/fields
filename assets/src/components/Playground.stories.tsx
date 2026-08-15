@@ -22,7 +22,12 @@ const column: React.CSSProperties = {
   minWidth: 0
 }
 
-const Playground = () => (
+/**
+ * `context` must thread into every Field: portaled content (select listboxes,
+ * popovers) re-applies its wrapper from the field's own context prop — without
+ * it, dropdowns render in the default context regardless of the toolbar.
+ */
+const Playground = ({ context }: { context?: string }) => (
   <div
     style={{
       display: 'grid',
@@ -32,37 +37,38 @@ const Playground = () => (
     }}
   >
     <div style={column}>
-      <Field type="text" name="pg-text" label="Text" description="A helper description" />
-      <Field type="textarea" name="pg-textarea" label="Textarea" />
-      <Field type="number" name="pg-number" label="Number" value="42" />
-      <Field type="date-picker" name="pg-date" label="Date" />
-      <Field type="time-picker" name="pg-time" label="Time" />
-      <Field type="color-picker" name="pg-color" label="Color" value="#6366F1" />
-      <Field type="gradient" name="pg-gradient" label="Gradient" />
+      <Field context={context} type="text" name="pg-text" label="Text" description="A helper description" />
+      <Field context={context} type="textarea" name="pg-textarea" label="Textarea" />
+      <Field context={context} type="number" name="pg-number" label="Number" value="42" />
+      <Field context={context} type="date-picker" name="pg-date" label="Date" />
+      <Field context={context} type="time-picker" name="pg-time" label="Time" />
+      <Field context={context} type="color-picker" name="pg-color" label="Color" value="#6366F1" />
+      <Field context={context} type="gradient" name="pg-gradient" label="Gradient" />
     </div>
 
     <div style={column}>
-      <Field type="select" name="pg-select" label="Select" choices={choices} />
+      <Field context={context} type="select" name="pg-select" label="Select" choices={choices} />
       <Field
+        context={context}
         type="select"
         name="pg-select-multi"
         label="Select (multiple)"
         multiple={true}
         choices={choices}
       />
-      <Field type="combo-box" name="pg-combo" label="Combo box" choices={choices} />
-      <Field type="button-group" name="pg-buttons" label="Button group" choices={choices} value="one" />
-      <Field type="radio" name="pg-radio" label="Radio" choices={choices} value="one" />
-      <Field type="checkbox" name="pg-checkbox" label="Checkbox" value={true} />
-      <Field type="switch" name="pg-switch" label="Switch" value="on" />
-      <Field type="switch" name="pg-switch-off" label="Switch (off)" value="off" />
+      <Field context={context} type="combo-box" name="pg-combo" label="Combo box" choices={choices} />
+      <Field context={context} type="button-group" name="pg-buttons" label="Button group" choices={choices} value="one" />
+      <Field context={context} type="radio" name="pg-radio" label="Radio" choices={choices} value="one" />
+      <Field context={context} type="checkbox" name="pg-checkbox" label="Checkbox" value={true} />
+      <Field context={context} type="switch" name="pg-switch" label="Switch" value="on" />
+      <Field context={context} type="switch" name="pg-switch-off" label="Switch (off)" value="off" />
     </div>
 
     <div style={{ ...column, gridColumn: '1 / -1' }}>
-      <Field type="dimensions" name="pg-dimensions" label="Dimensions" />
-      <Field type="simple-dimension" name="pg-simple-dimension" label="Simple dimension" />
-      <Field type="alignment-matrix" name="pg-alignment" label="Alignment matrix" />
-      <Field type="border" name="pg-border" label="Border" />
+      <Field context={context} type="dimensions" name="pg-dimensions" label="Dimensions" />
+      <Field context={context} type="simple-dimension" name="pg-simple-dimension" label="Simple dimension" />
+      <Field context={context} type="alignment-matrix" name="pg-alignment" label="Alignment matrix" />
+      <Field context={context} type="border" name="pg-border" label="Border" />
     </div>
   </div>
 )
