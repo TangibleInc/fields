@@ -64,13 +64,13 @@
   --tui-control-height-sm: 24px;
   --tui-control-height-md: 32px;
   --tui-control-height-lg: 40px;
-  --tui-control-font-size-sm: calc(13 * var(--tui-fontSize-multiplier, calc(1rem / 16)));
-  --tui-control-font-size-md: calc(13 * var(--tui-fontSize-multiplier, calc(1rem / 16)));
-  --tui-control-font-size-lg: calc(13 * var(--tui-fontSize-multiplier, calc(1rem / 16)));
-  --tui-button-font-size-xs: calc(13 * var(--tui-fontSize-multiplier, calc(1rem / 16)));
-  --tui-button-font-size-sm: calc(13 * var(--tui-fontSize-multiplier, calc(1rem / 16)));
-  --tui-button-font-size: calc(13 * var(--tui-fontSize-multiplier, calc(1rem / 16)));
-  --tui-button-font-size-lg: calc(13 * var(--tui-fontSize-multiplier, calc(1rem / 16)));
+  --tui-control-font-size-sm: calc(13 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-control-font-size-md: calc(13 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-control-font-size-lg: calc(13 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size-xs: calc(13 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size-sm: calc(13 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size: calc(13 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size-lg: calc(13 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
   --tui-button-font-weight: 499;
   --tui-button-radius: 2px;
   --tui-icon-button-radius: 2px;
@@ -88,8 +88,33 @@
   --tui-input-fg: var(--tui-color-fg);
   --tui-input-bg: var(--tui-color-bg-surface);
   --tui-select-trigger-bg: var(--tui-color-bg-surface);
+
+  /* WP-style switches: outlined transparent track with a fg thumb when off.
+     WP metrics: 12px thumb in an 18×36 border-box track with a 1px border —
+     the switch derives a 2px thumb inset on all four sides from these
+     (@tangible/ui ≥0.0.17). Synced from lms-monorepo wp-editor-kit. */
+  --tui-switch-border: var(--tui-color-fg);
+  --tui-switch-bg: transparent;
+  --tui-switch-thumb-bg: var(--tui-color-fg);
+  --tui-switch-track-width: 36px;
+  --tui-switch-track-height: 18px;
+  --tui-switch-thumb-size: 12px;
+  --tui-switch-border-width: 1px;
+
+  /* When checked the track fills with the accent, so the thumb flips to the
+     on-accent colour — the fg thumb is for inactive states only. Scoping the
+     API token to the checked track re-resolves the switch's internal thumb
+     token (declared on the track), so no --_* internals are touched. */
+  .tui-switch__track[aria-checked='true'] {
+    --tui-switch-thumb-bg: var(--tui-color-fg-on-accent, #fff);
+  }
 }
 
+/* Compound AND descendant: the context class usually sits ON the interface
+   element itself (storybook decorator, field wrappers), but portaled content
+   re-applies the wrapper a level down. The old descendant-only selector never
+   matched the common case, so wp dark tokens silently failed to apply. */
+.tf-context-wp.tui-interface[data-theme='dark'],
 .tf-context-wp .tui-interface[data-theme='dark'] {
   @include wp-tokens-dark;
 }
@@ -105,12 +130,12 @@
 
 :where(.tf-context-wp.tui-interface) :is(label, .tui-label) {
   font-weight: normal;
-  font-size: calc(13 * var(--tui-fontSize-multiplier, calc(1rem / 16)));
+  font-size: calc(13 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
 }
 
 .tf-context-wp.tui-interface .tui-field__label {
   font-weight: 500;
-  font-size: calc(11 * var(--tui-fontSize-multiplier, calc(1rem / 16)));
+  font-size: calc(11 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
   text-transform: uppercase;
 }
 
