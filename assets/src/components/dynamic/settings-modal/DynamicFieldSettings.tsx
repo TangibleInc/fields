@@ -15,16 +15,19 @@ import { RadioGroup } from '../../field/radio/RadioGroup'
 import Radio from '../../field/radio/Radio'
 import Control from '../../../Control'
 
+type FieldMode = 'builtin' | 'custom'
+
 interface DynamicFieldSettingsProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   dynamic: any // DynamicAPI from dynamicValuesAPI()
   editingId?: string
   editingRaw?: string
+  /** Mode for fresh opens (no editingRaw) — the insert panel's
+      "Custom value…" row opens straight into custom mode. */
+  defaultMode?: FieldMode
   onSubmit: (raw: string) => void
 }
-
-type FieldMode = 'builtin' | 'custom'
 
 const DynamicFieldSettings = ({
   open,
@@ -32,6 +35,7 @@ const DynamicFieldSettings = ({
   dynamic,
   editingId,
   editingRaw,
+  defaultMode = 'builtin',
   onSubmit,
 }: DynamicFieldSettingsProps) => {
   if (!dynamic) return null
@@ -104,11 +108,11 @@ const DynamicFieldSettings = ({
         setSelectedValue('')
       }
     } else {
-      setMode('builtin')
+      setMode(defaultMode)
       setSelectedValue('')
       setCustomValue('')
     }
-  }, [open, editingRaw])
+  }, [open, editingRaw, defaultMode])
 
   /**
    * Build grouped choices for the picker from dynamic categories
@@ -305,7 +309,9 @@ const DynamicFieldSettings = ({
                 <Field.Control>
                   <TextInput
                     value={customValue}
-                    onValueChange={value => setCustomValue(value)}
+                    /* TUI TextInput is a native wrapper: onChange, not
+                       onValueChange (which would silently fall into rest) */
+                    onChange={e => setCustomValue(e.target.value)}
                     placeholder="e.g. post_meta::field=author"
                   />
                 </Field.Control>

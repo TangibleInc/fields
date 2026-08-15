@@ -44,6 +44,7 @@ const DynamicEditor = ({
   const { dynamics } = getConfig()
 
   const [modalOpen, setModalOpen] = useState(false)
+  const [modalMode, setModalMode] = useState<'builtin' | 'custom'>('builtin')
   const [pickerOpen, setPickerOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | undefined>()
   const [editingRaw, setEditingRaw] = useState<string | undefined>()
@@ -90,6 +91,7 @@ const DynamicEditor = ({
       const raw = findTokenRaw(id)
       setEditingId(id)
       setEditingRaw(raw)
+      setModalMode('builtin')
       setModalOpen(true)
     },
     []
@@ -153,9 +155,19 @@ const DynamicEditor = ({
     (picked: string | number) => {
       const valueName = String(picked)
 
+      // "Custom value…" row → settings modal straight into custom mode
+      if (valueName === 'tf::custom') {
+        setEditingId(undefined)
+        setEditingRaw(undefined)
+        setModalMode('custom')
+        setModalOpen(true)
+        return
+      }
+
       if (valueHasSettings(dynamics, valueName)) {
         setEditingId(undefined)
         setEditingRaw(valueName)
+        setModalMode('builtin')
         setModalOpen(true)
         return
       }
@@ -312,6 +324,9 @@ const DynamicEditor = ({
               ))}
             </SearchSelect.Group>
           ))}
+          <SearchSelect.Option value="tf::custom" textValue="Custom">
+            Custom value…
+          </SearchSelect.Option>
         </SearchSelect.Content>
       </SearchSelect>
 
@@ -323,6 +338,7 @@ const DynamicEditor = ({
         dynamic={dynamic}
         editingId={editingId}
         editingRaw={editingRaw}
+        defaultMode={modalMode}
         onSubmit={handleModalSubmit}
       />
     </div>

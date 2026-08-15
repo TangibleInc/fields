@@ -66,11 +66,9 @@ describe('dynamic values feature - render', () => {
     const insertButton = await within(container).findByRole('button', { name: /insert/i })
     expect(insertButton).toBeTruthy()
 
-    // Special case for text, as it uses insert mode by default instead if replace like other types
-    if( type === 'text' ) {
-      expect(within(container).queryByRole('button', { name: /clear/i })).toBeFalsy()
-    }
-    else expect(within(container).getByRole('button', { name: /clear/i })).toBeTruthy()
+    // All types use the slotted append affordances now: the bolt insert shows
+    // when the value is static, the clear only once a dynamic value is set
+    expect(within(container).queryByRole('button', { name: /clear/i })).toBeFalsy()
   })
 
   test.each(testTypes)('%p type open dynamic value combobox when clicking on insert button', async type => {

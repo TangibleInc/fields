@@ -41,6 +41,7 @@ const BaseWrapper = props => {
   // the picked value (the legacy inline settings popover is gone).
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [settingsRaw, setSettingsRaw] = useState(undefined)
+  const [settingsMode, setSettingsMode] = useState('builtin')
 
   const state = useOverlayTriggerState({})
   const { triggerProps } = useOverlayTrigger(
@@ -67,9 +68,19 @@ const BaseWrapper = props => {
 
     if( ! valueName ) return;
 
+    // "Custom value…" row → settings modal straight into custom mode
+    if( valueName === 'tf::custom' ) {
+      state.close()
+      setSettingsRaw(undefined)
+      setSettingsMode('custom')
+      setSettingsOpen(true)
+      return
+    }
+
     if( valueHasSettings(dynamics, valueName) ) {
       state.close()
       setSettingsRaw(valueName)
+      setSettingsMode('builtin')
       setSettingsOpen(true)
       return
     }
@@ -120,6 +131,9 @@ const BaseWrapper = props => {
             )) }
           </SearchSelect.Group>
         )) }
+        <SearchSelect.Option value="tf::custom" textValue="Custom">
+          Custom value…
+        </SearchSelect.Option>
       </SearchSelect.Content>
     </SearchSelect>
   )
@@ -196,6 +210,7 @@ const BaseWrapper = props => {
         onOpenChange={ setSettingsOpen }
         dynamic={ props.config }
         editingRaw={ settingsRaw }
+        defaultMode={ settingsMode }
         onSubmit={ raw => setValueChange(`[[${raw}]]`) }
       />
     </div>

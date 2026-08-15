@@ -14,10 +14,27 @@
   width: $field-width;
   gap: 0;
 
-  // Field + affordances read as one control: the TUI input group carries the
-  // chrome and the insert/clear IconButtons sit in suffix append slots.
+  // Field + affordances read as one control: the insert/clear IconButtons
+  // sit in suffix append slots of the group.
   .tui-input-group.tf-dynamic-group {
     width: 100%;
+
+    // Composed controls (color, date, number…) own their chrome — the group
+    // is just the layout row. The group only keeps its own border/surface
+    // for the text-replace input and the dynamic pill bar, which have none.
+    &:not(:has(.tf-dynamic-text-input)):not(:has(.tf-dynamic-value-display)) {
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      padding: 0;
+      gap: var(--tui-spacing-xxs, 4px);
+    }
+
+    // The hosted control grows; suffix slots hug their buttons
+    > :not(.tui-input-group__suffix) {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
   }
 
   .tui-input-group__suffix {
