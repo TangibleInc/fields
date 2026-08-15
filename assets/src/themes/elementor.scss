@@ -140,40 +140,25 @@
   --tui-select-trigger-bg: var(--tui-color-bg);
   --tui-switch-accent: #f3bafd;
 
-  /* Combobox/multicombobox position their chevron on the WRAPPER, which
-     inherits the interface base font (16px) instead of the input's control
-     font — Select's chevron sits inside the trigger and gets 12px for free.
-     Pin them to the control font so all dropdown chevrons match. (Root cause
-     is a TUI sizing gap; this is the context-level correction.) */
-  .tui-combobox__icon,
-  .tui-multicombobox__icon {
-    font-size: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
-  }
-
-  /* Chips in token fields size from the GLOBAL typography ladder (sm = 14px),
-     detached from the control font. Fractional em of the host control instead:
-     the chip's own block padding eats the difference, so text + padding fit
-     the 28px control at any context font. (Candidate TUI-level fix: chips
-     inside token fields should always size em-relative to their control.) */
-  .tui-multiselect__chip,
-  .tui-multicombobox .tui-chip {
-    font-size: 0.85em;
-  }
+  /* (Removed in TUI 0.2.8: chevron and token-field chip sizing now key off
+     the control-font ladder at the source — the context-level pins that
+     lived here are no longer needed. The calendar also scales with the
+     control fonts now, so it left the rescope list below.) */
 
   /* Popover surfaces scale with the panel's 12px controls too: dropdown
-     options and the calendar all key their type off typography-size-sm/xs
-     rather than the control ladder — rescope those tokens per surface, and
-     shrink the calendar's day/month cells from the 2.5rem default. */
+     options key their type off typography-size-sm/xs rather than the
+     control ladder — rescope those tokens per surface. */
   .tui-select__content,
   .tui-multiselect__content,
   .tui-combobox__content,
   .tui-multicombobox__content,
-  .tui-popover,
-  .tui-calendar {
+  .tui-popover {
     --tui-typography-size-sm: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
     --tui-typography-size-xs: calc(11 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
   }
 
+  /* Deliberate 32px day cells (the automatic 2.5 × control-font would be
+     30px); tuned against Elementor's own datepicker. */
   --tui-calendar-cell-size: 2rem;
 
   /* Option hover follows the per-mode wash (combobox falls back through
@@ -211,6 +196,8 @@
        inert until fields picks up that release, then live automatically. */
     --tui-notice-gap: 8px;
     --tui-notice-para-gap: 6px;
+    /* Type icon follows the stripe colour (TUI 0.2.8 token). */
+    --tui-notice-icon: var(--tf-notice-accent, var(--tui-color-fg));
     font-size: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
     font-style: italic;
     font-weight: 300;
@@ -244,12 +231,8 @@
      the active one filled with a NEUTRAL — panel chrome stays monochrome even
      though the primary scale is magenta. Both modes' sampled active fill
      equals the border grey. */
-  .tui-segmented {
-    /* Root font-size keys the items' ems; SegmentedControl reads
-       typography-size-sm (14px) rather than the control ladder — pin it to
-       the panel's 12px like every other control. */
-    font-size: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
-  }
+  /* (SegmentedControl joined the control-font ladder in TUI 0.2.8 — the 12px
+     root-font pin that lived here is no longer needed.) */
 
   .tui-segmented.is-variant-pill {
     --tui-segmented-radius: var(--tui-input-radius);
