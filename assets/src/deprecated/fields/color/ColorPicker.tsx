@@ -3,7 +3,7 @@ import {
   useEffect
 } from 'react'
 
-import { Dialog } from '../../base'
+import { Dialog } from '../../../components/base'
 
 import {
   useFocusWithin,
