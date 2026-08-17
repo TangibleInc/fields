@@ -5,7 +5,7 @@ import {
   forwardRef
 } from 'react'
 
-import { Popover } from '../../base'
+import { Popover } from '../../../components/base'
 import ColorPicker from './ColorPicker'
 
 const ColorField = forwardRef(({
@@ -50,7 +50,7 @@ const ColorField = forwardRef(({
           triggerRef={ wrapperRef }
           placement="bottom start"
           style={{ width: wrapperRef?.current?.offsetWidth }}
-          className="tf-color-popover"
+          className="tf-color-popover tf-deprecated-control"
         >
           <ColorPicker
             value={ state.colorValue?.toString(format) }

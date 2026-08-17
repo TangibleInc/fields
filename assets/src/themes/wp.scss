@@ -82,6 +82,8 @@
   --tui-button-radius: 2px;
   --tui-icon-button-radius: 2px;
   --tui-input-radius: 2px;
+  --tui-color-area-radius: var(--tui-input-radius);
+  --tui-gradient-bar-radius: var(--tui-input-radius);
   --tui-select-trigger-radius: 2px;
   --tui-select-content-radius: 2px;
   --tui-multiselect-trigger-radius: 2px;
@@ -153,6 +155,23 @@
 .tf-context-wp.tui-interface .tui-select__option,
 .tf-context-wp.tui-interface .tui-multiselect__option {
   border-radius: var(--tui-select-content-radius);
+}
+
+/*
+ * Controls without a radius token, so they don't follow --tui-input-radius
+ *
+ * @see @tangible/ui/styles/components/color-picker.scss
+ * @see @tangible/ui/styles/components/gradient-picker.scss
+ */
+.tf-context-wp.tui-interface .tui-color-field,
+.tf-context-wp.tui-interface .tui-color-picker__field-group,
+.tf-context-wp.tui-interface .tui-gradient-picker__value-input {
+  border-radius: var(--tui-input-radius);
+
+  .tui-color-field__swatch,
+  .tui-color-picker__channel-input {
+    border-radius: var(--tui-input-radius);
+  }
 }
 
 .tf-context-wp.tui-tooltip__arrow {

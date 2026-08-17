@@ -18,7 +18,9 @@ import {
 
 import { Item } from 'react-stately'
 
-import ColorPicker from '../color/ColorPicker'
+// The legacy react-aria color picker lives with the deprecated fields now —
+// this (still-legacy) gradient field follows it there in its own migration.
+import ColorPicker from '../../../deprecated/fields/color/ColorPicker'
 import Select from '../../../deprecated/fields/select/Select'
 import Number from '../number/Number'
 
@@ -121,7 +123,7 @@ const Gradient = props => {
               width: wrapperRef?.current?.offsetWidth, 
               minWidth: 'fit-content' 
             }}
-            className="tf-gradient-popover"
+            className="tf-gradient-popover tf-deprecated-control"
           >
             <Dialog>
               <FocusScope autoFocus>
@@ -182,8 +184,9 @@ const Gradient = props => {
           {editColor !== false && (
             <Popover
               state={{ isOpen: editColor !== false, close: () => setEditColor(false) }}
-              triggerRef={colorPopover} 
+              triggerRef={colorPopover}
               placement={ editColor === 0 ? 'bottom start' : 'bottom end' }
+              className="tf-deprecated-control"
             >
               <ColorPicker
                 value={value.colors[editColor]}

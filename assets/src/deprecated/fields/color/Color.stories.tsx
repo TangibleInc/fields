@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Field } from '../../../index'
 
 const meta = {
-  title: 'Fields (Legacy)/Color',
+  title: 'Fields (Deprecated)/Color',
   component: Field,
   decorators: [
     Story => (
@@ -16,8 +16,9 @@ const meta = {
     layout: 'padded'
   },
   args: {
-    type: 'color-picker',
+    type: 'deprecated-color-picker',
     label: 'Color',
+    placeholder: 'Example placeholder',
     description: 'Example description',
     hasAlpha: true,
     format: 'rgba',
@@ -48,26 +49,5 @@ export const HSL: Story = {
   args: {
     format: 'hsl',
     hasAlpha: false,
-  }
-}
-
-export const Variable: Story = {
-  args: {
-    value: 'var(--tui-theme-primary-base)',
-    format: 'hex',
-  }
-}
-
-export const Gradient: Story = {
-  args: {
-    gradient: true,
-    value: 'linear-gradient(90deg, #6366F1 0%, #EC4899 100%)',
-  }
-}
-
-export const GradientFromSolid: Story = {
-  args: {
-    gradient: true,
-    value: '#6366F1',
   }
 }
