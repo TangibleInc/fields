@@ -123,7 +123,7 @@ const Gradient = props => {
               width: wrapperRef?.current?.offsetWidth, 
               minWidth: 'fit-content' 
             }}
-            className="tf-gradient-popover"
+            className="tf-gradient-popover tf-deprecated-control"
           >
             <Dialog>
               <FocusScope autoFocus>
@@ -184,8 +184,9 @@ const Gradient = props => {
           {editColor !== false && (
             <Popover
               state={{ isOpen: editColor !== false, close: () => setEditColor(false) }}
-              triggerRef={colorPopover} 
+              triggerRef={colorPopover}
               placement={ editColor === 0 ? 'bottom start' : 'bottom end' }
+              className="tf-deprecated-control"
             >
               <ColorPicker
                 value={value.colors[editColor]}
