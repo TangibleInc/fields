@@ -1,0 +1,163 @@
+/*
+ * Beaver Builder context theme overrides (TUI token remapping).
+ * Keep context-specific styling centralized here instead of per-component files.
+ *
+ * BB's design system runs on --fl-builder-* custom properties (radius 6px,
+ * target-size 36px, input/panel/platter/heading bgs, accent
+ * hsl(194,100%,41%), hue-210 grey ladders, font-family) — every value here
+ * references the BB var first so the live builder drives it, with fallbacks
+ * taken from builder-css.bundle.min.css's own skin definitions (both modes).
+ *
+ * Unlike Elementor, BB focuses text fields with the accent blue, so no
+ * neutral-focus split here. Aside for later: BB marks DYNAMIC values purple
+ * (--fl-builder-dynamic-accent-color: #6221a2) and global values orange
+ * (#ff9600) — relevant to the fields dynamic-value treatment someday.
+ *
+ * The legacy per-component overrides in contexts/beaver-builder/components/
+ * still apply to the not-yet-migrated react-aria fields; this file themes the
+ * TUI-based ones.
+ */
+
+@mixin bb-tokens-light {
+  /* BB accent ladder from their own definitions: accent hsl(194,100%,41%),
+     hover 37%, selected 34%. */
+  --tui-theme-primary-subtlest: #e6f6fb;
+  --tui-theme-primary-subtler: #c2e8f4;
+  --tui-theme-primary-subtle: #8fd4ea;
+  --tui-theme-primary-base: var(--fl-builder-accent-color, #00a3d1);
+  --tui-theme-primary-strong: var(--fl-builder-accent-color-hover, #0093bd);
+  --tui-theme-primary-stronger: #0087ad;
+  --tui-theme-primary-strongest: #005c77;
+
+  --tui-color-bg: var(--fl-builder-panel-bg-color, #fbfcfd);
+  --tui-color-bg-surface: var(--fl-builder-input-bg-color, #ffffff);
+  --tui-color-bg-elevated: #ffffff;
+  --tui-color-bg-muted: var(--fl-builder-platter-bg-color, #eff2f5);
+  --tui-color-fg: var(--fl-builder-input-color, #000000);
+  --tui-color-fg-secondary: #525961;
+  --tui-color-fg-muted: var(--fl-builder-dim-color, #7e8b98);
+  --tui-color-border: var(--fl-builder-outline-color, #d2dae3);
+  --tui-color-divider: var(--fl-builder-divider-color, #bfcbd8);
+
+  --tui-color-fill-subtle: #eff2f5;
+  --tui-color-fill: #e4e9ee;
+  --tui-color-fill-strong: #d2dae3;
+
+  --tui-focus-ring-color: var(--fl-builder-selected-color, #0087ad);
+
+  /* Dropdown option hover wash */
+  --tf-option-hover: #eff2f5;
+}
+
+@mixin bb-tokens-dark {
+  /* Dark fallbacks from BB's own skin definitions: panel #23282e, inputs
+     RECESSED darker (#181b20), heading #101216, outline hsl(210,11%,25%).
+     The accent is shared across skins. */
+  --tui-theme-primary-subtlest: #062e3a;
+  --tui-theme-primary-subtler: #0a4254;
+  --tui-theme-primary-subtle: #0e566e;
+  --tui-theme-primary-base: var(--fl-builder-accent-color, #00a3d1);
+  --tui-theme-primary-strong: #33b5da;
+  --tui-theme-primary-stronger: #66c8e4;
+  --tui-theme-primary-strongest: #b3e4f2;
+
+  --tui-color-bg: var(--fl-builder-panel-bg-color, #23282e);
+  --tui-color-bg-surface: var(--fl-builder-input-bg-color, #181b20);
+  --tui-color-bg-elevated: var(--fl-builder-box-background, #23282e);
+  --tui-color-bg-muted: var(--fl-builder-heading-bg-color, #101216);
+  --tui-color-fg: var(--fl-builder-input-color, #ffffff);
+  --tui-color-fg-secondary: #c3c8cd;
+  --tui-color-fg-muted: var(--fl-builder-dim-color, #7e8b98);
+  --tui-color-border: var(--fl-builder-outline-color, #393f47);
+  --tui-color-divider: var(--fl-builder-divider-color, #343a41);
+
+  /* Control fills — see the nested-wrapper gotcha in wp.scss/elementor.scss */
+  --tui-color-fill-subtle: #262c33;
+  --tui-color-fill: #2e353d;
+  --tui-color-fill-strong: #393f47;
+
+  --tui-focus-ring-color: var(--fl-builder-selected-color, #33b5da);
+
+  --tf-option-hover: #393f47;
+}
+
+@mixin bb-control-remaps {
+  --tui-focus-ring-offset: 0px;
+  --tui-focus-ring-width: 1.5px;
+
+  /* BB's panel runs 36px controls (their target-size) at ~14px type */
+  --tui-control-height-sm: 28px;
+  --tui-control-height-md: var(--fl-builder-target-size, 36px);
+  --tui-control-height-lg: 44px;
+  --tui-control-font-size-sm: calc(13 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-control-font-size-md: calc(14 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-control-font-size-lg: calc(15 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size-sm: calc(13 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size: calc(14 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size-lg: calc(15 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-weight: 500;
+  --tui-button-radius: var(--fl-builder-radius, 6px);
+  --tui-icon-button-radius: var(--fl-builder-radius, 6px);
+  --tui-input-radius: var(--fl-builder-radius, 6px);
+  --tui-select-trigger-radius: var(--fl-builder-radius, 6px);
+  --tui-select-content-radius: var(--fl-builder-radius, 6px);
+  --tui-multiselect-trigger-radius: var(--fl-builder-radius, 6px);
+  --tui-multiselect-content-radius: var(--fl-builder-radius, 6px);
+  --tui-accordion-radius: var(--fl-builder-radius, 6px);
+  --tui-card-radius: var(--fl-builder-radius, 6px);
+  --tui-notice-radius: var(--fl-builder-radius, 6px);
+  --tui-input-fg: var(--tui-color-fg);
+  --tui-input-bg: var(--tui-color-bg-surface);
+  --tui-select-trigger-bg: var(--tui-color-bg-surface);
+
+  /* Option hover follows the per-mode wash (combobox falls back through
+     select's token; multicombobox has its own). */
+  --tui-select-option-bg-hover: var(--tf-option-hover);
+  --tui-multiselect-option-bg-hover: var(--tf-option-hover);
+  --tui-multicombobox-option-bg-hover: var(--tf-option-hover);
+
+  /* Segmented groups (Align / Transform): grey group, the active segment
+     lifted to the surface colour (white in light). */
+  .tui-segmented.is-variant-pill {
+    --tui-segmented-radius: var(--tui-input-radius);
+    --tui-segmented-border: var(--tui-color-border);
+    --tui-segmented-bg: var(--tui-color-bg-muted);
+    --tui-segmented-padding: 0;
+    --tui-segmented-gap: 0;
+    --tui-segmented-item-radius: var(--fl-builder-radius, 6px);
+    --tui-segmented-item-padding: var(--tui-spacing-xxs) var(--tui-spacing-sm);
+    --tui-segmented-item-bg-active: var(--tui-color-bg-elevated);
+    --tui-segmented-item-fg-active: var(--tui-color-fg);
+  }
+}
+
+/* Panel labels: sentence case at panel ink, BB's font stack on the root. */
+@mixin bb-labels {
+  font-family: var(--fl-builder-font-family, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+
+  :is(label, .tui-label, .tui-field__label) {
+    font-weight: 400;
+    font-size: calc(14 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+    text-transform: none;
+    color: var(--tui-color-fg);
+  }
+}
+
+.tf-context-beaver-builder.tui-interface,
+.tf-context-beaver-builder .tui-interface {
+  @include bb-tokens-light;
+  @include bb-control-remaps;
+  @include bb-labels;
+}
+
+/* Dark: via data-theme (storybook toolbar, host-controlled interfaces), via
+   BB's own skin class, and cascaded into nested interfaces (portaled-content
+   wrappers carry no data-theme — see the gotcha in wp.scss). */
+.tf-context-beaver-builder.tui-interface[data-theme='dark'],
+.tf-context-beaver-builder .tui-interface[data-theme='dark'],
+.tf-context-beaver-builder.tui-interface[data-theme='dark'] .tui-interface,
+.tui-interface[data-theme='dark'] .tf-context-beaver-builder.tui-interface,
+.fl-builder-ui-skin--dark .tf-context-beaver-builder.tui-interface,
+.fl-builder-ui-skin--dark .tf-context-beaver-builder .tui-interface {
+  @include bb-tokens-dark;
+}
