@@ -1,0 +1,299 @@
+/*
+ * Elementor context theme overrides (TUI token remapping).
+ * Keep context-specific styling centralized here instead of per-component files.
+ *
+ * Starting point built from editor-panel screenshots (light + dark) — palette
+ * values sampled from the panels and cross-checked against Elementor's UI
+ * greys, then confirmed against Elementor's editor.min.css (--e-a-* tokens:
+ * txt #515962, border-bold #d5d8dc, radius 3px). Elementor's magenta
+ * (--e-a-color-primary-bold: #d004d4) is the primary accent — its own CSS
+ * fills checked controls with it — while the panel CHROME (tabs, segmented
+ * state switchers) stays neutral, so the segmented active fill maps to the
+ * border grey rather than the primary scale.
+ *
+ * The legacy per-component overrides in contexts/elementor/components/ still
+ * apply to the not-yet-migrated react-aria fields; this file themes the
+ * TUI-based ones.
+ */
+
+@mixin elementor-tokens-light {
+  /* Elementor magenta scale, built around --e-a-color-primary-bold */
+  --tui-theme-primary-subtlest: #fbe8fb;
+  --tui-theme-primary-subtler: #f7d1f7;
+  --tui-theme-primary-subtle: #eda7ed;
+  --tui-theme-primary-base: #d004d4;
+  --tui-theme-primary-strong: #a803ab;
+  --tui-theme-primary-stronger: #830286;
+  --tui-theme-primary-strongest: #5c015e;
+
+  --tui-color-bg-surface: #ffffff;
+  --tui-color-bg: #ffffff;
+  --tui-color-bg-elevated: #ffffff;
+  --tui-color-bg-muted: #f1f2f3;
+  --tui-color-fg: #0c0d0e;
+  --tui-color-fg-secondary: #515962;
+  --tui-color-fg-muted: #818a96;
+  --tui-color-border: #d5d8dc;
+  --tui-color-divider: #e6e9ec;
+
+  /* Semantic scales mapped to Elementor's palette: base = --e-a-color-X,
+     strong/stronger = their button hover/active ladders. Light subtle tints
+     keep TUI's defaults (Elementor's bg tints are dark-mode values). */
+  --tui-theme-info-base: #2563eb;
+  --tui-theme-info-strong: #134cca;
+  --tui-theme-info-stronger: #0e3b9c;
+  --tui-theme-success-base: #0a875a;
+  --tui-theme-success-strong: #06583a;
+  --tui-theme-success-stronger: #03281b;
+  --tui-theme-warning-base: #f59e0b;
+  --tui-theme-warning-strong: #c57f08;
+  --tui-theme-warning-stronger: #945f06;
+  --tui-theme-danger-base: #dc2626;
+  --tui-theme-danger-strong: #b21d1d;
+  --tui-theme-danger-stronger: #861616;
+
+  --tui-focus-ring-color: #69727d;
+
+  /* Dropdown option hover wash (Elementor's light hover grey). */
+  --tf-option-hover: #f1f2f3;
+}
+
+@mixin elementor-tokens-dark {
+  /* Magenta scale mirrored for dark: subtles go deep, stronger goes lighter.
+     Subtlest is Elementor's own dark primary tint (--e-a-bg-primary). */
+  --tui-theme-primary-subtlest: #310132;
+  --tui-theme-primary-subtler: #521254;
+  --tui-theme-primary-subtle: #831f86;
+  --tui-theme-primary-base: #d004d4;
+  --tui-theme-primary-strong: #e04ce3;
+  --tui-theme-primary-stronger: #ec8bee;
+  --tui-theme-primary-strongest: #f7d1f7;
+
+  --tui-color-bg: #1f2124;
+  --tui-color-bg-surface: #1f2124;
+  --tui-color-bg-elevated: #26292c;
+  --tui-color-bg-muted: #26292c;
+  --tui-color-fg: #d5d8dc;
+  --tui-color-fg-secondary: #d5d8dc;
+  --tui-color-fg-muted: #9da5ae;
+  --tui-color-border: #3f444b;
+  --tui-color-divider: #3f444b;
+
+  /* Control fills (hover washes, option hover, off tracks) — without these a
+     nested wrapper falls back to TUI's LIGHT fills (near-white option hover
+     under dark text in portaled dropdowns). */
+  --tui-color-fill-subtle: #26292c;
+  --tui-color-fill: #2c2f33;
+  --tui-color-fill-strong: #3f444b;
+
+  /* Semantic scales, dark: same Elementor bases; subtlest = Elementor's own
+     dark tints (--e-a-bg-*), which the notice backgrounds resolve to. */
+  --tui-theme-info-base: #2563eb;
+  --tui-theme-info-subtlest: #0a1a3d;
+  --tui-theme-success-base: #0a875a;
+  --tui-theme-success-subtlest: #032317;
+  --tui-theme-warning-base: #f59e0b;
+  --tui-theme-warning-subtlest: #311808;
+  --tui-theme-danger-base: #dc2626;
+  --tui-theme-danger-subtlest: #390a0a;
+
+  --tui-focus-ring-color: #9da5ae;
+
+  /* Dropdown option hover wash: fill-subtle (#26292c) EQUALS the dark popover
+     surface, so hovers were invisible — use the step-up grey instead. */
+  --tf-option-hover: #3f444b;
+}
+
+@mixin elementor-control-remaps {
+  --tui-focus-ring-offset: 0px;
+  --tui-focus-ring-width: 1px;
+
+  --tui-typography-weight-bold: 600;
+
+  /* Elementor's panel runs on 12px controls in tight rows */
+  --tui-control-height-sm: 24px;
+  --tui-control-height-md: 28px;
+  --tui-control-height-lg: 36px;
+  --tui-control-font-size-sm: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-control-font-size-md: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-control-font-size-lg: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size-xs: calc(11 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size-sm: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-size-lg: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  --tui-button-font-weight: 500;
+  --tui-button-radius: 3px;
+  --tui-icon-button-radius: 3px;
+  --tui-input-radius: 3px;
+  --tui-switch-track-height: 20px;
+  --tui-switch-track-width: 48px;
+  --tui-select-trigger-radius: 3px;
+  --tui-select-content-radius: 3px;
+  --tui-multiselect-trigger-radius: 3px;
+  --tui-multiselect-content-radius: 3px;
+  --tui-accordion-radius: 0;
+  --tui-chip-radius: 3px;
+  --tui-card-radius: 3px;
+  --tui-notice-radius: 3px;
+  --tui-input-fg: var(--tui-color-fg);
+  --tui-input-bg: var(--tui-color-bg);
+  --tui-select-trigger-bg: var(--tui-color-bg);
+  --tui-switch-accent: #f3bafd;
+
+  /* (Removed in TUI 0.2.8: chevron and token-field chip sizing now key off
+     the control-font ladder at the source — the context-level pins that
+     lived here are no longer needed. The calendar also scales with the
+     control fonts now, so it left the rescope list below.) */
+
+  /* Popover surfaces scale with the panel's 12px controls too: dropdown
+     options key their type off typography-size-sm/xs rather than the
+     control ladder — rescope those tokens per surface. */
+  .tui-select__content,
+  .tui-multiselect__content,
+  .tui-combobox__content,
+  .tui-multicombobox__content,
+  .tui-popover {
+    --tui-typography-size-sm: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+    --tui-typography-size-xs: calc(11 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+  }
+
+  /* Deliberate 32px day cells (the automatic 2.5 × control-font would be
+     30px); tuned against Elementor's own datepicker. */
+  --tui-calendar-cell-size: 2rem;
+
+  /* Option hover follows the per-mode wash (combobox falls back through
+     select's token; multicombobox has its own). */
+  --tui-select-option-bg-hover: var(--tf-option-hover);
+  --tui-multiselect-option-bg-hover: var(--tf-option-hover);
+  --tui-multicombobox-option-bg-hover: var(--tf-option-hover);
+
+  /* Text-like fields focus NEUTRAL (Elementor darkens the border, no accent):
+     the focused border follows the per-mode grey focus ring. Only the
+     selection controls below keep the magenta ring. */
+  --tui-input-border-focus: var(--tui-focus-ring-color);
+  --tui-select-trigger-border-focus: var(--tui-focus-ring-color);
+  --tui-multiselect-trigger-border-focus: var(--tui-focus-ring-color);
+  --tui-combobox-input-border-focus: var(--tui-focus-ring-color);
+  --tui-multicombobox-control-border-focus: var(--tui-focus-ring-color);
+
+  .tui-checkbox,
+  .tui-radio,
+  .tui-switch,
+  .tui-inline-choice {
+    --tui-focus-ring-color: var(--tui-theme-primary-base);
+  }
+
+  /* Notices, per .elementor-panel-alert: tinted background, a 3px
+     border-inline-start STRIPE in the type colour (square corners on the
+     stripe side, 3px on the end side), 12px italic light text. Elementor's
+     own --e-a-* tokens win in the real editor; TUI scales fall back. */
+  .tui-notice {
+    --tui-notice-fg: var(--tui-color-fg);
+    --tui-notice-border: transparent;
+    --tui-notice-border-width: 1px;
+    /* Inner gaps per .elementor-control-notice (icon gap 8px, content gap
+       6px). Reads --tui-notice-gap/-para-gap, added to TUI after 0.2.5 —
+       inert until fields picks up that release, then live automatically. */
+    --tui-notice-gap: 8px;
+    --tui-notice-para-gap: 6px;
+    /* Type icon follows the stripe colour (TUI 0.2.8 token). */
+    --tui-notice-icon: var(--tf-notice-accent, var(--tui-color-fg));
+    font-size: calc(12 * var(--tui-typography-size-multiplier, calc(1rem / 16)));
+    font-style: italic;
+    font-weight: 300;
+    border-inline-start: 3px solid var(--tf-notice-accent, var(--tui-color-fg));
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+
+    .tui-button {
+      font-style: normal;
+      font-weight: var(--tui-button-font-weight);
+    }
+  }
+  .tui-notice.is-theme-info {
+    --tf-notice-accent: var(--e-a-color-info, var(--tui-theme-info-base));
+    --tui-notice-bg: var(--e-a-bg-info, var(--tui-theme-info-subtlest));
+  }
+  .tui-notice.is-theme-success {
+    --tf-notice-accent: var(--e-a-color-success, var(--tui-theme-success-base));
+    --tui-notice-bg: var(--e-a-bg-success, var(--tui-theme-success-subtlest));
+  }
+  .tui-notice.is-theme-warning {
+    --tf-notice-accent: var(--e-a-color-warning, var(--tui-theme-warning-base));
+    --tui-notice-bg: var(--e-a-bg-warning, var(--tui-theme-warning-subtlest));
+  }
+  .tui-notice.is-theme-danger {
+    --tf-notice-accent: var(--e-a-color-danger, var(--tui-theme-danger-base));
+    --tui-notice-bg: var(--e-a-bg-danger, var(--tui-theme-danger-subtlest));
+  }
+
+  /* Segmented groups (Normal | Hover | Active): full-width bordered segments,
+     the active one filled with a NEUTRAL — panel chrome stays monochrome even
+     though the primary scale is magenta. Both modes' sampled active fill
+     equals the border grey. */
+  /* (SegmentedControl joined the control-font ladder in TUI 0.2.8 — the 12px
+     root-font pin that lived here is no longer needed.) */
+
+  .tui-segmented.is-variant-pill {
+    --tui-segmented-radius: var(--tui-input-radius);
+    --tui-segmented-border: var(--tui-color-border);
+    --tui-segmented-bg: transparent;
+    --tui-segmented-padding: 0;
+    --tui-segmented-gap: 0;
+    --tui-segmented-item-radius: 0;
+    --tui-segmented-item-padding: var(--tui-spacing-xxs) var(--tui-spacing-sm);
+    --tui-segmented-item-bg-active: var(--tui-color-border);
+    /* The neutral active fill is light grey in light mode — the default
+       on-accent white text has no contrast there. Panel fg works on both
+       modes' fills (near-black on #d5d8dc, light grey on #3f444b). */
+    --tui-segmented-item-fg-active: var(--tui-color-fg);
+  }
+}
+
+/* Panel labels, per Elementor's own control styles: --control-title-size
+   (fallback 12px), line-height 1, 5px inline-end margin, editor font stack. */
+@mixin elementor-labels {
+  font-family: var(--e-a-font-family, Roboto, Arial, Helvetica, sans-serif);
+
+  :is(label, .tui-label, .tui-field__label) {
+    font-weight: 400;
+    font-size: var(--control-title-size, 12px);
+    line-height: 1;
+    margin-inline-end: 5px;
+    text-transform: none;
+    color: var(--tui-color-fg-secondary);
+  }
+}
+
+.tf-context-elementor.tui-interface,
+.tf-context-elementor .tui-interface {
+  @include elementor-tokens-light;
+  @include elementor-control-remaps;
+  @include elementor-labels;
+}
+
+/* Dark: via data-theme (storybook toolbar, host-controlled interfaces).
+   The nested-interface selectors matter: portaled content re-applies a
+   .tui-interface wrapper WITHOUT data-theme, and a nested interface re-matches
+   TUI's light token block directly (beating inheritance from the dark
+   ancestor) — so dark must cascade into nested wrappers explicitly. */
+.tf-context-elementor.tui-interface[data-theme='dark'],
+.tf-context-elementor .tui-interface[data-theme='dark'],
+.tf-context-elementor.tui-interface[data-theme='dark'] .tui-interface,
+.tui-interface[data-theme='dark'] .tf-context-elementor.tui-interface {
+  @include elementor-tokens-dark;
+}
+
+/* …and via Elementor's own editor theme detection (matching the legacy
+   context mechanism in contexts/elementor/index.scss). */
+body.elementor-editor-active:has(#e-theme-ui-dark-css[media='all']) .tf-context-elementor.tui-interface,
+body.elementor-editor-active:has(#e-theme-ui-dark-css[media='all']) .tf-context-elementor .tui-interface {
+  @include elementor-tokens-dark;
+}
+
+body.elementor-editor-active:has(#e-theme-ui-dark-css[media='(prefers-color-scheme: dark)']) .tf-context-elementor.tui-interface,
+body.elementor-editor-active:has(#e-theme-ui-dark-css[media='(prefers-color-scheme: dark)']) .tf-context-elementor .tui-interface {
+  @media (prefers-color-scheme: dark) {
+    @include elementor-tokens-dark;
+  }
+}

@@ -34,6 +34,7 @@ import {
 import {
   Border as DeprecatedBorder,
   ButtonGroup as DeprecatedButtonGroup,
+  Color as DeprecatedColor,
   ComboBox as DeprecatedComboBox,
   Date as DeprecatedDate,
   Dimensions as DeprecatedDimensions,
@@ -102,6 +103,7 @@ const getTypes = () => {
        */
       'deprecated-border'           : DeprecatedBorder,
       'deprecated-button-group'     : DeprecatedButtonGroup,
+      'deprecated-color-picker'     : DeprecatedColor,
       'deprecated-combo-box'        : DeprecatedComboBox,
       'deprecated-date-picker'      : DeprecatedDate,
       'deprecated-dimensions'       : DeprecatedDimensions,

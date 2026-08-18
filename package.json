@@ -49,6 +49,7 @@
     "e2e:watch": "chokidar 'tests/e2e/**/*.js' --initial -c 'npm run e2e -- --retries=0'",
     "-- Storybook --": "https://storybook.js.org",
     "storybook": "storybook dev",
+    "storybook:fresh": "rm -rf node_modules/.cache/storybook && storybook dev",
     "storybook:build": "storybook build"
   },
   "dependencies": {
