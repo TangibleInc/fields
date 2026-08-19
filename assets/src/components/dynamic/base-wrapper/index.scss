@@ -4,6 +4,12 @@
   align-items: center;
   width: 100%;
 
+  // The picker has no trigger inside it (the bolt button is the trigger) and
+  // its panel is portaled, so the inline wrapper renders nothing and only
+  // takes a slot in the flex row
+  > .tui-search-select {
+    display: none;
+  }
 }
 
 .tf-dynamic-wrapper.tf-dynamic-wrapper-buttons-outside {
