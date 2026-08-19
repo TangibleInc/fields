@@ -23,24 +23,8 @@
   box-sizing: border-box;
 }
 
-// When inside dynamic wrapper, make room for the insert button
-.tf-dynamic-wrapper[data-dynamic="true"] .tui-input-group .tf-dynamic-editor {
-  .ProseMirror {
-    padding-right: 25px;
-  }
-}
-
-// With suffix: editor doesn't need extra padding, suffix handles spacing
-.tf-dynamic-wrapper[data-dynamic="true"] .tui-input-group:has(.tui-input-group__suffix) {
-  .tf-dynamic-editor .ProseMirror {
-    padding-right: 0;
-  }
-
-  // Suffix needs margin for the insert button that sits outside the group
-  .tui-input-group__suffix {
-    margin-right: 25px;
-  }
-}
+// The insert IconButton is an input-group suffix append — no floating-button
+// compensation needed.
 
 // Read-only state
 .tf-dynamic-editor[aria-readonly="true"] .ProseMirror {

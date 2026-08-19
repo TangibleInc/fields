@@ -1,0 +1,40 @@
+// Dynamic Field Settings modal body. The shell is TUI Modal; these are the
+// layout rules the old bespoke markup never had.
+.tf-dynamic-settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tui-spacing-md, 16px);
+  min-inline-size: min(28rem, 100%);
+
+  &__builtin,
+  &__custom {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tui-spacing-md, 16px);
+  }
+
+  &__fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tui-spacing-sm, 12px);
+  }
+}
+
+.tf-dynamic-settings__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--tui-spacing-sm, 12px);
+}
+
+// Selected value inside the SearchSelect trigger — the pill treatment
+// (bolt + category + label) from the design.
+.tf-dynamic-trigger-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  color: var(--tui-theme-primary-strong, #4338ca);
+
+  .tui-icon {
+    color: var(--tui-theme-primary-base, #6366f1);
+  }
+}

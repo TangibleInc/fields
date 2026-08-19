@@ -1,23 +1,18 @@
-import { 
+import {
   useState,
   useEffect,
   useRef,
   useMemo
 } from 'react'
 
-import {
-  DismissButton,
-  useOverlay,
-  useOverlayTrigger,
-  mergeProps,
-} from 'react-aria'
+import { useOverlayTrigger } from 'react-aria'
+import { useOverlayTriggerState } from 'react-stately'
 
 import { getConfig } from '../../../index.tsx'
-import Control from '../../../Control'
-
-import { useOverlayTriggerState } from 'react-stately'
-import { Button, Title } from '../../base'
-import ComboBox from '../../field/combo-box'
+import { IconButton, SearchSelect } from '@tangible/ui'
+import { Button } from '../../base'
+import DynamicFieldSettings from '../settings-modal/DynamicFieldSettings'
+import { buildGroupedChoices, valueHasSettings } from '../choices'
 
 /**
  * Accepted props:
@@ -38,27 +33,21 @@ const BaseWrapper = props => {
   const { dynamics } = getConfig()
 
   const triggerRef = useRef()
-  const overlayRef = useRef()
+  const wrapperRef = useRef(null)
 
-  const [value, setValue] = useState(false)
-  const [settingsForm, setSettingsForm] = useState(false)
-  const [settings, setSettings] = useState({})
   const [valueChange, setValueChange] = useState(false)
 
+  // Values that declare settings route to the settings modal, prefilled with
+  // the picked value (the legacy inline settings popover is gone).
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [settingsRaw, setSettingsRaw] = useState(undefined)
+  const [settingsMode, setSettingsMode] = useState('builtin')
+
   const state = useOverlayTriggerState({})
-  const { triggerProps, overlayProps } = useOverlayTrigger(
+  const { triggerProps } = useOverlayTrigger(
     { type: 'dialog' },
     state,
     triggerRef
-  )
-
-  const { overlayProps: dismissProps } = useOverlay(
-    {
-      isOpen        : state.isOpen,
-      onClose       : state.close,
-      isDismissable : true
-    },
-    overlayRef
   )
 
   useEffect(() => {
@@ -72,174 +61,163 @@ const BaseWrapper = props => {
     if( valueChange !== false ) {
       props?.onValueSelection(valueChange)
       setValueChange(false)
-    }    
+    }
   }, [valueChange])
 
   const saveDynamicValue = valueName => {
 
     if( ! valueName ) return;
 
-    const args = dynamics.values[ valueName ]?.fields
-    setValue(valueName)
-
-    if( ! Array.isArray(args) || args.length === 0 ) {
-      return selectAndClose(valueName)
+    // "Custom value…" row → settings modal straight into custom mode
+    if( valueName === 'tf::custom' ) {
+      state.close()
+      setSettingsRaw(undefined)
+      setSettingsMode('custom')
+      setSettingsOpen(true)
+      return
     }
-    
-    setSettingsForm(args) 
-  }
 
-  const selectAndClose = value => {
-    
+    if( valueHasSettings(dynamics, valueName) ) {
+      state.close()
+      setSettingsRaw(valueName)
+      setSettingsMode('builtin')
+      setSettingsOpen(true)
+      return
+    }
+
     setValueChange(
-      props.config.stringify(value, settings ?? false)
+      props.config.stringify(valueName, false)
     )
-
-    resetAndClose()
-  }
-
-  const resetAndClose = () => {
-    
-    setValue(false)
-    setSettingsForm(false)
-    setSettings(false)
-    
     state.close()
   }
 
-  /**
-   * Create an array usable by a combobox list that contains the dynamic values available
-   */
-  const choices = useMemo(() => {
+  const choices = useMemo(
+    () => buildGroupedChoices(props.config, dynamics),
+    []
+  )
 
-    const allowedTypes = props.config.getTypes()
-    const categoryKeys = props.config.getCategories()
-
-    const categories = categoryKeys.map(categoryKey => {
-      
-      const category = dynamics.categories[ categoryKey ]
-      const categoryChoices = Object.keys(dynamics.values)
-        .filter(value => (
-          category.values.includes(value) && allowedTypes.includes(dynamics.values[value]?.type)
-        ))
-        .reduce((choices, key) => ({
-          ...choices,
-          [key]: dynamics.values[key].label ?? key
-        }), {},)
-      
-      return {
-        name: category.label,
-        choices: categoryChoices
-      }
-    })
-
-    // Remove empty categories
-    return categories.filter(category => (
-      Object.keys(category.choices).length !== 0
-    ))
-  }, [])
-
-  /**
-   * Not sure why, but without a ref the state value is always empty when used inside getValue()
-   */
-  const settingsRef = useRef(settings)
-  const updateSettings = (name, settingValue) => {
-    setSettings(
-      settingsRef.current = {
-        ...settings,
-        [name]: settingValue
-      }
-    )
-  }
-  
   /**
    * There are 2 wasy to display insert/clear button:
    * - 2 button after the fields
    * - Inside the input (only used for text currently)
    */
   const buttonType = props.buttonType ?? 'outside'
+  const size       = props.size ?? 'md'
   const hasInsert  = !( props.readOnly || props.inputMasking ) && (buttonType === 'outside' || (! props.remove || props.remove.isDisabled))
   const hasClear   = !( props.readOnly || props.inputMasking ) && (buttonType === 'outside' || (props.remove && props.remove.isDisabled === false))
 
   const classes = `tf-dynamic-wrapper tf-dynamic-wrapper-buttons-${buttonType} ${props.className ?? ''}`
 
+  /**
+   * The value picker: TUI SearchSelect in external-trigger mode — the insert
+   * button opens the panel anchored under the whole field.
+   */
+  const picker = (
+    <SearchSelect
+      open={ state.isOpen }
+      onOpenChange={ open => { if( !open ) state.close() } }
+      onValueChange={ value => saveDynamicValue(String(value)) }
+      anchorRef={ wrapperRef }
+      restoreFocusRef={ triggerRef }
+      aria-label="Insert dynamic value"
+    >
+      <SearchSelect.Content>
+        { choices.map(category => (
+          <SearchSelect.Group key={ category.name }>
+            <SearchSelect.Label>{ category.name }</SearchSelect.Label>
+            { Object.entries(category.choices).map(([key, label]) => (
+              <SearchSelect.Option key={ key } value={ key }>
+                { String(label) }
+              </SearchSelect.Option>
+            )) }
+          </SearchSelect.Group>
+        )) }
+        <SearchSelect.Option value="tf::custom" textValue="Custom">
+          Custom value…
+        </SearchSelect.Option>
+      </SearchSelect.Content>
+    </SearchSelect>
+  )
+
+  const insertIconButton = (
+    <IconButton
+      icon="system/bolt-plus-fill"
+      label="Insert dynamic value"
+      variant="ghost"
+      theme="secondary"
+      size="sm"
+      className="tf-dynamic-wrapper-insert"
+      ref={ triggerRef }
+      { ...triggerProps }
+      /* IconButton is a native button (onClick); react-aria's onPress in
+         triggerProps is inert on it, so activation is wired explicitly */
+      onClick={ () => state.open() }
+      aria-haspopup="dialog"
+      aria-expanded={ state.isOpen }
+    />
+  )
+
+  const clearIconButton = (
+    <IconButton
+      icon="system/close"
+      label="Clear dynamic value"
+      variant="ghost"
+      theme="secondary"
+      size="sm"
+      className="tf-dynamic-wrapper-clear"
+      disabled={ props.remove?.isDisabled }
+      onClick={ props.remove?.onPress }
+    />
+  )
+
   return(
-    <div className={ classes } data-dynamic="true">
-      { props.children }
-      { hasInsert && 
-        <Button 
-          type={ buttonType === 'outside' ? 'action' : 'icon' } 
-          className="tf-dynamic-wrapper-insert" 
-          ref={ triggerRef } 
-          contentVisuallyHidden={ buttonType === 'inside' } 
-          { ...triggerProps }
-        > 
-        Insert
-      </Button> }
-      { hasClear &&
-        <Button 
-          type={ buttonType === 'outside' ? 'action' : 'icon' }
-          className="tf-dynamic-wrapper-clear"
-          contentVisuallyHidden={ buttonType === 'inside' }
-          { ...props.remove } 
-        >
-          Clear
-        </Button> }
-      {state.isOpen &&
-        /**
-         * tui-interface class needed to keeps the combobox
-         * list inside the popover
-         *
-         * @see getPortalRootFor() in @tangible/ui/utils/portal.js
-         */
-        (<div
-          className="tf-dynamic-wrapper-popover tui-interface"
-          ref={ overlayRef }
-          { ...mergeProps(overlayProps, dismissProps) }
-        >
-          { settingsForm
-            ? <div className="tf-dynamic-wrapper-popover-form">
-                <Title level={4}>
-                  Dynamic value settings
-                </Title>
-                { dynamics.values[ value ].description && 
-                  <i>{ dynamics.values[ value ].description }</i> }
-                { settingsForm.map(field => (
-                  <div className="tf-dynamic-wrapper-popover-field">
-                    <Control
-                      { ...field } 
-                      value={ settings[field.name] ?? '' }
-                      onChange={ settingValue => updateSettings(field.name, settingValue) }
-                      visibility={{
-                        condition: field.condition?.condition ?? false,
-                        action: field.condition?.action ?? 'show'
-                      }}
-                      data={{
-                        getValue: name => settingsRef.current[name] ?? ''
-                      }}
-                    />
-                  </div>
-                )) }
-                <div className="tf-dynamic-wrapper-popover-buttons">
-                  <Button type="action" onPress={ () => selectAndClose(value) }>
-                    Add
-                  </Button>
-                  <Button type="action" onPress={ resetAndClose }>
-                    Close
-                  </Button>
-                </div>
-              </div>
-            : <ComboBox 
-                choices={ choices }
-                label={ 'Select dynamic value to insert' }
-                labelVisuallyHidden={ true }
-                autoFocus={ true }
-                showButton={ false }
-                onChange={ saveDynamicValue }
-              /> }
-          <DismissButton onDismiss={ state.close } />
-        </div>
-      ) }
+    <div className={ classes } data-dynamic="true" ref={ wrapperRef }>
+      { buttonType === 'inside'
+        /* Field + affordances read as ONE control: an input group with the
+           icon buttons as suffix appends */
+        ? <div className={[
+            'tui-input-group',
+            'tf-dynamic-group',
+            size !== 'md' && `is-size-${size}`,
+          ].filter(Boolean).join(' ')}>
+            { props.children }
+            { hasInsert &&
+              <span className="tui-input-group__suffix">{ insertIconButton }</span> }
+            { hasClear &&
+              <span className="tui-input-group__suffix">{ clearIconButton }</span> }
+          </div>
+        : <>
+            { props.children }
+            { hasInsert &&
+              <Button
+                type="action"
+                className="tf-dynamic-wrapper-insert"
+                ref={ triggerRef }
+                { ...triggerProps }
+              >
+                Insert
+              </Button> }
+            { hasClear &&
+              <Button
+                type="action"
+                className="tf-dynamic-wrapper-clear"
+                { ...props.remove }
+              >
+                Clear
+              </Button> }
+          </> }
+      { picker }
+      {/* Settings modal for values that declare fields. onSubmit gives the
+          raw WITHOUT [[ ]] delimiters (the editor serialiser re-adds them) —
+          this path stores the full token, so wrap. */}
+      <DynamicFieldSettings
+        open={ settingsOpen }
+        onOpenChange={ setSettingsOpen }
+        dynamic={ props.config }
+        editingRaw={ settingsRaw }
+        defaultMode={ settingsMode }
+        onSubmit={ raw => setValueChange(`[[${raw}]]`) }
+      />
     </div>
   )
 }

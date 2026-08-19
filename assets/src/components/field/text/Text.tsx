@@ -85,6 +85,7 @@ const DynamicTextField = (props: FieldsTextProps) => {
           value={value}
           onChange={setValue}
           dynamic={props.dynamic}
+          size={props.size}
           name={props.name}
           placeholder={props.placeholder}
           readOnly={props.readOnly}

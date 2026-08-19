@@ -1,4 +1,9 @@
 import type { Node } from 'prosemirror-model'
+
+// TUI system/bolt-fill, inlined: the node view is imperative DOM (no React),
+// and an SVG tints via currentColor where the ⚡ emoji ignored the pill colour.
+const BOLT_SVG =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" aria-hidden="true" focusable="false"><path d="M13.522 11h3.487c.416 0 .79.26.91.647a.95.95 0 0 1-.25 1.106l-8.007 7a1 1 0 0 1-1.58-1.147L10.489 13H6.973a.995.995 0 0 1-.909-.647 1 1 0 0 1 .278-1.106l8.005-7a1.002 1.002 0 0 1 1.58 1.147z"/></svg>'
 import type { EditorView, NodeView } from 'prosemirror-view'
 import { NodeSelection } from 'prosemirror-state'
 
@@ -45,7 +50,7 @@ export class DynamicValueView implements NodeView {
     const icon = document.createElement('span')
     icon.className = 'tf-dynamic-pill__icon'
     icon.setAttribute('aria-hidden', 'true')
-    icon.textContent = '\u26A1' // ⚡
+    icon.innerHTML = BOLT_SVG
     pill.appendChild(icon)
 
     // Label

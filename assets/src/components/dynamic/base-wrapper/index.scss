@@ -4,32 +4,11 @@
   align-items: center;
   width: 100%;
 
-  .tf-dynamic-wrapper-popover {
-    position: absolute;
-    top: 100%;
-    z-index: $popover-index;
-    width: $field-width;
-  }
-
-  .tf-dynamic-wrapper-popover-form {
-    background: $field-background;
-    z-index: $popover-index;
-    width: 100%;
-    padding: $field-padding;
-    border: $field-border;
-  }
-
-  .tf-dynamic-wrapper-popover-form > * {
-    margin: 12px 0;
-  }
-
-  .tf-dynamic-wrapper-popover-buttons {
-    display: flex;
-    justify-content: flex-end;
-
-    button {
-      margin-left: 6px;
-    }
+  // The picker has no trigger inside it (the bolt button is the trigger) and
+  // its panel is portaled, so the inline wrapper renders nothing and only
+  // takes a slot in the flex row
+  > .tui-search-select {
+    display: none;
   }
 }
 
@@ -41,26 +20,57 @@
   width: $field-width;
   gap: 0;
 
-  .tf-button-icon {
-    position: absolute;
-    cursor: pointer;
-    top: 50%;
-    transform: translateY(-50%);
-    right: $field-border-width;
-    border: none;
-    background: transparent;
-    height: $field-height;
-    
-    &:before {
-      content: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTMiIGhlaWdodD0iMTciIHZpZXdCb3g9IjAgMCAxMyAxNyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcuNTIxNTggNi45OTk4N0gxMS4wMDg3QzExLjQyNDYgNi45OTk4NyAxMS43OTk5IDcuMjU5MjQgMTEuOTE4OCA3LjY0NjczQzEyLjA5MDggOC4wMzczNSAxMS45ODEzIDguNDc3OTcgMTEuNjY4NiA4Ljc1Mjk3TDExLjA2NTkgOS4yNzk5MkMxMC41NzgyIDkuMDk4OTEgMTAuMDUwNyA5IDkuNSA5QzcuMDE0NzIgOSA1IDExLjAxNDcgNSAxMy41QzUgMTMuODM5NSA1LjAzNzU5IDE0LjE3MDIgNS4xMDg4NCAxNC40ODgxTDMuNjYyMzEgMTUuNzUyOEMzLjMwODkxIDE2LjA1OTEgMi43OTE5NCAxNi4wODQxIDIuNDE0MTQgMTUuODA5MUMyLjAzNjAzIDE1LjUzNDEgMS44OTg0MyAxNS4wMzQxIDIuMDgyNjMgMTQuNjA2TDQuNDg3OTUgOC45OTk4NEgwLjk3MjdDMC41ODM5NTggOC45OTk4NCAwLjIxMDYzNSA4Ljc0MDQ3IDAuMDYzOTg4NSA4LjM1Mjk3Qy0wLjA4MjY1NzcgNy45NjIzNSAwLjAyODAzNTMgNy41MjE3NCAwLjM0MTg5NCA3LjI0Njc0TDguMzQ3MjMgMC4yNDc0MjNDOC43MDA2MyAtMC4wNjAwMDkyIDkuMjE2NjYgLTAuMDgzNDE1MSA5LjU5NTA4IDAuMTkxMDQ5QzkuOTczNSAwLjQ2NTYwNyAxMC4xMTExIDAuOTY0NjYxIDkuOTI2NTkgMS4zOTQwM0w3LjUyMTU4IDYuOTk5ODdaIiBmaWxsPSIjMUUxRTFFIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNOS41IDE3QzExLjQzMyAxNyAxMyAxNS40MzMgMTMgMTMuNUMxMyAxMS41NjcgMTEuNDMzIDEwIDkuNSAxMEM3LjU2NyAxMCA2IDExLjU2NyA2IDEzLjVDNiAxNS40MzMgNy41NjcgMTcgOS41IDE3Wk0xMiAxMy41MDAxQzEyIDEzLjgxOSAxMS43NDE2IDE0LjA3NzIgMTEuNDIzMSAxNC4wNzcySDEwLjA3NjlWMTUuNDIzM0MxMC4wNzY5IDE1Ljc0MjIgOS44MTg1NyAxNiA5LjUgMTZDOS4xODE0MyAxNiA4LjkyMzA4IDE1Ljc0MjIgOC45MjMwOCAxNS40MjMzVjE0LjA3NzJINy41NzY5MkM3LjI1ODM1IDE0LjA3NzIgNyAxMy44MTkgNyAxMy41MDAxQzcgMTMuMTgxMSA3LjI1ODM1IDEyLjkyMzMgNy41NzY5MiAxMi45MjMzSDguOTIzMDhWMTEuNTc3MUM4LjkyMzA4IDExLjI1ODIgOS4xODE0MyAxMSA5LjUgMTFDOS44MTg1NyAxMSAxMC4wNzY5IDExLjI1ODIgMTAuMDc2OSAxMS41NzcxVjEyLjkyMzNIMTEuNDIzMUMxMS43NDIyIDEyLjkyMzIgMTIgMTMuMTgxIDEyIDEzLjUwMDFaIiBmaWxsPSIjMUUxRTFFIi8+Cjwvc3ZnPgo=);
-      line-height: 1;
-      padding: 0px 5px;
+  // Field + affordances read as one control: the insert/clear IconButtons
+  // sit in suffix append slots of the group.
+  .tui-input-group.tf-dynamic-group {
+    width: 100%;
+
+    // Composed controls (color, date, number…) own their chrome — the group
+    // is just the layout row. The group only keeps its own border/surface
+    // for the text-replace input and the dynamic pill bar, which have none.
+    &:not(:has(.tf-dynamic-text-input)):not(:has(.tf-dynamic-value-display)) {
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      padding: 0;
+      gap: var(--tui-spacing-xxs, 4px);
     }
 
-    &.cm-content[contenteditable="false"] {
-      &::before {
-        display: none;
-      }
+    // The hosted control grows; suffix slots hug their buttons
+    > :not(.tui-input-group__suffix) {
+      flex: 1 1 auto;
+      min-width: 0;
     }
   }
+
+  .tui-input-group__suffix {
+    display: inline-flex;
+    align-items: center;
+    padding-inline: 2px;
+  }
+}
+
+// The active control height for the dynamic group, following the is-size-*
+// ladder — consumed by the appended-affordance scale below.
+.tf-dynamic-wrapper .tui-input-group {
+  --tf-dynamic-control: var(--tui-control-height-md, 2.5rem);
+
+  &.is-size-sm {
+    --tf-dynamic-control: var(--tui-control-height-sm, 2.25rem);
+  }
+
+  &.is-size-lg {
+    --tf-dynamic-control: var(--tui-control-height-lg, 3rem);
+  }
+}
+
+// Appended affordances scale WITH the host control — one visual step down,
+// clamped to the 24px WCAG target floor. A fixed t-shirt size can't track
+// context control-height remaps (Elementor's 28px md would overflow even xs)
+// or the size ladder; control 40px → 30px button, exactly filling the
+// group's content box.
+.tf-dynamic-wrapper .tui-input-group__suffix .tui-icon-button.tui-icon-button {
+  --tf-append-size: max(1.5rem, calc(var(--tf-dynamic-control, var(--tui-control-height-md, 2.5rem)) - 2 * var(--tui-spacing-xxs, 4px) - 2 * var(--tui-border-width, 1px)));
+  width: var(--tf-append-size);
+  height: var(--tf-append-size);
 }

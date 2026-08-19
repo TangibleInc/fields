@@ -1,19 +1,53 @@
 .tf-dynamic-field-wrapper.tf-dynamic-wrapper {
 
-  .tf-dynamic-value-input:disabled {
-    border-color: rgba(black, 0.1);
-    color: rgba(black, 0.4);
-    background: rgba(white, 0.5)
-  }
-
-  .tf-dynamic-value-input {
-    width: $field-width;
+  // Replace-mode value bar (standalone / buttons-outside): the whole field
+  // becomes a dynamic-value pill (bolt + label) on a tinted input-shaped
+  // surface.
+  .tf-dynamic-value-display {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
     min-height: $field-height;
     padding: var(--tui-spacing-xxs) $field-padding-horizontal;
     box-sizing: border-box;
+    background: var(--tui-theme-primary-subtlest, rgba(99, 102, 241, 0.12));
+    border: $field-border-width solid var(--tui-theme-primary-subtle, rgba(99, 102, 241, 0.25));
+    border-radius: var(--tui-input-radius, var(--tui-radius-md, 4px));
+
+    .tf-dynamic-pill {
+      background: none;
+      padding: 0;
+      margin: 0;
+      font-size: 1em;
+    }
   }
 
-  .tf-button-icon.tf-dynamic-wrapper-clear::before {
-    content: "⨯";
+  &.tf-dynamic-wrapper-buttons-inside .tf-dynamic-group {
+    padding-inline-end: var(--tui-spacing-xxs);
+  }
+
+  // Inside an input group the GROUP carries the chrome — tint the whole bar
+  // (icon buttons included) and strip the display's own box.
+  .tf-dynamic-group:has(.tf-dynamic-value-display) {
+    background: var(--tui-theme-primary-subtlest, rgba(99, 102, 241, 0.12));
+    border-color: var(--tui-theme-primary-subtle, rgba(99, 102, 241, 0.25));
+  }
+
+  .tf-dynamic-group .tf-dynamic-value-display {
+    border: none;
+    background: transparent;
+    // The GROUP owns the control height (min-height 40) and block padding —
+    // the display's own min-height/padding stacked on top of it (40 → 48)
+    min-height: 0;
+    padding: 0;
+  }
+
+  // Replace-mode empty state: the readOnly input inside the group goes flush
+  .tf-dynamic-group .tf-dynamic-text-input {
+    flex: 1 1 auto;
+    border: none;
+    background: transparent;
+    outline: none;
+    min-width: 0;
   }
 }
