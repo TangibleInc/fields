@@ -1,0 +1,345 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+
+import * as DependentStories from './Dependent.stories'
+import CodeTabs from '../components/CodeTabs'
+
+<Meta of={DependentStories} />
+
+# Dependent Attributes
+
+A field can take the value of another field and use it in one of its
+attributes, so that fields change with what the user selects.
+
+## Syntax
+
+To set up a dependent attribute:
+
+- Set `dependent` to `true` on the field
+- Use `{{field-name}}` in the attributes that take the value of another field,
+  where `field-name` is the name of that other field
+
+<CodeTabs>
+
+```php
+$fields->render_field('label-field', [
+  'type'  => 'text',
+  'label' => 'Set the label of the last field',
+]);
+
+$fields->render_field('description-field', [
+  'type'  => 'text',
+  'label' => 'Set the description of the last field',
+]);
+
+$fields->render_field('custom-field', [
+  'type'        => 'text',
+  'label'       => '{{label-field}}',
+  'description' => '{{description-field}}',
+  'dependent'   => true,
+]);
+```
+
+```jsx
+<Field
+  type="text"
+  name="label-field"
+  label="Set the label of the last field"
+/>
+
+<Field
+  type="text"
+  name="description-field"
+  label="Set the description of the last field"
+/>
+
+<Field
+  type="text"
+  name="custom-field"
+  label="{{label-field}}"
+  description="{{description-field}}"
+  dependent={true}
+/>
+```
+
+</CodeTabs>
+
+<Canvas of={DependentStories.Attributes} />
+
+Any attribute can be used. One attribute can contain several `{{field-name}}`
+coming from different fields, mixed with regular text.
+
+## Partial values
+
+When the other field stores an object, `{{field-name.attribute}}` takes one
+attribute of it instead of the whole value.
+
+An async combo box stores `{ value: '1', label: 'Label' }`, so
+`{{field-name.value}}` gives `1`, and `{{field-name.label}}` gives `Label`.
+
+<CodeTabs>
+
+```php
+$fields->render_field('partial-target', [
+  'type'      => 'text',
+  'label'     => 'The dimensions unit is {{partial-dimensions.unit}}',
+  'dependent' => true,
+]);
+```
+
+```jsx
+<Field
+  type="text"
+  name="partial-target"
+  label="The dimensions unit is {{partial-dimensions.unit}}"
+  dependent={true}
+/>
+```
+
+</CodeTabs>
+
+<Canvas of={DependentStories.PartialValue} />
+
+## Values other than text
+
+The value is used as it is, so it also works with an attribute that expects
+something other than text. Here the switch stores `true` or `false`, and turns
+the opacity of the color picker on and off.
+
+<CodeTabs>
+
+```php
+$fields->render_field('opacity-switch', [
+  'type'      => 'switch',
+  'label'     => 'Enable opacity',
+  'value_on'  => true,
+  'value_off' => false,
+]);
+
+$fields->render_field('opacity-color', [
+  'type'           => 'color_picker',
+  'label'          => 'Color',
+  'enable_opacity' => '{{opacity-switch}}',
+  'dependent'      => true,
+]);
+```
+
+```jsx
+<Field
+  type="switch"
+  name="opacity-switch"
+  label="Enable opacity"
+  valueOn={true}
+  valueOff={false}
+/>
+
+<Field
+  type="color-picker"
+  name="opacity-color"
+  label="Color"
+  hasAlpha="{{opacity-switch}}"
+  dependent={true}
+/>
+```
+
+</CodeTabs>
+
+<Canvas of={DependentStories.Boolean} />
+
+## Callbacks
+
+A callback changes the value before it is used. It receives the `value` of the
+other field, and the name of the `attribute` it is going to fill.
+
+The callback runs for every dependent attribute of the field, so the examples
+below start by checking which attribute is being filled.
+
+In JS, the callback is a function. It can return text or an element:
+
+```jsx
+import { Icon } from '@tangible/ui'
+
+<Field
+  type="text"
+  name="callback-text"
+  label="Text field"
+  description="{{callback-switch}}"
+  dependent={{
+    callback: ({ attribute, value }) => {
+      if (attribute !== 'description') return value
+      return value === 'yes'
+        ? <><Icon name="system/check-circle-fill" /> The switch is enabled</>
+        : <><Icon name="system/close-circle-fill" /> The switch is disabled</>
+    }
+  }}
+/>
+```
+
+<Canvas of={DependentStories.Callback} />
+
+When the field is registered and rendered from PHP, the callback still has to be
+defined in JS. It is registered with a name:
+
+```js
+const { fields: { dependent } } = window.tangibleFields
+
+dependent.registerCallback('custom-callback-name', ({ attribute, value }) => {
+  if (attribute !== 'description') return value
+  return value === 'yes'
+    ? 'The switch is enabled'
+    : 'The switch is disabled'
+})
+```
+
+And that name is used in the PHP definition:
+
+```php
+$fields->render_field('callback-text', [
+  'type'        => 'text',
+  'label'       => 'Text field',
+  'description' => '{{callback-switch}}',
+  'dependent'   => [
+    'callback' => 'custom-callback-name'
+  ]
+]);
+```
+
+Custom data can be passed to the callback, and is added to its parameters. It
+is `callback_data` in PHP, and `callbackData` in JS:
+
+<CodeTabs>
+
+```php
+$fields->render_field('callback-text', [
+  // ...
+  'dependent' => [
+    'callback'      => 'custom-callback-name',
+    'callback_data' => [ 'unit' => 'px' ]
+  ]
+]);
+```
+
+```jsx
+dependent={{
+  callback: ({ attribute, value, unit }) => `${value}${unit}`,
+  callbackData: { unit: 'px' }
+}}
+```
+
+</CodeTabs>
+
+## Elements and sub-fields
+
+Elements support the same syntax as fields.
+
+Inside a repeater or a field group, the value is taken from the current row. If
+no field of the row has that name, it is taken from the other fields of the
+page.
+
+<CodeTabs>
+
+```php
+$fields->render_field('dependent-repeater', [
+  'type'       => 'repeater',
+  'layout'     => 'block',
+  'sub_fields' => [
+    [
+      'name'  => 'row-label',
+      'type'  => 'text',
+      'label' => 'Label of the field below',
+    ],
+    [
+      'name'      => 'row-target',
+      'type'      => 'text',
+      'label'     => '{{row-label}}',
+      'dependent' => true,
+    ]
+  ]
+]);
+```
+
+```jsx
+<Field
+  type="repeater"
+  name="dependent-repeater"
+  layout="block"
+  fields={[
+    {
+      name: 'row-label',
+      type: 'text',
+      label: 'Label of the field below'
+    },
+    {
+      name: 'row-target',
+      type: 'text',
+      label: '{{row-label}}',
+      dependent: true
+    }
+  ]}
+/>
+```
+
+</CodeTabs>
+
+<Canvas of={DependentStories.Repeater} />
+
+## Object attributes
+
+An attribute can also be an object, and use a dependent value in one of its
+attributes. The async combo box does this to send the value of another field
+with its search request:
+
+<CodeTabs>
+
+```php
+$fields->render_field('post-select', [
+  'type'       => 'combo_box',
+  'label'      => 'Select a post',
+  'is_async'   => true,
+  'dependent'  => true,
+  'search_url' => get_rest_url() . 'wp/v2/search',
+  'async_args' => [
+    'subtype' => '{{field-post-type}}'
+  ],
+]);
+```
+
+```jsx
+<Field
+  type="combo-box"
+  name="post-select"
+  label="Select a post"
+  isAsync={true}
+  dependent={true}
+  searchUrl="/wp-json/wp/v2/search"
+  asyncArgs={{
+    subtype: '{{field-post-type}}'
+  }}
+/>
+```
+
+</CodeTabs>
+
+## Re-render a field
+
+Attributes update when the field they depend on changes. To update a field at
+any other moment, it can be re-rendered by name. It works with regular fields,
+not with sub-fields.
+
+```js
+window.tangibleFields.fields.rerender('custom-field')
+```
+
+## Limitations
+
+Dependent values only go one level deep:
+
+- `{{field-name.attribute}}` takes an attribute of an object, but not an
+  attribute of that attribute: `{{field-name.attribute.other}}` doesn't work
+- Inside an object attribute, a dependent value works for the attributes of that
+  object, not for the objects inside it
+
+Two other cases are not covered:
+
+- The `value`, `class` and `wrapper` attributes can't be dependent
+- A dependent value inside an array is ignored, for example in the `choices` of
+  a select
