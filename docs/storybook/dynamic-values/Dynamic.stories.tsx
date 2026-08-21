@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-import { Field, setConfig } from '../../index'
+import { Field, setConfig } from '../../../assets/src/index'
 
 /**
  * Dynamic values need a global config with categories and values
@@ -103,88 +103,9 @@ setConfig({
   }
 })
 
-/**
- * Dynamic values allow fields to use values resolved at render time from PHP.
- *
- * Supported field types: `text`, `number`, `color-picker`, `date-picker`
- *
- * #### Activate on a field
- *
- * PHP:
- * ```php
- * $fields->render_field('text-with-dynamic-values', [
- *   'label'   => 'Text field',
- *   'type'    => 'text',
- *   'dynamic' => true
- * ]);
- * ```
- *
- * JS:
- * ```jsx
- * const { Field } = window.tangibleFields
- *
- * <Field
- *   type="text"
- *   name="text-with-dynamic-values"
- *   label="Text field"
- *   dynamic={true}
- * />
- * ```
- *
- * #### Register a category and value
- *
- * ```php
- * $fields->register_dynamic_value_category('post', [
- *   'label' => 'Post',
- * ]);
- *
- * $fields->register_dynamic_value([
- *   'category' => 'post',
- *   'name'     => 'post_title',
- *   'label'    => 'Post title',
- *   'type'     => 'text',
- *   'fields'   => [
- *     [
- *       'type'    => 'select',
- *       'name'    => 'format',
- *       'label'   => 'Format',
- *       'choices' => [
- *         'none'      => 'None',
- *         'lowercase' => 'Lowercase',
- *         'uppercase' => 'Uppercase'
- *       ]
- *     ]
- *   ],
- *   'callback' => function($settings, $config) {
- *     $format = $settings['format'] ?? 'none';
- *     $post_title = get_the_title($config['context']['current_post_id']);
- *     if( $format === 'lowercase' ) return strtolower($post_title);
- *     if( $format === 'uppercase' ) return strtoupper($post_title);
- *     return $post_title;
- *   },
- *   'permission_callback' => '__return_true'
- * ]);
- * ```
- *
- * #### Render a dynamic value
- *
- * Dynamic values are stored as `[[dynamic_value_name::setting=value]]`.
- * To render:
- *
- * ```php
- * $output = $fields->render_value(
- *   $fields->fetch_value('field_name')
- * );
- * ```
- *
- * Text supports two modes:
- * - `insert` (default) — mix regular text and multiple dynamic values
- * - `replace` — fully replace the field value with a single dynamic value
- */
 const meta = {
-  title: 'Dynamic Values',
+  title: 'Features/Dynamic Values',
   component: Field,
-  tags: ['autodocs'],
   decorators: [
     Story => (
       <div style={{ minWidth: '500px' }}>
@@ -195,6 +116,10 @@ const meta = {
   parameters: {
     layout: 'padded',
     docs: {
+      toc: {
+        headingSelector: 'h2, h3',
+        title: 'Contents'
+      },
       source: {
         transform: (code, story) => {
           let formatedCode = ''
@@ -314,7 +239,7 @@ export const DatePicker: Story = {
 }
 
 /**
- * Dynamic values restricted to a specific category
+ * The size of the field applies to the picker and to the pills
  */
 export const Sizes: Story = {
   name: 'Sizes (sm / md / lg)',
@@ -345,6 +270,9 @@ export const Sizes: Story = {
   ),
 }
 
+/**
+ * Dynamic values restricted to a specific category
+ */
 export const RestrictedCategories: Story = {
   args: {
     type: 'text',

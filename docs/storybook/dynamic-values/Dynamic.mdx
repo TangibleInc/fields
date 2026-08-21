@@ -1,0 +1,269 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+
+import * as DynamicStories from './Dynamic.stories'
+import CodeTabs from '../components/CodeTabs'
+import StoryTabs from '../components/StoryTabs'
+
+<Meta of={DynamicStories} />
+
+# Dynamic Values
+
+Dynamic values are placeholders stored in the field value, and resolved from PHP
+when the value is rendered.
+
+## Activate on a field
+
+To add support for dynamic values on a field, add `dynamic` to the field
+definition.
+
+<CodeTabs>
+
+```php
+$fields->render_field('text-with-dynamic-values', [
+  'type'    => 'text',
+  'label'   => 'Text field',
+  'value'   => $fields->fetch_value('text-with-dynamic-values'),
+  'dynamic' => true
+]);
+```
+
+```jsx
+const { Field } = window.tangibleFields
+
+<Field
+  type="text"
+  name="text-with-dynamic-values"
+  label="Text field"
+  dynamic={true}
+/>
+```
+
+</CodeTabs>
+
+<Canvas of={DynamicStories.TextInsert} />
+
+Instead of `true`, an array configures the picker:
+
+- `mode`: `insert` or `replace`
+- `types`: the value types offered, from `text`, `date`, `color` and `number`
+- `categories`: the categories offered, all of them if not defined
+
+## Modes
+
+- `insert`: mix regular text and several dynamic values in the same value
+- `replace`: replace the whole field value with a single dynamic value
+
+```php
+$fields->render_field('text-with-dynamic-values', [
+  // ...
+  'dynamic' => [
+    'mode' => 'replace'
+  ]
+]);
+```
+
+<Canvas of={DynamicStories.TextReplace} />
+
+## Field types
+
+| Field type | Modes | Value types |
+| --- | --- | --- |
+| `text` | `insert` (default), `replace` | text, date, color, number |
+| `number` | `replace` | number |
+| `color-picker` | `replace` | color |
+| `date-picker` | `replace` | date |
+
+<StoryTabs labels={['Text', 'Number', 'Color', 'Date']}>
+
+<Canvas of={DynamicStories.TextInsert} />
+
+<Canvas of={DynamicStories.Number} />
+
+<Canvas of={DynamicStories.Color} />
+
+<Canvas of={DynamicStories.DatePicker} />
+
+</StoryTabs>
+
+The `types` option restricts what a field offers, and `categories` restricts
+which categories are listed.
+
+<CodeTabs>
+
+```php
+$fields->render_field('text-with-dynamic-values', [
+  'type'    => 'text',
+  'label'   => 'Text field',
+  'dynamic' => [
+    'categories' => [ 'post' ]
+  ]
+]);
+```
+
+```jsx
+<Field
+  type="text"
+  name="text-with-dynamic-values"
+  label="Text field"
+  dynamic={{ categories: ['post'] }}
+/>
+```
+
+</CodeTabs>
+
+<Canvas of={DynamicStories.RestrictedCategories} />
+
+## Read-only and sizes
+
+A read-only field displays its dynamic values as pills, without the picker.
+
+<Canvas of={DynamicStories.TextInsertReadOnly} />
+
+<Canvas of={DynamicStories.TextReplaceReadOnly} />
+
+The `size` of the field applies to the picker and the pills.
+
+<Canvas of={DynamicStories.Sizes} />
+
+## Register a category
+
+Each category is a group of dynamic values.
+
+```php
+$fields->register_dynamic_value_category('post', [
+  'label' => 'Post',
+]);
+```
+
+## Register a value
+
+```php
+$fields->register_dynamic_value([
+  'category'    => 'post',
+  'name'        => 'post_id',
+  'label'       => 'Post ID',
+  'type'        => 'text',
+  'description' => 'Return the current post ID, if any',
+  'callback'    => function($settings, $config) {
+    return $config['context']['current_post_id'];
+  },
+  'permission_callback' => '__return_true'
+]);
+```
+
+- category (required): Slug of the associated category
+- name (required): Slug of the dynamic value
+- label: If not defined, name will be used
+- description: Used both in the documentation and in the setting form
+- type: The type of data returned by the callback, either `color`, `date`,
+  `number` or `text`
+- callback: Function used to render the dynamic value
+- permission_callback: Evaluates if the current user can store and parse the
+  value
+- fields: Settings of the dynamic value
+
+### Settings
+
+Settings are defined with an array of fields, using the same syntax as regular
+fields (any field type can be used, and visibility conditions are supported).
+The user sets them when inserting the value, and they are passed to the callback.
+
+```php
+$fields->register_dynamic_value([
+  'category' => 'post',
+  'name'     => 'post_title',
+  'label'    => 'Post title',
+  'type'     => 'text',
+  'fields'   => [
+    [
+      'type'    => 'select',
+      'name'    => 'format',
+      'label'   => 'Format',
+      'choices' => [
+        'none'      => 'None',
+        'lowercase' => 'Lowercase',
+        'uppercase' => 'Uppercase'
+      ]
+    ]
+  ],
+  'callback' => function($settings, $config) {
+
+    $format = $settings['format'] ?? 'none';
+    $post_title = get_the_title(
+      $config['context']['current_post_id']
+    );
+
+    if( $format === 'lowercase' ) return strtolower($post_title);
+    if( $format === 'uppercase' ) return strtoupper($post_title);
+
+    return $post_title;
+  },
+  'permission_callback' => '__return_true'
+]);
+```
+
+### Permissions
+
+Two actions are evaluated, and the callback has to return `true` for the action
+to be allowed:
+
+- permission_callback_store: If the current user can save the dynamic value
+- permission_callback_parse: If the current user can parse the dynamic value
+
+```php
+$fields->register_dynamic_value([
+  // ...
+  'permission_callback_store' => function() {
+    return in_array('administrator', wp_get_current_user()->roles ?? []);
+  },
+  'permission_callback_parse' => '__return_true'
+]);
+```
+
+When both actions share the same callback, `permission_callback` can be used
+instead:
+
+```php
+$fields->register_dynamic_value([
+  // ...
+  'permission_callback' => function() {
+    return is_user_logged_in();
+  }
+]);
+```
+
+## Render a value
+
+Dynamic values are stored as
+`[[dynamic_value_name::setting=value::setting2=value2]]`, and rendered with
+`render_value`:
+
+```php
+$value = 'User ID: [[user_id]]';
+
+// Outputs something like "User ID: 1"
+$output = $fields->render_value($value);
+```
+
+For registered fields, it is applied after fetching the value:
+
+```php
+$output = $fields->render_value(
+  $fields->fetch_value('field_name')
+);
+```
+
+The second parameter is a config array, passed to the callback of the dynamic
+value:
+
+```php
+// Assuming the current user id is 1, returns "User ID: 1"
+$fields->render_value('User ID: [[user_id]]');
+
+// While this returns "User ID: 2"
+$fields->render_value('User ID: [[user_id]]', [
+  'context' => [
+    'current_user_id' => 2
+  ]
+]);
+```
