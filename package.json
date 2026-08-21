@@ -105,6 +105,8 @@
     "jest-environment-jsdom": "^29.7.0",
     "prop-types": "^15.8.1",
     "react-test-renderer": "^19.1.0",
+    "refractor": "^5.0.0",
+    "remark-gfm": "^4.0.1",
     "rollup-plugin-visualizer": "^5.14.0",
     "sass": "1.86.3",
     "storybook": "^10.5.10",

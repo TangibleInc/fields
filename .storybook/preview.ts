@@ -1,5 +1,13 @@
 import type { Preview } from '@storybook/react-vite'
 
+import { SyntaxHighlighter } from 'storybook/internal/components'
+import php from 'refractor/php'
+
+/**
+ * The bundled highlighter has no PHP language
+ */
+SyntaxHighlighter.registerLanguage('php', php)
+
 import './preview.css'
 import '@tangible/ui/styles/unlayered'
 import '../assets/src/contexts/default/index.scss'

@@ -1,0 +1,264 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+
+import * as VisibilityStories from './Visibility.stories'
+import CodeTabs from '../components/CodeTabs'
+import StoryTabs from '../components/StoryTabs'
+
+<Meta of={VisibilityStories} />
+
+# Field Visibility
+
+Conditions are evaluated against the value of the other fields, and show or
+hide a field when they match.
+
+## Syntax
+
+<CodeTabs>
+
+```php
+$fields->render_field('visibility-text', [
+  'type'        => 'text',
+  'label'       => 'Text input',
+  'description' => 'Type "show" to display the field below',
+]);
+
+$fields->render_field('visibility-target', [
+  'type'      => 'text',
+  'label'     => 'Visible when the text input is "show"',
+  'condition' => [
+    'action'    => 'show',
+    'condition' => [
+      'visibility-text' => [ '_eq' => 'show' ]
+    ]
+  ]
+]);
+```
+
+```jsx
+const { Field } = window.tangibleFields
+
+<Field
+  type="text"
+  name="visibility-text"
+  label="Text input"
+  description='Type "show" to display the field below'
+/>
+
+<Field
+  type="text"
+  name="visibility-target"
+  label='Visible when the text input is "show"'
+  condition={{
+    action: 'show',
+    condition: {
+      'visibility-text': { _eq: 'show' }
+    }
+  }}
+/>
+```
+
+</CodeTabs>
+
+- `action`: `show` or `hide`, whether the field is displayed or hidden when the
+  conditions match. If not defined, `show` is used
+- `condition`: the conditions to evaluate, each key being the name of the field
+  to compare
+
+<Canvas of={VisibilityStories.Show} />
+
+With the `hide` action, the field is removed when the condition matches.
+
+<Canvas of={VisibilityStories.Hide} />
+
+## Relations
+
+Several conditions can be grouped with `_and` or `_or`. When no relation is
+defined, `_and` is used.
+
+The conditions of a flat object are keyed by value, so when two fields hold the
+same value only the last one is evaluated. To compare several fields, list them
+under `_and`.
+
+<CodeTabs>
+
+```php
+$fields->render_field('relation-or', [
+  'type'      => 'text',
+  'label'     => 'Visible when first is "a" or second is "b"',
+  'condition' => [
+    'action'    => 'show',
+    'condition' => [
+      '_or' => [
+        [ 'relation-first' => [ '_eq' => 'a' ] ],
+        [ 'relation-second' => [ '_eq' => 'b' ] ]
+      ]
+    ]
+  ]
+]);
+```
+
+```jsx
+<Field
+  type="text"
+  name="relation-or"
+  label='Visible when first is "a" or second is "b"'
+  condition={{
+    condition: {
+      _or: [
+        { 'relation-first': { _eq: 'a' } },
+        { 'relation-second': { _eq: 'b' } }
+      ]
+    }
+  }}
+/>
+```
+
+</CodeTabs>
+
+<Canvas of={VisibilityStories.Relations} />
+
+## Operators
+
+| Operator | Description |
+| --- | --- |
+| `_eq` | Is equal |
+| `_neq` | Isn't equal |
+| `_lt` | Less than |
+| `_gt` | Greater than |
+| `_lte` | Less than or equal |
+| `_gte` | Greater than or equal |
+| `_in` | In array |
+| `_nin` | Not in array |
+| `_contains` | Contains |
+| `_ncontains` | Doesn't contain |
+| `_re` | Matches a regular expression |
+
+<StoryTabs labels={['Equal', 'Contains', 'In array', 'Less than', 'Greater than', 'Regex']}>
+
+<Canvas of={VisibilityStories.Equal} />
+
+<Canvas of={VisibilityStories.Contains} />
+
+<Canvas of={VisibilityStories.InArray} />
+
+<Canvas of={VisibilityStories.LessThan} />
+
+<Canvas of={VisibilityStories.GreaterThan} />
+
+<Canvas of={VisibilityStories.Regex} />
+
+</StoryTabs>
+
+## Elements and sub-fields
+
+Conditions work the same way on fields, on elements, and on the sub-fields of a
+repeater or a field group. A sub-field condition is evaluated against the values
+of its own row first, then against the other fields.
+
+In JS, the sub-fields of a repeater are defined with `fields` instead of
+`sub_fields`.
+
+<CodeTabs>
+
+```php
+$fields->render_field('repeater-visibility', [
+  'type'       => 'repeater',
+  'layout'     => 'block',
+  'sub_fields' => [
+    [
+      'name'  => 'subfield-number',
+      'type'  => 'number',
+      'label' => 'Number',
+    ],
+    [
+      'name'      => 'subfield-text',
+      'type'      => 'text',
+      'label'     => 'Visible when the number is 10 or more',
+      'condition' => [
+        'condition' => [
+          'subfield-number' => [ '_gte' => 10 ]
+        ]
+      ]
+    ]
+  ]
+]);
+```
+
+```jsx
+<Field
+  type="repeater"
+  name="repeater-visibility"
+  layout="block"
+  fields={[
+    {
+      name: 'subfield-number',
+      type: 'number',
+      label: 'Number'
+    },
+    {
+      name: 'subfield-text',
+      type: 'text',
+      label: 'Visible when the number is 10 or more',
+      condition: {
+        condition: {
+          'subfield-number': { _gte: 10 }
+        }
+      }
+    }
+  ]}
+/>
+```
+
+</CodeTabs>
+
+<Canvas of={VisibilityStories.Repeater} />
+
+## Partial values
+
+For a field storing an object, `field-name.attribute` compares a single
+attribute of the value.
+
+<CodeTabs>
+
+```php
+$fields->render_field('partial-target', [
+  'type'      => 'text',
+  'label'     => 'Visible when the dimensions unit is %',
+  'condition' => [
+    'condition' => [
+      'partial-dimensions.unit' => [ '_eq' => '%' ]
+    ]
+  ]
+]);
+```
+
+```jsx
+<Field
+  type="text"
+  name="partial-target"
+  label="Visible when the dimensions unit is %"
+  condition={{
+    condition: {
+      'partial-dimensions.unit': { _eq: '%' }
+    }
+  }}
+/>
+```
+
+</CodeTabs>
+
+<Canvas of={VisibilityStories.PartialValue} />
+
+## Re-evaluate manually
+
+Setting a value from the store re-evaluates the conditions watching that field:
+
+```js
+window.tangibleFields.store.setValue('visibility-text', 'show')
+```
+
+To re-evaluate every condition:
+
+```js
+window.tangibleFields.trigger('evaluateVisibility')
+```
