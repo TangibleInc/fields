@@ -17,6 +17,7 @@ import Gallery from './gallery/Gallery'
 import InputHidden from './hidden/InputHidden'
 import List from './list/List'
 import Number from './number/Number'
+import Password from './password/Password'
 import Radio from './radio/'
 import Select from './select/'
 import SimpleDimension from './simple-dimension/SimpleDimension'
@@ -46,6 +47,7 @@ export {
   InputHidden,
   List,
   Number,
+  Password,
   Radio,
   Select,
   SimpleDimension,

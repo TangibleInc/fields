@@ -71,6 +71,31 @@ $fields->format_args = function(
       $args = $fields->format_value($args, 'read_only', 'readOnly');
       break;
 
+    /**
+     * Stored secrets (API keys, tokens). The value never reaches the browser —
+     * the server sends `value_is_set` (a boolean) and nothing else, so an
+     * untouched field submits empty and the save handler reads empty as "keep
+     * the stored value".
+     *
+     * A `value` passed here is stripped rather than honoured: the field type
+     * exists to stop secrets being echoed into the page, and silently rendering
+     * one would reintroduce that leak with nicer styling.
+     */
+    case 'password':
+      if( isset($args['value']) ) {
+        unset($args['value']);
+        trigger_error(
+          "Field {$name} is a password field and was given a value, which has been dropped. "
+          . 'Stored secrets must not reach the browser — pass '
+          . '"value_is_set" => (bool) $stored instead.',
+          E_USER_WARNING
+        );
+      }
+      $args = $fields->format_value($args, 'value_is_set', 'isSet');
+      $args = $fields->format_value($args, 'locked_message', 'lockedMessage');
+      $args = $fields->format_value($args, 'read_only', 'readOnly');
+      break;
+
     case 'simple_dimension':
       $args['type'] = 'simple-dimension';
       break;
