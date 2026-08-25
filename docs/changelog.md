@@ -1,3 +1,7 @@
+# Unreleased
+
+- **New field type: `password`** — stored secrets (API keys, tokens) that never reach the browser. The server sends `value_is_set` (a boolean) instead of the value, an untouched field submits empty so the save handler can read empty as "keep the stored value", and `locked` marks a value defined outside the screen (a `wp-config.php` constant) as read-only with an explanation. A `value` passed to the field is dropped with a warning, and `render_field()` does not call the fetch callback for it at all — the field type exists to stop secrets being echoed into the page, so honouring one would defeat it. Renders TUI's `SecretInput`; every string it renders or exposes to assistive technology is overridable via `labels` for i18n.
+
 # 20250107
 
 - Dependent attributes

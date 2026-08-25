@@ -131,6 +131,11 @@ class FormatField_TestCase extends WP_UnitTestCase {
         'max' => 'maxValue',
         'read_only' => 'readOnly'
       ]],
+      'password' => ['password', [
+        'value_is_set' => 'isSet',
+        'locked_message' => 'lockedMessage',
+        'read_only' => 'readOnly'
+      ]],
       'combo_box' => ['combo_box', [
         'is_async' => 'isAsync',
         'async_args' => 'asyncArgs',
@@ -503,6 +508,51 @@ class FormatField_TestCase extends WP_UnitTestCase {
 
     $this->assertNotEmpty($args['fields']);
     $this->assertEquals('action', $args['fields'][0]['buttonType']);
+  }
+
+  /**
+   * A stored secret must never reach the browser. format_args() strips a value
+   * passed to a password field rather than honouring it — the field type exists
+   * to prevent exactly that leak.
+   */
+  public function test_format_args_password_strips_value() {
+
+    // The strip warns, and PHPUnit is configured to fail on warnings — take the
+    // handler for the duration so the warning can be asserted instead.
+    $warning = '';
+    set_error_handler(function($errno, $message) use (&$warning) {
+      $warning = $message;
+      return true;
+    }, E_USER_WARNING);
+
+    $args = tangible_fields()->format_args('api_key', [
+      'type'         => 'password',
+      'value'        => 'super-secret-key',
+      'value_is_set' => true
+    ]);
+
+    restore_error_handler();
+
+    $this->assertStringContainsString('api_key', $warning, 'no warning about the dropped value');
+    $this->assertArrayNotHasKey('value', $args, 'password field kept a value it was given');
+    $this->assertTrue($args['isSet'], 'value_is_set should have been rewritten as isSet');
+    $this->assertStringNotContainsString(
+      'super-secret-key',
+      json_encode($args),
+      'the secret survived somewhere in the formatted args'
+    );
+  }
+
+  /**
+   * Other field types are untouched by the strip above.
+   */
+  public function test_format_args_text_keeps_value() {
+    $args = tangible_fields()->format_args('greeting', [
+      'type'  => 'text',
+      'value' => 'hello'
+    ]);
+
+    $this->assertEquals('hello', $args['value']);
   }
 
   public function test_format_args_dependent() {
