@@ -205,6 +205,15 @@ $documentation->register_section('fields', [
         'number_max' => []
       ]
     ],
+    'password' => [
+      'title' => 'Password',
+      'path'  => 'fields/password',
+      'fields'=> [
+        'password'        => [],
+        'password-locked' => [],
+        'password-labels' => [],
+      ]
+    ],
     'radio' => [
       'title' => 'Radio',
       'path'  => 'fields/radio',
