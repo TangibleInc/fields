@@ -21,6 +21,10 @@
   padding: 1em;
 }
 
+// `padding: 0`, not `display: none`: WebKit evaluates `:has(> :empty)` for a freshly inserted
+// subtree before its children exist and never re-evaluates, so `display: none` here left every
+// field of a newly mounted repeater item invisible in Safari (see the repeater-advanced layout's
+// note for the full story). An empty wrapper with no padding occupies no space anyway.
 .tf-repeater-block-item-field:has(> div[data-overlay-container="true"]:empty) {
-  display: none;
+  padding: 0;
 }
