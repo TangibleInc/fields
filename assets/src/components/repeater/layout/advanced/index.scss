@@ -151,8 +151,21 @@ $advanced-item-index-height: 40px;
   }
 }
 
+// Collapse the footprint of a field wrapper whose field rendered nothing (e.g. hidden by a
+// visibility condition): the wrapper's only contribution is its padding, so zeroing it makes
+// the empty wrapper occupy no space.
+//
+// Deliberately `padding: 0`, NOT `display: none`. WebKit/Safari evaluates `:has(> :empty)`
+// for a freshly inserted subtree BEFORE the subtree's children exist, so on insertion this
+// selector matches EVERY field wrapper — and WebKit then fails to re-evaluate it once the
+// children are attached (the stale used style persists even though getComputedStyle reports
+// the corrected value; any later stylesheet mutation heals it). With `display: none` that
+// bug left every field in a newly opened repeater-advanced row invisible — rows expanded to
+// an empty 0-height strip for many seconds (until some global style invalidation happened
+// to occur). With `padding: 0` the same stale match only costs visible fields their padding
+// momentarily, which self-corrects on the next style recalculation.
 .tf-repeater-advanced-item-field:has(> div[data-overlay-container="true"]:empty) {
-  display: none;
+  padding: 0;
 }
 
 .tf-repeater-advanced-item-field:has(input.tf-hidden[type="hidden"]) {
