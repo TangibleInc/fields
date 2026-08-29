@@ -1,13 +1,14 @@
 import { useCallback, useState } from "react";
 import { useEnhancedChoices } from "./useEnhancedChoices";
 import { TextInput, IconButton, Icon, Button, Chip } from "@tangible/ui";
+import { renderItemLayoutSlots } from "./ItemLayoutRegistry";
 
 const SingleChoices = (props) => {
 
   const {
     // state
     inputValue,
-    selectedKey,
+    // selectedKey,
     pendingKey,
     isOpen,
     setIsOpen,
@@ -18,7 +19,7 @@ const SingleChoices = (props) => {
     filteredItems,
     hiddenValue,
     isConfirmed,
-    isNotSelected,
+    // isNotSelected,
     hasPending,
 
     // helpers
@@ -43,6 +44,7 @@ const SingleChoices = (props) => {
     inputRef,
     listBoxRef,
     popoverRef,
+    fieldRef,
 
     // label
     ariaLabel,
@@ -73,13 +75,10 @@ const SingleChoices = (props) => {
     setCustomDraft('');
   }, [customDraft, handleConfirmCustom]);
 
-  // handleConfirmCustom now adds the value as a real item to the list (via
-  // extraItems in the hook), so reopening the dropdown afterward will show
-  // it as a normal checked radio option — not just a raw string.
   const showConfirmedUI = isConfirmed && !isCustomMode;
 
   return (
-    <div style={{ display: 'inline-flex', flexDirection: 'column', width: '100%' }}>
+    <div ref={fieldRef} style={{ display: 'inline-flex', flexDirection: 'column', width: '100%' }}>
 
       {/* Header */}
       <div className="tf-enhanced-choice-header">
@@ -100,21 +99,18 @@ const SingleChoices = (props) => {
         </div>
 
         <div className="tf-enhanced-choice-status">
-          {hasPending && !isCustomMode && (
-            <Button 
-              label="Confirm Selected" 
-              variant="ghost" 
-              theme="primary" 
-              onClick={handleConfirm}
-              size="xs"
-            />
-          )}
-          {showConfirmedUI && (
-            <Chip size="xs" theme="primary" >Selected</Chip>
-          )}
-          {isNotSelected && !isCustomMode && (
-            <Chip size="xs" theme="secondary">Not Selected</Chip>
-          )}
+          <Button
+            label={
+              hasPending ? 'Confirm Selected'
+              : showConfirmedUI ? 'Selected'
+              : 'Not Selected'
+            }
+            variant={hasPending ? "ghost" : showConfirmedUI ? "solid" : "ghost"}
+            theme={hasPending ? "primary" : showConfirmedUI ? "primary" : "secondary"}
+            size="xs"
+            disabled={!hasPending}
+            onClick={handleConfirm}
+          />
         </div>
       </div>
 
@@ -135,7 +131,16 @@ const SingleChoices = (props) => {
               }}
               autoFocus
               prefix={<Icon name="lms/edit-externally" size="xxl" />}
-              suffix={<IconButton label="Clear selection" icon="system/close" onClick={handleCancelCustomMode} size="xs" />}
+              suffix={
+                <IconButton 
+                  label="Clear selection" 
+                  icon="system/close" 
+                  onClick={handleCancelCustomMode} 
+                  size="xs" 
+                  tabIndex={-1}
+                  onMouseDown={(e) => e.preventDefault()}
+                  />
+              }
             />
           </>
         ) : (
@@ -146,8 +151,22 @@ const SingleChoices = (props) => {
               ref={inputRef}
               prefix={showConfirmedUI ? <Icon name="system/check" size="xxl" /> : <Icon name="system/search" size="xxl" /> }
               suffix={showConfirmedUI
-                ? <IconButton size="xs" label="Clear selection" icon="system/close" onClick={handleClear} />
-                : <IconButton size="xs" label="Toggle options" icon={isOpen ? 'system/chevron-up' : 'system/chevron-down'} onClick={() => setIsOpen(o => !o)} />
+                ? <IconButton 
+                    size="xs" 
+                    label="Clear selection" 
+                    icon="system/close" 
+                    onClick={handleClear} 
+                    tabIndex={-1}
+                    onMouseDown={(e) => e.preventDefault()}
+                  />
+                : <Icon 
+                    size="xs" 
+                    label="Toggle options" 
+                    name={isOpen ? 'system/chevron-up' : 'system/chevron-down'} 
+                    // onClick={() => setIsOpen(o => !o)}
+                    // tabIndex={-1}
+                    // onMouseDown={(e) => e.preventDefault()}
+                  />
               }
               placeholder={props.placeholder ?? 'Search...'}
               value={pendingLabel ?? inputValue}
@@ -181,6 +200,19 @@ const SingleChoices = (props) => {
                 const isFocused  = index === focusedIndex;
                 const isMarked   = isSelected || isPending;
 
+                const suffixContent = props.itemLayout?.suffix
+                  ? renderItemLayoutSlots(item, props.itemLayout.suffix)
+                  : (props.isViewable && item.viewLink && (
+                      <a href={item.viewLink} className="tf-enhanced-choice-view-link" target="_blank" rel="noreferrer"
+                        aria-label={`View ${item.label}`} onMouseDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
+                        <Icon name="lms/visible" size="md" aria-hidden="true" />
+                      </a>
+                    ));
+
+                const prefixContent = props.itemLayout?.prefix
+                  ? renderItemLayoutSlots(item, props.itemLayout.prefix)
+                  : null;
+
                 let classes = 'tf-enhanced-choice-option';
                 if (isMarked)  classes += ' is-selected';
                 if (isFocused) classes += ' is-focused';
@@ -198,34 +230,17 @@ const SingleChoices = (props) => {
                     }}
                   >
                     <div className="tf-enhanced-choice-option-content">
+                      {prefixContent}
 
-                      <div
-                        className="tf-enhanced-choice-selection-indicator"
-                        style={{ pointerEvents: 'none' }}
-                      >
-                        <span
-                          aria-hidden="true"
-                          className={`tf-enhanced-choice-radio${isMarked ? ' is-checked' : ''}`}
-                        />
+                      <div className="tf-enhanced-choice-selection-indicator" style={{ pointerEvents: 'none' }}>
+                        <span aria-hidden="true" className={`tf-enhanced-choice-radio${isMarked ? ' is-checked' : ''}`} />
                       </div>
 
                       <div className="tf-enhanced-choice-label">
                         {item.label}
                       </div>
 
-                      {props.isViewable && item.viewLink && (
-                        <a
-                          href={item.viewLink}
-                          className="tf-enhanced-choice-view-link"
-                          target="_blank"
-                          rel="noreferrer"
-                          aria-label={`View ${item.label}`}
-                          onMouseDown={(e) => e.stopPropagation()}
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                           <Icon name="lms/visible" size="md" aria-hidden="true" />
-                        </a>
-                      )}
+                      {suffixContent}
                     </div>
                   </li>
                 );
@@ -247,7 +262,6 @@ const SingleChoices = (props) => {
                   </div>
                   <Button 
                     label="Custom Value" 
-                    variant="primary" 
                     size="sm"
                     onClick={handleCustomModeToggle} 
                   />

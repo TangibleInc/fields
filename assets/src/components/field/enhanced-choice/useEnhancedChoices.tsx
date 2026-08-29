@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState, useEffect } from "react";
+import { ItemLayoutConfig } from "./ItemLayoutRegistry";
 
 export interface ChoicesItem {
   value:        string;
@@ -6,13 +7,14 @@ export interface ChoicesItem {
   description?: string;
   category?:    string;
   viewLink?:    string;
+  badge?:       string;
+  [key: string]: unknown;
 }
 
 // Raw PHP choices formats:
 //   flat:    { red: 'Red', blue: 'Blue' }
 //   rich:    { red: { label: 'Red', viewLink: '/colors/red' } }
 //   grouped: [ { label: 'Warm Colors', items: { red: 'Red', orange: 'Orange' } } ]
-
 type RawFlatItem = string | { label: string; viewLink?: string; category?: string };
 type RawFlatChoices    = Record<string, RawFlatItem>;
 type RawGroupedChoices = { label: string; items: RawFlatChoices }[];
@@ -26,8 +28,8 @@ export interface GroupedChoiceItem {
 const normalizeFlatChoices = (choices: RawFlatChoices): ChoicesItem[] =>
   Object.entries(choices).map(([value, item]) => {
     if (typeof item === 'string') return { value, label: item };
-    return { value, label: item.label, viewLink: item.viewLink, category: item.category };
-  });
+    return { value, ...item };
+});
 
 const normalizeChoices = (choices: RawChoices): ChoicesItem[] | GroupedChoiceItem[] => {
   if (Array.isArray(choices)) {
@@ -49,13 +51,14 @@ const flattenChoices = (choices: RawChoices): ChoicesItem[] => {
 };
 
 interface BaseProps {
-  items?:       ChoicesItem[];
-  choices?:     RawChoices;   // flat, rich, or grouped PHP format
-  label?:       string;
-  name?:        string;
-  description?: string;
-  placeholder?: string;
-  isViewable?:  boolean;
+  items?:        ChoicesItem[];
+  choices?:      RawChoices;
+  label?:        string;
+  name?:         string;
+  description?:  string;
+  placeholder?:  string;
+  isViewable?:   boolean;
+  itemLayout?:   ItemLayoutConfig   // new
 }
 
 interface SingleProps extends BaseProps {
@@ -98,12 +101,10 @@ const parseInitial = (props: UseEnhancedChoicesProps) => {
 };
 
 export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
-  // const { contains } = useFilter({ sensitivity: 'base' });
-
   const inputRef   = useRef<HTMLInputElement>(null);
-  // const buttonRef  = useRef<HTMLButtonElement>(null);
   const listBoxRef = useRef<HTMLUListElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
+  const fieldRef = useRef<HTMLDivElement>(null);
 
   const initial = useMemo(() => parseInitial(props), []);
 
@@ -116,6 +117,26 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
 
   const isSingle  = props.mode === 'single';
   const ariaLabel = props.label ?? props.name ?? 'Select';
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleOutsideClick = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (!fieldRef.current?.contains(target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || focusedIndex < 0) return;
+    const el = document.getElementById(`${ariaLabel}-option-${focusedIndex}`);
+    el?.scrollIntoView({ block: 'nearest' });
+  }, [isOpen, focusedIndex, ariaLabel]);
 
   const baseItems = useMemo<ChoicesItem[]>(() => {
     if (props.choices) return flattenChoices(props.choices);
@@ -238,11 +259,11 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       setIsOpen(true);
-      setFocusedIndex(i => Math.min(i + 1, filteredItems.length - 1));
+      setFocusedIndex(i => (i + 1) > filteredItems.length - 1 ? 0 : i + 1);
     }
     if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setFocusedIndex(i => Math.max(i - 1, 0));
+      setFocusedIndex(i => (i - 1) < 0 ? filteredItems.length - 1 : i - 1);
     }
     if (e.key === 'Enter' && focusedIndex >= 0) {
       e.preventDefault();
@@ -354,6 +375,7 @@ export const useEnhancedChoices = (props: UseEnhancedChoicesProps) => {
     inputRef,
     listBoxRef,
     popoverRef,
+    fieldRef,
 
     // helpers
     ariaLabel,

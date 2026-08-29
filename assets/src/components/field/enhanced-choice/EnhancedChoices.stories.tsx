@@ -19,8 +19,12 @@ const meta = {
     placeholder: { control: 'text', description: 'Input placeholder text.' },
     multiple: { control: 'boolean', description: 'Enables multi-select mode.' },
     isGrouped: { control: 'boolean', description: 'Renders choices as grouped sections.' },
-    isViewable: { control: 'boolean', description: 'Shows a view-link icon per option.' },
+    isViewable: { control: 'boolean', description: 'Shows a view-link icon per option. Ignored when itemLayout is provided.' },
     isCustomModeEnabled: { control: 'boolean', description: 'Allows entering a custom value not in the choices list.' },
+    itemLayout: {
+      control: 'object',
+      description: 'Declarative, PHP-compatible slot config for per-option content (prefix/suffix). Each entry picks a registered component ("viewLink" | "icon" | "badge") by name and configures its props — statically via `props`, or per-item via `propsFromItem` (reads a field off each choice). Overrides isViewable when present.',
+    },
     name: { control: 'text', description: 'Form field name, used for the hidden input.' },
     value: { control: false, description: 'Controlled value (string for single, string[] for multiple).' },
     onChange: { control: false, action: 'changed', description: 'Fires when the selection changes.' },
@@ -86,6 +90,13 @@ const choicesViewAndGroup = [
     },
   },
 ];
+
+// Data for the new itemLayout stories
+const choicesBadged = {
+  red:   { label: 'Red',   badge: 'Popular' },
+  blue:  { label: 'Blue', badge: 'Oldest'},
+  green: { label: 'Green', badge: 'New' },
+};
 
 export const Single: Story = {
   args: {
@@ -271,6 +282,205 @@ echo $fields->render_field('enhanced_choice_multiple_group_and_view', [
   'placeholder' => 'Search colors...',
   'isViewable'  => true, // Optional, defaults to false
   'isGrouped'   => true, // Optional, defaults to false
+]);
+\`\`\`
+        `,
+      },
+    },
+  },
+};
+
+export const ItemLayoutStaticIcon: Story = {
+  args: {
+    label: 'Favorite color',
+    placeholder: 'Search colors...',
+    choices: sampleChoices,
+    multiple: false,
+    itemLayout: {
+      suffix: [
+        { component: 'icon', props: { name: 'lms/edit', size: 'md' } },
+      ],
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Every option gets the same suffix icon, configured once — no per-item data needed.
+
+**PHP:**
+\`\`\`php
+echo $fields->render_field('enhanced_choice_layout_static', [
+  'type'        => 'enhanced-choice',
+  'label'       => 'Pick a color',
+  'choices'     => $choices,
+  'placeholder' => 'Search colors...',
+  'itemLayout'  => [
+    'suffix' => [
+      [ 'component' => 'icon', 'props' => [ 'name' => 'lms/edit', 'size' => 'md' ] ],
+    ],
+  ],
+]);
+\`\`\`
+        `,
+      },
+    },
+  },
+};
+
+export const ItemLayoutViewLink: Story = {
+  args: {
+    label: 'Favorite colors',
+    placeholder: 'Search colors...',
+    choices: choicesViewable,
+    multiple: false,
+    itemLayout: {
+      suffix: [
+        {
+          component: 'viewLink',
+          propsFromItem: { href: 'viewLink' },
+        },
+      ],
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+Same visual result as \`isViewable: true\`, expressed through itemLayout instead —
+each row's link target is read from that item's own \`viewLink\` field.
+
+**PHP:**
+\`\`\`php
+$choices_viewable = [
+    'red'  => [ 'label' => 'Red',  'viewLink' => '/colors/red'  ],
+    'blue' => [ 'label' => 'Blue', 'viewLink' => '/colors/blue' ],
+];
+
+echo $fields->render_field('enhanced_choice_layout_viewlink', [
+  'type'        => 'enhanced-choice',
+  'label'       => 'Pick a color',
+  'choices'     => $choices_viewable,
+  'placeholder' => 'Search colors...',
+  'itemLayout'  => [
+    'suffix' => [
+      [
+        'component'     => 'viewLink',
+        'propsFromItem' => [ 'href' => 'viewLink' ],
+      ],
+    ],
+  ],
+]);
+\`\`\`
+        `,
+      },
+    },
+  },
+};
+
+/**
+ * Mixed itemLayout — static props (theme/size) combined with a per-item
+ * value (the badge text itself) via propsFromItem.
+ */
+export const ItemLayoutBadge: Story = {
+  args: {
+    label: 'Favorite colors',
+    placeholder: 'Search colors...',
+    choices: choicesBadged,
+    multiple: false,
+    itemLayout: {
+      suffix: [
+        {
+          component: 'badge',
+          props: { theme: 'secondary', size: 'xs' },
+          propsFromItem: { children: 'badge' },
+        },
+      ],
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+\`theme\`/\`size\` are static (same for every row); \`children\` (the badge text)
+comes from each item's own \`badge\` field. Items without a \`badge\` render no chip.
+
+**PHP:**
+\`\`\`php
+$choices_badged = [
+    'red'   => [ 'label' => 'Red',   'badge' => 'Popular' ],
+    'blue'  => [ 'label' => 'Blue' ],
+    'green' => [ 'label' => 'Green', 'badge' => 'New' ],
+];
+
+echo $fields->render_field('enhanced_choice_layout_badge', [
+  'type'        => 'enhanced-choice',
+  'label'       => 'Pick a color',
+  'choices'     => $choices_badged,
+  'placeholder' => 'Search colors...',
+  'itemLayout'  => [
+    'suffix' => [
+      [
+        'component'     => 'badge',
+        'props'         => [ 'theme' => 'secondary', 'size' => 'xs' ],
+        'propsFromItem' => [ 'children' => 'badge' ],
+      ],
+    ],
+  ],
+]);
+\`\`\`
+        `,
+      },
+    },
+  },
+};
+
+export const ItemLayoutBadgeMultiple: Story = {
+  args: {
+    label: 'Favorite colors',
+    placeholder: 'Search colors...',
+    choices: choicesBadged,
+    multiple: true,
+    itemLayout: {
+      suffix: [
+        {
+          component: 'badge',
+          props: { theme: 'secondary', size: 'xs' },
+          propsFromItem: { children: 'badge' },
+        },
+      ],
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: `
+\`theme\`/\`size\` are static (same for every row); \`children\` (the badge text)
+comes from each item's own \`badge\` field. Items without a \`badge\` render no chip.
+
+**PHP:**
+\`\`\`php
+$choices_badged = [
+    'red'   => [ 'label' => 'Red',   'badge' => 'Popular' ],
+    'blue'  => [ 'label' => 'Blue' ],
+    'green' => [ 'label' => 'Green', 'badge' => 'New' ],
+];
+
+echo $fields->render_field('enhanced_choice_layout_badge_multiple', [
+  'type'        => 'enhanced-choice',
+  'label'       => 'Pick a color',
+  'choices'     => $choices_badged,
+  'placeholder' => 'Search colors...',
+  'multiple'    => true,
+  'itemLayout'  => [
+    'suffix' => [
+      [
+        'component'     => 'badge',
+        'props'         => [ 'theme' => 'secondary', 'size' => 'xs' ],
+        'propsFromItem' => [ 'children' => 'badge' ],
+      ],
+    ],
+  ],
 ]);
 \`\`\`
         `,
