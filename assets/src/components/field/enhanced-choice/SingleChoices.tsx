@@ -163,9 +163,6 @@ const SingleChoices = (props) => {
                     size="xs" 
                     label="Toggle options" 
                     name={isOpen ? 'system/chevron-up' : 'system/chevron-down'} 
-                    // onClick={() => setIsOpen(o => !o)}
-                    // tabIndex={-1}
-                    // onMouseDown={(e) => e.preventDefault()}
                   />
               }
               placeholder={props.placeholder ?? 'Search...'}
@@ -205,7 +202,7 @@ const SingleChoices = (props) => {
                   : (props.isViewable && item.viewLink && (
                       <a href={item.viewLink} className="tf-enhanced-choice-view-link" target="_blank" rel="noreferrer"
                         aria-label={`View ${item.label}`} onMouseDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
-                        <Icon name="lms/visible" size="md" aria-hidden="true" />
+                        <Icon name="system/view" size="md" aria-hidden="true" />
                       </a>
                     ));
 

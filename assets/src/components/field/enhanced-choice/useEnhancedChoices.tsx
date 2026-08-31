@@ -58,7 +58,7 @@ interface BaseProps {
   description?:  string;
   placeholder?:  string;
   isViewable?:   boolean;
-  itemLayout?:   ItemLayoutConfig   // new
+  itemLayout?:   ItemLayoutConfig
 }
 
 interface SingleProps extends BaseProps {

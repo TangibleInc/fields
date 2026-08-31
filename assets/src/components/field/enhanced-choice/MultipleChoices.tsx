@@ -223,7 +223,7 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
       >
-        <Icon name="lms/visible" size="md" aria-hidden="true" />
+        <Icon name="lms/view" size="md" aria-hidden="true" />
       </a>
     );
   };
@@ -374,13 +374,9 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
                 onMouseDown={(e) => e.preventDefault()}/>
               ) : (
                 <Icon
-                  // label="Toggle options"
                   name={isOpen ? 'system/chevron-up' : 'system/chevron-down'}
-                  // onClick={() => setIsOpen(o => !o)}
                   size="xs"
                   aria-hidden="true"
-                  // onMouseDown={(e) => e.preventDefault()}
-                  // tabIndex={-1}
                 />
               )
             }
@@ -406,8 +402,6 @@ const MultipleChoices = (props: MultipleChoicesProps) => {
                           variant="ghost"
                           size="xs"
                           onClick={() => handleReviewRemove(key)}
-                          // tabIndex={-1}
-                          // onMouseDown={(e) => e.preventDefault()}
                         />
 
                       </div>

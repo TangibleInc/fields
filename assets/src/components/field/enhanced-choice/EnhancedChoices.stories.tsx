@@ -505,3 +505,178 @@ export const Controlled: Story = {
     );
   },
 };
+
+export const ItemLayoutVSIsViewable: Story = {
+  render: function ItemLayoutVSIsViewable() {
+    return (
+      <div>
+        <EnhancedChoices
+            choices={choicesViewable}
+            multiple
+            isViewable={true}
+            itemLayout={{
+              suffix: [{ component: 'badge', props: { theme: 'primary', size: 'xs' }, propsFromItem: { children: 'label' } }],
+            }}
+        />
+      </div>
+    );
+  },
+};
+
+export const PrefixAndSuffix: Story = {
+  render: function PrefixAndSuffix() {
+    return (
+      <div>
+        <EnhancedChoices
+          choices={choicesBadged}
+          multiple
+          itemLayout={{
+            prefix: [{ component: 'icon', props: { name: 'lms/edit', size: 'sm' } }],
+            suffix: [{ component: 'badge', props: { theme: 'secondary', size: 'xs' }, propsFromItem: { children: 'badge' } }],
+          }}
+        />
+      </div>
+    );
+  },
+};
+
+const choicesPartialBadge = {
+  red:   { label: 'Red', badge: 'Popular' },
+  blue:  { label: 'Blue',badge: 'Popular' },   // no badge field at all
+};
+
+export const PropFromItem: Story = {
+  render: function PropFromItem() {
+    return (
+      <div>
+        <EnhancedChoices
+          choices={choicesPartialBadge}
+          multiple
+          itemLayout={{
+            suffix: [{ component: 'badge', propsFromItem: { children: 'badge' } }],
+          }}
+        />
+      </div>
+    );
+  },
+};
+
+const choicesMultipleSuffix = {
+  red:   { label: 'Red', badge: 'Popular', viewLink: 'https://example.com/red' },
+  blue:  { label: 'Blue',badge: 'Popular', viewLink: 'https://example.com/blue' },   // no badge field at all
+};
+
+export const MutipleSuffixItem: Story = {
+  render: function MutipleSuffixItem() {
+    return (
+      <div>
+        <EnhancedChoices
+          choices={choicesMultipleSuffix}
+          multiple
+          itemLayout={{
+            suffix: [
+              { component: 'badge', props: { theme: 'primary', size: 'xs' }, propsFromItem: { children: 'badge' } },
+              { component: 'viewLink', propsFromItem: { href: 'viewLink' } },
+              { component: 'viewLink', propsFromItem: { href: 'viewLink' } },
+              { component: 'viewLink', propsFromItem: { href: 'viewLink' } },
+            ],
+          }}
+        />
+      </div>
+    );
+  },
+};
+
+export const UnknownComponent: Story = {
+ render: function UnkownComponent() {
+  return (
+    <div>
+      <EnhancedChoices
+        choices={choicesMultipleSuffix}
+        multiple
+        itemLayout={{
+          suffix: [{ component: 'totallyNotReal', props: { name: 'x' } }],
+        }}
+      />
+    </div>
+  );
+ }
+}
+
+// const choicesViewGroup = {
+//   label: 'Warm Colors',
+//   items: {
+//     red:    'Red',
+//     orange: 'Orange',
+//     yellow: 'Yellow',
+//   },
+//   badge: 'Popular', 
+//   viewLink: 'https://example.com/red'
+// }
+
+const choicesViewGroup = [ 
+    {
+      items: {
+        orange: {
+          label: 'Orange',
+          viewLink: '/colors/orange'
+        },
+        red: {
+          label: 'Red',
+          viewLink: '/colors/red',
+          badge: 'Popular'
+        },
+        yellow: {
+          label: 'Yellow',
+          viewLink: '/colors/yellow',
+          badge: 'Popular'
+        }
+      },
+      label: 'Warm Colors'
+    },
+    {
+      items: {
+        blue: {
+          label: 'Blue',
+          viewLink: '/colors/blue',
+          badge: 'Popular'
+        },
+        green: {
+          label: 'Green',
+          viewLink: '/colors/green'
+        }
+      },
+      label: 'Cool Colors'
+    }
+  ]
+
+export const GroupedAndItemLayout: Story = {
+  render: function GroupedAndItemLayout() {
+    return (
+      <div>
+        <EnhancedChoices
+          choices={choicesViewGroup}
+          multiple
+          isGrouped
+          itemLayout={{
+            suffix: [{ component: 'viewLink', propsFromItem: { href: 'viewLink' } }, { component: 'badge', propsFromItem: { children: 'badge' } }],
+          }}
+        />
+      </div>
+    );
+  },
+};
+
+export const CustomModeAndItemLayout: Story = {
+  render: function CustomModeAndItemLayout() {
+    return (
+      <div>
+        <EnhancedChoices
+          choices={choicesBadged}
+          isCustomModeEnabled
+          itemLayout={{ suffix: [{ component: 'badge', propsFromItem: { children: 'badge' } }] }}
+        />
+      </div>
+    )
+  }
+}

@@ -17,7 +17,7 @@ function ViewLinkSlot({ href, label }: { href?: string; label?: string }) {
       onMouseDown={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
     >
-      <Icon name="lms/visible" size="md" aria-hidden="true" />
+      <Icon name="system/view" size="md" aria-hidden="true" />
     </a>
   );
 }
