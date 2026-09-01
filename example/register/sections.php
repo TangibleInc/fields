@@ -150,6 +150,18 @@ $documentation->register_section('fields', [
         'dimensions_not_linked' => [ 'json' => true ]
       ]
     ],
+    'enhanced_choice' => [
+      'title' => 'Enhanced choice',
+      'path'  => 'fields/enhanced-choice',
+      'fields'=> [
+        'enhanced_choice'             => [ 'json' => true ],
+        'enhanced_choice_visibility'  => [ 'json' => true ],
+        'enhanced_choice_multiple'    => [ 'json' => true ],
+        'enhanced_choice_multiple_group_items' => [ 'json' => true ],
+        'enhanced_choice_multiple_group_and_view' => [ 'json' => true ],
+        'enhanced_choice_custom'      => [ 'json' => true ],
+      ]
+    ],
     'field_group' => [
       'title' => 'Field group',
       'path'  => 'fields/field-group',

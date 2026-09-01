@@ -11,6 +11,7 @@ import Dimensions from './dimensions/Dimensions'
 import DynamicText from './dynamic-text/DynamicText'
 import Editor from './editor/'
 import FieldGroup from './field-group/FieldGroup'
+import EnhancedChoice from './enhanced-choice/'
 import File from './file/File'
 import Gradient from './gradient/Gradient'
 import Gallery from './gallery/Gallery'
@@ -39,6 +40,7 @@ export {
   Dimensions,
   DynamicText,
   Editor,
+  EnhancedChoice,
   FieldGroup,
   File,
   Gradient,
