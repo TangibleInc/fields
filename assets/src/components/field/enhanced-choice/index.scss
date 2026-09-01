@@ -156,6 +156,12 @@
   align-items: center;
   gap: var(--tui-spacing-xs);
   cursor: pointer;
+  padding: var(--tui-spacing-xs) var(--tui-spacing-sm);
+  border-radius: var(--tui-radius-sm);
+  
+  &.is-focused {
+    background-color: var(--tui-theme-primary-subtlest);
+  }
 }
 
 .tf-enhanced-choice-select-all-label {
@@ -163,19 +169,18 @@
   color: var(--tui-color-fg-muted);
 }
 
-// .tf-enhanced-choice-select-all {
-//   // background: #fafafa;
+.tf-enhanced-choice-select-all {
 
-//   .tf-enhanced-choice-label {
-//     font-size: 13px;
-//     color: #6b7280;
-//   }
+  .tf-enhanced-choice-label {
+    font-size: var(--tui-typography-size-xs);//13px;
+    color: var(--tui-color-fg-muted);//#6b7280;
+  }
 
-//   &.is-focused,
-//   &:hover {
-//     background: #f3f4f6;
-//   }
-// }
+  &.is-focused,
+  &:hover {
+    background: var(--tui-color-bg-muted);//#f3f4f6;
+  }
+}
 
 .tf-enhanced-choice-review {
   padding: var(--tui-spacing-xs) 0;

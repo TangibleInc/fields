@@ -8,6 +8,64 @@ const meta = {
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
+    docs: {
+      description: {
+        component: `
+## itemLayout — composable per-item slots
+
+\`itemLayout\` lets PHP configure what renders before (\`prefix\`) and after
+(\`suffix\`) each option's label, without hardcoding a fixed set of booleans
+like \`isViewable\`. Since PHP can only send data (not real JSX or functions),
+each entry picks a registered component **by name** and configures its props.
+
+If \`itemLayout\` isn't provided, the field falls back to legacy \`isViewable\`
+behavior — fully backward compatible with existing PHP field configs.
+
+**Shape:**
+\`\`\`ts
+type ItemLayoutEntry = {
+  component: string;                      // required
+  props?: Record<string, unknown>;        // static, same for every row
+  propsFromItem?: Record<string, string>; // per-row, reads from each item
+};
+
+type ItemLayoutConfig = {
+  prefix?: ItemLayoutEntry[];
+  suffix?: ItemLayoutEntry[];
+};
+\`\`\`
+
+**Registered components:**
+
+| component | Renders | Valid keys | Notes |
+|---|---|---|---|
+| \`icon\` | Icon | \`name\`, \`size\` | Decorative, always aria-hidden |
+| \`badge\` | Chip | \`children\`, \`theme\`, \`size\`, \`variant\` | \`children\` is the chip's text |
+| \`button\` | Button | \`label\`, \`variant\`, \`theme\`, \`size\`, \`href\`, \`target\` | Display/link only — no onClick |
+| \`viewLink\` | Anchor + Icon | \`href\`, \`label\` | Migration path from legacy isViewable |
+
+Any prop outside a component's allowed keys is silently dropped. Unknown
+\`component\` names log a dev warning and render nothing — never crashes.
+
+**\`props\` vs \`propsFromItem\`:** \`props\` is static (same every row).
+\`propsFromItem\` is \`{ targetProp: 'itemFieldName' }\` — reads \`item[fieldName]\`
+per row. Both can combine; \`propsFromItem\` wins on conflict.
+
+**Example per-item view link:**
+\`\`\`php
+'itemLayout' => [
+  'suffix' => [
+    [ 'component' => 'viewLink', 'propsFromItem' => [ 'href' => 'viewLink' ] ],
+  ],
+],
+\`\`\`
+
+See the \`ItemLayout*\` stories below for more worked examples, including
+mixed configs (prefix + suffix together, multiple entries per slot, grouped
+mode, custom value mode, and conflict/edge-case handling).
+        `,
+      },
+    },
   },
   argTypes: {
     choices: {
@@ -23,7 +81,7 @@ const meta = {
     isCustomModeEnabled: { control: 'boolean', description: 'Allows entering a custom value not in the choices list.' },
     itemLayout: {
       control: 'object',
-      description: 'Declarative, PHP-compatible slot config for per-option content (prefix/suffix). Each entry picks a registered component ("viewLink" | "icon" | "badge") by name and configures its props — statically via `props`, or per-item via `propsFromItem` (reads a field off each choice). Overrides isViewable when present.',
+      description: 'Declarative slot config for per-option content (prefix/suffix). See the component guide above for the full component/props reference.',
     },
     name: { control: 'text', description: 'Form field name, used for the hidden input.' },
     value: { control: false, description: 'Controlled value (string for single, string[] for multiple).' },
@@ -91,7 +149,7 @@ const choicesViewAndGroup = [
   },
 ];
 
-// Data for the new itemLayout stories
+// Data for the itemLayout stories
 const choicesBadged = {
   red:   { label: 'Red',   badge: 'Popular' },
   blue:  { label: 'Blue', badge: 'Oldest'},
@@ -542,7 +600,7 @@ export const PrefixAndSuffix: Story = {
 
 const choicesPartialBadge = {
   red:   { label: 'Red', badge: 'Popular' },
-  blue:  { label: 'Blue',badge: 'Popular' },   // no badge field at all
+  blue:  { label: 'Blue',badge: 'Popular' },
 };
 
 export const PropFromItem: Story = {
@@ -563,7 +621,7 @@ export const PropFromItem: Story = {
 
 const choicesMultipleSuffix = {
   red:   { label: 'Red', badge: 'Popular', viewLink: 'https://example.com/red' },
-  blue:  { label: 'Blue',badge: 'Popular', viewLink: 'https://example.com/blue' },   // no badge field at all
+  blue:  { label: 'Blue',badge: 'Popular', viewLink: 'https://example.com/blue' },
 };
 
 export const MutipleSuffixItem: Story = {
@@ -602,17 +660,6 @@ export const UnknownComponent: Story = {
   );
  }
 }
-
-// const choicesViewGroup = {
-//   label: 'Warm Colors',
-//   items: {
-//     red:    'Red',
-//     orange: 'Orange',
-//     yellow: 'Yellow',
-//   },
-//   badge: 'Popular', 
-//   viewLink: 'https://example.com/red'
-// }
 
 const choicesViewGroup = [ 
     {
