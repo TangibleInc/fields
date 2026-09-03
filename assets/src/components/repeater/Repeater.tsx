@@ -134,12 +134,12 @@ const Repeater = props => {
    * repeater is not sortable so they can fall back to the plain number.
    * Arrows mode: index badge between up/down, no drag grip (no drag library)
    */
-  const renderMoveHandle = (i: number) => (
+  const renderMoveHandle = (i: number, { index = true } = {}) => (
     sortable
       ? <MoveHandle
           mode="arrows"
           size="sm"
-          index={ i + 1 }
+          index={ index ? i + 1 : undefined }
           className="tf-repeater-move-handle"
           aria-label={ string('reorderItem', { index: i + 1 }) }
           labels={{
@@ -369,6 +369,7 @@ const Repeater = props => {
           title={ props.sectionTitle ?? false }
           useSwitch={ props.useSwitch }
           useBulk={ props.useBulk }
+          actionsPosition={ props.actionsPosition }
           afterRow={ props.afterRow }
           beforeRow={ props.beforeRow }
           name={ props.name ?? '' }

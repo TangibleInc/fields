@@ -93,6 +93,34 @@ describe('Repeater with a block layout', () => {
       expect(within(container).getByDisplayValue('B')).toBeTruthy()
     })
 
+    it('moves Clone and Remove into the header as icon buttons with actionsPosition=header', async () => {
+      const { user, rows, container } = setup({ actionsPosition: 'header' })
+      const header = rows()[0].querySelector('.tf-panel-header')
+
+      expect(rows()[0].querySelector('.tf-panel-footer')).toBeNull()
+      expect(within(header).queryByText('Edit')).toBeNull()
+      expect(within(header).queryByText('Close')).toBeNull()
+
+      const clone = within(header).getByText('Clone').closest('button')
+      const remove = within(header).getByText('Remove').closest('button')
+      expect(clone.querySelector('.tui-icon')).toBeTruthy()
+      expect(remove.querySelector('.tui-icon')).toBeTruthy()
+      expect(within(header).getByText('Clone').classList.contains('tui-visually-hidden')).toBe(true)
+
+      // header actions do not toggle the row
+      expect(rows()[0].getAttribute('data-state')).toBe('open')
+      await user.click(clone)
+      expect(rows().length).toBe(4)
+      expect(rows()[0].getAttribute('data-state')).toBe('open')
+
+      await user.click(remove)
+      await user.click(within(document.querySelector('.tf-confirm-dialog')).getByText('Remove'))
+      expect(rows().length).toBe(3)
+      // the removed row was the open one; nothing is open now
+      expect(container.querySelector('.tf-repeater-block-item[data-state="open"]')).toBeNull()
+      expect(within(container).queryByDisplayValue('A')).toBeNull()
+    })
+
     it('shows a move handle in the header when sortable', async () => {
       const { user, rows, container } = setup({ sortable: true })
       const header = rows()[0].querySelector('.tf-panel-header')

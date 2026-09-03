@@ -1,13 +1,15 @@
 import { Checkbox } from '../../../field'
 import BulkActions from '../../common/BulkActions'
+import { iconAction } from '../../common/actions'
 
 /**
+ * Rows as a real <table>: column labels in <thead>, one <tr> per item. Cells
+ * hold the fields with their labels visually hidden (the header carries them)
+ *
  * TODO: Implement useTable hook
  *
  * @see https://react-spectrum.adobe.com/react-aria/useTable.html
  */
-
-const bulkOptions = { 'deletion': 'Delete' }
 
 const Table = ({
   items,
@@ -18,60 +20,82 @@ const Table = ({
   maxLength,
   useBulk,
   renderAction,
-  renderFooterActions
-}) => (
-  <>
-    <div>
+  renderFooterActions,
+  renderMoveHandle,
+  sortable,
+  string
+}) => {
+
+  const repeatable = maxLength !== undefined
+
+  return (
+    <>
       { useBulk &&
         <BulkActions
-          actions={ bulkOptions }
+          actions={{ 'deletion': string('bulkDelete') }}
           dispatch={ dispatch }
+          string={ string }
         /> }
-      <table>
+      <table className="tf-repeater-table-grid">
         <thead>
           <tr>
-            { useBulk && <th></th> }
+            { sortable &&
+              <th className="tf-repeater-table-handle">
+                <span className="tui-visually-hidden">{ string('rowOrder') }</span>
+              </th> }
+            { useBulk &&
+              <th className="tf-repeater-table-select">
+                <span className="tui-visually-hidden">{ string('rowSelect') }</span>
+              </th> }
             { fields.map((field, h) => (
               <th key={ h }>{ field.label ?? '' }</th>
             )) }
-            { maxLength > 1 && <th align='end'></th>}
+            { repeatable &&
+              <th className="tf-repeater-row-actions">
+                <span className="tui-visually-hidden">{ string('rowActions') }</span>
+              </th> }
           </tr>
         </thead>
         <tbody className='tf-repeater-items tf-repeater-table-items'>
           { items && items.slice(0, maxLength).map((item, i) => (
-            <tr key={ item.key ?? i }>
+            <tr key={ item.key }>
+              { sortable &&
+                <td className="tf-repeater-table-handle">
+                  { renderMoveHandle(i, { index: false }) }
+                </td> }
               { useBulk &&
-                <td key={ `${item.key}-enable` }>
-                  <div onClick={ e => e.stopPropagation() }>
-                    <Checkbox
-                      value={ item._bulkCheckbox }
-                      onChange={ value => dispatch({
-                        type    : 'update',
-                        item    : i,
-                        control : '_bulkCheckbox',
-                        value   : value
-                      }) }
-                    />
-                  </div>
+                <td className="tf-repeater-table-select">
+                  <Checkbox
+                    label={ string('selectItem', { index: i + 1 }) }
+                    labelVisuallyHidden={ true }
+                    value={ item._bulkCheckbox }
+                    onChange={ value => dispatch({
+                      type    : 'update',
+                      item    : i,
+                      control : '_bulkCheckbox',
+                      value   : value
+                    }) }
+                  />
                 </td> }
               { rowFields.map((control, j) => (
                 <td key={ `${item.key}-${j}` }>
                   { renderItem(control, item, i) }
                 </td>
               )) }
-              <td className='tf-repeater-row-actions'>
-                <div>
-                  { renderAction( 'clone', i ) }
-                  { renderAction( 'delete', i ) }
-                </div>
-              </td>
+              { repeatable &&
+                <td className='tf-repeater-row-actions'>
+                  <div>
+                    { renderAction( 'clone', i, iconAction('system/copy', 'primary') ) }
+                    { renderAction( 'delete', i, { buttonProps: iconAction('system/minus', 'danger') } ) }
+                  </div>
+                </td> }
             </tr>
           )) }
         </tbody>
       </table>
-    </div>
-    { renderFooterActions() }
-  </>
-)
+      { renderFooterActions() }
+    </>
+  )
+}
 
 export default Table

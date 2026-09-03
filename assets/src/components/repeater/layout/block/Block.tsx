@@ -6,6 +6,7 @@ import { Checkbox, Switch } from '../../../field'
 import { renderTitle } from '../../common/helpers'
 import ToggleLink from '../../common/ToggleLink'
 import BulkActions from '../../common/BulkActions'
+import { iconAction } from '../../common/actions'
 
 const Block = ({
   items,
@@ -20,9 +21,17 @@ const Block = ({
   renderFooterActions,
   renderAction,
   renderMoveHandle,
+  actionsPosition = 'footer',
   parent,
   string
 }) => {
+
+  /**
+   * 'footer' (default): Clone / Edit-Close / Remove as buttons under the
+   * content. 'header': Clone and Remove as ghost icon buttons in the trigger
+   * row; the trigger itself covers open/close
+   */
+  const inlineActions = actionsPosition === 'header'
 
   /**
    * Open item tracked by key (assigned on hydration, see dispatcher.ts), so
@@ -81,6 +90,13 @@ const Block = ({
     </>
   )
 
+  const headerRight = i => (
+    <>
+      { renderAction( 'clone', i, iconAction('system/copy', 'primary', 'ghost') ) }
+      { renderAction( 'delete', i, { buttonProps: iconAction('system/trash', 'danger', 'ghost') } ) }
+    </>
+  )
+
   return(
     <>
       { useBulk &&
@@ -103,7 +119,8 @@ const Block = ({
             className="tf-repeater-block-item"
             title={ renderTitle(item, i, title, name, renderItem, parent) }
             headerLeft={ headerLeft(item, i) }
-            footer={ maxLength !== undefined ? footer(i) : undefined }
+            headerRight={ maxLength !== undefined && inlineActions ? headerRight(i) : undefined }
+            footer={ maxLength !== undefined && ! inlineActions ? footer(i) : undefined }
           >
             { rowFields.map(control => (
               <div key={ control.name ?? i } className="tf-repeater-block-item-field">

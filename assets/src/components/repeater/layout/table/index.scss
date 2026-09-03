@@ -1,52 +1,79 @@
+// Table layout chrome on TUI tokens: one bordered surface holding the header
+// row, hairline-divided rows, and the footer actions
+
 .tf-repeater-table-container {
   display: flex;
   flex-direction: column;
   width: 100%;
-    
-  border: $field-border;
-  border-radius: $field-border-radius;
-  border-color: rgba($field-border-color, 0.5);
-
-  .tf-repeater-actions {
-    width: 100%;
-    padding: 4px;
-    box-sizing: border-box;
-    justify-content: flex-start;
-    padding: $section-padding;
-  }
+  border: var(--tui-border-width, 1px) solid var(--tui-color-border);
+  border-radius: var(--tui-radius-md, 8px);
+  background: var(--tui-color-bg-surface);
+  overflow: hidden;
 
   table {
     width: 100%;
-    padding: 4px;
-    padding-top: 0;
+    border-collapse: collapse;
+  }
 
-    th, tr {
-      min-height: $field-height;
-      padding: 2px;
-    }
+  th {
+    height: var(--tui-control-height-md, 40px);
+    padding: var(--tui-spacing-xs, 8px) var(--tui-spacing-xxs, 4px);
+    text-align: start;
+    font-weight: var(--tui-typography-weight-medium, 500);
+  }
 
-    th {
-      height: $field-height;
-      text-align: left;
-    }
+  td {
+    padding: var(--tui-spacing-xs, 8px) var(--tui-spacing-xxs, 4px);
+    vertical-align: middle;
 
-    td > div {
+    // Field wrappers fill their cell
+    & > div {
       width: 100%;
-      display: flex;
-      justify-content: center;
-
-      & > div {
-        width: 100%;
-      }
     }
   }
 
+  th:first-child,
+  td:first-child {
+    padding-inline-start: var(--tui-spacing-sm, 12px);
+  }
+
+  th:last-child,
+  td:last-child {
+    padding-inline-end: var(--tui-spacing-sm, 12px);
+  }
+
+  tbody tr {
+    border-top: var(--tui-border-width, 1px) solid var(--tui-color-border);
+  }
+
+  // Fixed-width utility columns
+  .tf-repeater-table-handle,
+  .tf-repeater-table-select,
   .tf-repeater-row-actions {
     width: 1%;
-    & > div {
-      display: inline-flex;
-      gap: $global-spacer-xs;
+    white-space: nowrap;
+  }
+
+  .tf-repeater-row-actions > div {
+    display: inline-flex;
+    gap: var(--tui-spacing-xxs, 4px);
+  }
+
+  // Icon-only row actions are square
+  .tf-repeater-row-actions .tui-button {
+    width: var(--tui-control-height-md, 40px);
+    padding-inline: 0;
+    justify-content: center;
+  }
+
+  .tf-repeater-actions {
+    justify-content: flex-start;
+    padding: var(--tui-spacing-sm, 12px);
+    border-top: var(--tui-border-width, 1px) solid var(--tui-color-border);
+
+    // Add item leads; Remove all keeps to the far end
+    & > :last-child:not(:first-child) {
+      margin-inline-start: auto;
     }
   }
-  
 }

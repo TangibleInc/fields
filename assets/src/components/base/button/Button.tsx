@@ -182,10 +182,15 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
 
   const mapped = layoutMap[resolvedLayout]
   const label: ReactNode = content ?? children
-  const stringLabel = typeof label === 'string' ? label : undefined
-  const computedAriaLabel = contentVisuallyHidden ? stringLabel : undefined
-  const ariaLabel = ariaLabelProp ?? computedAriaLabel
-  const renderedContent = contentVisuallyHidden ? null : label
+  /**
+   * Icon-only buttons keep their label in the DOM, visually hidden, rather
+   * than moving it to aria-label: same for assistive tech, and the text stays
+   * available to find-in-page, translation tools and tests
+   */
+  const ariaLabel = ariaLabelProp
+  const renderedContent = contentVisuallyHidden
+    ? <span className="tui-visually-hidden">{label}</span>
+    : label
   const resolvedDisabled = Boolean(disabled || isDisabled)
   const rawTheme = theme ?? mapped.theme
   const resolvedTheme = rawTheme === 'destructive' ? 'danger' : rawTheme

@@ -254,13 +254,15 @@ const commonRepeaterTests = (layout, args = {}) => {
       })
     )
 
+    // Icon-only actions keep their label visually hidden inside the button
+    const buttonOf = element => element.closest('button')
     let addButton, cloneButton
 
     addButton = within(container).getByText(config.addText)
     expect(addButton).not.toBeDisabled()
 
     if( layout !== 'bare' ) {
-      cloneButton = within(container).getByText(config.cloneText)
+      cloneButton = buttonOf(within(container).getByText(config.cloneText))
       expect(cloneButton).not.toBeDisabled()
     }
 
@@ -270,12 +272,11 @@ const commonRepeaterTests = (layout, args = {}) => {
     expect(addButton).toBeDisabled()
 
     if( layout === 'tab' ) {
-      cloneButton = within(container).getByText(config.cloneText)
-      cloneButton = cloneButton.parentNode // Child element because visually hidden
+      cloneButton = buttonOf(within(container).getByText(config.cloneText))
       expect(cloneButton).toBeDisabled()
     }
     else if( layout !== 'bare' ) {
-      cloneButton = within(container).getAllByText(config.cloneText)
+      cloneButton = within(container).getAllByText(config.cloneText).map(buttonOf)
       expect(cloneButton[0]).toBeDisabled()
       expect(cloneButton[1]).toBeDisabled()
     }
@@ -287,7 +288,7 @@ const commonRepeaterTests = (layout, args = {}) => {
     expect(addButton).not.toBeDisabled()
 
     if( layout !== 'bare' ) {
-      cloneButton  = within(container).getByText(config.cloneText)
+      cloneButton = buttonOf(within(container).getByText(config.cloneText))
       expect(cloneButton).not.toBeDisabled()
     }
   })
