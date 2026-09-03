@@ -14,22 +14,21 @@ $tab-content-inset: 32px;
 .tf-tab-header {
   display: flex;
   flex-wrap: nowrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--tui-spacing-sm, 12px);
+  align-items: stretch;
   box-sizing: border-box;
   width: 100%;
   padding-inline: var(--tui-spacing-sm, 12px);
-  border-bottom: var(--tui-border-width, 1px) solid var(--tui-color-border);
   overflow-x: auto;
-  overflow-y: hidden;
 
-  // The header draws the divider so it spans list and actions alike; the
-  // active tab's indicator still overlaps it via TUI's negative margin
+  // TUI's list draws the divider and the active tab's indicator overlaps it
+  // with a negative margin, so the divider must stay on the list (a border
+  // on the header would clip that 1px overhang). The actions continue the
+  // same line to the header's end
   .tui-tabs__list {
+    flex: 1 0 auto;
     flex-wrap: nowrap;
+    align-items: stretch;
     min-width: fit-content;
-    border-block-end: none;
   }
 
   .tf-tab-item {
@@ -42,8 +41,10 @@ $tab-content-inset: 32px;
   flex-wrap: nowrap;
   align-items: center;
   gap: var(--tui-spacing-xxs, 4px);
-  align-self: center;
-  margin-inline-start: auto;
+  flex: 0 0 auto;
+  // Spacing from the tabs lives inside so the divider runs unbroken
+  padding-inline-start: var(--tui-spacing-sm, 12px);
+  border-block-end: var(--tui-border-width, 1px) solid var(--tui-color-divider, var(--tui-color-border));
 }
 
 .tf-tab-content {
