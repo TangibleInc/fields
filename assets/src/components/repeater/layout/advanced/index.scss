@@ -60,19 +60,6 @@ $advanced-item-index-height: 40px;
     background: $field-background-secondary;
   }
 
-  .tf-repeater-advanced-label-row-arrow {
-    cursor: pointer;
-  }
-
-  .tf-repeater-advanced-label-row-arrow > div {
-    border: solid black;
-    border-color: $field-font-color;
-    border-width: 0 1px 1px 0;
-    display: inline-block;
-    height: calc(#{$field-height} / 4);
-    width: calc(#{$field-height} / 4);
-  }
-
   .tf-repeater-advanced-overview-item-actions {
     display: flex;
     align-items: center;
@@ -94,29 +81,47 @@ $advanced-item-index-height: 40px;
 }
 
 .tf-repeater-advanced-item .tf-repeater-advanced-overview:hover,
-.tf-repeater-advanced-item[data-open="true"] .tf-repeater-advanced-overview {
+.tf-repeater-advanced-item[data-state="open"] .tf-repeater-advanced-overview {
   background-color: $global-theme-color-lighter-05;
 }
 
-.tf-repeater-advanced-item[data-open="true"] .tf-repeater-advanced-label-row-arrow > div {
-  transform: translateY(50%) rotate(-135deg);
-}
-
-.tf-repeater-advanced-item[data-open="false"] .tf-repeater-advanced-label-row-arrow > div {
-  transform: translateY(-50%) rotate(45deg);
+// The list is a flush TUI Accordion; it sits between our column-label header
+// and the footer actions, which carry the outer radius, so the accordion
+// itself goes square and borrows the header's border colour
+.tf-repeater-advanced-items.tui-accordion.is-variant-flush {
+  --tui-accordion-border: #{rgba($field-border-color, 0.5)};
+  --tui-accordion-bg: #{$field-background};
+  --tui-accordion-bg-open: #{$field-background};
+  --tui-accordion-panel-padding: 0;
+  border-radius: 0;
+  border-top: none;
 }
 
 .tf-repeater-advanced-item {
   position: relative;
-  background-color: $field-background;
-  border: $field-border;
-  border-color: rgba($field-border-color, 0.5);
-  border-radius: $field-border-radius;
-  border-top: none;
-  border-radius: 0px;
 }
 
-.tf-repeater-advanced-item[data-open="true"]::before {
+// asChild puts the accordion trigger class on the chevron IconButton; undo the
+// full-width row-trigger treatment that class carries and let the icon button
+// keep its own size
+.tf-repeater-advanced-toggle.tui-accordion__trigger {
+  flex: 0 0 auto;
+  width: var(--tui-control-height-sm, 32px);
+  padding: 0;
+  justify-content: center;
+  background: transparent;
+  align-self: center;
+
+  .tui-icon {
+    transition: transform var(--tui-motion-duration, 150ms) var(--tui-motion-timing, ease);
+  }
+
+  &[data-state="open"] .tui-icon {
+    transform: rotate(180deg);
+  }
+}
+
+.tf-repeater-advanced-item[data-state="open"]::before {
   content: '';
   position: absolute;
   top: 0;
@@ -141,6 +146,9 @@ $advanced-item-index-height: 40px;
   margin-right: $advanced-item-index-width;
   margin-top: calc($advanced-item-index-width / 2);
   margin-bottom: calc($advanced-item-index-width / 2);
+  // ::before/::after spacers on the TUI panel content already pad the block
+  // axis when there is content; we keep our own margins and zero the padding
+  // token above, so nothing doubles up
 
   .tf-repeater-advanced-item-field {
     padding: $section-padding;
