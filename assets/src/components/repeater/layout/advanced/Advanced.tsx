@@ -25,6 +25,11 @@ const Advanced = ({
   const [openSection, setOpenSection] = useState(false)
   const headerColumns = getHeaderConfig(fields, headerFields)
 
+  /**
+   * Row actions read as WP list-table row actions: small text links
+   */
+  const actionProps = { size: 'xs', variant: 'link' } as const
+
   return(
     <>
       { useBulk &&
@@ -85,13 +90,13 @@ const Advanced = ({
                     <div className="tf-repeater-advanced-overview-item-actions is-size-sm">
                       <Button
                         type="text-primary"
-                        size={ 'xs' }
+                        { ...actionProps }
                         onPress={ () => setOpenSection(openSection === i ? false : i) }
                       >
                         { openSection === i ? 'Close' : 'Edit' }
                       </Button>
-                      { renderAction( 'clone', i, { type : 'text-primary', size: 'xs' } ) }
-                      { renderAction( 'delete', i, { buttonProps : { type: 'text-danger', size: 'xs' } } ) }
+                      { renderAction( 'clone', i, { type : 'text-primary', ...actionProps } ) }
+                      { renderAction( 'delete', i, { buttonProps : { type: 'text-danger', ...actionProps } } ) }
                     </div> } 
                 </div>
                 <Button

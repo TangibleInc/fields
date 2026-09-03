@@ -74,11 +74,11 @@ $advanced-item-index-height: 40px;
   }
 
   .tf-repeater-advanced-overview-item-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--tui-spacing-sm, 12px);
     width: 100%;
     height: var(--tui-control-height-sm, 25px);
-    button {
-      display: none;
-    }
   }
 }
 
@@ -91,10 +91,6 @@ $advanced-item-index-height: 40px;
 
 .tf-repeater-advanced-overview-item-fields {
   display: flex;
-}
-
-.tf-repeater-advanced-overview:hover .tf-repeater-advanced-overview-item-actions button {
-  display: initial;
 }
 
 .tf-repeater-advanced-item .tf-repeater-advanced-overview:hover,
