@@ -1,17 +1,15 @@
 /**
- * Button props for an icon-only row action. The label stays in the DOM,
- * visually hidden, so the action keeps its name for assistive tech and tests
+ * Props for an icon-only row action: the fields Button renders a TUI
+ * IconButton (tooltip on) and uses the action's label as its accessible name
  */
 const iconAction = (
   icon: string,
-  theme: 'primary' | 'danger',
+  theme: 'secondary' | 'danger',
   variant: 'outline' | 'ghost' = 'outline'
 ) => ({
-  type                  : 'action',
+  icon,
   theme,
-  variant,
-  leftIconName          : icon,
-  contentVisuallyHidden : true
+  variant
 })
 
 export { iconAction }

@@ -84,7 +84,7 @@ const Table = ({
               { repeatable &&
                 <td className='tf-repeater-row-actions'>
                   <div>
-                    { renderAction( 'clone', i, iconAction('system/copy', 'primary') ) }
+                    { renderAction( 'clone', i, iconAction('system/copy', 'secondary') ) }
                     { renderAction( 'delete', i, { buttonProps: iconAction('system/minus', 'danger') } ) }
                   </div>
                 </td> }

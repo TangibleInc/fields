@@ -97,7 +97,7 @@ const Block = ({
 
   const headerRight = i => (
     <>
-      { renderAction( 'clone', i, iconAction('system/copy', 'primary', 'ghost') ) }
+      { renderAction( 'clone', i, iconAction('system/copy', 'secondary', 'ghost') ) }
       { renderAction( 'delete', i, { buttonProps: iconAction('system/trash', 'danger', 'ghost') } ) }
     </>
   )

@@ -101,11 +101,12 @@ describe('Repeater with a block layout', () => {
       expect(within(header).queryByText('Edit')).toBeNull()
       expect(within(header).queryByText('Close')).toBeNull()
 
-      const clone = within(header).getByText('Clone').closest('button')
-      const remove = within(header).getByText('Remove').closest('button')
-      expect(clone.querySelector('.tui-icon')).toBeTruthy()
-      expect(remove.querySelector('.tui-icon')).toBeTruthy()
-      expect(within(header).getByText('Clone').classList.contains('tui-visually-hidden')).toBe(true)
+      const clone = within(header).getByRole('button', { name: 'Clone item 1' })
+      const remove = within(header).getByRole('button', { name: 'Remove item 1' })
+      expect(clone.classList.contains('tui-icon-button')).toBe(true)
+      expect(remove.classList.contains('tui-icon-button')).toBe(true)
+      expect(clone.classList.contains('is-theme-secondary')).toBe(true)
+      expect(remove.classList.contains('is-theme-danger')).toBe(true)
 
       // header actions do not toggle the row
       expect(rows()[0].getAttribute('data-state')).toBe('open')
@@ -128,8 +129,8 @@ describe('Repeater with a block layout', () => {
 
     it('names Clone and Remove per row', () => {
       const { rows } = setup()
-      expect(within(rows()[1]).getByText('Clone').closest('button').getAttribute('aria-label')).toBe('Clone item 2')
-      expect(within(rows()[1]).getByText('Remove').closest('button').getAttribute('aria-label')).toBe('Remove item 2')
+      expect(within(rows()[1]).getByRole('button', { name: 'Clone item 2' })).toBeTruthy()
+      expect(within(rows()[1]).getByRole('button', { name: 'Remove item 2' })).toBeTruthy()
     })
 
     it('moves between row triggers with the arrow keys', async () => {

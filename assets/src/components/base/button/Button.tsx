@@ -1,8 +1,8 @@
 import type { CSSProperties, MouseEvent, ReactNode } from 'react'
 import { forwardRef, useEffect, useRef } from 'react'
 import type { Ref } from 'react'
-import { Button as TuiButton } from '@tangible/ui'
-import type { ButtonProps as TuiButtonProps } from '@tangible/ui'
+import { Button as TuiButton, IconButton as TuiIconButton } from '@tangible/ui'
+import type { ButtonProps as TuiButtonProps, IconButtonProps as TuiIconButtonProps } from '@tangible/ui'
 
 import { isDev } from '../../../utils/is-dev'
 import { triggerEvent } from '../../../events'
@@ -85,6 +85,13 @@ export interface FieldsButtonProps extends ForwardedTuiProps {
   'data-test-id'?: string
   'aria-label'?: string
   contentVisuallyHidden?: boolean
+  /**
+   * Icon-only button: renders a TUI IconButton with the label as its
+   * accessible name and tooltip. Content/children become that label
+   */
+  icon?: TuiIconButtonProps['icon']
+  showTooltip?: TuiIconButtonProps['showTooltip']
+  tooltipSide?: TuiIconButtonProps['tooltipSide']
   changeTag?: 'button' | 'span'
   data?: unknown
   wrapper?: unknown
@@ -139,6 +146,9 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
     onClick,
     onPress,
     contentVisuallyHidden,
+    icon,
+    showTooltip,
+    tooltipSide,
     changeTag,
     /**
      * Destructured to prevent react-aria props from reaching the DOM.
@@ -188,6 +198,7 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
    * available to find-in-page, translation tools and tests
    */
   const ariaLabel = ariaLabelProp
+  const stringLabel = typeof label === 'string' ? label : undefined
   const renderedContent = contentVisuallyHidden
     ? <span className="tui-visually-hidden">{label}</span>
     : label
@@ -240,6 +251,34 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
     hasWarnedMissingLabel.current = true
     console.warn(
       '[Fields Button] Button has no visible label and no aria-label. Provide `content`, `children`, or an accessible label.'
+    )
+  }
+
+  if (icon) {
+    return (
+      <TuiIconButton
+        /* TUI's ButtonProps is a button-or-anchor union; the leftover props
+           are plain HTML attributes, so hand them over untyped */
+        {...(tuiProps as Record<string, unknown>)}
+        ref={ref as Ref<HTMLButtonElement | HTMLAnchorElement>}
+        icon={icon}
+        label={ariaLabel ?? stringLabel ?? ''}
+        size={resolvedSize}
+        theme={resolvedTheme}
+        variant={resolvedVariant === 'link' ? 'ghost' : resolvedVariant}
+        disabled={resolvedDisabled}
+        loading={resolvedLoading}
+        showTooltip={showTooltip ?? true}
+        tooltipSide={tooltipSide}
+        /* IconButtonProps is a button|anchor union whose onClick types do not
+           unify; we always render a button here */
+        onClick={handleClick as never}
+        className={className}
+        style={style}
+        data-testid={resolvedTestId}
+        data-test-id={resolvedTestId}
+        data-name={name}
+      />
     )
   }
 

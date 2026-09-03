@@ -10,6 +10,14 @@ import * as fields from '../../../../../assets/src/index.tsx'
  * - Tests with initial value
  * - Test clone button (check key is different)
  */
+/**
+ * Row actions carry a row-specific accessible name ("Remove item 2") and, in
+ * icon-only layouts, no text at all: find them by name, not by text
+ */
+const actionButtons = (scope, text) => within(scope).getAllByRole('button', {
+  name: new RegExp(`^${text}( item \\d+)?$`)
+})
+
 const commonRepeaterTests = (layout, args = {}) => {
 
   const config = {
@@ -141,7 +149,7 @@ const commonRepeaterTests = (layout, args = {}) => {
     const removeElement = async index => (
       config.removeElement
         ? config.removeElement(index, { itemsContainer, user, document }, config)
-        : user.click(within(itemsContainer.children[index]).getByText(config.removeText))
+        : user.click(actionButtons(itemsContainer.children[index], config.removeText)[0])
     )
 
     // Confirmation popup - Cancel
@@ -254,16 +262,15 @@ const commonRepeaterTests = (layout, args = {}) => {
       })
     )
 
-    // Icon-only actions keep their label visually hidden inside the button
-    const buttonOf = element => element.closest('button')
-    let addButton, cloneButton
+    let addButton, cloneButtons
 
     addButton = within(container).getByText(config.addText)
     expect(addButton).not.toBeDisabled()
 
     if( layout !== 'bare' ) {
-      cloneButton = buttonOf(within(container).getByText(config.cloneText))
-      expect(cloneButton).not.toBeDisabled()
+      cloneButtons = actionButtons(container, config.cloneText)
+      expect(cloneButtons.length).toBe(1)
+      expect(cloneButtons[0]).not.toBeDisabled()
     }
 
     await user.click(within(container).getByText(config.addText))
@@ -271,25 +278,22 @@ const commonRepeaterTests = (layout, args = {}) => {
     addButton = within(container).getByText(config.addText)
     expect(addButton).toBeDisabled()
 
-    if( layout === 'tab' ) {
-      cloneButton = buttonOf(within(container).getByText(config.cloneText))
-      expect(cloneButton).toBeDisabled()
-    }
-    else if( layout !== 'bare' ) {
-      cloneButton = within(container).getAllByText(config.cloneText).map(buttonOf)
-      expect(cloneButton[0]).toBeDisabled()
-      expect(cloneButton[1]).toBeDisabled()
+    if( layout !== 'bare' ) {
+      cloneButtons = actionButtons(container, config.cloneText)
+      // tab shows one clone control for the active item; other layouts one per row
+      expect(cloneButtons.length).toBe(layout === 'tab' ? 1 : 2)
+      cloneButtons.forEach(button => expect(button).toBeDisabled())
     }
 
-    await user.click(within(container).getAllByText(config.removeText)[0])
+    await user.click(actionButtons(container, config.removeText)[0])
     await user.click(within(document.querySelector(`.tf-confirm-dialog`)).getByText(config.removeText)) // Confirmation popup
 
     addButton = within(container).getByText(config.addText)
     expect(addButton).not.toBeDisabled()
 
     if( layout !== 'bare' ) {
-      cloneButton = buttonOf(within(container).getByText(config.cloneText))
-      expect(cloneButton).not.toBeDisabled()
+      cloneButtons = actionButtons(container, config.cloneText)
+      expect(cloneButtons[0]).not.toBeDisabled()
     }
   })
 
@@ -572,7 +576,7 @@ const commonRepeaterTests = (layout, args = {}) => {
     // Does not have a clone button
     if( layout === 'bare' ) return;
 
-    const cloneButton = within(container).getByText(config.cloneText)
+    const cloneButton = actionButtons(container, config.cloneText)[0]
     await user.click(cloneButton)
 
     const repeater = store.getRepeater('test')
