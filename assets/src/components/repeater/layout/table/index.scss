@@ -10,51 +10,54 @@
   background: var(--tui-color-bg-surface);
   overflow: hidden;
 
-  table {
+  // Only the repeater's own grid: child combinators keep these rules off any
+  // table a field renders inside a cell (a date picker's calendar, a nested
+  // repeater styles its own grid)
+  .tf-repeater-table-grid {
     width: 100%;
     border-collapse: collapse;
-  }
 
-  th {
-    height: var(--tui-control-height-md, 40px);
-    padding: var(--tui-spacing-xs, 8px) var(--tui-spacing-xxs, 4px);
-    text-align: start;
-    font-weight: var(--tui-typography-weight-medium, 500);
-  }
+    > thead > tr > th {
+      height: var(--tui-control-height-md, 40px);
+      padding: var(--tui-spacing-xs, 8px) var(--tui-spacing-xxs, 4px);
+      text-align: start;
+      font-weight: var(--tui-typography-weight-medium, 500);
+    }
 
-  td {
-    padding: var(--tui-spacing-xs, 8px) var(--tui-spacing-xxs, 4px);
-    vertical-align: middle;
+    > tbody > tr {
+      border-top: var(--tui-border-width, 1px) solid var(--tui-color-border);
+    }
 
-    // Field wrappers fill their cell
-    & > div {
-      width: 100%;
+    > tbody > tr > td {
+      padding: var(--tui-spacing-xs, 8px) var(--tui-spacing-xxs, 4px);
+      vertical-align: middle;
+
+      // Field wrappers fill their cell
+      > div {
+        width: 100%;
+      }
+    }
+
+    > thead > tr > th:first-child,
+    > tbody > tr > td:first-child {
+      padding-inline-start: var(--tui-spacing-sm, 12px);
+    }
+
+    > thead > tr > th:last-child,
+    > tbody > tr > td:last-child {
+      padding-inline-end: var(--tui-spacing-sm, 12px);
     }
   }
 
-  th:first-child,
-  td:first-child {
-    padding-inline-start: var(--tui-spacing-sm, 12px);
-  }
-
-  th:last-child,
-  td:last-child {
-    padding-inline-end: var(--tui-spacing-sm, 12px);
-  }
-
-  tbody tr {
-    border-top: var(--tui-border-width, 1px) solid var(--tui-color-border);
-  }
-
   // Fixed-width utility columns
-  .tf-repeater-table-handle,
-  .tf-repeater-table-select,
-  .tf-repeater-row-actions {
+  .tf-repeater-table-grid > * > tr > .tf-repeater-table-handle,
+  .tf-repeater-table-grid > * > tr > .tf-repeater-table-select,
+  .tf-repeater-table-grid > * > tr > .tf-repeater-row-actions {
     width: 1%;
     white-space: nowrap;
   }
 
-  .tf-repeater-row-actions > div {
+  .tf-repeater-table-grid > tbody > tr > .tf-repeater-row-actions > div {
     display: inline-flex;
     gap: var(--tui-spacing-xxs, 4px);
   }
