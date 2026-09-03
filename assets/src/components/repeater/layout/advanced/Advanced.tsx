@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import type { MouseEvent } from 'react'
-import { Accordion, IconButton, useAccordionItem } from '@tangible/ui'
+import { Accordion, IconButton } from '@tangible/ui'
 import { Button } from '../../../base'
 import { Checkbox } from '../../../field'
 import BulkActions from '../../common/BulkActions'
+import ToggleLink from '../../common/ToggleLink'
 import {
   getHeaderConfig,
   renderHeaderValue
@@ -14,26 +15,6 @@ import {
  * on something that already has its own behaviour
  */
 const INTERACTIVE = 'button, a, input, select, textarea, label, [role="button"], [role="link"]'
-
-/**
- * Second way to toggle a row, next to the chevron. Lives inside the
- * Accordion.Item so it can point aria-controls at the item's panel
- */
-const ToggleLink = ({ index, string, ...buttonProps }) => {
-  const { isOpen, panelId, toggle } = useAccordionItem()
-  return (
-    <Button
-      type="text-primary"
-      { ...buttonProps }
-      aria-expanded={ isOpen }
-      aria-controls={ panelId }
-      aria-label={ string(isOpen ? 'closeItem' : 'editItem', { index }) }
-      onPress={ toggle }
-    >
-      { string(isOpen ? 'close' : 'edit') }
-    </Button>
-  )
-}
 
 const Advanced = ({
   items,

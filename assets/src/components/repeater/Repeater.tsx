@@ -161,7 +161,7 @@ const Repeater = props => {
     const list = root.querySelector('.tf-repeater-items')
     const rows = list ? Array.from(list.children) as HTMLElement[] : []
     const row = rows[Math.min(index, rows.length - 1)]
-    const target = row?.querySelector<HTMLElement>('.tf-button-repeater-overview-open')
+    const target = row?.querySelector<HTMLElement>('[data-tui-accordion-trigger]')
       ?? row?.querySelector<HTMLElement>(FOCUSABLE)
       ?? root.querySelector<HTMLElement>(`.tf-repeater-actions ${FOCUSABLE}`)
     target?.focus()

@@ -1,80 +1,147 @@
-import { 
-  useState, 
-  useEffect,
-  isValidElement 
-} from 'react'
-
-import { Button } from '../'
+import type { MouseEvent, ReactNode } from 'react'
+import { useEffect, useState } from 'react'
+import { Accordion, useAccordionItem } from '@tangible/ui'
 
 /**
- * Note: 
- * 
- * We use onClick on the header otherwise we can't use e.stopPropagation() 
- * in headerLeft/headerRight, however onClick is deprecated for Button and we should use
- * onPress instead (but it won't allow e.stopPropagation() anymore)
- * 
- * Maybe we can't use a <Button /> for the panel header 
+ * Clicking the header row toggles the item for pointer users, unless the
+ * click landed on something with its own behaviour (the trigger handles
+ * itself; switches and checkboxes in the header must not toggle the panel)
  */
-const ExpandablePanel = props => {
+const INTERACTIVE = 'button, a, input, select, textarea, label, [role="button"], [role="link"], [role="switch"], [role="checkbox"]'
 
-  const [showItem, setShowItem] = useState(true)
+export interface PanelItemProps {
+  /** Accordion item value; unique within the parent Accordion */
+  value: string
+  title?: ReactNode
+  headerLeft?: ReactNode
+  headerRight?: ReactNode
+  footer?: ReactNode
+  /**
+   * 'remove' (default) unmounts the content while closed; 'hide' keeps it
+   * mounted and lets TUI hide it (aria-hidden + inert)
+   */
+  behavior?: 'remove' | 'hide'
+  className?: string
+  children?: ReactNode
+}
 
-  useEffect(() => {
-    if( props.isOpen !== showItem ) {
-      setShowItem( props.isOpen )
-    } 
-  }, [props.isOpen])
+const PanelItemBody = ({
+  title,
+  headerLeft,
+  headerRight,
+  footer,
+  behavior = 'remove',
+  children
+}: Omit<PanelItemProps, 'value' | 'className'>) => {
 
+  const { isOpen, toggle } = useAccordionItem()
 
-  const toggle = () => {
-    setShowItem( ! showItem )
-    props.onChange && props.onChange( ! showItem )
+  const onHeaderClick = (event: MouseEvent<HTMLDivElement>) => {
+    if ((event.target as Element).closest(INTERACTIVE)) return
+    toggle()
   }
 
-  let classes = 'tf-panel'
-  classes += ` tf-panel-${ showItem ? 'open' : 'closed' }`
-  classes += props.className ? ` ${props.className}` : ''
-  classes += props.class ? ` ${props.class}` : ''
-  classes += ! props.footer ? ' tf-panel-no-footer' : ''
-  
-  return ( 
-    <div className={ classes } data-status={ showItem ? 'open' : 'closed' }>
-      <Button className="tf-panel-header" type="action" onClick={ toggle }>
-        <div className="tf-panel-header-left">
-          { props.headerLeft 
-            ? <div className="tf-panel-header-before-title">
-                { props.headerLeft }
-              </div>
-            : null }
-          { props.title 
-            ? <div className="tf-panel-header-title">
-                { ! isValidElement(props.title) 
-                  ? <strong>{ props.title }</strong>
-                  : props.title }
-              </div>
-            : null }
-        </div>
-        <div className="tf-panel-header-right">
-          { props.headerRight 
-            ? <div className="tf-panel-header-before-title">
-                { props.headerRight }
-              </div>
-            : null }
-          <span className="tf-panel-arrow" />
-        </div>
-      </Button>
-      { showItem || props?.behavior === 'hide'
-        ? <div className='tf-panel-content'>
-            { props.children }
-          </div> 
-        : null }
-      { props.footer 
-        ? <div className='tf-panel-footer'>
-            { props.footer }
-          </div> 
-        : null }
+  return (
+    <>
+      <div className="tf-panel-header" onClick={ onHeaderClick }>
+        { headerLeft &&
+          <div className="tf-panel-header-left">
+            { headerLeft }
+          </div> }
+        <Accordion.Trigger className="tf-panel-header-trigger">
+          <span className="tf-panel-header-title">
+            { title }
+          </span>
+        </Accordion.Trigger>
+        { headerRight &&
+          <div className="tf-panel-header-right">
+            { headerRight }
+          </div> }
+      </div>
+      <Accordion.Panel>
+        { (isOpen || behavior === 'hide') &&
+          <div className="tf-panel-content">
+            { children }
+          </div> }
+      </Accordion.Panel>
+      { footer &&
+        <div className="tf-panel-footer">
+          { footer }
+        </div> }
+    </>
+  )
+}
+
+/**
+ * One collapsible row inside a TUI Accordion: header row (side slots around
+ * the trigger), content panel, optional always-visible footer.
+ *
+ * Used by the Block repeater layout (many items in one accordion) and by
+ * ExpandablePanel (one item on its own)
+ */
+const PanelItem = ({ value, className, ...body }: PanelItemProps) => (
+  <Accordion.Item
+    value={ value }
+    className={ ['tf-panel-item', className].filter(Boolean).join(' ') }
+  >
+    <PanelItemBody { ...body } />
+  </Accordion.Item>
+)
+
+export interface ExpandablePanelProps extends Omit<PanelItemProps, 'value'> {
+  isOpen?: boolean
+  onChange?: (open: boolean) => void
+  /** Legacy alias of className, from PHP config */
+  class?: string
+}
+
+const ITEM = 'panel'
+
+/**
+ * Standalone collapsible panel. Semi-controlled like before: `isOpen`
+ * changes are followed, user toggles are kept locally and reported through
+ * `onChange`
+ */
+const ExpandablePanel = ({
+  isOpen = true,
+  onChange,
+  className,
+  class: legacyClass,
+  ...item
+}: ExpandablePanelProps) => {
+
+  const [open, setOpen] = useState(isOpen)
+
+  useEffect(() => {
+    if (isOpen !== open) setOpen(isOpen)
+  }, [isOpen])
+
+  const change = (value: string | undefined) => {
+    const next = value === ITEM
+    setOpen(next)
+    onChange?.(next)
+  }
+
+  const classes = [
+    'tf-panel',
+    open ? 'tf-panel-open' : 'tf-panel-closed',
+    className,
+    legacyClass
+  ].filter(Boolean).join(' ')
+
+  return (
+    <div className={ classes } data-status={ open ? 'open' : 'closed' }>
+      <Accordion
+        type="single"
+        collapsible
+        value={ open ? ITEM : null }
+        onValueChange={ change }
+      >
+        <PanelItem value={ ITEM } { ...item } />
+      </Accordion>
     </div>
   )
 }
 
+export { PanelItem }
 export default ExpandablePanel

@@ -3,7 +3,7 @@ import ConfirmDialog, { ConfirmTrigger } from './confirm-dialog/ConfirmDialog'
 import LegacyButton from './button/LegacyButton'
 import Description from './field/Description'
 import Dialog from './dialog/Dialog'
-import ExpandablePanel from './expandable-panel/ExpandablePanel'
+import ExpandablePanel, { PanelItem } from './expandable-panel/ExpandablePanel'
 import Label from './field/Label'
 import ListBox from './list-box/ListBox'
 import Modal from './modal/Modal'
@@ -33,6 +33,7 @@ export {
   ModalTrigger,
   Notice,
   Option,
+  PanelItem,
   Popover,
   RenderChoices,
   Section,
