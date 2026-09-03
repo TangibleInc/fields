@@ -14,6 +14,8 @@ export default {
     delete                      : 'Remove',
     edit                        : 'Edit',
     close                       : 'Close',
+    editItem                    : 'Edit item {index}',
+    closeItem                   : 'Close item {index}',
     expandItem                  : 'Open item {index}',
     collapseItem                : 'Close item {index}',
     removeAll                   : 'Remove all',

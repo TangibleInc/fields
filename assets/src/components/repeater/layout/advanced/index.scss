@@ -92,7 +92,10 @@ $advanced-item-index-height: 40px;
   --tui-accordion-border: #{rgba($field-border-color, 0.5)};
   --tui-accordion-bg: #{$field-background};
   --tui-accordion-bg-open: #{$field-background};
+  // The row content carries its own margins (.tf-repeater-advanced-row), so
+  // the panel adds neither inline padding nor block spacers
   --tui-accordion-panel-padding: 0;
+  --tui-accordion-panel-spacing: 0;
   border-radius: 0;
   border-top: none;
 }
@@ -103,10 +106,10 @@ $advanced-item-index-height: 40px;
 
 // asChild puts the accordion trigger class on the chevron IconButton; undo the
 // full-width row-trigger treatment that class carries and let the icon button
-// keep its own size
+// keep its own size. TUI has been asked to stop stamping the paint class in
+// asChild mode, at which point this block goes
 .tf-repeater-advanced-toggle.tui-accordion__trigger {
   flex: 0 0 auto;
-  width: var(--tui-control-height-sm, 32px);
   padding: 0;
   justify-content: center;
   background: transparent;
@@ -146,9 +149,6 @@ $advanced-item-index-height: 40px;
   margin-right: $advanced-item-index-width;
   margin-top: calc($advanced-item-index-width / 2);
   margin-bottom: calc($advanced-item-index-width / 2);
-  // ::before/::after spacers on the TUI panel content already pad the block
-  // axis when there is content; we keep our own margins and zero the padding
-  // token above, so nothing doubles up
 
   .tf-repeater-advanced-item-field {
     padding: $section-padding;

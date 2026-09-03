@@ -256,25 +256,43 @@ describe('Repeater with an advanced layout', () => {
       )
       const toggles = () => container.querySelectorAll('.tf-button-repeater-overview-open')
       const openFields = () => container.querySelectorAll('.tf-text').length
-      return { user, container, toggles, openFields }
+      const panelOf = (toggle: Element) => document.getElementById(toggle.getAttribute('aria-controls'))
+      return { user, container, toggles, openFields, panelOf }
     }
 
     it('wires the chevron as the accordion trigger', async () => {
-      const { user, toggles, openFields, container } = setup()
+      const { user, toggles, panelOf } = setup()
       const toggle = toggles()[0]
+      const panel = panelOf(toggle)
 
       expect(toggle.tagName).toBe('BUTTON')
       expect(toggle.getAttribute('aria-expanded')).toBe('false')
       expect(toggle.getAttribute('aria-label')).toBe('Open item 1')
+      expect(panel.getAttribute('aria-hidden')).toBe('true')
+      expect(within(panel).queryByRole('textbox')).toBeNull()
 
       await user.click(toggle)
 
-      expect(openFields()).toBe(1)
       expect(toggle.getAttribute('aria-expanded')).toBe('true')
       expect(toggle.getAttribute('aria-label')).toBe('Close item 1')
-      const panel = document.getElementById(toggle.getAttribute('aria-controls'))
-      expect(panel).toBeTruthy()
       expect(panel.getAttribute('data-state')).toBe('open')
+      expect(panel.getAttribute('aria-hidden')).toBe('false')
+      expect(within(panel).getByDisplayValue('Text 1')).toBeTruthy()
+    })
+
+    it('exposes state on the Edit/Close link with a row-specific name', async () => {
+      const { user, container } = setup()
+      const overview = container.querySelectorAll('.tf-repeater-advanced-overview')[1]
+      const link = within(overview).getByText('Edit')
+
+      expect(link.getAttribute('aria-expanded')).toBe('false')
+      expect(link.getAttribute('aria-label')).toBe('Edit item 2')
+
+      await user.click(link)
+
+      expect(link.getAttribute('aria-expanded')).toBe('true')
+      expect(link.getAttribute('aria-label')).toBe('Close item 2')
+      expect(link).toHaveTextContent('Close')
     })
 
     it('toggles exactly once per key press', async () => {
@@ -293,12 +311,24 @@ describe('Repeater with an advanced layout', () => {
     })
 
     it('opens one row at a time', async () => {
-      const { user, toggles, openFields } = setup()
+      const { user, toggles, panelOf } = setup()
       await user.click(toggles()[0])
       await user.click(toggles()[1])
-      expect(openFields()).toBe(1)
       expect(toggles()[0].getAttribute('aria-expanded')).toBe('false')
       expect(toggles()[1].getAttribute('aria-expanded')).toBe('true')
+      expect(within(panelOf(toggles()[0])).queryByRole('textbox')).toBeNull()
+      expect(within(panelOf(toggles()[1])).getByDisplayValue('Text 2')).toBeTruthy()
+    })
+
+    it('moves between chevrons with the arrow keys', async () => {
+      const { user, toggles } = setup(3)
+      ;(toggles()[0] as HTMLElement).focus()
+      await user.keyboard('{ArrowDown}')
+      expect(document.activeElement).toBe(toggles()[1])
+      await user.keyboard('{End}')
+      expect(document.activeElement).toBe(toggles()[2])
+      await user.keyboard('{ArrowDown}')
+      expect(document.activeElement).toBe(toggles()[0])
     })
 
     it('toggles on double-click of the overview, but not of its controls', async () => {
@@ -311,22 +341,59 @@ describe('Repeater with an advanced layout', () => {
       await user.dblClick(overview.querySelector('.tf-repeater-advanced-label-row-index'))
       expect(openFields()).toBe(0)
 
-      // Double-clicking the Edit link toggles through the link itself: open, close
-      await user.dblClick(within(overview).getByText('Edit'))
+      // A control's own clicks are its own business; the row handler stays out
+      await user.dblClick(within(overview).getByText('Duplicate'))
       expect(openFields()).toBe(0)
+      expect(container.querySelectorAll('.tf-repeater-advanced-item').length).toBe(4)
     })
 
     it('keeps the same row open when a row above it is removed', async () => {
       const { user, toggles, container } = setup(3)
       await user.click(toggles()[1])
-      expect(container.querySelector('.tf-text input').getAttribute('value')).toBe('Text 2')
+      expect(within(container).getByDisplayValue('Text 2')).toBeTruthy()
 
       const firstOverview = container.querySelectorAll('.tf-repeater-advanced-overview')[0]
       await user.click(within(firstOverview).getByText('Delete'))
       await user.click(within(document.querySelector('.tf-confirm-dialog')).getByText('Delete'))
 
       expect(container.querySelectorAll('.tf-repeater-advanced-item').length).toBe(2)
-      expect(container.querySelector('.tf-text input').getAttribute('value')).toBe('Text 2')
+      expect(within(container).getByDisplayValue('Text 2')).toBeTruthy()
+    })
+
+    it('assigns keys to rows hydrated without one', () => {
+      const { container: c2 } = render(
+        fields.render({
+          type   : 'repeater',
+          layout : 'advanced',
+          name   : 'keyless-test',
+          value  : JSON.stringify([{ text: 'A' }, { text: 'B' }, { text: 'C' }]),
+          fields : [{ type: 'text', label: 'Text', name: 'text' }]
+        })
+      )
+      const saved = JSON.parse(c2.querySelector('input[name=keyless-test]').getAttribute('value'))
+      const keys = saved.map(row => row.key)
+      expect(keys.every(k => typeof k === 'string' && k.length > 0)).toBe(true)
+      expect(new Set(keys).size).toBe(3)
+    })
+
+    it('hands focus to the next row after a delete, and to the footer when empty', async () => {
+      const { user, toggles, container } = setup(2)
+
+      const firstOverview = container.querySelectorAll('.tf-repeater-advanced-overview')[0]
+      await user.click(within(firstOverview).getByText('Delete'))
+      await user.click(within(document.querySelector('.tf-confirm-dialog')).getByText('Delete'))
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      expect(container.querySelectorAll('.tf-repeater-advanced-item').length).toBe(1)
+      expect(document.activeElement).toBe(toggles()[0])
+      expect(document.activeElement.getAttribute('aria-label')).toBe('Open item 1')
+
+      await user.click(within(container).getByText('Remove all'))
+      await user.click(within(document.querySelector('.tf-confirm-dialog')).getByText('Remove all'))
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      expect(container.querySelectorAll('.tf-repeater-advanced-item').length).toBe(0)
+      expect(document.activeElement).toBe(within(container).getByText('Add item'))
     })
   })
 })

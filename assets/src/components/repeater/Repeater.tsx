@@ -90,6 +90,29 @@ const Repeater = props => {
   const values = useRef()
   values.current = items
 
+  const rootRef = useRef<HTMLDivElement>(null)
+
+  const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
+  /**
+   * The confirm dialog restores focus to its trigger on close, but removing a
+   * row destroys that trigger with it. Hand focus to the row now occupying the
+   * removed position (its toggle when the layout has one, else its first
+   * control), or to the footer actions once the list is empty. Deferred so it
+   * lands after TUI's own restore attempt
+   */
+  const focusAfterRemove = (index: number) => setTimeout(() => {
+    const root = rootRef.current
+    if (!root) return
+    const list = root.querySelector('.tf-repeater-items')
+    const rows = list ? Array.from(list.children) as HTMLElement[] : []
+    const row = rows[Math.min(index, rows.length - 1)]
+    const target = row?.querySelector<HTMLElement>('.tf-button-repeater-overview-open')
+      ?? row?.querySelector<HTMLElement>(FOCUSABLE)
+      ?? root.querySelector<HTMLElement>(`.tf-repeater-actions ${FOCUSABLE}`)
+    target?.focus()
+  })
+
   const renderItem = (config, row, i) => (
     <Item
       key={ row.key + i }
@@ -184,7 +207,10 @@ const Repeater = props => {
           label={ string('removeAll') }
           title={ string('confirmRemoveAll') }
           isDisabled={ items.length <= 0 }
-          onConfirm={ () => dispatch({ type: 'clear' }) }
+          onConfirm={ () => {
+            dispatch({ type: 'clear' })
+            focusAfterRemove(0)
+          } }
         >
           { string('confirmRemoveAllDescription') }
         </ConfirmTrigger>
@@ -224,23 +250,28 @@ const Repeater = props => {
    * Also, rendering actions from <Repeater /> instead of <Layout /> avoid
    * having to deal with props.repeatable in each layout
    */
-  const renderAction = (action, i, customProps = {}) => {
+  const renderAction = (action, i, customProps: Record<string, any> = {}) => {
     if ( ! repeatable ) return <></>;
     if ( props?.parts?.actions?.[ action ] ) {
       return renderCustomComponent( action, i, customProps )
     }
     switch( action ) {
-      case 'delete':
+      case 'delete': {
+        const { onConfirm, ...confirmProps } = customProps
         return(
           <ConfirmTrigger
             label={ string('delete') }
             title={ string('confirmDelete') }
-            onConfirm={ () => dispatch({ type : 'remove', item : i }) }
-            { ...customProps }
+            { ...confirmProps }
+            onConfirm={ () => {
+              onConfirm ? onConfirm() : dispatch({ type : 'remove', item : i })
+              focusAfterRemove(i)
+            } }
           >
             { string('confirmDeleteDescription', { index: i + 1 }) }
           </ConfirmTrigger>
         )
+      }
         case 'clone':
           return(
             <Button
@@ -261,7 +292,7 @@ const Repeater = props => {
   useEffect(() => props.onChange && props.onChange( getSavedValue() ), [items])
 
   return(
-    <div className={ `tf-repeater tf-repeater-${layout}`}>
+    <div className={ `tf-repeater tf-repeater-${layout}`} ref={ rootRef }>
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(getSavedValue()) } />
       { props.label &&
         <Title level={2} className='tf-repeater-title'>

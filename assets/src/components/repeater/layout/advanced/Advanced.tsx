@@ -44,7 +44,7 @@ const Advanced = ({
    */
   const actionProps = { size: 'xs', variant: 'link' } as const
 
-  const itemKey = (item, i) => String(item.key ?? i)
+  const itemKey = item => String(item.key) // assigned on hydration, see dispatcher.ts
   const toggle = key => setOpenKey(current => current === key ? undefined : key)
 
   const onOverviewDoubleClick = key => (event: MouseEvent<HTMLDivElement>) => {
@@ -53,10 +53,14 @@ const Advanced = ({
   }
 
   /**
-   * Stop a double-click from selecting the overview text
+   * Stop a double-click from selecting text in the chrome of the row; header
+   * values stay selectable, since double-clicking a title or ID to copy it is
+   * a real use
    */
   const onOverviewMouseDown = (event: MouseEvent<HTMLDivElement>) => {
-    if (event.detail > 1) event.preventDefault()
+    if (event.detail < 2) return
+    if ((event.target as Element).closest('.tf-repeater-advanced-label-row-item')) return
+    event.preventDefault()
   }
 
   return(
@@ -87,7 +91,7 @@ const Advanced = ({
         >
           { items && items.slice(0, maxLength).map((item, i) => {
 
-            const key = itemKey(item, i)
+            const key = itemKey(item)
             const isOpen = openKey === key
 
             return (
@@ -130,10 +134,12 @@ const Advanced = ({
                       )) }
                     </div>
                     { maxLength !== undefined &&
-                      <div className="tf-repeater-advanced-overview-item-actions is-size-sm">
+                      <div className="tf-repeater-advanced-overview-item-actions">
                         <Button
                           type="text-primary"
                           { ...actionProps }
+                          aria-expanded={ isOpen }
+                          aria-label={ string(isOpen ? 'closeItem' : 'editItem', { index: i + 1 }) }
                           onPress={ () => toggle(key) }
                         >
                           { string(isOpen ? 'close' : 'edit') }
@@ -152,8 +158,10 @@ const Advanced = ({
                     />
                   </Accordion.Trigger>
                 </div>
-                { /* Closed rows render no fields (a contract the field-group
-                     tests pin); TUI's panel still owns the aria/inert state */ }
+                { /* Closed rows render no fields: a contract the field-group tests
+                     pin, and a deliberate trade against TUI's close animation,
+                     which has nothing left to collapse. TUI's panel still owns
+                     the aria-hidden/inert state */ }
                 <Accordion.Panel className="tf-repeater-advanced-panel">
                   { isOpen &&
                     <div className='tf-repeater-advanced-row'>

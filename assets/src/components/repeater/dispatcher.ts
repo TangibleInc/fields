@@ -97,12 +97,25 @@ const formatClone = (initial, props) => {
   return item
 }
 
+/**
+ * Rows need a stable key: layouts key React elements and open/selection state
+ * by it. Values saved before keys were persisted, or written by hand, may not
+ * carry one, so assign it on hydration rather than falling back to the index
+ */
+const withKey = item => (
+  item && typeof item === 'object' && item.key
+    ? item
+    : { ...item, key: uniqid() }
+)
+
 const initDispatcher = (value, emptyItem) => {
   try {
     const initialItems = Array.isArray(value) ? value : JSON.parse(value)
-    return Array.isArray(initialItems) ? initialItems : [ emptyItem ]
+    return Array.isArray(initialItems)
+      ? initialItems.map(withKey)
+      : [ withKey(emptyItem) ]
   } catch (err) {
-    return [{ key: uniqid(), ...emptyItem }]
+    return [ withKey(emptyItem) ]
   }
 }
 
