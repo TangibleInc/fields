@@ -56,20 +56,29 @@ $advanced-item-index-height: 40px;
     line-height: $advanced-item-index-height;
   }
 
+  // The plain index reads like TUI's MoveHandle badge (size sm), so sortable
+  // and unsortable repeaters look like the same family
   .tf-repeater-advanced-label-row-index {
-    background: $field-background-secondary;
-  }
-
-  // Sortable rows: the MoveHandle replaces the plain number and brings its
-  // own panel background
-  .tf-repeater-advanced-label-row-index:has(.tui-move-handle) {
     display: flex;
     align-items: center;
     justify-content: center;
     align-self: center;
+    flex: 0 0 auto;
+    width: var(--tui-move-handle-size, 32px);
+    height: var(--tui-move-handle-size, 32px);
+    line-height: normal;
+    border-radius: var(--tui-radius-sm, 4px);
+    background: var(--tui-color-bg-muted, #{$field-background-secondary});
+    color: var(--tui-color-fg-muted, #{$field-font-color});
+    font-size: var(--tui-typography-size-sm, 0.875rem);
+    font-weight: var(--tui-typography-weight-medium, 500);
+  }
+
+  // Sortable rows: the MoveHandle replaces the plain number and brings its
+  // own panel
+  .tf-repeater-advanced-label-row-index:has(.tui-move-handle) {
     height: auto;
     background: none;
-    line-height: normal;
   }
 
   .tf-repeater-advanced-overview-item-actions {
