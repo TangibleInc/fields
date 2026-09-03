@@ -251,7 +251,8 @@ const Repeater = props => {
     repeatable && (
       <div className="tf-repeater-actions">
         <Button
-          type="action"
+          variant="outline"
+          theme="primary"
           onPress={ () => dispatch({ type: 'add' }) }
           isDisabled={ maxLength <= items.length }
         >
