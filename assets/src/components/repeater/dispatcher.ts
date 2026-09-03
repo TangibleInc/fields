@@ -39,6 +39,18 @@ const repeaterDispatcher = (emptyItem, maxLength, props) => (items, action) => {
               key: uniqid(),
             },
           ]
+    case 'move': {
+      const { from, to } = action
+      if (
+        from === to
+        || from < 0 || from >= items.length
+        || to < 0 || to >= items.length
+      ) return items
+      const moved = [...items]
+      const [row] = moved.splice(from, 1)
+      moved.splice(to, 0, row)
+      return moved
+    }
     case 'clear':
       return []
     /**

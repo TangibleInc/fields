@@ -60,6 +60,18 @@ $advanced-item-index-height: 40px;
     background: $field-background-secondary;
   }
 
+  // Sortable rows: the MoveHandle replaces the plain number and brings its
+  // own panel background
+  .tf-repeater-advanced-label-row-index:has(.tui-move-handle) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    height: auto;
+    background: none;
+    line-height: normal;
+  }
+
   .tf-repeater-advanced-overview-item-actions {
     display: flex;
     align-items: center;

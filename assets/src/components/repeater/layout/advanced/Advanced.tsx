@@ -27,6 +27,7 @@ const Advanced = ({
   afterRow = false,
   renderAction,
   renderFooterActions,
+  renderMoveHandle,
   useBulk,
   string
 }) => {
@@ -120,7 +121,7 @@ const Advanced = ({
                       />
                     </div> }
                   <div className='tf-repeater-advanced-label-row-index'>
-                    { i + 1 }
+                    { renderMoveHandle(i) ?? (i + 1) }
                   </div>
                   <div className="tf-repeater-advanced-overview-item-container">
                     <div className="tf-repeater-advanced-overview-item-fields">

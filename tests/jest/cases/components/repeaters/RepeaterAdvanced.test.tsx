@@ -396,4 +396,92 @@ describe('Repeater with an advanced layout', () => {
       expect(document.activeElement).toBe(within(container).getByText('Add item'))
     })
   })
+
+  describe('sortable', () => {
+
+    const setup = (sortable = true) => {
+      const user = userEvent.setup()
+      const { container } = render(
+        fields.render({
+          type     : 'repeater',
+          layout   : 'advanced',
+          name     : 'sortable-test',
+          sortable : sortable,
+          value    : JSON.stringify([
+            { key: 'a', text: 'A' },
+            { key: 'b', text: 'B' },
+            { key: 'c', text: 'C' }
+          ]),
+          fields   : [{ type: 'text', label: 'Text', name: 'text' }]
+        })
+      )
+      const order = () => JSON.parse(
+        container.querySelector('input[name=sortable-test]').getAttribute('value')
+      ).map(row => row.text)
+      const handles = () => container.querySelectorAll('.tui-move-handle')
+      const live = () => container.querySelector('[aria-live]')
+      return { user, container, order, handles, live }
+    }
+
+    it('renders the plain index when not sortable', () => {
+      const { handles, live, container } = setup(false)
+      expect(handles().length).toBe(0)
+      expect(live()).toBeNull()
+      expect(container.querySelectorAll('.tf-repeater-advanced-overview .tf-repeater-advanced-label-row-index')[1]).toHaveTextContent('2')
+    })
+
+    it('renders a labelled MoveHandle per row with boundary arrows disabled', () => {
+      const { handles } = setup()
+      expect(handles().length).toBe(3)
+
+      const first = handles()[0]
+      expect(first.getAttribute('aria-label')).toBe('Reorder item 1')
+      expect(within(first).getByLabelText('Move item 1 up')).toBeDisabled()
+      expect(within(first).getByLabelText('Move item 1 down')).not.toBeDisabled()
+      expect(first).toHaveTextContent('1')
+
+      const last = handles()[2]
+      expect(within(last).getByLabelText('Move item 3 down')).toBeDisabled()
+    })
+
+    it('moves a row, announces it, and keeps focus on the moved row', async () => {
+      const { user, order, handles, live } = setup()
+      expect(order()).toEqual(['A', 'B', 'C'])
+
+      await user.click(within(handles()[0]).getByLabelText('Move item 1 down'))
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      expect(order()).toEqual(['B', 'A', 'C'])
+      expect(live()).toHaveTextContent('Item moved to position 2 of 3')
+      expect(document.activeElement).toBe(within(handles()[1]).getByLabelText('Move item 2 down'))
+
+      await user.click(within(handles()[2]).getByLabelText('Move item 3 up'))
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      expect(order()).toEqual(['B', 'C', 'A'])
+      expect(live()).toHaveTextContent('Item moved to position 2 of 3')
+    })
+
+    it('moving to the end falls back to the up arrow for focus', async () => {
+      const { user, order, handles } = setup()
+
+      await user.click(within(handles()[1]).getByLabelText('Move item 2 down'))
+      await new Promise(resolve => setTimeout(resolve, 0))
+
+      expect(order()).toEqual(['A', 'C', 'B'])
+      expect(document.activeElement).toBe(within(handles()[2]).getByLabelText('Move item 3 up'))
+    })
+
+    it('keeps the open row open across a move', async () => {
+      const { user, container, handles } = setup()
+      const toggles = container.querySelectorAll('.tf-button-repeater-overview-open')
+      await user.click(toggles[0])
+      expect(within(container).getByDisplayValue('A')).toBeTruthy()
+
+      await user.click(within(handles()[0]).getByLabelText('Move item 1 down'))
+
+      expect(within(container).getByDisplayValue('A')).toBeTruthy()
+      expect(container.querySelectorAll('.tf-repeater-advanced-item')[1].getAttribute('data-state')).toBe('open')
+    })
+  })
 })

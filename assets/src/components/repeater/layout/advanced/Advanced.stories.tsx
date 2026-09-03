@@ -111,3 +111,18 @@ export const WithBulk: Story = {
     useBulk: true,
   }
 }
+
+/**
+ * Opt-in reordering: the index badge becomes a MoveHandle with up/down moves.
+ * Moves are announced to assistive tech through a live region
+ */
+export const Sortable: Story = {
+  args: {
+    sortable: true,
+    value: JSON.stringify([
+      { key: 'a', date: '2026-01-05', select: 'test1', color: '#6366F1' },
+      { key: 'b', date: '2026-02-14', select: 'test2', color: '#F59E0B' },
+      { key: 'c', date: '2026-03-21', select: 'test3', color: '#10B981' }
+    ])
+  }
+}

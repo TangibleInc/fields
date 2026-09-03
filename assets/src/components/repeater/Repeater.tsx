@@ -10,6 +10,8 @@ import {
   initDispatcher
 } from './dispatcher.ts'
 
+import { MoveHandle } from '@tangible/ui'
+
 import {
   Button,
   Title,
@@ -30,6 +32,13 @@ const Repeater = props => {
 
   const repeatable = props.repeatable ?? true
   const maxLength = props.maxlength ?? Infinity
+
+  /**
+   * Opt-in row reordering (PHP: sortable). Rows get a MoveHandle in place of
+   * the plain index, with up/down moves; the saved value follows the order
+   */
+  const sortable = repeatable && Boolean(props.sortable) && props.sortable !== 'false'
+  const [announcement, setAnnouncement] = useState('')
 
   const rowFields = fields.map(field => {
 
@@ -101,6 +110,50 @@ const Repeater = props => {
    * control), or to the footer actions once the list is empty. Deferred so it
    * lands after TUI's own restore attempt
    */
+  /**
+   * Reorder and keep focus on the control that did it: the row moves in the
+   * DOM, and TUI's MoveHandle recovers to the opposite arrow at a boundary
+   */
+  const move = (from: number, to: number) => {
+    const count = items.length
+    if (to < 0 || to >= count) return
+    dispatch({ type: 'move', from, to })
+    setAnnouncement(string('movedAnnouncement', { index: from + 1, position: to + 1, count }))
+    const direction = to > from ? 'down' : 'up'
+    setTimeout(() => {
+      const list = rootRef.current?.querySelector('.tf-repeater-items')
+      const row = list?.children[to] as HTMLElement | undefined
+      const target = row?.querySelector<HTMLElement>(`.tui-move-handle [data-direction="${direction}"]:not(:disabled)`)
+        ?? row?.querySelector<HTMLElement>('.tui-move-handle button:not(:disabled)')
+      target?.focus()
+    })
+  }
+
+  /**
+   * Layouts call this where they show the row index; it returns null when the
+   * repeater is not sortable so they can fall back to the plain number
+   */
+  const renderMoveHandle = (i: number) => (
+    sortable
+      ? <MoveHandle
+          mode="full"
+          size="sm"
+          index={ i + 1 }
+          className="tf-repeater-move-handle"
+          aria-label={ string('reorderItem', { index: i + 1 }) }
+          labels={{
+            moveUp   : string('moveItemUp', { index: i + 1 }),
+            moveDown : string('moveItemDown', { index: i + 1 }),
+            drag     : string('dragItem', { index: i + 1 })
+          }}
+          canMoveUp={ i > 0 }
+          canMoveDown={ i < items.length - 1 }
+          onMoveUp={ () => move(i, i - 1) }
+          onMoveDown={ () => move(i, i + 1) }
+        />
+      : null
+  )
+
   const focusAfterRemove = (index: number) => setTimeout(() => {
     const root = rootRef.current
     if (!root) return
@@ -294,6 +347,10 @@ const Repeater = props => {
   return(
     <div className={ `tf-repeater tf-repeater-${layout}`} ref={ rootRef }>
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(getSavedValue()) } />
+      { sortable &&
+        <div className="tui-visually-hidden" aria-live="polite" aria-atomic="true">
+          { announcement }
+        </div> }
       { props.label &&
         <Title level={2} className='tf-repeater-title'>
           { props.label }
@@ -315,6 +372,8 @@ const Repeater = props => {
           name={ props.name ?? '' }
           renderFooterActions={ renderFooterActions }
           renderAction={ renderAction }
+          renderMoveHandle={ renderMoveHandle }
+          sortable={ sortable }
           parent={ props }
           string={ string }
         />

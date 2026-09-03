@@ -26,3 +26,18 @@
   margin-top: $global-spacer-sm;
 	margin-bottom: $global-spacer-sm;
 }
+
+// Repeater reordering uses MoveHandle for its index badge and up/down arrows
+// only. There is no drag library behind it, so the grip that TUI swaps in on
+// hover/focus-within is suppressed and the index stays put. TUI has been
+// asked for a native index-plus-arrows mode; this block goes when it lands
+.tf-repeater-move-handle.tui-move-handle {
+  .tui-move-handle__handle {
+    display: none;
+  }
+
+  &.has-index:hover .tui-move-handle__index,
+  &.has-index:focus-within .tui-move-handle__index {
+    display: inline;
+  }
+}
