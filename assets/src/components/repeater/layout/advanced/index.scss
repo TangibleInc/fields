@@ -65,7 +65,9 @@ $advanced-item-index-height: 40px;
     align-self: center;
     flex: 0 0 auto;
     width: var(--tui-move-handle-size, 32px);
-    height: var(--tui-move-handle-size, 32px);
+    // Approximates the MoveHandle with its arrows (~51px), so rows keep the
+    // same rhythm whether or not the repeater is sortable
+    min-height: 48px;
     line-height: normal;
     border-radius: var(--tui-radius-sm, 4px);
     background: var(--tui-color-bg-muted, #{$field-background-secondary});
@@ -77,7 +79,7 @@ $advanced-item-index-height: 40px;
   // Sortable rows: the MoveHandle replaces the plain number and brings its
   // own panel
   .tf-repeater-advanced-label-row-index:has(.tui-move-handle) {
-    height: auto;
+    min-height: 0;
     background: none;
   }
 
