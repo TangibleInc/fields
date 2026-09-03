@@ -23,10 +23,9 @@ const Table = ({
   renderFooterActions,
   renderMoveHandle,
   sortable,
+  repeatable,
   string
 }) => {
-
-  const repeatable = maxLength !== undefined
 
   return (
     <>

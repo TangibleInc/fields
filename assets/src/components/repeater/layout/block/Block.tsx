@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Accordion } from '@tangible/ui'
 
-import { PanelItem } from '../../../base/expandable-panel/ExpandablePanel'
+import { PanelItem } from '../../../base'
 import { Checkbox, Switch } from '../../../field'
 import { renderTitle } from '../../common/helpers'
 import ToggleLink from '../../common/ToggleLink'
@@ -21,6 +21,7 @@ const Block = ({
   renderFooterActions,
   renderAction,
   renderMoveHandle,
+  repeatable,
   actionsPosition = 'footer',
   parent,
   string
@@ -56,7 +57,7 @@ const Block = ({
         { handle }
         { useBulk &&
           <Checkbox
-            label={ `Select item ${i + 1}` }
+            label={ string('selectItem', { index: i + 1 }) }
             labelVisuallyHidden={ true }
             value={ item._bulkCheckbox }
             onChange={ value => dispatch({
@@ -68,7 +69,7 @@ const Block = ({
           /> }
         { useSwitch &&
           <Switch
-            label={ `Enable item ${i + 1}` }
+            label={ string('enableItem', { index: i + 1 }) }
             labelVisuallyHidden={ true }
             value={ item.enabled }
             onChange={ value => dispatch({
@@ -82,6 +83,10 @@ const Block = ({
     )
   }
 
+  /**
+   * ToggleLink reads the item's accordion context; these elements are created
+   * here but only render inside PanelItem, which is what makes that work
+   */
   const footer = i => (
     <>
       { renderAction( 'clone', i ) }
@@ -119,8 +124,8 @@ const Block = ({
             className="tf-repeater-block-item"
             title={ renderTitle(item, i, title, name, renderItem, parent) }
             headerLeft={ headerLeft(item, i) }
-            headerRight={ maxLength !== undefined && inlineActions ? headerRight(i) : undefined }
-            footer={ maxLength !== undefined && ! inlineActions ? footer(i) : undefined }
+            headerRight={ repeatable && inlineActions ? headerRight(i) : undefined }
+            footer={ repeatable && ! inlineActions ? footer(i) : undefined }
           >
             { rowFields.map(control => (
               <div key={ control.name ?? i } className="tf-repeater-block-item-field">

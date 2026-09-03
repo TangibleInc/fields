@@ -12,6 +12,12 @@
   align-items: center;
   cursor: pointer;
 
+  // Side slots hold controls with their own behaviour, not the toggle
+  .tf-panel-header-left,
+  .tf-panel-header-right {
+    cursor: default;
+  }
+
   // The trigger is TUI's own full-width button (title + chevron); side slots
   // sit beside it and keep their controls out of the button
   .tf-panel-header-trigger {
@@ -45,5 +51,5 @@
   align-items: center;
   gap: var(--tui-spacing-xs, 8px);
   padding: var(--tui-spacing-xs, 8px) var(--tui-spacing-md, 16px);
-  border-top: var(--tui-border-width, 1px) solid var(--tui-color-border);
+  border-top: var(--tui-border-width, 1px) solid var(--tui-color-border, #{$field-border-color});
 }

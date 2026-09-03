@@ -5,16 +5,19 @@ import { Button } from '../../../base'
 import { Checkbox } from '../../../field'
 import BulkActions from '../../common/BulkActions'
 import ToggleLink from '../../common/ToggleLink'
+import { isInteractiveTarget } from '../../../../utils/interactive'
 import {
   getHeaderConfig,
   renderHeaderValue
 } from './header'
 
 /**
- * Double-clicking the overview row toggles it, unless the double-click landed
- * on something that already has its own behaviour
+ * Gesture: the overview row is a dense, table-like summary whose values are
+ * worth selecting and copying, so a *double*-click toggles it (the chevron is
+ * the primary control). Block rows are card headers and toggle on a single
+ * click; see base/expandable-panel. Clicks that start on a control are left
+ * to that control
  */
-const INTERACTIVE = 'button, a, input, select, textarea, label, [role="button"], [role="link"]'
 
 const Advanced = ({
   items,
@@ -29,6 +32,7 @@ const Advanced = ({
   renderAction,
   renderFooterActions,
   renderMoveHandle,
+  repeatable,
   useBulk,
   string
 }) => {
@@ -50,7 +54,7 @@ const Advanced = ({
   const toggle = key => setOpenKey(current => current === key ? undefined : key)
 
   const onOverviewDoubleClick = key => (event: MouseEvent<HTMLDivElement>) => {
-    if ((event.target as Element).closest(INTERACTIVE)) return
+    if (isInteractiveTarget(event.target)) return
     toggle(key)
   }
 
@@ -110,7 +114,7 @@ const Advanced = ({
                   { useBulk &&
                     <div className="tf-repeater-advanced-item-checkbox">
                       <Checkbox
-                        label={ `Select item ${i + 1}` }
+                        label={ string('selectItem', { index: i + 1 }) }
                         labelVisuallyHidden={ true }
                         value={ item._bulkCheckbox }
                         onChange={ value => dispatch({
@@ -135,7 +139,7 @@ const Advanced = ({
                         </div>
                       )) }
                     </div>
-                    { maxLength !== undefined &&
+                    { repeatable &&
                       <div className="tf-repeater-advanced-overview-item-actions">
                         <ToggleLink index={ i + 1 } string={ string } { ...actionProps } />
                         { renderAction( 'clone', i, { type : 'text-primary', ...actionProps } ) }

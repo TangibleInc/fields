@@ -1,17 +1,20 @@
 import type { MouseEvent, ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import { Accordion, useAccordionItem } from '@tangible/ui'
+import { isInteractiveTarget } from '../../../utils/interactive'
 
 /**
- * Clicking the header row toggles the item for pointer users, unless the
- * click landed on something with its own behaviour (the trigger handles
- * itself; switches and checkboxes in the header must not toggle the panel)
+ * Gesture: a single click anywhere on the header row toggles the item, the
+ * card-header convention. (The Advanced repeater's dense overview row uses
+ * double-click instead, so its values stay selectable; see Advanced.tsx.)
+ * Clicks that start on a control in the row are left to that control
  */
-const INTERACTIVE = 'button, a, input, select, textarea, label, [role="button"], [role="link"], [role="switch"], [role="checkbox"]'
 
 export interface PanelItemProps {
   /** Accordion item value; unique within the parent Accordion */
   value: string
+  /** Wrap the trigger in a heading for screen-reader heading navigation */
+  headingLevel?: 2 | 3 | 4 | 5 | 6
   title?: ReactNode
   headerLeft?: ReactNode
   headerRight?: ReactNode
@@ -25,6 +28,10 @@ export interface PanelItemProps {
   children?: ReactNode
 }
 
+/**
+ * Rendered inside Accordion.Item on purpose: useAccordionItem() reads the
+ * item's context, so this cannot be inlined into PanelItem
+ */
 const PanelItemBody = ({
   title,
   headerLeft,
@@ -37,7 +44,11 @@ const PanelItemBody = ({
   const { isOpen, toggle } = useAccordionItem()
 
   const onHeaderClick = (event: MouseEvent<HTMLDivElement>) => {
-    if ((event.target as Element).closest(INTERACTIVE)) return
+    const target = event.target as Element
+    // The side slots are control zones in their entirety (a switch's wrapper
+    // padding counts), not just the controls inside them
+    if (target.closest('.tf-panel-header-left, .tf-panel-header-right')) return
+    if (isInteractiveTarget(target)) return
     toggle()
   }
 
@@ -79,9 +90,10 @@ const PanelItemBody = ({
  * Used by the Block repeater layout (many items in one accordion) and by
  * ExpandablePanel (one item on its own)
  */
-const PanelItem = ({ value, className, ...body }: PanelItemProps) => (
+const PanelItem = ({ value, className, headingLevel, ...body }: PanelItemProps) => (
   <Accordion.Item
     value={ value }
+    headingLevel={ headingLevel }
     className={ ['tf-panel-item', className].filter(Boolean).join(' ') }
   >
     <PanelItemBody { ...body } />
@@ -98,9 +110,14 @@ export interface ExpandablePanelProps extends Omit<PanelItemProps, 'value'> {
 const ITEM = 'panel'
 
 /**
- * Standalone collapsible panel. Semi-controlled like before: `isOpen`
- * changes are followed, user toggles are kept locally and reported through
- * `onChange`
+ * Standalone collapsible panel. Semi-controlled, as before: a *change* in the
+ * `isOpen` prop is applied; between changes the user's own toggles win and
+ * are reported through `onChange`. Re-passing the same `isOpen` value after
+ * the user toggled does not reopen/close the panel.
+ *
+ * The .tf-panel wrapper with `data-status` and tf-panel-open/closed is the
+ * public theming hook for context stylesheets and plugins; TUI's own
+ * data-state lives on the item inside
  */
 const ExpandablePanel = ({
   isOpen = true,
@@ -113,6 +130,7 @@ const ExpandablePanel = ({
   const [open, setOpen] = useState(isOpen)
 
   useEffect(() => {
+    // Only `isOpen` on purpose: this follows prop changes, not local toggles
     if (isOpen !== open) setOpen(isOpen)
   }, [isOpen])
 

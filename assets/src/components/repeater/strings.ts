@@ -12,6 +12,8 @@ export default {
     add                         : 'Add item',
     clone                       : 'Clone',
     delete                      : 'Remove',
+    cloneItem                   : 'Clone item {index}',
+    deleteItem                  : 'Remove item {index}',
     edit                        : 'Edit',
     close                       : 'Close',
     editItem                    : 'Edit item {index}',
@@ -22,6 +24,7 @@ export default {
     dragItem                    : 'Drag to reorder item {index}',
     movedAnnouncement           : 'Item moved to position {position} of {count}',
     selectItem                  : 'Select item {index}',
+    enableItem                  : 'Enable item {index}',
     rowOrder                    : 'Order',
     rowSelect                   : 'Select',
     rowActions                  : 'Actions',
@@ -42,6 +45,8 @@ export default {
     advanced  : {
       clone                     : 'Duplicate',
       delete                    : 'Delete',
+      cloneItem                 : 'Duplicate item {index}',
+      deleteItem                : 'Delete item {index}',
       confirmDelete             : 'Delete this item?',
       confirmDeleteDescription  : 'Item {index} will be deleted.'
     },

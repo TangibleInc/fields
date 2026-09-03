@@ -312,11 +312,15 @@ const Repeater = props => {
     }
     switch( action ) {
       case 'delete': {
-        const { onConfirm, ...confirmProps } = customProps
+        const { onConfirm, buttonProps, ...confirmProps } = customProps
         return(
           <ConfirmTrigger
             label={ string('delete') }
             title={ string('confirmDelete') }
+            buttonProps={{
+              'aria-label': string('deleteItem', { index: i + 1 }),
+              ...(buttonProps ?? {})
+            }}
             { ...confirmProps }
             onConfirm={ () => {
               onConfirm ? onConfirm() : dispatch({ type : 'remove', item : i })
@@ -331,6 +335,7 @@ const Repeater = props => {
           return(
             <Button
               type="action"
+              aria-label={ string('cloneItem', { index: i + 1 }) }
               isDisabled={ maxLength <= items.length }
               onPress={ () => dispatch({
                 type : 'clone',
@@ -377,6 +382,7 @@ const Repeater = props => {
           renderAction={ renderAction }
           renderMoveHandle={ renderMoveHandle }
           sortable={ sortable }
+          repeatable={ repeatable }
           parent={ props }
           string={ string }
         />

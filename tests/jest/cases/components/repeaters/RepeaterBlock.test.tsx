@@ -121,6 +121,37 @@ describe('Repeater with a block layout', () => {
       expect(within(container).queryByDisplayValue('A')).toBeNull()
     })
 
+    it('renders no left slot when there is nothing to put in it', () => {
+      const { rows } = setup()
+      expect(rows()[0].querySelector('.tf-panel-header-left')).toBeNull()
+    })
+
+    it('names Clone and Remove per row', () => {
+      const { rows } = setup()
+      expect(within(rows()[1]).getByText('Clone').closest('button').getAttribute('aria-label')).toBe('Clone item 2')
+      expect(within(rows()[1]).getByText('Remove').closest('button').getAttribute('aria-label')).toBe('Remove item 2')
+    })
+
+    it('moves between row triggers with the arrow keys', async () => {
+      const { user, triggers } = setup()
+      ;(triggers()[0] as HTMLElement).focus()
+      await user.keyboard('{ArrowDown}')
+      expect(document.activeElement).toBe(triggers()[1])
+      await user.keyboard('{End}')
+      expect(document.activeElement).toBe(triggers()[2])
+      await user.keyboard('{Home}')
+      expect(document.activeElement).toBe(triggers()[0])
+    })
+
+    it('hands focus to the next row trigger after a delete', async () => {
+      const { user, rows, triggers } = setup()
+      await user.click(within(rows()[0]).getByText('Remove'))
+      await user.click(within(document.querySelector('.tf-confirm-dialog')).getByText('Remove'))
+      await new Promise(resolve => setTimeout(resolve, 0))
+      expect(rows().length).toBe(2)
+      expect(document.activeElement).toBe(triggers()[0])
+    })
+
     it('shows a move handle in the header when sortable', async () => {
       const { user, rows, container } = setup({ sortable: true })
       const header = rows()[0].querySelector('.tf-panel-header')
