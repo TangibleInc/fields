@@ -78,6 +78,11 @@ $advanced-item-index-height: 40px;
     gap: var(--tui-spacing-sm, 12px);
     width: 100%;
     height: var(--tui-control-height-sm, 25px);
+
+    // Row actions read as WP list-table row actions: no underline
+    .tui-button.is-style-link {
+      text-decoration: none;
+    }
   }
 }
 
