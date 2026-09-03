@@ -1,14 +1,12 @@
 import { useState } from 'react'
+import { Accordion } from '@tangible/ui'
 
-import { 
-  Button,
-  ExpandablePanel 
-} from '../../../base'
-
+import { PanelItem } from '../../../base'
 import { Checkbox, Switch } from '../../../field'
 import { renderTitle } from '../../common/helpers'
-
+import ToggleLink from '../../common/ToggleLink'
 import BulkActions from '../../common/BulkActions'
+import { iconAction } from '../../common/actions'
 
 const Block = ({
   items,
@@ -22,98 +20,121 @@ const Block = ({
   name,
   renderFooterActions,
   renderAction,
-  parent
+  renderMoveHandle,
+  repeatable,
+  actionsPosition = 'footer',
+  parent,
+  string
 }) => {
 
-  const [activeItem, setActiveItem] = useState(0)
-  const toggleItem = i => setActiveItem( i !== activeItem ? i : false )
+  /**
+   * 'footer' (default): Clone / Edit-Close / Remove as buttons under the
+   * content. 'header': Clone and Remove as ghost icon buttons in the trigger
+   * row; the trigger itself covers open/close
+   */
+  const inlineActions = actionsPosition === 'header'
 
-  const bulkOptions = { 'deletion': 'Delete' }
+  /**
+   * Open item tracked by key (assigned on hydration, see dispatcher.ts), so
+   * removing or moving rows never switches which one is open
+   */
+  const [openKey, setOpenKey] = useState<string | undefined>(
+    items?.[0]?.key !== undefined ? String(items[0].key) : undefined
+  )
+
+  const bulkOptions = { 'deletion': string('bulkDelete') }
 
   if ( useSwitch ) {
     bulkOptions['enabled'] = 'Enabled'
     bulkOptions['disabled'] = 'Disabled'
   }
 
-  const getHeaderLeft = (item, i) => {
+  const headerLeft = (item, i) => {
+    const handle = renderMoveHandle(i)
+    if ( ! useBulk && ! useSwitch && ! handle ) return null
     return (
       <>
-        {
-          useBulk
-          ? <div onClick={ e => e.stopPropagation() }>
-              <Checkbox
-                label={ `Select item ${i + 1}` }
-                labelVisuallyHidden={ true }
-                value={ item._bulkCheckbox }
-                onChange={ value => dispatch({ 
-                  type    : 'update',
-                  item    : i,
-                  control : '_bulkCheckbox',
-                  value   : value
-                }) } 
-              />
-            </div>  
-          : null
-        }
-        { 
-          useSwitch
-          ? <div onClick={ e => e.stopPropagation() }>
-              <Switch 
-                label={ `Enable item ${i + 1}` }
-                labelVisuallyHidden={ true }
-                value={ item.enabled }
-                onChange={ value => dispatch({ 
-                  type    : 'update',
-                  item    : i,
-                  control : 'enabled',
-                  value   : value
-                }) }
-              />
-            </div>  
-          : null 
-        }
+        { handle }
+        { useBulk &&
+          <Checkbox
+            label={ string('selectItem', { index: i + 1 }) }
+            labelVisuallyHidden={ true }
+            value={ item._bulkCheckbox }
+            onChange={ value => dispatch({
+              type    : 'update',
+              item    : i,
+              control : '_bulkCheckbox',
+              value   : value
+            }) }
+          /> }
+        { useSwitch &&
+          <Switch
+            label={ string('enableItem', { index: i + 1 }) }
+            labelVisuallyHidden={ true }
+            value={ item.enabled }
+            onChange={ value => dispatch({
+              type    : 'update',
+              item    : i,
+              control : 'enabled',
+              value   : value
+            }) }
+          /> }
       </>
-    ) 
+    )
   }
 
-  const actions = (i, item) => (
-     <> 
+  /**
+   * ToggleLink reads the item's accordion context; these elements are created
+   * here but only render inside PanelItem, which is what makes that work
+   */
+  const footer = i => (
+    <>
       { renderAction( 'clone', i ) }
-      <Button type="action" onPress={ () => toggleItem(i) }>
-        { activeItem !== i ? 'Edit' : 'Close' }
-      </Button>
+      <ToggleLink index={ i + 1 } string={ string } type="action" />
       { renderAction( 'delete', i ) }
+    </>
+  )
+
+  const headerRight = i => (
+    <>
+      { renderAction( 'clone', i, iconAction('system/copy', 'secondary', 'ghost') ) }
+      { renderAction( 'delete', i, { buttonProps: iconAction('system/trash', 'danger', 'ghost') } ) }
     </>
   )
 
   return(
     <>
-      <div className='tf-repeater-items tf-repeater-block-items'>
-        { useBulk && 
-          <BulkActions
-            actions={ bulkOptions }
-            dispatch={ dispatch }
-          /> }
+      { useBulk &&
+        <BulkActions
+          actions={ bulkOptions }
+          dispatch={ dispatch }
+          string={ string }
+        /> }
+      <Accordion
+        type="single"
+        collapsible
+        value={ openKey ?? null }
+        onValueChange={ setOpenKey }
+        className='tf-repeater-items tf-repeater-block-items'
+      >
         { items && items.slice(0, maxLength).map((item, i) => (
-          <ExpandablePanel
-            key={ item.key ?? i } 
-            title={ renderTitle(item, i, title, name, renderItem, parent) }
-            footer={ actions(i, item) }
-            isOpen={ activeItem === i }
+          <PanelItem
+            key={ item.key }
+            value={ String(item.key) }
             className="tf-repeater-block-item"
-            onChange={ visible => visible 
-              ? (activeItem !== i ? setActiveItem(i) : null)
-              : (activeItem === i ? setActiveItem(false) : null) }
-            headerLeft={ getHeaderLeft(item, i) }
-          > 
-            { rowFields.map(control => ( 
+            title={ renderTitle(item, i, title, name, renderItem, parent) }
+            headerLeft={ headerLeft(item, i) }
+            headerRight={ repeatable && inlineActions ? headerRight(i) : undefined }
+            footer={ repeatable && ! inlineActions ? footer(i) : undefined }
+          >
+            { rowFields.map(control => (
               <div key={ control.name ?? i } className="tf-repeater-block-item-field">
                 { renderItem(control, item, i) }
               </div>
-            )) } 
-          </ExpandablePanel>
+            )) }
+          </PanelItem>
         )) }
-      </div>
+      </Accordion>
       { renderFooterActions() }
     </>
   )

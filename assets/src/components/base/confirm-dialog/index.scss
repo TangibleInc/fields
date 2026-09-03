@@ -1,0 +1,14 @@
+// Confirmation dialog. The shell is TUI Modal; these are the few layout rules
+// the compound slots leave to the consumer.
+.tf-confirm-dialog {
+
+  &__title {
+    margin: 0;
+    font-size: var(--tui-font-size-lg, 1.125rem);
+    line-height: 1.3;
+  }
+
+  &__body {
+    margin: 0;
+  }
+}

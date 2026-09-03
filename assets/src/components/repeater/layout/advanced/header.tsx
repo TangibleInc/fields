@@ -6,12 +6,12 @@ import * as tangibleFields from '../../../../index.tsx'
  * 
  * By default, the header will display the value of all fields
  * 
- * This default behavior can be changed by passing the headerConfig 
+ * This default behavior can be changed by passing the headerFields 
  * prop, which will determine which fields are going to be displayed
  * 
  * For example, to only display the value of two field we set it to:
  * 
- * headerConfig={[
+ * headerFields={[
  *    'field-name-1',
  *    'field-name-2'
  * ]}
@@ -21,7 +21,7 @@ import * as tangibleFields from '../../../../index.tsx'
  *  
  * For example, if I want to add a prefix to 'field-name-1':
  * 
- * headerConfig={[
+ * headerFields={[
  *    { name: 'field-name-1', callback: ({ value }) => `_Prefix_${value}` },
  *    'field-name-2'
  * ]}
@@ -32,7 +32,7 @@ import * as tangibleFields from '../../../../index.tsx'
  * 
  * Example:
  * 
- * headerConfig={[
+ * headerFields={[
  *    { name: 'field-name-1', callback: 'callback_name` },
  *    'field-name-2'
  * ]}

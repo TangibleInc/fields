@@ -67,3 +67,17 @@ export const BulkActions: Story = {
     useBulk: true,
   }
 }
+
+/**
+ * Opt-in reordering: a MoveHandle with up/down moves leads each row
+ */
+export const Sortable: Story = {
+  args: {
+    sortable: true,
+    value: JSON.stringify([
+      { key: 'a', text: 'First' },
+      { key: 'b', text: 'Second' },
+      { key: 'c', text: 'Third' }
+    ])
+  }
+}

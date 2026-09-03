@@ -10,6 +10,14 @@ import * as fields from '../../../../../assets/src/index.tsx'
  * - Tests with initial value
  * - Test clone button (check key is different)
  */
+/**
+ * Row actions carry a row-specific accessible name ("Remove item 2") and, in
+ * icon-only layouts, no text at all: find them by name, not by text
+ */
+const actionButtons = (scope, text) => within(scope).getAllByRole('button', {
+  name: new RegExp(`^${text}( item \\d+)?$`)
+})
+
 const commonRepeaterTests = (layout, args = {}) => {
 
   const config = {
@@ -141,26 +149,26 @@ const commonRepeaterTests = (layout, args = {}) => {
     const removeElement = async index => (
       config.removeElement
         ? config.removeElement(index, { itemsContainer, user, document }, config)
-        : user.click(within(itemsContainer.children[index]).getByText(config.removeText))
+        : user.click(actionButtons(itemsContainer.children[index], config.removeText)[0])
     )
 
     // Confirmation popup - Cancel
 
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
     await removeElement(2)
-    expect(document.querySelector(`.tf-modal-container`)).toBeTruthy()
-    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText('Cancel'))
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeTruthy()
+    await user.click(within(document.querySelector(`.tf-confirm-dialog`)).getByText('Cancel'))
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
 
     expect(itemsContainer.children.length).toBe(4)
 
     // Confirmation popup - Delete second item
 
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
     await removeElement(1)
-    expect(document.querySelector(`.tf-modal-container`)).toBeTruthy()
-    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText(config.removeText))
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeTruthy()
+    await user.click(within(document.querySelector(`.tf-confirm-dialog`)).getByText(config.removeText))
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
 
     expect(itemsContainer.children.length).toBe(3)
 
@@ -181,21 +189,21 @@ const commonRepeaterTests = (layout, args = {}) => {
 
     // Confirmation popup - Cancel
 
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
     await user.click(within(container).getByText('Remove all'))
-    expect(document.querySelector(`.tf-modal-container`)).toBeTruthy()
-    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText('Cancel'))
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeTruthy()
+    await user.click(within(document.querySelector(`.tf-confirm-dialog`)).getByText('Cancel'))
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
 
     expect(itemsContainer.children.length).toBe(3)
 
     // Confirmation popup - Delete all
 
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
     await user.click(within(container).getByText('Remove all'))
-    expect(document.querySelector(`.tf-modal-container`)).toBeTruthy()
-    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText('Remove all'))
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeTruthy()
+    await user.click(within(document.querySelector(`.tf-confirm-dialog`)).getByText('Remove all'))
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
 
     expect(itemsContainer.children.length).toBe(0)
   })
@@ -222,13 +230,14 @@ const commonRepeaterTests = (layout, args = {}) => {
       })
     )
 
-    expect(within(container).queryByText('Duplicate')).toBeFalsy()
-    expect(within(container).queryByText('Edit')).toBeFalsy()
-    expect(within(container).queryByText('Remove')).toBeFalsy()
-    expect(within(container).queryByText('Delete')).toBeFalsy()
+    // by accessible name: icon-only actions carry no text
+    const actions = within(container).queryAllByRole('button', {
+      name: /^(Duplicate|Edit|Remove|Delete|Clone)( item \d+)?$/
+    })
+    expect(actions.length).toBe(0)
     expect(within(container).queryByText(config.addText)).toBeFalsy()
     expect(within(container).queryByText('Remove all')).toBeFalsy()
-    expect(within(container).queryByText('Clone')).toBeFalsy()
+    expect(within(container).queryAllByRole('button', { name: /^(Reorder|Move) item/ }).length).toBe(0)
   })
 
   it('supports maxlength property', async () => {
@@ -254,14 +263,15 @@ const commonRepeaterTests = (layout, args = {}) => {
       })
     )
 
-    let addButton, cloneButton
+    let addButton, cloneButtons
 
     addButton = within(container).getByText(config.addText)
     expect(addButton).not.toBeDisabled()
 
     if( layout !== 'bare' ) {
-      cloneButton = within(container).getByText(config.cloneText)
-      expect(cloneButton).not.toBeDisabled()
+      cloneButtons = actionButtons(container, config.cloneText)
+      expect(cloneButtons.length).toBe(1)
+      expect(cloneButtons[0]).not.toBeDisabled()
     }
 
     await user.click(within(container).getByText(config.addText))
@@ -269,26 +279,22 @@ const commonRepeaterTests = (layout, args = {}) => {
     addButton = within(container).getByText(config.addText)
     expect(addButton).toBeDisabled()
 
-    if( layout === 'tab' ) {
-      cloneButton = within(container).getByText(config.cloneText)
-      cloneButton = cloneButton.parentNode // Child element because visually hidden
-      expect(cloneButton).toBeDisabled()
-    }
-    else if( layout !== 'bare' ) {
-      cloneButton = within(container).getAllByText(config.cloneText)
-      expect(cloneButton[0]).toBeDisabled()
-      expect(cloneButton[1]).toBeDisabled()
+    if( layout !== 'bare' ) {
+      cloneButtons = actionButtons(container, config.cloneText)
+      // tab shows one clone control for the active item; other layouts one per row
+      expect(cloneButtons.length).toBe(layout === 'tab' ? 1 : 2)
+      cloneButtons.forEach(button => expect(button).toBeDisabled())
     }
 
-    await user.click(within(container).getAllByText(config.removeText)[0])
-    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText(config.removeText)) // Confirmation popup
+    await user.click(actionButtons(container, config.removeText)[0])
+    await user.click(within(document.querySelector(`.tf-confirm-dialog`)).getByText(config.removeText)) // Confirmation popup
 
     addButton = within(container).getByText(config.addText)
     expect(addButton).not.toBeDisabled()
 
     if( layout !== 'bare' ) {
-      cloneButton  = within(container).getByText(config.cloneText)
-      expect(cloneButton).not.toBeDisabled()
+      cloneButtons = actionButtons(container, config.cloneText)
+      expect(cloneButtons[0]).not.toBeDisabled()
     }
   })
 
@@ -571,7 +577,7 @@ const commonRepeaterTests = (layout, args = {}) => {
     // Does not have a clone button
     if( layout === 'bare' ) return;
 
-    const cloneButton = within(container).getByText(config.cloneText)
+    const cloneButton = actionButtons(container, config.cloneText)[0]
     await user.click(cloneButton)
 
     const repeater = store.getRepeater('test')

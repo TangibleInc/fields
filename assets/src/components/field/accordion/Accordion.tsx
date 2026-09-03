@@ -34,14 +34,12 @@ const Accordion = props => {
   }
 
   const headerLeft = ! uncontrolled && props.useSwitch
-    ? <div onClick={ e => e.stopPropagation() }>
-        <Switch
-          value={ value.enabled ?? 'off' }
-          onChange={ isEnabled }
-          label={ 'Toggle accordion' }
-          labelVisuallyHidden={ true }
-        />
-      </div>
+    ? <Switch
+        value={ value.enabled ?? 'off' }
+        onChange={ isEnabled }
+        label={ 'Toggle accordion' }
+        labelVisuallyHidden={ true }
+      />
     : null
 
   return(

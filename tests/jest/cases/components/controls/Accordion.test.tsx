@@ -99,8 +99,6 @@ describe('Accordion component', () => {
 
     expect(panel.getAttribute('data-status')).toBe('closed')
 
-    // Expected warning onClick, see comment in Accordion component
-    console.warn = jest.fn()
     const user = userEvent.setup()
 
     await user.click(header)
@@ -130,11 +128,54 @@ describe('Accordion component', () => {
     expect(headerSwitch).toBeTruthy()
     expect(panel.getAttribute('data-status')).toBe('closed')
 
-    // Expected warning onClick, see comment in Accordion component
-    console.warn = jest.fn()
     const user = userEvent.setup()
 
     await user.click(headerSwitch)
     expect(panel.getAttribute('data-status')).toBe('closed')
+  })
+
+  it('keeps uncontrolled content mounted but hidden while closed', () => {
+
+    render(
+      <>
+        { fields.render({
+          name         : 'accordion-name',
+          type         : 'accordion',
+          uncontrolled : true,
+          fields       : [
+            {
+              label : 'Subfield 1',
+              type  : 'text',
+              name  : 'subfield1'
+            }
+          ]
+        }) }
+      </>
+    )
+
+    const panel = document.querySelector('.tf-panel')
+    expect(panel.getAttribute('data-status')).toBe('closed')
+
+    // behavior=hide: the field is in the DOM, TUI hides the panel
+    const content = panel.querySelector('.tf-panel-content')
+    expect(content).toBeTruthy()
+    expect(content.querySelector('input')).toBeTruthy()
+    expect(content.closest('.tui-accordion__panel').getAttribute('aria-hidden')).toBe('true')
+  })
+
+  it('removes controlled content while closed', () => {
+
+    render(
+      <>
+        { fields.render({
+          name   : 'accordion-name',
+          type   : 'accordion',
+          value  : {},
+          fields : [{ label: 'Subfield 1', type: 'text', name: 'subfield1' }]
+        }) }
+      </>
+    )
+
+    expect(document.querySelector('.tf-panel .tf-panel-content')).toBeNull()
   })
 })

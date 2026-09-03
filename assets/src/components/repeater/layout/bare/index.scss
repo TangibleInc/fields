@@ -1,11 +1,22 @@
 .tf-repeater-bare-items {
   display: flex;
   flex-direction: column;
-  row-gap: $global-spacer-sm;
+  row-gap: var(--tui-spacing-xs, 8px);
 
   .tf-repeater-bare-row {
     display: flex;
+    align-items: flex-start;
     width: 100%;
-    gap: $global-spacer-sm;
+    gap: var(--tui-spacing-xs, 8px);
+  }
+
+  .tf-repeater-bare-item-field {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .tf-repeater-bare-row-actions,
+  .tui-move-handle {
+    flex: 0 0 auto;
   }
 }

@@ -10,10 +10,12 @@ import {
   initDispatcher
 } from './dispatcher.ts'
 
+import { MoveHandle } from '@tangible/ui'
+
 import {
   Button,
   Title,
-  ModalTrigger
+  ConfirmTrigger
 } from '../base'
 
 import types from '../../types.ts'
@@ -30,6 +32,13 @@ const Repeater = props => {
 
   const repeatable = props.repeatable ?? true
   const maxLength = props.maxlength ?? Infinity
+
+  /**
+   * Opt-in row reordering (PHP: sortable). Rows get a MoveHandle in place of
+   * the plain index, with up/down moves; the saved value follows the order
+   */
+  const sortable = repeatable && Boolean(props.sortable) && props.sortable !== 'false'
+  const [announcement, setAnnouncement] = useState('')
 
   const rowFields = fields.map(field => {
 
@@ -89,6 +98,74 @@ const Repeater = props => {
    */
   const values = useRef()
   values.current = items
+
+  const rootRef = useRef<HTMLDivElement>(null)
+
+  const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
+  /**
+   * The confirm dialog restores focus to its trigger on close, but removing a
+   * row destroys that trigger with it. Hand focus to the row now occupying the
+   * removed position (its toggle when the layout has one, else its first
+   * control), or to the footer actions once the list is empty. Deferred so it
+   * lands after TUI's own restore attempt
+   */
+  /**
+   * Reorder and keep focus on the control that did it: the row moves in the
+   * DOM, and TUI's MoveHandle recovers to the opposite arrow at a boundary
+   */
+  const move = (from: number, to: number) => {
+    const count = items.length
+    if (to < 0 || to >= count) return
+    dispatch({ type: 'move', from, to })
+    setAnnouncement(string('movedAnnouncement', { index: from + 1, position: to + 1, count }))
+    const direction = to > from ? 'down' : 'up'
+    setTimeout(() => {
+      const list = rootRef.current?.querySelector('.tf-repeater-items')
+      const row = list?.children[to] as HTMLElement | undefined
+      const target = row?.querySelector<HTMLElement>(`.tui-move-handle [data-direction="${direction}"]:not(:disabled)`)
+        ?? row?.querySelector<HTMLElement>('.tui-move-handle button:not(:disabled)')
+      target?.focus()
+    })
+  }
+
+  /**
+   * Layouts call this where they show the row index; it returns null when the
+   * repeater is not sortable so they can fall back to the plain number.
+   * Arrows mode: index badge between up/down, no drag grip (no drag library)
+   */
+  const renderMoveHandle = (i: number, { index = true } = {}) => (
+    sortable
+      ? <MoveHandle
+          mode="arrows"
+          size="sm"
+          index={ index ? i + 1 : undefined }
+          className="tf-repeater-move-handle"
+          aria-label={ string('reorderItem', { index: i + 1 }) }
+          labels={{
+            moveUp   : string('moveItemUp', { index: i + 1 }),
+            moveDown : string('moveItemDown', { index: i + 1 }),
+            drag     : string('dragItem', { index: i + 1 })
+          }}
+          canMoveUp={ i > 0 }
+          canMoveDown={ i < items.length - 1 }
+          onMoveUp={ () => move(i, i - 1) }
+          onMoveDown={ () => move(i, i + 1) }
+        />
+      : null
+  )
+
+  const focusAfterRemove = (index: number) => setTimeout(() => {
+    const root = rootRef.current
+    if (!root) return
+    const list = root.querySelector('.tf-repeater-items')
+    const rows = list ? Array.from(list.children) as HTMLElement[] : []
+    const row = rows[Math.min(index, rows.length - 1)]
+    const target = row?.querySelector<HTMLElement>('[data-tui-accordion-trigger]')
+      ?? row?.querySelector<HTMLElement>(FOCUSABLE)
+      ?? root.querySelector<HTMLElement>(`.tf-repeater-actions ${FOCUSABLE}`)
+    target?.focus()
+  })
 
   const renderItem = (config, row, i) => (
     <Item
@@ -150,11 +227,21 @@ const Repeater = props => {
     )
   )
 
-  const string = name => ({
-    ...strings.common,
-    ...(strings.layoutOveride[ layout ] ?? {}),
-    ...(props.strings ?? {})
-  }[name] ?? name)
+  /**
+   * Resolve a UI string: common < layout override < user override.
+   * `params` fills {placeholders}, e.g. string('confirmDeleteDescription', { index: 2 })
+   */
+  const string = (name, params = {}) => {
+    const value = {
+      ...strings.common,
+      ...(strings.layoutOveride[ layout ] ?? {}),
+      ...(props.strings ?? {})
+    }[name] ?? name
+    return Object.entries(params).reduce(
+      (text, [key, replacement]) => text.replaceAll(`{${key}}`, String(replacement)),
+      String(value)
+    )
+  }
 
   /**
    * Default function to render footer action, this has to be called
@@ -164,21 +251,24 @@ const Repeater = props => {
     repeatable && (
       <div className="tf-repeater-actions">
         <Button
-          type="action"
+          variant="outline"
+          theme="primary"
           onPress={ () => dispatch({ type: 'add' }) }
           isDisabled={ maxLength <= items.length }
         >
           { string('add') }
         </Button>
-        <ModalTrigger
-          title="Confirmation"
-          buttonProps={{ type: 'danger' }}
-          label="Remove all"
+        <ConfirmTrigger
+          label={ string('removeAll') }
+          title={ string('confirmRemoveAll') }
           isDisabled={ items.length <= 0 }
-          onValidate={ () => dispatch({ type: 'clear' })}
+          onConfirm={ () => {
+            dispatch({ type: 'clear' })
+            focusAfterRemove(0)
+          } }
         >
-          Are you sure you want to clear all item(s)?
-        </ModalTrigger>
+          { string('confirmRemoveAllDescription') }
+        </ConfirmTrigger>
       </div>
     )
   )
@@ -212,28 +302,47 @@ const Repeater = props => {
    * Render props can be overwritten by the layout if different from default
    * Component can be overwritten by the user
    *
-   * Also, rendering actions from <Repeater /> instead of <Layout /> avoid
-   * having to deal with props.repeatable in each layout
+   * Rendering actions from <Repeater /> keeps the action itself (label,
+   * confirm, dispatch, disabled state) in one place; renderAction returns
+   * nothing when the repeater is not repeatable. Layouts still own the chrome
+   * around actions (wrappers, columns, the Add button) and use `repeatable`
+   * to hide that
    */
-  const renderAction = (action, i, customProps = {}) => {
+  const renderAction = (action, i, customProps: Record<string, any> = {}) => {
     if ( ! repeatable ) return <></>;
     if ( props?.parts?.actions?.[ action ] ) {
       return renderCustomComponent( action, i, customProps )
     }
     switch( action ) {
-      case 'delete':
+      case 'delete': {
+        /**
+         * restoreFocus: false for layouts whose delete trigger survives the
+         * removal (the tab layout's header actions); the confirm dialog then
+         * restores focus to it and no handoff is needed
+         */
+        const { onConfirm, buttonProps, restoreFocus = true, ...confirmProps } = customProps
         return(
-          <ModalTrigger
+          <ConfirmTrigger
             label={ string('delete') }
-            title="Confirmation"
-            onValidate={ () => dispatch({ type : 'remove', item : i }) }
-            buttonProps={{ type: 'danger' }}
-            { ...customProps }
+            title={ string('confirmDelete') }
+            buttonProps={{
+              'aria-label': string('deleteItem', { index: i + 1 }),
+              ...(buttonProps ?? {})
+            }}
+            { ...confirmProps }
+            onConfirm={ () => {
+              onConfirm ? onConfirm() : dispatch({ type : 'remove', item : i })
+              if (restoreFocus) focusAfterRemove(i)
+            } }
           >
-            Are you sure you want to remove item { i + 1 }?
-          </ModalTrigger>
+            { string('confirmDeleteDescription', { index: i + 1 }) }
+          </ConfirmTrigger>
         )
-        case 'clone':
+      }
+        case 'clone': {
+          // Same shape as delete: button props may come flat or as buttonProps
+          const { buttonProps: cloneButtonProps, ...flat } = customProps
+          const { 'aria-label': ariaLabel, ...rest } = { ...flat, ...(cloneButtonProps ?? {}) }
           return(
             <Button
               type="action"
@@ -242,19 +351,25 @@ const Repeater = props => {
                 type : 'clone',
                 item : items[i]
               }) }
-              { ...customProps }
+              { ...rest }
+              aria-label={ ariaLabel ?? string('cloneItem', { index: i + 1 }) }
             >
               { string('clone') }
             </Button>
           )
+        }
     }
   }
 
   useEffect(() => props.onChange && props.onChange( getSavedValue() ), [items])
 
   return(
-    <div className={ `tf-repeater tf-repeater-${layout}`}>
+    <div className={ `tf-repeater tf-repeater-${layout}`} ref={ rootRef }>
       <input type='hidden' name={ props.name ?? '' } value={ JSON.stringify(getSavedValue()) } />
+      { sortable &&
+        <div className="tui-visually-hidden" aria-live="polite" aria-atomic="true">
+          { announcement }
+        </div> }
       { props.label &&
         <Title level={2} className='tf-repeater-title'>
           { props.label }
@@ -271,11 +386,15 @@ const Repeater = props => {
           title={ props.sectionTitle ?? false }
           useSwitch={ props.useSwitch }
           useBulk={ props.useBulk }
+          actionsPosition={ props.actionsPosition }
           afterRow={ props.afterRow }
           beforeRow={ props.beforeRow }
           name={ props.name ?? '' }
           renderFooterActions={ renderFooterActions }
           renderAction={ renderAction }
+          renderMoveHandle={ renderMoveHandle }
+          sortable={ sortable }
+          repeatable={ repeatable }
           parent={ props }
           string={ string }
         />
