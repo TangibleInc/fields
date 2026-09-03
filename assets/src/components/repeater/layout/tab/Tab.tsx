@@ -52,9 +52,7 @@ const Tab = ({
         contentVisuallyHidden : true
       } ) }
       { renderAction( 'delete', activeItem, {
-        label       : 'Remove',
-        title       :'Confirmation',
-        onValidate  : () => {
+        onConfirm   : () => {
           dispatch({ type : 'remove', item : activeItem })
           setActiveItem( activeItem == 0 ? 0 : activeItem - 1 )
         },

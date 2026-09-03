@@ -13,7 +13,7 @@ import {
 import {
   Button,
   Title,
-  ModalTrigger
+  ConfirmTrigger
 } from '../base'
 
 import types from '../../types.ts'
@@ -170,15 +170,14 @@ const Repeater = props => {
         >
           { string('add') }
         </Button>
-        <ModalTrigger
-          title="Confirmation"
-          buttonProps={{ type: 'danger' }}
-          label="Remove all"
+        <ConfirmTrigger
+          label={ string('removeAll') }
+          title={ string('confirmRemoveAll') }
           isDisabled={ items.length <= 0 }
-          onValidate={ () => dispatch({ type: 'clear' })}
+          onConfirm={ () => dispatch({ type: 'clear' }) }
         >
-          Are you sure you want to clear all item(s)?
-        </ModalTrigger>
+          { string('confirmRemoveAllDescription') }
+        </ConfirmTrigger>
       </div>
     )
   )
@@ -223,15 +222,14 @@ const Repeater = props => {
     switch( action ) {
       case 'delete':
         return(
-          <ModalTrigger
+          <ConfirmTrigger
             label={ string('delete') }
-            title="Confirmation"
-            onValidate={ () => dispatch({ type : 'remove', item : i }) }
-            buttonProps={{ type: 'danger' }}
+            title={ string('confirmDelete') }
+            onConfirm={ () => dispatch({ type : 'remove', item : i }) }
             { ...customProps }
           >
-            Are you sure you want to remove item { i + 1 }?
-          </ModalTrigger>
+            { string('confirmDeleteDescription').replace('%d', String(i + 1)) }
+          </ConfirmTrigger>
         )
         case 'clone':
           return(

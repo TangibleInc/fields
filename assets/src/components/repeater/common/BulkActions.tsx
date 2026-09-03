@@ -5,7 +5,7 @@ import {
 
 import { 
   Button,
-  ModalTrigger 
+  ConfirmTrigger 
 } from '../../base'
 
 import { 
@@ -75,13 +75,15 @@ const BulkActions = (props) => {
         onChange={ setAction }
       />
       { action === 'deletion' 
-        ? <ModalTrigger 
-            title="Confirmation"
+        ? <ConfirmTrigger
             label="Apply"
-            onValidate={ applyAction }
+            title="Remove selected items?"
+            confirmText="Remove"
+            buttonProps={{ type: 'action' }}
+            onConfirm={ applyAction }
           >
-            Are you sure you want to remove the selected items?
-          </ModalTrigger>  
+            The selected items will be removed.
+          </ConfirmTrigger>
         : <Button type="action" onPress={ applyAction }>
             Apply
           </Button> }

@@ -1,4 +1,5 @@
 import Button from './button/Button'
+import ConfirmDialog, { ConfirmTrigger } from './confirm-dialog/ConfirmDialog'
 import LegacyButton from './button/LegacyButton'
 import Description from './field/Description'
 import Dialog from './dialog/Dialog'
@@ -20,6 +21,8 @@ import Wrapper from './wrapper/Wrapper'
 
 export {
   Button,
+  ConfirmDialog,
+  ConfirmTrigger,
   LegacyButton,
   Description,
   Dialog,

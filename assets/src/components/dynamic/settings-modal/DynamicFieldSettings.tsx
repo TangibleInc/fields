@@ -3,14 +3,13 @@ import {
   useMemo,
   useEffect,
   useRef,
-  useContext,
 } from 'react'
 
 import { Modal, SearchSelect, Field, TextInput, Icon } from '@tangible/ui'
 
-import { ControlContext } from '../../../context'
 import { getConfig } from '../../../index.tsx'
 import { Button } from '../../base'
+import usePortalContainer from '../../base/modal/usePortalContainer'
 import { RadioGroup } from '../../field/radio/RadioGroup'
 import Radio from '../../field/radio/Radio'
 import Control from '../../../Control'
@@ -41,27 +40,11 @@ const DynamicFieldSettings = ({
   if (!dynamic) return null
 
   const { dynamics } = getConfig()
-  const control = useContext(ControlContext)
-
   /**
-   * TUI Modal portals itself, which would land outside the global context
-   * class (tf-context-{name}) — recreate the wrapper the react-aria overlay
-   * used to provide by giving the Modal a container that carries the
-   * context classes (control.wrapper already includes tui-interface).
-   *
-   * @see renderField() in ./src/index.jsx
+   * TUI Modal portals itself; the hook gives it a container that carries
+   * the global context classes so our styles still apply inside it
    */
-  const [modalContainer, setModalContainer] = useState<HTMLElement | null>(null)
-  useEffect(() => {
-    const host = control?.portalContainer ?? document.body
-    const el = document.createElement('div')
-    el.className = control?.wrapper ?? 'tui-interface'
-    host.appendChild(el)
-    setModalContainer(el)
-    return () => {
-      host.removeChild(el)
-    }
-  }, [])
+  const modalContainer = usePortalContainer(open)
 
   const [mode, setMode] = useState<FieldMode>('builtin')
   const [selectedValue, setSelectedValue] = useState('')

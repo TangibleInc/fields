@@ -146,21 +146,21 @@ const commonRepeaterTests = (layout, args = {}) => {
 
     // Confirmation popup - Cancel
 
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
     await removeElement(2)
-    expect(document.querySelector(`.tf-modal-container`)).toBeTruthy()
-    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText('Cancel'))
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeTruthy()
+    await user.click(within(document.querySelector(`.tf-confirm-dialog`)).getByText('Cancel'))
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
 
     expect(itemsContainer.children.length).toBe(4)
 
     // Confirmation popup - Delete second item
 
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
     await removeElement(1)
-    expect(document.querySelector(`.tf-modal-container`)).toBeTruthy()
-    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText(config.removeText))
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeTruthy()
+    await user.click(within(document.querySelector(`.tf-confirm-dialog`)).getByText(config.removeText))
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
 
     expect(itemsContainer.children.length).toBe(3)
 
@@ -181,21 +181,21 @@ const commonRepeaterTests = (layout, args = {}) => {
 
     // Confirmation popup - Cancel
 
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
     await user.click(within(container).getByText('Remove all'))
-    expect(document.querySelector(`.tf-modal-container`)).toBeTruthy()
-    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText('Cancel'))
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeTruthy()
+    await user.click(within(document.querySelector(`.tf-confirm-dialog`)).getByText('Cancel'))
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
 
     expect(itemsContainer.children.length).toBe(3)
 
     // Confirmation popup - Delete all
 
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
     await user.click(within(container).getByText('Remove all'))
-    expect(document.querySelector(`.tf-modal-container`)).toBeTruthy()
-    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText('Remove all'))
-    expect(document.querySelector(`.tf-modal-container`)).toBeFalsy()
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeTruthy()
+    await user.click(within(document.querySelector(`.tf-confirm-dialog`)).getByText('Remove all'))
+    expect(document.querySelector(`.tf-confirm-dialog`)).toBeFalsy()
 
     expect(itemsContainer.children.length).toBe(0)
   })
@@ -281,7 +281,7 @@ const commonRepeaterTests = (layout, args = {}) => {
     }
 
     await user.click(within(container).getAllByText(config.removeText)[0])
-    await user.click(within(document.querySelector(`.tf-modal-container`)).getByText(config.removeText)) // Confirmation popup
+    await user.click(within(document.querySelector(`.tf-confirm-dialog`)).getByText(config.removeText)) // Confirmation popup
 
     addButton = within(container).getByText(config.addText)
     expect(addButton).not.toBeDisabled()

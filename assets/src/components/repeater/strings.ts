@@ -7,9 +7,17 @@
 export default {
   
   common: {
-    add       : 'Add item',
-    clone     : 'Clone',
-    delete    : 'Remove'
+    add              : 'Add item',
+    clone            : 'Clone',
+    delete           : 'Remove',
+    removeAll        : 'Remove all',
+    confirmDelete    : 'Remove this item?',
+    confirmRemoveAll : 'Remove all items?',
+    /**
+     * Body copy for the confirm dialogs. %d is the 1-based item index
+     */
+    confirmDeleteDescription    : 'Item %d will be removed.',
+    confirmRemoveAllDescription : 'Every item in this list will be removed.'
   },
   
   layoutOveride: {
