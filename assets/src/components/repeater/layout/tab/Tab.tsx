@@ -43,15 +43,23 @@ const Tab = ({
   )
 
   const keyOf = item => String(item.key)
-  const activeIndex = Math.max(0, items.findIndex(item => keyOf(item) === activeKey))
-  const resolvedKey = items[activeIndex] ? keyOf(items[activeIndex]) : undefined
+  const shown = items.slice(0, maxLength)
+
+  /**
+   * A key that no longer exists (or none yet) falls back to the first item
+   * for display; the actions below are gated on there being items at all,
+   * so the fallback never retargets a destructive action onto an empty list
+   */
+  const foundIndex = shown.findIndex(item => keyOf(item) === activeKey)
+  const activeIndex = foundIndex === -1 ? 0 : foundIndex
+  const resolvedKey = shown[activeIndex] ? keyOf(shown[activeIndex]) : undefined
 
   /**
    * After removing the active item, show its neighbour: the next one, else
    * the previous
    */
   const removeActive = () => {
-    const next = items[activeIndex + 1] ?? items[activeIndex - 1]
+    const next = shown[activeIndex + 1] ?? shown[activeIndex - 1]
     dispatch({ type : 'remove', item : activeIndex })
     setActiveKey(next ? keyOf(next) : undefined)
   }
@@ -64,29 +72,38 @@ const Tab = ({
     >
       { string('add') }
     </Button>
-    <div className='tf-repeater-tab-icon-actions'>
-      { renderAction( 'clone', activeIndex, iconAction('system/copy', 'secondary', 'ghost') ) }
-      { renderAction( 'delete', activeIndex, {
-        onConfirm   : removeActive,
-        buttonProps : iconAction('system/trash', 'danger', 'ghost')
-      } ) }
-    </div>
+    { shown.length > 0 &&
+      <div className='tf-repeater-tab-icon-actions'>
+        { renderAction( 'clone', activeIndex, { buttonProps: iconAction('system/copy', 'secondary', 'ghost') } ) }
+        { renderAction( 'delete', activeIndex, {
+          onConfirm    : removeActive,
+          restoreFocus : false, // the trigger survives; the dialog restores to it
+          buttonProps  : iconAction('system/trash', 'danger', 'ghost')
+        } ) }
+      </div> }
   </>
+
+  /**
+   * Name the tablist after the field when it has a label, so several tab
+   * repeaters on one screen stay distinguishable
+   */
+  const listLabel = parent?.label
+    ? string('itemsLabelNamed', { label: parent.label })
+    : string('itemsLabel')
 
   return(
     <Container
       value={ resolvedKey }
       onValueChange={ setActiveKey }
-      label={ string('itemsLabel') }
+      label={ listLabel }
       className="tf-repeater-tab-container"
     >
       <Header
-        label={ string('itemsLabel') }
         className="tf-repeater-items tf-repeater-tab-items"
         actionsClassName="tf-repeater-tab-actions"
         actions={ actions }
       >
-        { items && items.slice(0, maxLength).map((item, i) => (
+        { shown.map((item, i) => (
           <Title
             key={ keyOf(item) }
             value={ keyOf(item) }
@@ -96,11 +113,10 @@ const Tab = ({
           </Title>
         )) }
       </Header>
-      { items && items.map((item, itemIndex) => (
+      { shown.map((item, itemIndex) => (
         <Content
           key={ keyOf(item) }
           value={ keyOf(item) }
-          isActive={ keyOf(item) === resolvedKey }
           className='tf-repeater-tab-content'
         >
           { rowFields.map((control, i) => (

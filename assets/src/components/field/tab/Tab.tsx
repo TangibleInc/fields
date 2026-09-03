@@ -31,7 +31,7 @@ const Tab = props => {
     key => ({ ...props.tabs[ key ], name: key })
   )
 
-  const [activeTab, setActiveTab] = useState( tabs[0]?.name ?? false )
+  const [activeTab, setActiveTab] = useState<string | undefined>( tabs[0]?.name )
   const [value, setValue] = useState(
     uncontrolled ? {} : initJSON( props.value )
   )
@@ -50,11 +50,11 @@ const Tab = props => {
           value={ JSON.stringify( value ) }
         /> }
       <Container
-        value={ activeTab || undefined }
+        value={ activeTab }
         onValueChange={ setActiveTab }
         label={ props.label ?? 'Tabs' }
       >
-        <Header label={ props.label ?? 'Tabs' }>
+        <Header>
           { tabs.map(tab => (
             <Title key={ tab.name } value={ tab.name }>
               { tab.title }
@@ -65,7 +65,6 @@ const Tab = props => {
           <Content
             key={ tab.name }
             value={ tab.name }
-            isActive={ tab.name === activeTab }
             behavior={ uncontrolled ? 'hide' : 'remove' }
           >
             <FieldGroup

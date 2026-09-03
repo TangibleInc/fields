@@ -29,6 +29,7 @@ export default {
     rowSelect                   : 'Select',
     rowActions                  : 'Actions',
     itemsLabel                  : 'Items',
+    itemsLabelNamed             : '{label} items',
     expandItem                  : 'Open item {index}',
     collapseItem                : 'Close item {index}',
     removeAll                   : 'Remove all',

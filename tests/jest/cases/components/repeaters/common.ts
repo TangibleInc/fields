@@ -230,13 +230,14 @@ const commonRepeaterTests = (layout, args = {}) => {
       })
     )
 
-    expect(within(container).queryByText('Duplicate')).toBeFalsy()
-    expect(within(container).queryByText('Edit')).toBeFalsy()
-    expect(within(container).queryByText('Remove')).toBeFalsy()
-    expect(within(container).queryByText('Delete')).toBeFalsy()
+    // by accessible name: icon-only actions carry no text
+    const actions = within(container).queryAllByRole('button', {
+      name: /^(Duplicate|Edit|Remove|Delete|Clone)( item \d+)?$/
+    })
+    expect(actions.length).toBe(0)
     expect(within(container).queryByText(config.addText)).toBeFalsy()
     expect(within(container).queryByText('Remove all')).toBeFalsy()
-    expect(within(container).queryByText('Clone')).toBeFalsy()
+    expect(within(container).queryAllByRole('button', { name: /^(Reorder|Move) item/ }).length).toBe(0)
   })
 
   it('supports maxlength property', async () => {

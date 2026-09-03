@@ -193,9 +193,9 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
   const mapped = layoutMap[resolvedLayout]
   const label: ReactNode = content ?? children
   /**
-   * Icon-only buttons keep their label in the DOM, visually hidden, rather
-   * than moving it to aria-label: same for assistive tech, and the text stays
-   * available to find-in-page, translation tools and tests
+   * Two icon-only modes: `contentVisuallyHidden` keeps the label in the DOM,
+   * visually hidden; `icon` renders a TUI IconButton whose accessible name
+   * and tooltip are the label
    */
   const ariaLabel = ariaLabelProp
   const stringLabel = typeof label === 'string' ? label : undefined
@@ -245,8 +245,7 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement | HTMLSpanElemen
   if (
     !hasWarnedMissingLabel.current &&
     isDev() &&
-    renderedContent == null &&
-    !ariaLabel
+    (icon ? !ariaLabel && !stringLabel : renderedContent == null && !ariaLabel)
   ) {
     hasWarnedMissingLabel.current = true
     console.warn(

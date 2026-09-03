@@ -302,8 +302,11 @@ const Repeater = props => {
    * Render props can be overwritten by the layout if different from default
    * Component can be overwritten by the user
    *
-   * Also, rendering actions from <Repeater /> instead of <Layout /> avoid
-   * having to deal with props.repeatable in each layout
+   * Rendering actions from <Repeater /> keeps the action itself (label,
+   * confirm, dispatch, disabled state) in one place; renderAction returns
+   * nothing when the repeater is not repeatable. Layouts still own the chrome
+   * around actions (wrappers, columns, the Add button) and use `repeatable`
+   * to hide that
    */
   const renderAction = (action, i, customProps: Record<string, any> = {}) => {
     if ( ! repeatable ) return <></>;
@@ -312,7 +315,12 @@ const Repeater = props => {
     }
     switch( action ) {
       case 'delete': {
-        const { onConfirm, buttonProps, ...confirmProps } = customProps
+        /**
+         * restoreFocus: false for layouts whose delete trigger survives the
+         * removal (the tab layout's header actions); the confirm dialog then
+         * restores focus to it and no handoff is needed
+         */
+        const { onConfirm, buttonProps, restoreFocus = true, ...confirmProps } = customProps
         return(
           <ConfirmTrigger
             label={ string('delete') }
@@ -324,28 +332,32 @@ const Repeater = props => {
             { ...confirmProps }
             onConfirm={ () => {
               onConfirm ? onConfirm() : dispatch({ type : 'remove', item : i })
-              focusAfterRemove(i)
+              if (restoreFocus) focusAfterRemove(i)
             } }
           >
             { string('confirmDeleteDescription', { index: i + 1 }) }
           </ConfirmTrigger>
         )
       }
-        case 'clone':
+        case 'clone': {
+          // Same shape as delete: button props may come flat or as buttonProps
+          const { buttonProps: cloneButtonProps, ...flat } = customProps
+          const { 'aria-label': ariaLabel, ...rest } = { ...flat, ...(cloneButtonProps ?? {}) }
           return(
             <Button
               type="action"
-              aria-label={ string('cloneItem', { index: i + 1 }) }
               isDisabled={ maxLength <= items.length }
               onPress={ () => dispatch({
                 type : 'clone',
                 item : items[i]
               }) }
-              { ...customProps }
+              { ...rest }
+              aria-label={ ariaLabel ?? string('cloneItem', { index: i + 1 }) }
             >
               { string('clone') }
             </Button>
           )
+        }
     }
   }
 
