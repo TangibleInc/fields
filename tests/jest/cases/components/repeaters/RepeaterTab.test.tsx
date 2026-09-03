@@ -13,7 +13,7 @@ describe('Repeater with a tab layout', () => {
       await args.user.click(within(args.itemsContainer).getByText('Item ' + (index + 1)))
       await args.user.click(
         within(args.document.querySelector('.tf-repeater-tab-actions'))
-          .getByText(config.removeText)
+          .getByRole('button', { name: new RegExp(`^${config.removeText}( item \\d+)?$`) })
       )
     }
   })

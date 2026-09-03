@@ -49,14 +49,14 @@ const Tab = props => {
           name={ props.name ?? '' }
           value={ JSON.stringify( value ) }
         /> }
-      <Container>
-        <Header>
+      <Container
+        value={ activeTab || undefined }
+        onValueChange={ setActiveTab }
+        label={ props.label ?? 'Tabs' }
+      >
+        <Header label={ props.label ?? 'Tabs' }>
           { tabs.map(tab => (
-            <Title
-              key={ tab.name }
-              isOpen={ tab.name === activeTab }
-              onPress={ () => setActiveTab(tab.name) }
-            >
+            <Title key={ tab.name } value={ tab.name }>
               { tab.title }
             </Title>
           )) }
@@ -64,6 +64,7 @@ const Tab = props => {
         { tabs && tabs.map((tab, indexTab) => (
           <Content
             key={ tab.name }
+            value={ tab.name }
             isActive={ tab.name === activeTab }
             behavior={ uncontrolled ? 'hide' : 'remove' }
           >

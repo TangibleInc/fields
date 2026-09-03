@@ -1,86 +1,107 @@
-import { useState, useEffect } from 'react'
-import Button from '../button/Button'
+import type { ReactNode } from 'react'
+import { Tabs } from '@tangible/ui'
 
 /**
- *  <Container>
- *    <Header>
- *      <Title>Content 1</Title>
- *      <Title>Content 2</Title>
- *    <Header>
- *    <Content isActive={ true }>
- *      <Row>
- *        <RowTitle>Content 1</RowTitle>
- *      </Row>
+ * Tabbed sections on TUI Tabs (underline variant). Compound API:
+ *
+ *  <Container value={ active } onValueChange={ setActive } label="Sections">
+ *    <Header actions={ ... }>
+ *      <Title value="one">Content 1</Title>
+ *      <Title value="two">Content 2</Title>
+ *    </Header>
+ *    <Content value="one" isActive={ active === 'one' }>
  *      <Row>
  *        <RowLabel>A field</RowLabel>
- *        <RowField>
- *          // ...
- *        </RowField>
+ *        <RowField>...</RowField>
  *      </Row>
- *      // ...
- *    <Content>
- *    <Content isActive={ false }>
- *      // ...
- *    <Content>
- *  <Tabs>
+ *    </Content>
+ *    <Content value="two" isActive={ active === 'two' } behavior="hide">...</Content>
+ *  </Container>
+ *
+ * TUI owns the tablist semantics, arrow-key navigation and the panel's
+ * aria-hidden/inert state; `label` names the tablist
  */
- 
-const Container = props => (
-  <div className={ 'tf-tab-container ' + (props.className ?? '') }>
-    { props.children }
-  </div>
+
+interface ContainerProps {
+  value: string | undefined
+  onValueChange: (value: string) => void
+  /** Accessible name of the tablist */
+  label: string
+  className?: string
+  children: ReactNode
+}
+
+const Container = ({ value, onValueChange, label, className, children }: ContainerProps) => (
+  <Tabs
+    variant="underline"
+    value={ value }
+    onValueChange={ onValueChange }
+    className={ ['tf-tab-container', className].filter(Boolean).join(' ') }
+    data-tf-tablist-label={ label }
+  >
+    { children }
+  </Tabs>
 )
 
-const Header = props => (
-  <div className='tf-tab-header'>
-    <div className={ 'tf-tab-items ' + (props.className ?? '') }>
-      { props.children }
-    </div>
-    { props.actions && 
-      <div className={ 'tf-tab-actions ' + (props.actionsClassName ?? '') }>
-        { props.actions }
+interface HeaderProps {
+  /** Accessible name of the tablist; falls back to the Container label */
+  label?: string
+  actions?: ReactNode
+  className?: string
+  actionsClassName?: string
+  children: ReactNode
+}
+
+const Header = ({ label = 'Tabs', actions, className, actionsClassName, children }: HeaderProps) => (
+  <div className="tf-tab-header">
+    <Tabs.List
+      aria-label={ label }
+      className={ ['tf-tab-items', className].filter(Boolean).join(' ') }
+    >
+      { children }
+    </Tabs.List>
+    { actions &&
+      <div className={ ['tf-tab-actions', actionsClassName].filter(Boolean).join(' ') }>
+        { actions }
       </div> }
   </div>
 )
 
-const Title = props => (
-  <div 
-    className={ 'tf-tab-item ' + (props.className ?? '') }
-    data-open={ props.isOpen ?? false }
+interface TitleProps {
+  value: string
+  className?: string
+  children: ReactNode
+}
+
+const Title = ({ value, className, children }: TitleProps) => (
+  <Tabs.Tab
+    value={ value }
+    className={ ['tf-tab-item', className].filter(Boolean).join(' ') }
   >
-    <Button
-      type={ 'text-action' }
-      onPress={ props.onPress }
-      variant={ 'ghost' }
-    >
-      { props.children }
-    </Button>
-  </div>
+    { children }
+  </Tabs.Tab>
 )
 
-const Content = props => {
-
-  const [ isActive, setIsActive ] = useState( props.isActive ?? false )
-
-  useEffect(() => {
-    if ( props.isActive !== isActive ) setIsActive( props.isActive )
-  }, [ props.isActive ])
-
+interface ContentProps {
+  value: string
+  isActive: boolean
   /**
-   * When behavior is 'hide', keep inactive content mounted (display: none)
-   * so any hidden inputs are still submitted with the form
+   * 'remove' (default) unmounts inactive content; 'hide' keeps it mounted so
+   * hidden inputs still submit with the form (TUI hides the panel)
    */
-  if ( ! isActive && props.behavior !== 'hide' ) return;
-
-  return(
-    <div
-      className={ 'tf-tab-content ' + (props.className ?? '') }
-      style={ ! isActive ? { display : 'none' } : undefined }
-    >
-      { props.children }
-    </div>
-  )
+  behavior?: 'remove' | 'hide'
+  className?: string
+  children: ReactNode
 }
+
+const Content = ({ value, isActive, behavior = 'remove', className, children }: ContentProps) => (
+  <Tabs.Panel
+    value={ value }
+    className={ ['tf-tab-content', className].filter(Boolean).join(' ') }
+  >
+    { (isActive || behavior === 'hide') && children }
+  </Tabs.Panel>
+)
 
 const Row = props => (
   <div className={ 'tf-tab-row ' + (props.className ?? '') }>

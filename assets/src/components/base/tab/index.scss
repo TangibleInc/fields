@@ -1,86 +1,58 @@
-$tab-item-index-width: 32px;
-$tab-item-index-height: 40px;
+// Tabbed sections on TUI Tabs (underline). The container carries the surface
+// and border; the header is a flex row holding TUI's tablist and, for the tab
+// repeater, the item actions
+
+$tab-content-inset: 32px;
 
 .tf-tab-container {
-  background-color: $field-background;
   width: 100%;
-  border: $field-border;
-  border-radius: $field-border-radius;
-  border-color: rgba($field-border-color, 0.5);
+  background-color: var(--tui-color-bg-surface);
+  border: var(--tui-border-width, 1px) solid var(--tui-color-border);
+  border-radius: var(--tui-radius-sm, 4px);
 }
 
 .tf-tab-header {
   display: flex;
   flex-wrap: nowrap;
-  box-sizing: border-box;
+  align-items: flex-end;
   justify-content: space-between;
+  gap: var(--tui-spacing-sm, 12px);
+  box-sizing: border-box;
   width: 100%;
-  border-bottom: $field-border;
-  border-bottom-color: rgba($field-border-color, 0.5);
+  padding-inline: var(--tui-spacing-sm, 12px);
+  border-bottom: var(--tui-border-width, 1px) solid var(--tui-color-border);
   overflow-x: auto;
   overflow-y: hidden;
+
+  // The header draws the divider so it spans list and actions alike; the
+  // active tab's indicator still overlaps it via TUI's negative margin
+  .tui-tabs__list {
+    flex-wrap: nowrap;
+    min-width: fit-content;
+    border-block-end: none;
+  }
+
+  .tf-tab-item {
+    white-space: nowrap;
+  }
 }
 
 .tf-tab-actions {
   display: flex;
   flex-wrap: nowrap;
-  width: 100%;
-  justify-content: space-between;
-}
-
-.tf-tab-items {
-  display: flex;
-  justify-content: flex-start;
-  box-sizing: border-box;
-  gap: $global-spacer-sm;
-  background-color: $field-background;
-  margin: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  min-width: fit-content;
-  gap: 0;
-}
-
-.tf-tab-item {
-  position: relative;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  min-width: fit-content;
-  @include label;
-  margin-bottom: 0;
-
-  button {
-    border-radius: 0;
-  }
-
-  &[data-open="true"]::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background-color: $button-primary-color;
-  }
-
-  button {
-    white-space: nowrap;
-  }
+  gap: var(--tui-spacing-xxs, 4px);
+  align-self: center;
+  margin-inline-start: auto;
 }
 
 .tf-tab-content {
   width: 100%;
   box-sizing: border-box;
-  background-color: $field-background;
-
-  padding-left: $tab-item-index-width;
-  padding-right: $tab-item-index-width;
-  padding-top: calc($tab-item-index-width / 2);
-  padding-bottom: calc($tab-item-index-width / 2);
+  padding: var(--tui-spacing-md, 16px) $tab-content-inset;
 
   .tf-tab-row-field {
-    padding: $section-padding;
+    padding: var(--tui-spacing-xs, 8px) var(--tui-spacing-md, 16px);
   }
 }
 
@@ -111,7 +83,7 @@ $tab-item-index-height: 40px;
       width: 100%;
     }
   }
-  
+
   /**
    * Make sure we hide label for fields with visibility condition set
    * to hide
@@ -125,7 +97,7 @@ $tab-item-index-height: 40px;
    */
   .tf-tab-row-field > div[class*='tf-context-'] > .tf-switch {
     display: flex;
-    gap: $global-spacer-sm;
+    gap: var(--tui-spacing-xs, 8px);
 
     .tf-switch-label {
       width: fit-content;
@@ -143,20 +115,5 @@ $tab-item-index-height: 40px;
       flex-direction: row;
       gap: 10px;
     }
-  }
-}
-
-.tf-tab-content {
-  width: 100%;
-  box-sizing: border-box;
-  background-color: $field-background;
-
-  padding-left: $tab-item-index-width;
-  padding-right: $tab-item-index-width;
-  padding-top: calc($tab-item-index-width / 2);
-  padding-bottom: calc($tab-item-index-width / 2);
-
-  .tf-tab-row-field {
-    padding: $section-padding;
   }
 }
