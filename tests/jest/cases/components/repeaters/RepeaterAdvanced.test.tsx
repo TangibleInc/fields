@@ -287,6 +287,7 @@ describe('Repeater with an advanced layout', () => {
 
       expect(link.getAttribute('aria-expanded')).toBe('false')
       expect(link.getAttribute('aria-label')).toBe('Edit item 2')
+      expect(document.getElementById(link.getAttribute('aria-controls'))).toBeTruthy()
 
       await user.click(link)
 

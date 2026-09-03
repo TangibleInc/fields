@@ -131,12 +131,13 @@ const Repeater = props => {
 
   /**
    * Layouts call this where they show the row index; it returns null when the
-   * repeater is not sortable so they can fall back to the plain number
+   * repeater is not sortable so they can fall back to the plain number.
+   * Arrows mode: index badge between up/down, no drag grip (no drag library)
    */
   const renderMoveHandle = (i: number) => (
     sortable
       ? <MoveHandle
-          mode="full"
+          mode="arrows"
           size="sm"
           index={ i + 1 }
           className="tf-repeater-move-handle"

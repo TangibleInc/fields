@@ -11,10 +11,4 @@
   &__body {
     margin: 0;
   }
-
-  &__actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--tui-spacing-sm, 12px);
-  }
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { MouseEvent } from 'react'
-import { Accordion, IconButton } from '@tangible/ui'
+import { Accordion, IconButton, useAccordionItem } from '@tangible/ui'
 import { Button } from '../../../base'
 import { Checkbox } from '../../../field'
 import BulkActions from '../../common/BulkActions'
@@ -14,6 +14,26 @@ import {
  * on something that already has its own behaviour
  */
 const INTERACTIVE = 'button, a, input, select, textarea, label, [role="button"], [role="link"]'
+
+/**
+ * Second way to toggle a row, next to the chevron. Lives inside the
+ * Accordion.Item so it can point aria-controls at the item's panel
+ */
+const ToggleLink = ({ index, string, ...buttonProps }) => {
+  const { isOpen, panelId, toggle } = useAccordionItem()
+  return (
+    <Button
+      type="text-primary"
+      { ...buttonProps }
+      aria-expanded={ isOpen }
+      aria-controls={ panelId }
+      aria-label={ string(isOpen ? 'closeItem' : 'editItem', { index }) }
+      onPress={ toggle }
+    >
+      { string(isOpen ? 'close' : 'edit') }
+    </Button>
+  )
+}
 
 const Advanced = ({
   items,
@@ -86,7 +106,7 @@ const Advanced = ({
           type="single"
           collapsible
           variant="flush"
-          value={ openKey ?? '' }
+          value={ openKey ?? null }
           onValueChange={ setOpenKey }
           className='tf-repeater-items tf-repeater-advanced-items'
         >
@@ -136,20 +156,12 @@ const Advanced = ({
                     </div>
                     { maxLength !== undefined &&
                       <div className="tf-repeater-advanced-overview-item-actions">
-                        <Button
-                          type="text-primary"
-                          { ...actionProps }
-                          aria-expanded={ isOpen }
-                          aria-label={ string(isOpen ? 'closeItem' : 'editItem', { index: i + 1 }) }
-                          onPress={ () => toggle(key) }
-                        >
-                          { string(isOpen ? 'close' : 'edit') }
-                        </Button>
+                        <ToggleLink index={ i + 1 } string={ string } { ...actionProps } />
                         { renderAction( 'clone', i, { type : 'text-primary', ...actionProps } ) }
                         { renderAction( 'delete', i, { buttonProps : { type: 'text-danger', ...actionProps } } ) }
                       </div> }
                   </div>
-                  <Accordion.Trigger asChild>
+                  <Accordion.Trigger asChild unstyled>
                     <IconButton
                       icon="system/chevron-down"
                       label={ string(isOpen ? 'collapseItem' : 'expandItem', { index: i + 1 }) }

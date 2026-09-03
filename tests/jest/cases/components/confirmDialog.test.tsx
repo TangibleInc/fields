@@ -33,7 +33,7 @@ describe('ConfirmDialog', () => {
 
     const el = dialog()
     expect(el).toBeTruthy()
-    expect(el.getAttribute('role')).toBe('dialog')
+    expect(el.getAttribute('role')).toBe('alertdialog')
 
     const title = document.getElementById(el.getAttribute('aria-labelledby'))
     const body = document.getElementById(el.getAttribute('aria-describedby'))

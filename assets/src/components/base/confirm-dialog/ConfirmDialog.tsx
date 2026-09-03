@@ -36,14 +36,12 @@ export interface ConfirmDialogProps {
  * - Title and body are wired as the dialog's name and description
  * - Initial focus lands on Cancel — the least destructive action — as
  *   recommended by the WAI-ARIA dialog pattern for destructive confirms
- * - Escape and backdrop click both cancel
+ * - Escape cancels; a backdrop click does nothing, since an alert dialog
+ *   asks for an answer (TUI's default for role="alertdialog")
  * - Focus returns to the trigger on close (the Modal stays mounted through
  *   the close so TUI can restore it)
  *
- * Note: TUI Modal renders role="dialog"; an alertdialog role would be more
- * precise for a confirm. Revisit when TUI exposes it.
- *
- * @see https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/
+ * @see https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/
  */
 const ConfirmDialog = ({
   open,
@@ -80,13 +78,13 @@ const ConfirmDialog = ({
     <Modal
       open={open}
       onClose={cancel}
+      role="alertdialog"
       size="sm"
       container={container}
       aria-labelledby={titleId}
       aria-describedby={children ? bodyId : undefined}
       initialFocusSelector={`.${CANCEL_CLASS}`}
       closeOnEscape
-      closeOnBackdropClick
       className={['tf-confirm-dialog', className].filter(Boolean).join(' ')}
     >
       <Modal.Head>

@@ -116,15 +116,10 @@ $advanced-item-index-height: 40px;
   position: relative;
 }
 
-// asChild puts the accordion trigger class on the chevron IconButton; undo the
-// full-width row-trigger treatment that class carries and let the icon button
-// keep its own size. TUI has been asked to stop stamping the paint class in
-// asChild mode, at which point this block goes
-.tf-repeater-advanced-toggle.tui-accordion__trigger {
+// The chevron IconButton is an unstyled accordion trigger: TUI leaves the
+// paint to the button and hands us data-state for the open indicator
+.tf-repeater-advanced-toggle {
   flex: 0 0 auto;
-  padding: 0;
-  justify-content: center;
-  background: transparent;
   align-self: center;
 
   .tui-icon {
