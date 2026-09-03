@@ -78,7 +78,7 @@ const bulkActionsRepeaterTests = (layout, args = {}) => {
     )
     await user.click(within(bulkActionContainer).getByText('Apply'))
     await user.click(
-      within(document.querySelector('.tf-confirm-dialog')).getByText('Remove')
+      within(document.querySelector('.tf-confirm-dialog')).getByText('Delete')
     )
 
     expect(

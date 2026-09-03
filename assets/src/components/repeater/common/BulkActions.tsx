@@ -20,6 +20,8 @@ import {
 
 const BulkActions = (props) => {
 
+  const string = props.string ?? (name => name)
+
   const [action, setAction] = useState('')
   const [checkbox, setCheckbox] = useState(false)
 
@@ -76,16 +78,16 @@ const BulkActions = (props) => {
       />
       { action === 'deletion' 
         ? <ConfirmTrigger
-            label="Apply"
-            title="Remove selected items?"
-            confirmText="Remove"
+            label={ string('bulkApply') }
+            title={ string('confirmBulkDelete') }
+            confirmText={ string('bulkDelete') }
             buttonProps={{ type: 'action' }}
             onConfirm={ applyAction }
           >
-            The selected items will be removed.
+            { string('confirmBulkDeleteDescription') }
           </ConfirmTrigger>
         : <Button type="action" onPress={ applyAction }>
-            Apply
+            { string('bulkApply') }
           </Button> }
     </div>
   )

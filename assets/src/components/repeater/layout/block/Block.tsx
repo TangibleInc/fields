@@ -22,13 +22,14 @@ const Block = ({
   name,
   renderFooterActions,
   renderAction,
-  parent
+  parent,
+  string
 }) => {
 
   const [activeItem, setActiveItem] = useState(0)
   const toggleItem = i => setActiveItem( i !== activeItem ? i : false )
 
-  const bulkOptions = { 'deletion': 'Delete' }
+  const bulkOptions = { 'deletion': string('bulkDelete') }
 
   if ( useSwitch ) {
     bulkOptions['enabled'] = 'Enabled'
@@ -93,6 +94,7 @@ const Block = ({
           <BulkActions
             actions={ bulkOptions }
             dispatch={ dispatch }
+            string={ string }
           /> }
         { items && items.slice(0, maxLength).map((item, i) => (
           <ExpandablePanel

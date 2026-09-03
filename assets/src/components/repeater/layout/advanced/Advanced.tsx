@@ -19,7 +19,8 @@ const Advanced = ({
   afterRow = false,
   renderAction,
   renderFooterActions,
-  useBulk
+  useBulk,
+  string
 }) => {
 
   const [openSection, setOpenSection] = useState(false)
@@ -34,8 +35,9 @@ const Advanced = ({
     <>
       { useBulk &&
         <BulkActions
-          actions={{ 'deletion': 'Delete' }}
+          actions={{ 'deletion': string('bulkDelete') }}
           dispatch={ dispatch }
+          string={ string }
         /> }
       <div className='tf-repeater-advanced'>
         <div className='tf-repeater-advanced-header tf-repeater-advanced-label-row'>

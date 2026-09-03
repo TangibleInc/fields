@@ -1,16 +1,23 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useLayoutEffect, useState } from 'react'
 import { ControlContext } from '../../../context'
 
 /**
- * TUI Modal portals itself to the end of <body>, which lands it outside the
- * global context class (tf-context-{name}) that scopes our styles. Recreate
- * the wrapper the react-aria overlay used to provide: a container carrying
- * the context classes (control.wrapper already includes tui-interface),
- * appended to the configured portal container.
+ * Gives a TUI Modal a container inside our interface wrapper.
  *
- * The container only exists while `active` is true, so a page with many
- * potential dialogs (one per repeater row) does not litter <body> with
- * empty wrappers.
+ * Left alone, TUI resolves its own portal root from the trigger's nearest
+ * .tui-interface, which is usually our field wrapper. We still hand it a
+ * container for two reasons:
+ *
+ * - Page builders (Elementor, Beaver Builder) set control.portalContainer so
+ *   overlays land inside their panel, and TUI can't know about that
+ * - TUI's shared portal root is a fixed, z-indexed stacking context; a plain
+ *   wrapper lets the modal's own z-index (see modal/index.scss) clear the WP
+ *   admin bar
+ *
+ * The wrapper is created on first activation and kept until unmount, rather
+ * than torn down on every close: the Modal must render once with open=false
+ * to restore focus to its trigger, and TUI indexes .tui-interface nodes for
+ * its portal roots, so churning them is best avoided.
  *
  * @see renderField() in ./src/index.tsx
  * @see ./Modal.tsx for the legacy react-aria equivalent
@@ -20,22 +27,21 @@ const usePortalContainer = (active = true): HTMLElement | null => {
   const control = useContext(ControlContext)
   const [container, setContainer] = useState<HTMLElement | null>(null)
 
-  useEffect(() => {
-    if (!active) return
+  useLayoutEffect(() => {
+    if (!active || container) return
 
     const host: Element = control?.portalContainer ?? document.body
     const el = document.createElement('div')
-    el.className = control?.wrapper ?? 'tui-interface'
+    el.className = control?.wrapper ?? 'tf-interface tui-interface'
     host.appendChild(el)
     setContainer(el)
+  }, [active, container, control])
 
-    return () => {
-      host.removeChild(el)
-      setContainer(null)
-    }
-  }, [active])
+  useLayoutEffect(() => () => {
+    container?.remove()
+  }, [container])
 
-  return active ? container : null
+  return container
 }
 
 export default usePortalContainer

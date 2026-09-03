@@ -150,11 +150,21 @@ const Repeater = props => {
     )
   )
 
-  const string = name => ({
-    ...strings.common,
-    ...(strings.layoutOveride[ layout ] ?? {}),
-    ...(props.strings ?? {})
-  }[name] ?? name)
+  /**
+   * Resolve a UI string: common < layout override < user override.
+   * `params` fills {placeholders}, e.g. string('confirmDeleteDescription', { index: 2 })
+   */
+  const string = (name, params = {}) => {
+    const value = {
+      ...strings.common,
+      ...(strings.layoutOveride[ layout ] ?? {}),
+      ...(props.strings ?? {})
+    }[name] ?? name
+    return Object.entries(params).reduce(
+      (text, [key, replacement]) => text.replaceAll(`{${key}}`, String(replacement)),
+      String(value)
+    )
+  }
 
   /**
    * Default function to render footer action, this has to be called
@@ -228,7 +238,7 @@ const Repeater = props => {
             onConfirm={ () => dispatch({ type : 'remove', item : i }) }
             { ...customProps }
           >
-            { string('confirmDeleteDescription').replace('%d', String(i + 1)) }
+            { string('confirmDeleteDescription', { index: i + 1 }) }
           </ConfirmTrigger>
         )
         case 'clone':

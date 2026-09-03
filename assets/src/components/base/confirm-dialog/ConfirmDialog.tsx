@@ -8,6 +8,11 @@ import usePortalContainer from '../modal/usePortalContainer'
 
 type ConfirmType = 'danger' | 'primary'
 
+/**
+ * Also the initialFocusSelector target and a styling hook in index.scss
+ */
+export const CANCEL_CLASS = 'tf-confirm-dialog__cancel'
+
 export interface ConfirmDialogProps {
   open: boolean
   /** Called when the dialog wants to close, whichever way (confirm, cancel, escape, backdrop). */
@@ -20,6 +25,7 @@ export interface ConfirmDialogProps {
   cancelText?: ReactNode
   /** Visual weight of the confirm action. Destructive by default — that is what a confirm is for. */
   confirmType?: ConfirmType
+  /** Applied to the dialog element, not the trigger (use buttonProps.className for that) */
   className?: string
 }
 
@@ -31,6 +37,8 @@ export interface ConfirmDialogProps {
  * - Initial focus lands on Cancel — the least destructive action — as
  *   recommended by the WAI-ARIA dialog pattern for destructive confirms
  * - Escape and backdrop click both cancel
+ * - Focus returns to the trigger on close (the Modal stays mounted through
+ *   the close so TUI can restore it)
  *
  * Note: TUI Modal renders role="dialog"; an alertdialog role would be more
  * precise for a confirm. Revisit when TUI exposes it.
@@ -66,7 +74,7 @@ const ConfirmDialog = ({
     onConfirm()
   }
 
-  if (!open || !container) return null
+  if (!container) return null
 
   return (
     <Modal
@@ -76,7 +84,9 @@ const ConfirmDialog = ({
       container={container}
       aria-labelledby={titleId}
       aria-describedby={children ? bodyId : undefined}
-      initialFocusSelector=".tf-confirm-dialog__cancel"
+      initialFocusSelector={`.${CANCEL_CLASS}`}
+      closeOnEscape
+      closeOnBackdropClick
       className={['tf-confirm-dialog', className].filter(Boolean).join(' ')}
     >
       <Modal.Head>
@@ -94,7 +104,7 @@ const ConfirmDialog = ({
       <Modal.Foot className="tf-confirm-dialog__actions">
         <Button
           type="action"
-          className="tf-confirm-dialog__cancel"
+          className={CANCEL_CLASS}
           onPress={cancel}
         >
           {cancelText}

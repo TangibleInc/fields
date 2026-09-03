@@ -1,11 +1,13 @@
 // TUI's default modal layer is 1000, which is below the WordPress admin bar
 // (99999). Every TUI Modal we portal lands inside a .tf-interface wrapper
-// (see usePortalContainer), so lifting the layer here covers them all.
+// (see usePortalContainer), so setting the modal-specific token here covers
+// them all without touching the shared layer token other TUI parts read.
 .tf-interface {
-  --tui-layer-modal: 1000000;
+  --tui-modal-z: 1000000;
 }
 
 .tf-modal {
+  --tui-layer-modal: 1000000;
 
   position: fixed;
   z-index: var(--tui-layer-modal);
