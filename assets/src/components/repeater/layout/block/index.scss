@@ -1,24 +1,21 @@
+// Block rows are PanelItems in a card-variant TUI Accordion: border, radius,
+// surface and the gap between rows come from TUI
+
+.tf-repeater-block-items {
+  margin-block: var(--tui-spacing-xs, 8px);
+}
+
 .tf-repeater-block-item {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-top: 1em;
-  margin-bottom: $global-spacer-xs;
-    
-  border: $field-border;
-  border-radius: $field-border-radius;
-  background: $field-background;
 
   // not ideal but it will do until we change the css of the switch component to be able to change its size
   .tf-panel-header .tf-switch-element,
   .tf-panel-header .tf-switch-element-selected {
     transform: scale(0.7);
   }
-
 }
 
 .tf-repeater-block-item-field {
-  padding: 1em;
+  padding-block: var(--tui-spacing-xs, 8px);
 }
 
 .tf-repeater-block-item-field:has(> div[data-overlay-container="true"]:empty) {

@@ -97,7 +97,7 @@ describe(
       expect(container.querySelector('input[name="subfield1"]')).toBeTruthy()
       expect(container.querySelector('input[name="subfield2"]')).toBeTruthy()
 
-      await user.click(container.querySelectorAll('.tf-tab-item button')[1])
+      await user.click(container.querySelectorAll('[role="tab"]')[1])
 
       expect(container.querySelector('input[name="subfield1"]')).toBeTruthy()
       expect(container.querySelector('input[name="subfield2"]')).toBeTruthy()
@@ -136,7 +136,7 @@ describe(
       expect(container.querySelector('input[name="subfield1"]')).toBeTruthy()
       expect(container.querySelector('input[name="subfield2"]')).toBeFalsy()
 
-      await user.click(container.querySelectorAll('.tf-tab-item button')[1])
+      await user.click(container.querySelectorAll('[role="tab"]')[1])
 
       expect(container.querySelector('input[name="subfield1"]')).toBeFalsy()
       expect(container.querySelector('input[name="subfield2"]')).toBeTruthy()

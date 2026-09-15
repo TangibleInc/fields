@@ -8,21 +8,10 @@
 .tf-repeater-actions {
   display: flex;
   justify-content: flex-end;
-  padding: 2px;
-  padding-bottom: 4px;
-  gap: $global-spacer-xs;
-
-  .tf-button-action:last-child {
-    color: $global-context-destructive;
-    border-color: $global-context-destructive;
-  }
+  gap: var(--tui-spacing-xxs, 4px);
+  padding-block: var(--tui-spacing-xxs, 4px);
 }
 
 .tf-repeater-title {
   @include label;
-}
-
-.tf-repeater-block-items {
-  margin-top: $global-spacer-sm;
-	margin-bottom: $global-spacer-sm;
 }

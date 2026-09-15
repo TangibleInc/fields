@@ -50,11 +50,12 @@ describe('Tab component', () => {
       })
     )
     
-    const tab1 = within(container).getByText('Title tab 1')
-    const tab2 = within(container).getByText('Title tab 2')
+    const tab1 = within(container).getByRole('tab', { name: 'Title tab 1' })
+    const tab2 = within(container).getByRole('tab', { name: 'Title tab 2' })
 
-    expect(tab1.parentNode.getAttribute('data-open')).toBe('true')
-    expect(tab2.parentNode.getAttribute('data-open')).toBe('false')
+    expect(tab1.getAttribute('aria-selected')).toBe('true')
+    expect(tab2.getAttribute('aria-selected')).toBe('false')
+    expect(within(container).getByRole('tablist').getAttribute('aria-label')).toBeTruthy()
     
     expect(within(container).getByLabelText('Text field')).toBeTruthy()
     expect(within(container).getByLabelText('Color field')).toBeTruthy()
@@ -62,8 +63,8 @@ describe('Tab component', () => {
 
     await user.click(tab2)
     
-    expect(tab1.parentNode.getAttribute('data-open')).toBe('false')
-    expect(tab2.parentNode.getAttribute('data-open')).toBe('true')
+    expect(tab1.getAttribute('aria-selected')).toBe('false')
+    expect(tab2.getAttribute('aria-selected')).toBe('true')
     
     expect(within(container).queryByLabelText('Text field')).toBeFalsy()
     expect(within(container).queryByLabelText('Color field')).toBeFalsy()
