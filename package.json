@@ -95,7 +95,7 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@wordpress/e2e-test-utils-playwright": "^1.22.0",
-    "@wordpress/env": "^10.22.0",
+    "@wordpress/env": "^11.15.0",
     "babel-jest": "^29.7.0",
     "babel-plugin-transform-import-meta": "^2.3.3",
     "chokidar-cli": "^3.0.0",
