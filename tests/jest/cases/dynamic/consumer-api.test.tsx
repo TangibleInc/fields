@@ -12,7 +12,7 @@ import { createDynamicValuesAPI } from '../../../../assets/src/dynamic-values'
 /**
  * The dynamic-values surface a consumer with its own UI relies on: an API
  * that needs no host field, the settings modal driven by props (modes,
- * extra groups, labels, container), and the settings sub-form on its own.
+ * labels, container), and the settings sub-form on its own.
  * The registry is the one tests/jest/setup/config.ts installs.
  */
 describe('dynamic values feature - consumer API', () => {
@@ -102,33 +102,16 @@ describe('dynamic values feature - consumer API', () => {
       expect(screen.getByText('Select Type & Meta Key')).toBeInTheDocument()
     })
 
-    test('lists extra groups after the registry and submits their keys unchanged', async () => {
-      const { user, onSubmit, onOpenChange } = setup({
+    test('editing a registry reference preselects it and prefills its settings', async () => {
+      setup({
         modes: ['builtin'],
-        extraGroups: [
-          { name: 'doc', label: 'This document', choices: { 'custom.title': 'Title', 'custom.sig': 'Signature' } },
-        ],
+        editingId: 'chip-1',
+        editingRaw: 'test-value-settings::dynamic-value-setting=abc',
       })
 
-      await user.click(trigger())
-      const options = await screen.findAllByRole('option')
-      const texts = options.map(option => option.textContent)
-      expect(texts.slice(-2)).toStrictEqual(['Title', 'Signature'])
-      expect(screen.getByText('This document')).toBeInTheDocument()
-
-      await user.click(screen.getByRole('option', { name: 'Title' }))
-      await user.click(screen.getByText('Add Field'))
-
-      await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
-      expect(onSubmit).toHaveBeenCalledWith('custom.title', {
-        mode: 'builtin',
-        value: 'custom.title',
-        label: 'Title',
-        group: 'This document',
-        settings: {},
-        extra: true,
-      })
-      expect(onOpenChange).toHaveBeenCalledWith(false)
+      expect(trigger()).toHaveTextContent('Test value settings')
+      expect(await screen.findByLabelText('Dynamic value setting')).toHaveValue('abc')
+      expect(screen.getByText('Update Field')).toBeInTheDocument()
     })
 
     test('a registry value with settings submits the token inside and the pick', async () => {
@@ -149,22 +132,10 @@ describe('dynamic values feature - consumer API', () => {
         value: 'test-value-settings',
         label: 'Test value settings',
         group: 'Test category',
-        extra: false,
       })
       expect(meta.settings).toStrictEqual({ 'dynamic-value-setting': 'abc' })
     })
 
-    test('editing an extra-group reference preselects it', () => {
-      setup({
-        modes: ['builtin'],
-        editingId: 'chip-1',
-        editingRaw: 'custom.title',
-        extraGroups: [{ name: 'doc', label: 'This document', choices: { 'custom.title': 'Title' } }],
-      })
-
-      expect(trigger()).toHaveTextContent('Title')
-      expect(screen.getByText('Update Field')).toBeInTheDocument()
-    })
   })
 
   describe('DynamicValueSettings on its own', () => {

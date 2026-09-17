@@ -123,7 +123,6 @@ const Harness = ({ categories, editingRaw, ...props }: HarnessProps) => {
  *   onOpenChange={ setOpen }
  *   dynamic={ dynamicValues.createAPI({ categories: ['user'] }) }
  *   modes={ ['builtin'] }
- *   extraGroups={ [{ name: 'doc', label: 'This document', choices: { title: 'Title' } }] }
  *   labels={ { title: 'Insert a field' } }
  *   onSubmit={ (raw, meta) => insert(raw, meta.label) }
  * />
@@ -132,13 +131,11 @@ const Harness = ({ categories, editingRaw, ...props }: HarnessProps) => {
  * - `dynamicValues.createAPI({ types, categories, mode })` narrows the
  *   registry without a field
  * - `modes` — `['builtin']` hides the Field Type toggle
- * - `extraGroups` — consumer-provided groups listed after the registry;
- *   their keys are submitted unchanged, they carry no settings
  * - `labels` — every string of the dialog
  * - `container` — where the dialog mounts; it receives the interface
  *   wrapper classes while open
  * - `onSubmit(raw, meta)` — the raw reference plus what was picked
- *   (`value`, `label`, `group`, `settings`, `extra`)
+ *   (`value`, `label`, `group`, `settings`)
  *
  * Inside a field this dialog is opened by the field's own dynamic-value
  * button; see the Dynamic Values stories.
@@ -164,23 +161,13 @@ export const Default: Story = {
 }
 
 /**
- * Built-in only, narrowed to one category, with a consumer group listed after
- * the registry — a builder listing its document's own fields
+ * Built-in only, narrowed to one category — a consumer whose "custom" means
+ * something of its own hides the toggle and lists the categories it wants
  */
-export const BuiltinWithExtraGroups: Story = {
+export const BuiltinNarrowed: Story = {
   args: {
     modes: ['builtin'],
     categories: ['user'],
-    extraGroups: [
-      {
-        name: 'document',
-        label: 'This document',
-        choices: {
-          'custom.title': 'Title',
-          'custom.signature': 'Signature',
-        },
-      },
-    ],
   },
 }
 
@@ -211,15 +198,3 @@ export const EditingReference: Story = {
   },
 }
 
-/**
- * Editing a reference from a consumer group preselects it too
- */
-export const EditingExtraReference: Story = {
-  args: {
-    modes: ['builtin'],
-    editingRaw: 'custom.title',
-    extraGroups: [
-      { name: 'document', label: 'This document', choices: { 'custom.title': 'Title' } },
-    ],
-  },
-}

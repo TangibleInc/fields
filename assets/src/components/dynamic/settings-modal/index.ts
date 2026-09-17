@@ -4,7 +4,6 @@ export {
 } from './DynamicFieldSettings'
 export type {
   DynamicFieldMode,
-  DynamicFieldSettingsGroup,
   DynamicFieldSettingsLabels,
   DynamicFieldSettingsProps,
   DynamicFieldSettingsSubmitMeta,

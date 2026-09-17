@@ -19,17 +19,6 @@ import { EnsureControlContext } from './ensure-context'
 
 export type DynamicFieldMode = 'builtin' | 'custom'
 
-/**
- * A consumer-provided group of choices listed with the registry's own — a
- * builder's per-document fields, for instance. Keys are submitted as the
- * raw reference unchanged; they carry no settings.
- */
-export interface DynamicFieldSettingsGroup {
-  name: string
-  label: string
-  choices: Record<string, string>
-}
-
 export interface DynamicFieldSettingsLabels {
   title: string
   fieldType: string
@@ -61,15 +50,13 @@ export const defaultDynamicFieldSettingsLabels: DynamicFieldSettingsLabels = {
 /** What was picked, alongside the raw reference `onSubmit` receives. */
 export interface DynamicFieldSettingsSubmitMeta {
   mode: DynamicFieldMode
-  /** The value name (built-in), the extra-group key, or the custom raw. */
+  /** The value name (built-in) or the custom raw. */
   value: string
-  /** Display label of the pick — the registry's or the extra group's. */
+  /** Display label of the pick. */
   label: string
-  /** Label of the group the pick belongs to, when it belongs to one. */
+  /** Label of the category the pick belongs to, when it belongs to one. */
   group?: string
   settings: Record<string, any>
-  /** Whether the pick came from `extraGroups`. */
-  extra: boolean
 }
 
 export interface DynamicFieldSettingsProps {
@@ -87,8 +74,6 @@ export interface DynamicFieldSettingsProps {
    * @default ['builtin', 'custom']
    */
   modes?: DynamicFieldMode[]
-  /** Groups listed after the registry's categories. */
-  extraGroups?: DynamicFieldSettingsGroup[]
   /** Override any of the dialog's strings. */
   labels?: Partial<DynamicFieldSettingsLabels>
   /**
@@ -117,7 +102,6 @@ const DynamicFieldSettings = ({
   editingRaw,
   defaultMode = 'builtin',
   modes = ['builtin', 'custom'],
-  extraGroups = [],
   labels: labelsProp,
   container,
   context,
@@ -159,27 +143,10 @@ const DynamicFieldSettings = ({
 
   const isEditing = editingId !== undefined
 
-  /**
-   * The registry's categories (filtered to the API's types and categories)
-   * followed by the consumer's extra groups
-   */
-  const choices = useMemo(
-    () => [
-      ...buildGroupedChoices(dynamic, dynamics),
-      ...extraGroups
-        .filter(group => Object.keys(group?.choices ?? {}).length > 0)
-        .map(group => ({ name: group.label, choices: group.choices })),
-    ],
-    [extraGroups]
-  )
-  const extraKeys = useMemo(
-    () => new Set(extraGroups.flatMap(group => Object.keys(group?.choices ?? {}))),
-    [extraGroups]
-  )
+  /** The registry's categories, filtered to the API's types and categories */
+  const choices = useMemo(() => buildGroupedChoices(dynamic, dynamics), [])
 
-  const isExtra = (value: string) => extraKeys.has(value)
   const hasSettings = (value: string) => {
-    if (isExtra(value)) return false
     const args = dynamics.values[value]?.fields
     return Array.isArray(args) && args.length > 0
   }
@@ -197,10 +164,6 @@ const DynamicFieldSettings = ({
         setSelectedValue(parsed.type)
         setCustomValue('')
         if (parsed.fields) setSettings(parsed.fields)
-      } else if (isExtra(editingRaw)) {
-        setMode('builtin')
-        setSelectedValue(editingRaw)
-        setCustomValue('')
       } else if (availableModes.includes('custom')) {
         setMode('custom')
         setCustomValue(editingRaw)
@@ -229,32 +192,27 @@ const DynamicFieldSettings = ({
 
     if (mode === 'custom') {
       raw = customValue.trim()
-      meta = { mode, value: raw, label: raw, settings: {}, extra: false }
+      meta = { mode, value: raw, label: raw, settings: {} }
     } else {
       if (!selectedValue) return
       const group = choices.find(category => selectedValue in category.choices)
       const label = String(group?.choices[selectedValue] ?? selectedValue)
-      if (isExtra(selectedValue)) {
-        raw = selectedValue
-        meta = { mode, value: selectedValue, label, group: group?.name, settings: {}, extra: true }
-      } else {
-        // Blank settings add nothing but noise to the token (the parser
-        // defaults a missing setting to '' anyway), so only filled ones
-        // travel: [[user_meta::meta_name=x]], not [[user_meta::source=::meta_name=x]]
-        const filled = Object.fromEntries(
-          Object.entries(settings).filter(([, v]) => v !== '' && v !== null && v !== undefined)
-        )
-        raw = dynamic.stringify(
-          selectedValue,
-          Object.keys(filled).length > 0 ? filled : false
-        )
-        // stringify returns the full [[type::key=value]] token; the raw
-        // reference is its inside — consumers add their own delimiters
-        if (raw.startsWith('[[') && raw.endsWith(']]')) {
-          raw = raw.slice(2, -2)
-        }
-        meta = { mode, value: selectedValue, label, group: group?.name, settings: filled, extra: false }
+      // Blank settings add nothing but noise to the token (the parser
+      // defaults a missing setting to '' anyway), so only filled ones
+      // travel: [[user_meta::meta_name=x]], not [[user_meta::source=::meta_name=x]]
+      const filled = Object.fromEntries(
+        Object.entries(settings).filter(([, v]) => v !== '' && v !== null && v !== undefined)
+      )
+      raw = dynamic.stringify(
+        selectedValue,
+        Object.keys(filled).length > 0 ? filled : false
+      )
+      // stringify returns the full [[type::key=value]] token; the raw
+      // reference is its inside — consumers add their own delimiters
+      if (raw.startsWith('[[') && raw.endsWith(']]')) {
+        raw = raw.slice(2, -2)
       }
+      meta = { mode, value: selectedValue, label, group: group?.name, settings: filled }
     }
 
     if (!raw) return

@@ -155,7 +155,7 @@ const initItem = (name, props, type) => (
  * @example
  *   const api = tangibleFields.dynamicValues.createAPI({ categories: ['user'] })
  *   <tangibleFields.DynamicFieldSettings open dynamic={ api } modes={ ['builtin'] }
- *     extraGroups={ [{ name: 'doc', label: 'This document', choices: { title: 'Title' } }] }
+ *     labels={ { title: 'Insert a field' } }
  *     onSubmit={ (raw, meta) => insert(raw, meta.label) } />
  */
 const dynamicValues = {
