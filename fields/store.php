@@ -70,7 +70,7 @@ add_action( 'wp_ajax_tangible_fields_store', [ $fields, '_ajax_store_callback' ]
 add_action( 'wp_ajax_nopriv_tangible_fields_store', [ $fields, '_ajax_store_callback' ] );
 $fields->_ajax_store_callback = function (
 ) use ($fields) {
-  $name = $_GET['name'] ?? '';
+  $name = sanitize_text_field( wp_unslash( $_GET['name'] ?? '' ) );
 
   if ( ! $field = $fields->get_field( $name ) ) {
     return $fields->__send_ajax( [
@@ -101,7 +101,7 @@ add_action( 'wp_ajax_tangible_fields_fetch', [ $fields, '_ajax_fetch_callback' ]
 add_action( 'wp_ajax_nopriv_tangible_fields_fetch', [ $fields, '_ajax_fetch_callback' ] );
 $fields->_ajax_fetch_callback = function (
 ) use ($fields) {
-  $name = $_GET['name'] ?? '';
+  $name = sanitize_text_field( wp_unslash( $_GET['name'] ?? '' ) );
 
   if ( ! $field = $fields->get_field( $name ) ) {
     return $fields->__send_ajax( [
@@ -138,8 +138,7 @@ $fields->__send_ajax = function ( $data, $return = null ) {
     return $data;
   }
 
-  echo json_encode( $data );
-  exit;
+  wp_send_json( $data );
 };
 
 /**

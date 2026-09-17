@@ -417,6 +417,21 @@ class Store_TestCase extends TF_UnitTestCase {
     unset($_GET['name']);
   }
 
+  public function test_fields_store_ajax_name_is_sanitized() {
+    $_GET['name'] = '<img src=x onerror=alert(1)>test';
+
+    foreach ( ['_ajax_fetch_callback', '_ajax_store_callback'] as $callback ) {
+      $response = tangible_fields()->$callback();
+
+      $this->assertEquals([
+        'success' => false,
+        'error' => 'Unknown field test',
+      ], $response);
+    }
+
+    unset($_GET['name']);
+  }
+
   public function test_fields_store_ajax_fetch() {
     tangible_fields()->register_field('test', array_merge(
       tangible_fields()->_store_callbacks['memory'](),
