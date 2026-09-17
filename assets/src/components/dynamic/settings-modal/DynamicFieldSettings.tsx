@@ -2,30 +2,111 @@ import {
   useState,
   useMemo,
   useEffect,
-  useRef,
+  useContext,
 } from 'react'
 
 import { Modal, SearchSelect, Field, TextInput, Icon } from '@tangible/ui'
 
 import { getConfig } from '../../../index.tsx'
+import { ControlContext } from '../../../context'
 import { Button } from '../../base'
 import usePortalContainer from '../../base/modal/usePortalContainer'
 import { RadioGroup } from '../../field/radio/RadioGroup'
 import Radio from '../../field/radio/Radio'
-import Control from '../../../Control'
+import { buildGroupedChoices } from '../choices'
+import DynamicValueSettings from './DynamicValueSettings'
+import { EnsureControlContext } from './ensure-context'
 
-type FieldMode = 'builtin' | 'custom'
+export type DynamicFieldMode = 'builtin' | 'custom'
 
-interface DynamicFieldSettingsProps {
+/**
+ * A consumer-provided group of choices listed with the registry's own — a
+ * builder's per-document fields, for instance. Keys are submitted as the
+ * raw reference unchanged; they carry no settings.
+ */
+export interface DynamicFieldSettingsGroup {
+  name: string
+  label: string
+  choices: Record<string, string>
+}
+
+export interface DynamicFieldSettingsLabels {
+  title: string
+  fieldType: string
+  builtin: string
+  custom: string
+  select: string
+  selectPlaceholder: string
+  customKey: string
+  customPlaceholder: string
+  cancel: string
+  add: string
+  update: string
+}
+
+export const defaultDynamicFieldSettingsLabels: DynamicFieldSettingsLabels = {
+  title: 'Dynamic Field Settings',
+  fieldType: 'Field Type',
+  builtin: 'Built-in',
+  custom: 'Custom',
+  select: 'Select Type & Meta Key',
+  selectPlaceholder: 'Choose a dynamic value',
+  customKey: 'Custom key',
+  customPlaceholder: 'e.g. post_meta::field=author',
+  cancel: 'Cancel',
+  add: 'Add Field',
+  update: 'Update Field',
+}
+
+/** What was picked, alongside the raw reference `onSubmit` receives. */
+export interface DynamicFieldSettingsSubmitMeta {
+  mode: DynamicFieldMode
+  /** The value name (built-in), the extra-group key, or the custom raw. */
+  value: string
+  /** Display label of the pick — the registry's or the extra group's. */
+  label: string
+  /** Label of the group the pick belongs to, when it belongs to one. */
+  group?: string
+  settings: Record<string, any>
+  /** Whether the pick came from `extraGroups`. */
+  extra: boolean
+}
+
+export interface DynamicFieldSettingsProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  dynamic: any // DynamicAPI from dynamicValuesAPI()
+  /** DynamicAPI from dynamicValuesAPI() or createDynamicValuesAPI(). */
+  dynamic: any
   editingId?: string
   editingRaw?: string
   /** Mode for fresh opens (no editingRaw) — the insert panel's
       "Custom value…" row opens straight into custom mode. */
-  defaultMode?: FieldMode
-  onSubmit: (raw: string) => void
+  defaultMode?: DynamicFieldMode
+  /**
+   * Which modes the dialog offers. One mode hides the Field Type toggle.
+   * @default ['builtin', 'custom']
+   */
+  modes?: DynamicFieldMode[]
+  /** Groups listed after the registry's categories. */
+  extraGroups?: DynamicFieldSettingsGroup[]
+  /** Override any of the dialog's strings. */
+  labels?: Partial<DynamicFieldSettingsLabels>
+  /**
+   * Where the dialog mounts. Defaults to a wrapper created inside the
+   * control context's portal container (see usePortalContainer). A given
+   * container receives the interface wrapper classes (tf-interface,
+   * tf-context-<name>, tui-interface) while the dialog is mounted: the
+   * module's styles are scoped under them, and TUI portals the pickers'
+   * panels into the nearest .tui-interface — that container.
+   */
+  container?: HTMLElement | null
+  /**
+   * The tf-context name used for the interface wrapper when the dialog is
+   * rendered outside any field (no ControlContext above it), e.g. 'wp'.
+   */
+  context?: string
+  /** The raw reference WITHOUT [[ ]] delimiters, and what was picked. */
+  onSubmit: (raw: string, meta: DynamicFieldSettingsSubmitMeta) => void
 }
 
 const DynamicFieldSettings = ({
@@ -35,144 +116,150 @@ const DynamicFieldSettings = ({
   editingId,
   editingRaw,
   defaultMode = 'builtin',
+  modes = ['builtin', 'custom'],
+  extraGroups = [],
+  labels: labelsProp,
+  container,
+  context,
   onSubmit,
 }: DynamicFieldSettingsProps) => {
   if (!dynamic) return null
 
   const { dynamics } = getConfig()
+  const labels = { ...defaultDynamicFieldSettingsLabels, ...(labelsProp ?? {}) }
+  const availableModes: DynamicFieldMode[] = modes.length ? modes : ['builtin']
+  const initialMode: DynamicFieldMode = availableModes.includes(defaultMode)
+    ? defaultMode
+    : availableModes[0]
+
   /**
    * TUI Modal portals itself; the hook gives it a container that carries
-   * the global context classes so our styles still apply inside it
+   * the global context classes so our styles still apply inside it — unless
+   * the consumer names one
    */
-  const modalContainer = usePortalContainer(open)
+  const fallbackContainer = usePortalContainer(open && !container)
+  const modalContainer = container ?? fallbackContainer
 
-  const [mode, setMode] = useState<FieldMode>('builtin')
+  // A consumer's container must carry the wrapper classes our styles and
+  // TUI's portal roots key on; add what is missing for the dialog's lifetime.
+  const existingControl = useContext(ControlContext)
+  const contextName = context ?? existingControl?.name ?? 'default'
+  useEffect(() => {
+    if (!container) return
+    const wanted = ['tf-interface', `tf-context-${contextName}`, 'tui-interface']
+    const added = wanted.filter(className => !container.classList.contains(className))
+    added.forEach(className => container.classList.add(className))
+    return () => added.forEach(className => container.classList.remove(className))
+  }, [container, contextName])
+
+  const [mode, setMode] = useState<DynamicFieldMode>(initialMode)
   const [selectedValue, setSelectedValue] = useState('')
   const [customValue, setCustomValue] = useState('')
   const [settings, setSettings] = useState<Record<string, any>>({})
-  const [settingsForm, setSettingsForm] = useState<any[] | null>(null)
-  const settingsRef = useRef(settings)
-  settingsRef.current = settings
 
   const isEditing = editingId !== undefined
+
+  /**
+   * The registry's categories (filtered to the API's types and categories)
+   * followed by the consumer's extra groups
+   */
+  const choices = useMemo(
+    () => [
+      ...buildGroupedChoices(dynamic, dynamics),
+      ...extraGroups
+        .filter(group => Object.keys(group?.choices ?? {}).length > 0)
+        .map(group => ({ name: group.label, choices: group.choices })),
+    ],
+    [extraGroups]
+  )
+  const extraKeys = useMemo(
+    () => new Set(extraGroups.flatMap(group => Object.keys(group?.choices ?? {}))),
+    [extraGroups]
+  )
+
+  const isExtra = (value: string) => extraKeys.has(value)
+  const hasSettings = (value: string) => {
+    if (isExtra(value)) return false
+    const args = dynamics.values[value]?.fields
+    return Array.isArray(args) && args.length > 0
+  }
 
   // Parse editingRaw into initial state when modal opens
   useEffect(() => {
     if (!open) return
 
     setSettings({})
-    setSettingsForm(null)
 
     if (editingRaw) {
       const parsed = dynamic.parse(editingRaw)
-      if (parsed && parsed.type) {
-        // Check if it's a known built-in value
-        if (dynamics.values[parsed.type]) {
-          setMode('builtin')
-          setSelectedValue(parsed.type)
-          setCustomValue('')
-          // Restore settings from parsed fields
-          if (parsed.fields) {
-            setSettings(parsed.fields)
-          }
-          // Check for settings form
-          const args = dynamics.values[parsed.type]?.fields
-          if (Array.isArray(args) && args.length > 0) {
-            setSettingsForm(args)
-          }
-        } else {
-          setMode('custom')
-          setCustomValue(editingRaw)
-          setSelectedValue('')
-        }
-      } else {
+      if (parsed && parsed.type && dynamics.values[parsed.type]) {
+        setMode('builtin')
+        setSelectedValue(parsed.type)
+        setCustomValue('')
+        if (parsed.fields) setSettings(parsed.fields)
+      } else if (isExtra(editingRaw)) {
+        setMode('builtin')
+        setSelectedValue(editingRaw)
+        setCustomValue('')
+      } else if (availableModes.includes('custom')) {
         setMode('custom')
         setCustomValue(editingRaw)
         setSelectedValue('')
+      } else {
+        setMode('builtin')
+        setSelectedValue('')
+        setCustomValue('')
       }
     } else {
-      setMode(defaultMode)
+      setMode(initialMode)
       setSelectedValue('')
       setCustomValue('')
     }
-  }, [open, editingRaw, defaultMode])
-
-  /**
-   * Build grouped choices for the picker from dynamic categories
-   */
-  const choices = useMemo(() => {
-    const allowedTypes = dynamic.getTypes()
-    const categoryKeys = dynamic.getCategories()
-
-    const categories = categoryKeys.map(categoryKey => {
-      const category = dynamics.categories[categoryKey]
-      const categoryChoices = Object.keys(dynamics.values)
-        .filter(
-          value =>
-            category.values.includes(value) &&
-            allowedTypes.includes(dynamics.values[value]?.type)
-        )
-        .reduce(
-          (choices, key) => ({
-            ...choices,
-            [key]: dynamics.values[key].label ?? key,
-          }),
-          {}
-        )
-
-      return {
-        name: category.label,
-        choices: categoryChoices,
-      }
-    })
-
-    return categories.filter(
-      category => Object.keys(category.choices).length !== 0
-    )
-  }, [])
+  }, [open, editingRaw, initialMode])
 
   const handleBuiltinSelect = (valueName: string) => {
     if (!valueName) return
     setSelectedValue(valueName)
-
-    const args = dynamics.values[valueName]?.fields
-    if (Array.isArray(args) && args.length > 0) {
-      setSettingsForm(args)
-    } else {
-      setSettingsForm(null)
-    }
-  }
-
-  const updateSettings = (name: string, settingValue: any) => {
-    setSettings(prev => {
-      const next = { ...prev, [name]: settingValue }
-      settingsRef.current = next
-      return next
-    })
+    setSettings({})
   }
 
   const handleSubmit = () => {
     let raw: string
+    let meta: DynamicFieldSettingsSubmitMeta
 
     if (mode === 'custom') {
       raw = customValue.trim()
+      meta = { mode, value: raw, label: raw, settings: {}, extra: false }
     } else {
       if (!selectedValue) return
-      raw = dynamic.stringify(
-        selectedValue,
-        Object.keys(settings).length > 0 ? settings : false
-      )
-      // stringify returns [[value]] — we need just the inner raw
-      // Actually stringify returns the full [[type::key=value]] string
-      // We need to strip the [[ and ]] delimiters since our serialiser adds them
-      if (raw.startsWith('[[') && raw.endsWith(']]')) {
-        raw = raw.slice(2, -2)
+      const group = choices.find(category => selectedValue in category.choices)
+      const label = String(group?.choices[selectedValue] ?? selectedValue)
+      if (isExtra(selectedValue)) {
+        raw = selectedValue
+        meta = { mode, value: selectedValue, label, group: group?.name, settings: {}, extra: true }
+      } else {
+        // Blank settings add nothing but noise to the token (the parser
+        // defaults a missing setting to '' anyway), so only filled ones
+        // travel: [[user_meta::meta_name=x]], not [[user_meta::source=::meta_name=x]]
+        const filled = Object.fromEntries(
+          Object.entries(settings).filter(([, v]) => v !== '' && v !== null && v !== undefined)
+        )
+        raw = dynamic.stringify(
+          selectedValue,
+          Object.keys(filled).length > 0 ? filled : false
+        )
+        // stringify returns the full [[type::key=value]] token; the raw
+        // reference is its inside — consumers add their own delimiters
+        if (raw.startsWith('[[') && raw.endsWith(']]')) {
+          raw = raw.slice(2, -2)
+        }
+        meta = { mode, value: selectedValue, label, group: group?.name, settings: filled, extra: false }
       }
     }
 
     if (!raw) return
 
-    onSubmit(raw)
+    onSubmit(raw, meta)
     onOpenChange(false)
   }
 
@@ -187,12 +274,17 @@ const DynamicFieldSettings = ({
     [choices, selectedValue]
   )
   const selectedLabel = selectedValue
-    ? dynamics.values[selectedValue]?.label ?? selectedValue
+    ? String(
+        choices.find(category => selectedValue in category.choices)?.choices[selectedValue]
+          ?? dynamics.values[selectedValue]?.label
+          ?? selectedValue
+      )
     : ''
 
   if (!modalContainer) return null
 
   return (
+    <EnsureControlContext context={context} portalContainer={container}>
     <Modal
       open={open}
       onClose={handleCancel}
@@ -204,33 +296,39 @@ const DynamicFieldSettings = ({
     >
       <Modal.Head>
         <h3 id="tf-dynamic-settings-title" style={{ margin: 0 }}>
-          Dynamic Field Settings
+          {labels.title}
         </h3>
       </Modal.Head>
       <Modal.Body>
         <div className="tf-dynamic-settings">
-          {/* Mode toggle */}
-          <RadioGroup
-            label="Field Type"
-            value={mode}
-            onChange={value => setMode(value as FieldMode)}
-            name="dynamic-field-mode"
-            className="tf-dynamic-settings__mode"
-          >
-            <Radio value="builtin">Built-in</Radio>
-            <Radio value="custom">Custom</Radio>
-          </RadioGroup>
+          {/* Mode toggle — only when there is a choice to make */}
+          {availableModes.length > 1 && (
+            <RadioGroup
+              label={labels.fieldType}
+              value={mode}
+              onChange={value => setMode(value as DynamicFieldMode)}
+              name="dynamic-field-mode"
+              className="tf-dynamic-settings__mode"
+            >
+              {availableModes.includes('builtin') && (
+                <Radio value="builtin">{labels.builtin}</Radio>
+              )}
+              {availableModes.includes('custom') && (
+                <Radio value="custom">{labels.custom}</Radio>
+              )}
+            </RadioGroup>
+          )}
 
           {/* Built-in mode */}
           {mode === 'builtin' && (
             <div className="tf-dynamic-settings__builtin">
               <Field>
-                <Field.Label as="span">Select Type &amp; Meta Key</Field.Label>
+                <Field.Label as="span">{labels.select}</Field.Label>
                 <Field.Control>
                   <SearchSelect
                     value={selectedValue || undefined}
                     onValueChange={value => handleBuiltinSelect(String(value))}
-                    placeholder="Choose a dynamic value"
+                    placeholder={labels.selectPlaceholder}
                   >
                     <SearchSelect.Trigger>
                       {selectedValue ? (
@@ -245,7 +343,7 @@ const DynamicFieldSettings = ({
                         <SearchSelect.Group key={category.name}>
                           <SearchSelect.Label>{category.name}</SearchSelect.Label>
                           {Object.entries(category.choices).map(([key, label]) => (
-                            <SearchSelect.Option key={key} value={key}>
+                            <SearchSelect.Option key={key} value={key} textValue={String(label)}>
                               {String(label)}
                             </SearchSelect.Option>
                           ))}
@@ -255,31 +353,13 @@ const DynamicFieldSettings = ({
                   </SearchSelect>
                 </Field.Control>
               </Field>
-              {settingsForm && (
-                <div className="tf-dynamic-settings__fields">
-                  {settingsForm.map(field => (
-                    <div
-                      key={field.name}
-                      className="tf-dynamic-settings__field"
-                    >
-                      <Control
-                        {...field}
-                        value={settings[field.name] ?? ''}
-                        onChange={settingValue =>
-                          updateSettings(field.name, settingValue)
-                        }
-                        visibility={{
-                          condition: field.condition?.condition ?? false,
-                          action: field.condition?.action ?? 'show',
-                        }}
-                        data={{
-                          getValue: name =>
-                            settingsRef.current[name] ?? '',
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
+              {selectedValue && hasSettings(selectedValue) && (
+                <DynamicValueSettings
+                  key={selectedValue}
+                  valueName={selectedValue}
+                  settings={settings}
+                  onChange={setSettings}
+                />
               )}
             </div>
           )}
@@ -288,14 +368,14 @@ const DynamicFieldSettings = ({
           {mode === 'custom' && (
             <div className="tf-dynamic-settings__custom">
               <Field>
-                <Field.Label>Custom key</Field.Label>
+                <Field.Label>{labels.customKey}</Field.Label>
                 <Field.Control>
                   <TextInput
                     value={customValue}
                     /* TUI TextInput is a native wrapper: onChange, not
                        onValueChange (which would silently fall into rest) */
                     onChange={e => setCustomValue(e.target.value)}
-                    placeholder="e.g. post_meta::field=author"
+                    placeholder={labels.customPlaceholder}
                   />
                 </Field.Control>
               </Field>
@@ -305,13 +385,14 @@ const DynamicFieldSettings = ({
       </Modal.Body>
       <Modal.Foot className="tf-dynamic-settings__actions">
         <Button type="action" onPress={handleCancel}>
-          Cancel
+          {labels.cancel}
         </Button>
         <Button type="primary" onPress={handleSubmit}>
-          {isEditing ? 'Update Field' : 'Add Field'}
+          {isEditing ? labels.update : labels.add}
         </Button>
       </Modal.Foot>
     </Modal>
+    </EnsureControlContext>
   )
 }
 

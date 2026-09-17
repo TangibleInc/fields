@@ -23,6 +23,22 @@ import types from './types'
 import fields from './fields'
 import * as utils from './utils'
 
+import {
+  dynamicValuesAPI,
+  createDynamicValuesAPI,
+  dynamicValueRegex,
+} from './dynamic-values'
+import {
+  dynamicValueToString,
+  stringToDynamicValue,
+} from './dynamic-values/format'
+import { buildGroupedChoices } from './components/dynamic/choices'
+import {
+  DynamicFieldSettings,
+  DynamicValueSettings,
+  defaultDynamicFieldSettingsLabels,
+} from './components/dynamic/settings-modal'
+
 const renderComponent = (props, type = 'field') => (
   type === 'element' 
     ? renderElement(props)
@@ -130,6 +146,28 @@ const initItem = (name, props, type) => (
   })
 )
 
+/**
+ * The dynamic-values surface for consumers that bring their own UI (a page
+ * builder's dialog, a block editor's toolbar): the settings modal and its
+ * settings sub-form as components, an API factory that needs no host field,
+ * the grouped-choice builder the pickers use, and the token grammar.
+ *
+ * @example
+ *   const api = tangibleFields.dynamicValues.createAPI({ categories: ['user'] })
+ *   <tangibleFields.DynamicFieldSettings open dynamic={ api } modes={ ['builtin'] }
+ *     extraGroups={ [{ name: 'doc', label: 'This document', choices: { title: 'Title' } }] }
+ *     onSubmit={ (raw, meta) => insert(raw, meta.label) } />
+ */
+const dynamicValues = {
+  createAPI           : createDynamicValuesAPI,
+  fieldAPI            : dynamicValuesAPI,
+  buildGroupedChoices,
+  stringify           : dynamicValueToString,
+  parse               : stringToDynamicValue,
+  regex               : dynamicValueRegex,
+  defaultLabels       : defaultDynamicFieldSettingsLabels,
+}
+
 export {
   renderComponent as render,
   addEventListener as event,
@@ -141,6 +179,9 @@ export {
   renderField as Field,
   renderElement as Element,
   ControlContext,
+  DynamicFieldSettings,
+  DynamicValueSettings,
+  dynamicValues,
   init,
   config,
   getConfig,
