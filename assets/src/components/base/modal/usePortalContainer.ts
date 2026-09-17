@@ -19,23 +19,30 @@ import { ControlContext } from '../../../context'
  * to restore focus to its trigger, and TUI indexes .tui-interface nodes for
  * its portal roots, so churning them is best avoided.
  *
+ * A component rendered outside any field (a consumer's own dialog) has no
+ * context to read from; it hands the same two values in explicitly.
+ *
  * @see renderField() in ./src/index.tsx
  * @see ./Modal.tsx for the legacy react-aria equivalent
  */
-const usePortalContainer = (active = true): HTMLElement | null => {
+const usePortalContainer = (
+  active = true,
+  explicit: { portalContainer?: Element | null, wrapper?: string } = {}
+): HTMLElement | null => {
 
   const control = useContext(ControlContext)
   const [container, setContainer] = useState<HTMLElement | null>(null)
+  const host: Element = explicit.portalContainer ?? control?.portalContainer ?? document.body
+  const wrapper = explicit.wrapper ?? control?.wrapper ?? 'tf-interface tui-interface'
 
   useLayoutEffect(() => {
     if (!active || container) return
 
-    const host: Element = control?.portalContainer ?? document.body
     const el = document.createElement('div')
-    el.className = control?.wrapper ?? 'tf-interface tui-interface'
+    el.className = wrapper
     host.appendChild(el)
     setContainer(el)
-  }, [active, container, control])
+  }, [active, container, host, wrapper])
 
   useLayoutEffect(() => () => {
     container?.remove()
