@@ -77,14 +77,13 @@ export interface DynamicFieldSettingsProps {
   /** Override any of the dialog's strings. */
   labels?: Partial<DynamicFieldSettingsLabels>
   /**
-   * Where the dialog mounts. Defaults to a wrapper created inside the
-   * control context's portal container (see usePortalContainer). A given
-   * container receives the interface wrapper classes (tf-interface,
-   * tf-context-<name>, tui-interface) while the dialog is mounted: the
-   * module's styles are scoped under them, and TUI portals the pickers'
-   * panels into the nearest .tui-interface — that container.
+   * Where the dialog's interface wrapper is created — the same
+   * `portalContainer` renderField() accepts (page builders point it at
+   * their panel). Defaults to the control context's, else document.body.
+   * The wrapper carries the interface classes the module's styles are
+   * scoped under, and TUI portals the pickers' panels into it.
    */
-  container?: HTMLElement | null
+  portalContainer?: Element | null
   /**
    * The tf-context name used for the interface wrapper when the dialog is
    * rendered outside any field (no ControlContext above it), e.g. 'wp'.
@@ -103,7 +102,7 @@ const DynamicFieldSettings = ({
   defaultMode = 'builtin',
   modes = ['builtin', 'custom'],
   labels: labelsProp,
-  container,
+  portalContainer,
   context,
   onSubmit,
 }: DynamicFieldSettingsProps) => {
@@ -117,24 +116,17 @@ const DynamicFieldSettings = ({
     : availableModes[0]
 
   /**
-   * TUI Modal portals itself; the hook gives it a container that carries
-   * the global context classes so our styles still apply inside it — unless
-   * the consumer names one
+   * TUI Modal portals itself; the hook gives it a wrapper that carries the
+   * interface classes so our styles still apply inside it. Inside a field
+   * the context says where and with which classes; a consumer rendering the
+   * dialog on its own hands them in.
    */
-  const fallbackContainer = usePortalContainer(open && !container)
-  const modalContainer = container ?? fallbackContainer
-
-  // A consumer's container must carry the wrapper classes our styles and
-  // TUI's portal roots key on; add what is missing for the dialog's lifetime.
   const existingControl = useContext(ControlContext)
-  const contextName = context ?? existingControl?.name ?? 'default'
-  useEffect(() => {
-    if (!container) return
-    const wanted = ['tf-interface', `tf-context-${contextName}`, 'tui-interface']
-    const added = wanted.filter(className => !container.classList.contains(className))
-    added.forEach(className => container.classList.add(className))
-    return () => added.forEach(className => container.classList.remove(className))
-  }, [container, contextName])
+  const modalContainer = usePortalContainer(open, {
+    portalContainer: portalContainer ?? existingControl?.portalContainer,
+    wrapper: existingControl?.wrapper
+      ?? `tf-interface tf-context-${context ?? 'default'} tui-interface`,
+  })
 
   const [mode, setMode] = useState<DynamicFieldMode>(initialMode)
   const [selectedValue, setSelectedValue] = useState('')
@@ -242,7 +234,7 @@ const DynamicFieldSettings = ({
   if (!modalContainer) return null
 
   return (
-    <EnsureControlContext context={context} portalContainer={container}>
+    <EnsureControlContext context={context} portalContainer={portalContainer}>
     <Modal
       open={open}
       onClose={handleCancel}

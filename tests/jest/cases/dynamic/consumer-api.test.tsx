@@ -12,7 +12,7 @@ import { createDynamicValuesAPI } from '../../../../assets/src/dynamic-values'
 /**
  * The dynamic-values surface a consumer with its own UI relies on: an API
  * that needs no host field, the settings modal driven by props (modes,
- * labels, container), and the settings sub-form on its own.
+ * labels, portalContainer), and the settings sub-form on its own.
  * The registry is the one tests/jest/setup/config.ts installs.
  */
 describe('dynamic values feature - consumer API', () => {
@@ -53,7 +53,7 @@ describe('dynamic values feature - consumer API', () => {
       const onSubmit = jest.fn()
       const onOpenChange = jest.fn()
       const container = document.createElement('div')
-      // Deliberately bare: the dialog must add the wrapper classes itself
+      // Deliberately bare: the dialog creates its own interface wrapper inside
       container.className = 'consumer-host'
       document.body.appendChild(container)
       const utils = render(
@@ -61,7 +61,7 @@ describe('dynamic values feature - consumer API', () => {
           open
           onOpenChange={ onOpenChange }
           dynamic={ createDynamicValuesAPI() }
-          container={ container }
+          portalContainer={ container }
           onSubmit={ onSubmit }
           { ...props }
         />
@@ -80,15 +80,18 @@ describe('dynamic values feature - consumer API', () => {
       document.body.innerHTML = ''
     })
 
-    test('mounts into the given container and uses the given labels', () => {
+    test('mounts inside the given portal container, in its own interface wrapper, with the given labels', () => {
       const { container } = setup({
         labels: { title: 'Insert a field', select: 'Field', add: 'Insert' },
+        context: 'wp',
       })
 
-      expect(container.querySelector('.tf-dynamic-settings-dialog')).toBeTruthy()
-      // The wrapper classes the module's styles and TUI's portal roots key on
-      expect(container.classList.contains('tf-interface')).toBe(true)
-      expect(container.classList.contains('tf-context-default')).toBe(true)
+      // The same wrapper renderField's dialogs get: the module's styles are
+      // scoped under these classes and TUI's portal roots key on them
+      const wrapper = container.querySelector(':scope > .tf-interface.tf-context-wp.tui-interface')
+      expect(wrapper).toBeTruthy()
+      expect(wrapper.querySelector('.tf-dynamic-settings-dialog')).toBeTruthy()
+      expect(container.className).toBe('consumer-host')
       expect(screen.getByText('Insert a field')).toBeInTheDocument()
       expect(screen.getByText('Field')).toBeInTheDocument()
       expect(screen.getByText('Insert')).toBeInTheDocument()

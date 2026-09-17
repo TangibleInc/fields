@@ -132,8 +132,8 @@ const Harness = ({ categories, editingRaw, ...props }: HarnessProps) => {
  *   registry without a field
  * - `modes` — `['builtin']` hides the Field Type toggle
  * - `labels` — every string of the dialog
- * - `container` — where the dialog mounts; it receives the interface
- *   wrapper classes while open
+ * - `portalContainer` — where the dialog's interface wrapper is created,
+ *   the same prop renderField accepts
  * - `onSubmit(raw, meta)` — the raw reference plus what was picked
  *   (`value`, `label`, `group`, `settings`)
  *
