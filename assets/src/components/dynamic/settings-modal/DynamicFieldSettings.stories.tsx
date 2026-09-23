@@ -79,8 +79,8 @@ type HarnessProps = Omit<DynamicFieldSettingsProps, 'open' | 'onOpenChange' | 'o
 
 /**
  * A consumer with its own UI: a button opens the dialog, and what the
- * dialog submits is shown underneath — the raw reference (what a consumer
- * stores, without the [[ ]] delimiters) and the pick behind it
+ * dialog submits is shown underneath — the token (the saved-value format,
+ * [[ ]] included) and the pick behind it
  */
 const Harness = ({ categories, editingRaw, ...props }: HarnessProps) => {
   const [open, setOpen] = useState(false)
@@ -134,7 +134,7 @@ const Harness = ({ categories, editingRaw, ...props }: HarnessProps) => {
  * - `labels` — every string of the dialog
  * - `portalContainer` — where the dialog's interface wrapper is created,
  *   the same prop renderField accepts
- * - `onSubmit(raw, meta)` — the raw reference plus what was picked
+ * - `onSubmit(raw, meta)` — the `[[ ]]` token plus what was picked
  *   (`value`, `label`, `group`, `settings`)
  *
  * Inside a field this dialog is opened by the field's own dynamic-value

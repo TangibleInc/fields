@@ -129,7 +129,8 @@ describe('dynamic values feature - consumer API', () => {
 
       await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
       const [raw, meta] = onSubmit.mock.calls[0]
-      expect(raw).toBe('test-value-settings::dynamic-value-setting=abc')
+      // The saved-value format, delimiters included — what render_value() takes
+      expect(raw).toBe('[[test-value-settings::dynamic-value-setting=abc]]')
       expect(meta).toMatchObject({
         mode: 'builtin',
         value: 'test-value-settings',
@@ -139,6 +140,43 @@ describe('dynamic values feature - consumer API', () => {
       expect(meta.settings).toStrictEqual({ 'dynamic-value-setting': 'abc' })
     })
 
+  })
+
+  describe('DynamicFieldSettings custom mode', () => {
+
+    afterEach(() => {
+      document.body.innerHTML = ''
+    })
+
+    test('wraps a typed key in the delimiters, or keeps the ones typed', async () => {
+      const user = userEvent.setup({ pointerEventsCheck: 0 })
+      for (const [typed, expected] of [
+        ['post_meta::field=author', '[[post_meta::field=author]]'],
+        ['[[post_meta::field=author]]', '[[post_meta::field=author]]'],
+      ]) {
+        const onSubmit = jest.fn()
+        const container = document.createElement('div')
+        document.body.appendChild(container)
+        const { unmount } = render(
+          <DynamicFieldSettings
+            open
+            onOpenChange={ () => {} }
+            dynamic={ createDynamicValuesAPI() }
+            portalContainer={ container }
+            defaultMode="custom"
+            onSubmit={ onSubmit }
+          />
+        )
+        // user-event reads `[` as a key descriptor; `[[` types one literal bracket
+        await user.type(screen.getByLabelText('Custom key'), typed.replace(/\[/g, '[['))
+        await user.click(screen.getByText('Add Field'))
+        await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+        expect(onSubmit.mock.calls[0][0]).toBe(expected)
+        expect(onSubmit.mock.calls[0][1]).toMatchObject({ mode: 'custom', value: 'post_meta::field=author' })
+        unmount()
+        document.body.innerHTML = ''
+      }
+    })
   })
 
   describe('DynamicValueSettings on its own', () => {

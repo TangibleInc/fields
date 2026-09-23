@@ -13,7 +13,7 @@ import { Button } from '../../base'
 import usePortalContainer from '../../base/modal/usePortalContainer'
 import { RadioGroup } from '../../field/radio/RadioGroup'
 import Radio from '../../field/radio/Radio'
-import { buildGroupedChoices } from '../choices'
+import { buildGroupedChoices, valueHasSettings } from '../choices'
 import DynamicValueSettings from './DynamicValueSettings'
 import { EnsureControlContext } from './ensure-context'
 
@@ -47,7 +47,7 @@ export const defaultDynamicFieldSettingsLabels: DynamicFieldSettingsLabels = {
   update: 'Update Field',
 }
 
-/** What was picked, alongside the raw reference `onSubmit` receives. */
+/** What was picked, alongside the token `onSubmit` receives. */
 export interface DynamicFieldSettingsSubmitMeta {
   mode: DynamicFieldMode
   /** The value name (built-in) or the custom raw. */
@@ -89,7 +89,10 @@ export interface DynamicFieldSettingsProps {
    * rendered outside any field (no ControlContext above it), e.g. 'wp'.
    */
   context?: string
-  /** The raw reference WITHOUT [[ ]] delimiters, and what was picked. */
+  /**
+   * The saved-value token, `[[name::setting=value]]` — the format
+   * render_value() and every stored field value use — and what was picked.
+   */
   onSubmit: (raw: string, meta: DynamicFieldSettingsSubmitMeta) => void
 }
 
@@ -138,11 +141,6 @@ const DynamicFieldSettings = ({
   /** The registry's categories, filtered to the API's types and categories */
   const choices = useMemo(() => buildGroupedChoices(dynamic, dynamics), [])
 
-  const hasSettings = (value: string) => {
-    const args = dynamics.values[value]?.fields
-    return Array.isArray(args) && args.length > 0
-  }
-
   // Parse editingRaw into initial state when modal opens
   useEffect(() => {
     if (!open) return
@@ -183,8 +181,10 @@ const DynamicFieldSettings = ({
     let meta: DynamicFieldSettingsSubmitMeta
 
     if (mode === 'custom') {
-      raw = customValue.trim()
-      meta = { mode, value: raw, label: raw, settings: {} }
+      // Typed with or without the delimiters; the token always has them
+      const inner = customValue.trim().replace(/^\[\[/, '').replace(/\]\]$/, '')
+      raw = inner ? `[[${inner}]]` : ''
+      meta = { mode, value: inner, label: inner, settings: {} }
     } else {
       if (!selectedValue) return
       const group = choices.find(category => selectedValue in category.choices)
@@ -199,11 +199,6 @@ const DynamicFieldSettings = ({
         selectedValue,
         Object.keys(filled).length > 0 ? filled : false
       )
-      // stringify returns the full [[type::key=value]] token; the raw
-      // reference is its inside — consumers add their own delimiters
-      if (raw.startsWith('[[') && raw.endsWith(']]')) {
-        raw = raw.slice(2, -2)
-      }
       meta = { mode, value: selectedValue, label, group: group?.name, settings: filled }
     }
 
@@ -303,7 +298,7 @@ const DynamicFieldSettings = ({
                   </SearchSelect>
                 </Field.Control>
               </Field>
-              {selectedValue && hasSettings(selectedValue) && (
+              {selectedValue && valueHasSettings(dynamics, selectedValue) && (
                 <DynamicValueSettings
                   key={selectedValue}
                   valueName={selectedValue}
