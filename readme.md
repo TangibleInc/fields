@@ -161,8 +161,9 @@ npm run composer:install
 To run the tests:
 
 ```sh
-npm run test:8.2
 npm run test:7.4
+npm run test:8.2
+npm run test:8.4
 ```
 
 The version-specific commands take a while to start, but afterwards you can run npm run test to re-run tests in the same environment.
