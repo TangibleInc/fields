@@ -208,15 +208,14 @@ const BaseWrapper = props => {
           </> }
       { picker }
       {/* Settings modal for values that declare fields. onSubmit gives the
-          raw WITHOUT [[ ]] delimiters (the editor serialiser re-adds them) —
-          this path stores the full token, so wrap. */}
+          full [[ ]] token — the saved-value format this path stores. */}
       <DynamicFieldSettings
         open={ settingsOpen }
         onOpenChange={ setSettingsOpen }
         dynamic={ props.config }
         editingRaw={ settingsRaw }
         defaultMode={ settingsMode }
-        onSubmit={ raw => setValueChange(`[[${raw}]]`) }
+        onSubmit={ raw => setValueChange(raw) }
       />
     </div>
   )

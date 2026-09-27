@@ -122,10 +122,48 @@ const dynamicValuesAPI = (value, setValue, {
     : false
 }
 
+/**
+ * The same API for a consumer that has no host field — a page builder's
+ * own dialog, a block editor's toolbar — so DynamicFieldSettings and the
+ * grouped-choice helpers can be driven standalone. There is no value to
+ * read or write, so the value-bound members are inert.
+ *
+ * `types` and `categories` default to everything the registry knows.
+ */
+const createDynamicValuesAPI = ({
+  types,
+  categories,
+  mode = 'replace'
+}: {
+  types?: string[]
+  categories?: string[]
+  mode?: 'insert' | 'replace'
+} = {}) => {
+  const globalConfig = getConfig().dynamics ?? { values: {}, categories: {} }
+  const allTypes = Array.from(
+    new Set(
+      Object.values(globalConfig.values ?? {}).map((value: any) => value?.type ?? 'text')
+    )
+  )
+  return {
+    getTypes      : () => types ?? allTypes,
+    getMode       : () => mode,
+    getCategories : () => categories ?? Object.keys(globalConfig.categories ?? {}),
+    getList       : () => globalConfig.values ?? {},
+    getAll        : () => [],
+    getLabel      : (name: string) => globalConfig.values?.[name]?.label ?? name,
+    stringify     : dynamicValueToString,
+    parse         : stringToDynamicValue,
+    hasValues     : () => false,
+    setValue      : () => {}
+  }
+}
+
 export {
   allowedTypes,
   defaultConfig,
   dynamicValuesAPI,
+  createDynamicValuesAPI,
   getDynamicStrings,
   dynamicValueRegex
 }
