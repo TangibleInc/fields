@@ -66,7 +66,7 @@ $fields->enqueue = function(array $config = []) use($fields) {
   wp_enqueue_script(
     'tangible-fields',
     framework\module_url( '/assets', __FILE__ ) . '/build/index.min.js',
-    [ 'wp-element' ],
+    [ 'wp-element', 'react-jsx-runtime' ],
     $fields->version,
     true
   );

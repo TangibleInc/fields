@@ -72,6 +72,31 @@ class Enqueue_TestCase extends WP_UnitTestCase {
     ], array_keys($data));
   }
 
+  public function test_script_dependencies() {
+    tangible_fields()->enqueue();
+
+    $this->assertEquals(
+      ['wp-element', 'react-jsx-runtime'],
+      wp_scripts()->query('tangible-fields')->deps
+    );
+
+    /**
+     * The build relies on the wp.element and ReactJSXRuntime globals, so both
+     * scripts have to be printed before ours
+     */
+    wp_scripts()->all_deps(['tangible-fields']);
+    $printed = wp_scripts()->to_do;
+
+    foreach( ['wp-element', 'react-jsx-runtime'] as $dependency ) {
+      $this->assertContains($dependency, $printed, "$dependency is not printed");
+      $this->assertLessThan(
+        array_search('tangible-fields', $printed),
+        array_search($dependency, $printed),
+        "$dependency is printed after tangible-fields"
+      );
+    }
+  }
+
   /**
     * @dataProvider _test_items_enqueue_data
     */
