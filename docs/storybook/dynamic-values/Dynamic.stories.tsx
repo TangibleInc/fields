@@ -1,6 +1,12 @@
+import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 import { Field, setConfig } from '../../../assets/src/index'
+import { createDynamicValuesAPI } from '../../../assets/src/dynamic-values'
+import DynamicFieldSettings, {
+  type DynamicFieldSettingsProps,
+  type DynamicFieldSettingsSubmitMeta,
+} from '../../../assets/src/components/dynamic/settings-modal/DynamicFieldSettings'
 
 /**
  * Dynamic values need a global config with categories and values
@@ -102,6 +108,44 @@ setConfig({
     }
   }
 })
+
+type IntegrationExampleProps = Omit<DynamicFieldSettingsProps, 'open' | 'onOpenChange' | 'onSubmit' | 'dynamic'> & {
+  /** Categories the dialog offers, every registered one when omitted */
+  categories?: string[]
+}
+
+/**
+ * A consumer with its own UI: a button opens the dialog, and what the dialog
+ * submits is shown underneath (the token and the pick behind it)
+ */
+const IntegrationExample = ({ categories, editingRaw, ...props }: IntegrationExampleProps) => {
+  const [open, setOpen] = useState(false)
+  const [last, setLast] = useState<{ raw: string; meta: DynamicFieldSettingsSubmitMeta } | null>(null)
+  const dynamic = createDynamicValuesAPI({ categories })
+
+  return (
+    <div className="tf-interface tui-interface">
+      <button type="button" className="tui-button" onClick={() => setOpen(true)}>
+        { editingRaw ? `Edit [[${editingRaw}]]` : 'Insert a dynamic value' }
+      </button>
+      <DynamicFieldSettings
+        { ...props }
+        open={ open }
+        onOpenChange={ setOpen }
+        dynamic={ dynamic }
+        editingId={ editingRaw ? 'story' : undefined }
+        editingRaw={ editingRaw }
+        onSubmit={ (raw, meta) => setLast({ raw, meta }) }
+      />
+      { last && (
+        <pre style={{ marginTop: '1rem', fontSize: '12px' }}>
+          raw:  { last.raw }{'\n'}
+          meta: { JSON.stringify(last.meta, null, 2) }
+        </pre>
+      ) }
+    </div>
+  )
+}
 
 const meta = {
   title: 'Features/Dynamic Values',
@@ -281,5 +325,117 @@ export const RestrictedCategories: Story = {
     dynamic: {
       categories: ['post'],
     },
+  }
+}
+
+/**
+ * The settings dialog opened from a consumer's own button, without a host
+ * field: both modes, every category, default strings
+ */
+export const CustomIntegration: Story = {
+  name: 'Custom integration',
+  render: () => <IntegrationExample />,
+  parameters: {
+    docs: {
+      source: {
+        transform: code => code,
+        code: `const { DynamicFieldSettings, dynamicValues } = window.tangibleFields
+
+<DynamicFieldSettings
+  open={ open }
+  onOpenChange={ setOpen }
+  dynamic={ dynamicValues.createAPI() }
+  onSubmit={ (token, meta) => insert(token, meta.label) }
+/>`
+      }
+    }
+  }
+}
+
+/**
+ * Built-in values only, narrowed to one category: the Field Type toggle is
+ * hidden and only the post category is listed
+ */
+export const CustomIntegrationBuiltin: Story = {
+  name: 'Custom integration (built-in, one category)',
+  render: () => <IntegrationExample modes={ ['builtin'] } categories={ ['post'] } />,
+  parameters: {
+    docs: {
+      source: {
+        transform: code => code,
+        code: `<DynamicFieldSettings
+  open={ open }
+  onOpenChange={ setOpen }
+  dynamic={ dynamicValues.createAPI({ categories: ['post'] }) }
+  modes={ ['builtin'] }
+  onSubmit={ (token, meta) => insert(token, meta.label) }
+/>`
+      }
+    }
+  }
+}
+
+/**
+ * Every string of the dialog overridden
+ */
+export const CustomIntegrationLabels: Story = {
+  name: 'Custom integration (custom labels)',
+  render: () => (
+    <IntegrationExample
+      modes={ ['builtin'] }
+      labels={{
+        title: 'Insert a field',
+        select: 'Field',
+        selectPlaceholder: 'Search fields…',
+        cancel: 'Never mind',
+        add: 'Insert',
+      }}
+    />
+  ),
+  parameters: {
+    docs: {
+      source: {
+        transform: code => code,
+        code: `<DynamicFieldSettings
+  open={ open }
+  onOpenChange={ setOpen }
+  dynamic={ dynamicValues.createAPI() }
+  modes={ ['builtin'] }
+  labels={{
+    title: 'Insert a field',
+    select: 'Field',
+    selectPlaceholder: 'Search fields…',
+    cancel: 'Never mind',
+    add: 'Insert',
+  }}
+  onSubmit={ (token, meta) => insert(token, meta.label) }
+/>`
+      }
+    }
+  }
+}
+
+/**
+ * Editing an existing token: the value is preselected, its settings are
+ * prefilled and the submit button reads Update
+ */
+export const CustomIntegrationEditing: Story = {
+  name: 'Custom integration (editing a token)',
+  render: () => <IntegrationExample modes={ ['builtin'] } editingRaw="post-meta::field=subtitle::format=rendered" />,
+  parameters: {
+    docs: {
+      source: {
+        transform: code => code,
+        code: `<DynamicFieldSettings
+  open={ open }
+  onOpenChange={ setOpen }
+  dynamic={ dynamicValues.createAPI() }
+  modes={ ['builtin'] }
+  editingId="my-token"
+  editingRaw="post-meta::field=subtitle::format=rendered"
+  onSubmit={ (token, meta) => replace(token, meta.label) }
+/>`
+      }
+    }
   }
 }

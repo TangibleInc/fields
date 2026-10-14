@@ -267,3 +267,55 @@ $fields->render_value('User ID: [[user_id]]', [
   ]
 ]);
 ```
+
+## Custom integration
+
+To pick dynamic values from your own UI (a page builder dialog, a block editor
+toolbar), the settings dialog that fields open from their dynamic value button
+is exported on its own.
+
+```jsx
+const { DynamicFieldSettings, dynamicValues } = window.tangibleFields
+
+<DynamicFieldSettings
+  open={ open }
+  onOpenChange={ setOpen }
+  dynamic={ dynamicValues.createAPI({ categories: ['post'] }) }
+  modes={ ['builtin'] }
+  labels={{ title: 'Insert a field', select: 'Field' }}
+  portalContainer={ host }
+  context="wp"
+  onSubmit={ (token, meta) => insert(token, meta.label) }
+/>
+```
+
+- dynamic (required): The API returned by `dynamicValues.createAPI()`, which
+  takes the same `types`, `categories` and `mode` options as the `dynamic`
+  field attribute
+- onSubmit (required): Receives the token, in the stored format
+  `[[name::setting=value]]`, and a `meta` object describing the pick (`mode`,
+  `value`, `label`, `group`, `settings`)
+- modes: The modes offered, `['builtin', 'custom']` by default. A single mode
+  hides the Field Type toggle
+- labels: Every string of the dialog, see `dynamicValues.defaultLabels` for the
+  keys
+- portalContainer: Where the dialog is rendered, the same attribute fields
+  accept. `document.body` by default
+- context: The style context used when rendered outside any field
+- editingId, editingRaw: Set both to edit an existing token instead of
+  inserting a new one. `editingRaw` is the token, with or without its `[[ ]]`
+
+<StoryTabs labels={['Default', 'Built-in', 'Labels', 'Editing']}>
+
+<Canvas of={DynamicStories.CustomIntegration} />
+
+<Canvas of={DynamicStories.CustomIntegrationBuiltin} />
+
+<Canvas of={DynamicStories.CustomIntegrationLabels} />
+
+<Canvas of={DynamicStories.CustomIntegrationEditing} />
+
+</StoryTabs>
+
+The `dynamicValues` namespace also exposes `parse`, `stringify`, `regex` and
+`buildGroupedChoices` to work with tokens and the registry directly.
