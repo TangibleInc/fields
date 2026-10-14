@@ -27,8 +27,18 @@ body.tui-interface.tf-color-mode-light {
   color-scheme: light;
 }
 
-/* Docs story preview: wrapper fills frame */
-.docs-story .tui-interface {
+/*
+ * Docs story preview: the zoom wrapper's transform makes it the containing
+ * block of TUI's fixed portal layer, which caps popovers (dynamic value
+ * picker, selects) to the story height. Dropping it lets them open past the
+ * canvas, at the cost of the canvas zoom buttons
+ */
+.sbdocs div.docs-story > div {
+  transform: none;
+}
+
+/* Docs story preview: the context decorator's wrapper fills the frame (not the wrappers of nested fields) */
+.docs-story [class*="tf-color-mode-"] > .tui-interface {
   min-height: 100%;
   padding: 1rem;
   box-sizing: border-box;

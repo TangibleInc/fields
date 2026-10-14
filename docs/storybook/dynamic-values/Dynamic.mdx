@@ -125,6 +125,18 @@ The `size` of the field applies to the picker and the pills.
 
 <Canvas of={DynamicStories.Sizes} />
 
+## Built-in values
+
+| Value | Category | Settings |
+| --- | --- | --- |
+| `post_id` | Post | |
+| `post_meta` | Post | `source`, `post_id`, `meta_name` |
+| `user_id` | User | |
+| `user_meta` | User | `source`, `meta_name` |
+| `date` | General | `date_type`, `custom_date_picker`, `delay`, `delay_number`, `delay_type`, plus the [date helper](#date-helper) settings |
+
+`post_meta` and `user_meta` can be stored by administrators only.
+
 ## Register a category
 
 Each category is a group of dynamic values.
@@ -157,10 +169,24 @@ $fields->register_dynamic_value([
 - description: Used both in the documentation and in the setting form
 - type: The type of data returned by the callback, either `color`, `date`,
   `number` or `text`
-- callback: Function used to render the dynamic value
+- callback: Function used to render the dynamic value. It receives the
+  settings set by the user, and the config described in the
+  [Context](#context) section
 - permission_callback: Evaluates if the current user can store and parse the
   value
 - fields: Settings of the dynamic value
+
+The category has to be registered first. The built-in categories are
+registered on `init`, so values added to them use a later priority:
+
+```php
+add_action('init', function() use($fields) {
+  $fields->register_dynamic_value([
+    'category' => 'post',
+    // ...
+  ]);
+}, 20);
+```
 
 ### Settings
 
@@ -207,8 +233,10 @@ $fields->register_dynamic_value([
 Two actions are evaluated, and the callback has to return `true` for the action
 to be allowed:
 
-- permission_callback_store: If the current user can save the dynamic value
-- permission_callback_parse: If the current user can parse the dynamic value
+- permission_callback_store: If the current user can save the dynamic value.
+  Values the user cannot store are not offered in the picker
+- permission_callback_parse: If the current user can parse the dynamic value.
+  Values the user cannot parse are removed from the string before rendering
 
 ```php
 $fields->register_dynamic_value([
@@ -232,6 +260,31 @@ $fields->register_dynamic_value([
 ]);
 ```
 
+### Date helper
+
+For values returning a date, `dynamic_values_date_helper` provides the format
+and timezone settings, and a function to render a timestamp with them.
+
+```php
+$fields->register_dynamic_value([
+  'category' => 'post',
+  'name'     => 'post_date',
+  'label'    => 'Post date',
+  'type'     => 'date',
+  'fields'   => [
+    ...$fields->dynamic_values_date_helper['settings']
+  ],
+  'callback' => function($settings, $config) use($fields) {
+    $timestamp = get_post_timestamp( $config['context']['current_post_id'] );
+    return $fields->dynamic_values_date_helper['render']( $timestamp, $settings );
+  },
+  'permission_callback' => '__return_true'
+]);
+```
+
+The helper settings are `date_format`, `custom_date_format` and
+`date_timezone`.
+
 ## Render a value
 
 Dynamic values are stored as
@@ -253,8 +306,21 @@ $output = $fields->render_value(
 );
 ```
 
-The second parameter is a config array, passed to the callback of the dynamic
-value:
+Unregistered values are left as-is.
+
+### Context
+
+The second parameter of `render_value` is a config array. Its `context` key
+is merged over a default context, then passed to the callback of each dynamic
+value found in the string.
+
+The default context is:
+
+- current_user_id: The current user ID
+- current_post_id: The ID of the current post in the loop, if any
+
+To render a value for another post or user than the current one, pass a
+context:
 
 ```php
 // Assuming the current user id is 1, returns "User ID: 1"
@@ -266,6 +332,66 @@ $fields->render_value('User ID: [[user_id]]', [
     'current_user_id' => 2
   ]
 ]);
+```
+
+Any key can be added to the context, and read from the callback of a
+registered value:
+
+```php
+$fields->register_dynamic_value([
+  'category' => 'order',
+  'name'     => 'order_total',
+  'label'    => 'Order total',
+  'type'     => 'number',
+  'callback' => function($settings, $config) {
+    return get_post_meta( $config['context']['order_id'] ?? 0, 'total', true );
+  },
+  'permission_callback' => '__return_true'
+]);
+
+$fields->render_value('Total: [[order_total]]', [
+  'context' => [
+    'order_id' => $order_id
+  ]
+]);
+```
+
+Only the context reaches the callback.
+
+### Action
+
+Before rendering, values the current user cannot parse are removed from the
+string. The `action` key of the config selects the permission checked, `parse`
+by default. With `evaluate`, used by the
+[conditional logic evaluation](?path=/docs/features-conditional-logic--docs#evaluate),
+no permission is checked.
+
+## Hooks
+
+`tangible_fields_dynamic_value` filters each value definition at registration:
+
+```php
+add_filter('tangible_fields_dynamic_value', function(array $dynamic_value) {
+  if( $dynamic_value['name'] === 'post_id' ) {
+    $dynamic_value['label'] = 'Current post ID';
+  }
+  return $dynamic_value;
+});
+```
+
+`tangible_fields_dynamic_value_general_date` filters the date of the built-in
+`date` value, before delay and format are applied. It supports extra
+`date_type` choices, added with the previous filter:
+
+```php
+add_filter('tangible_fields_dynamic_value_general_date', function($date, array $settings, array $config) {
+  if( $settings['date_type'] === 'post_date' ) {
+    return tangible\date()->fromTimestamp(
+      get_post_timestamp( $config['context']['current_post_id'] )
+    );
+  }
+  return $date;
+}, 10, 3);
 ```
 
 ## Custom integration
