@@ -1,0 +1,98 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+
+import * as TypesStories from './Types.stories'
+
+<Meta of={TypesStories} />
+
+# Custom types
+
+Field types are React components registered by name. `types.add` registers a
+new one, which is then rendered like any other type.
+
+```js
+tangibleFields.types.add('custom-type', CustomComponent)
+```
+
+```jsx
+<Field type="custom-type" name="field-name" />
+```
+
+## Component
+
+To work with the other fields, the component:
+
+- Reads its initial value from `props.value`
+- Calls `props.onChange` with the new value each time it changes
+- Puts the value in a hidden input named `props.name`, so that it is sent
+  with the form
+
+```jsx
+const CustomComponent = props => {
+
+  const [value, setValue] = useState(props.value ?? '')
+
+  useEffect(() => {
+    if (props.onChange) props.onChange(value)
+  }, [value])
+
+  return (
+    <>
+      <input type="hidden" name={ props.name ?? '' } value={ value } />
+      {/* ... */}
+    </>
+  )
+}
+```
+
+Here is a type storing a JSON value, built with two regular fields:
+
+<Canvas of={TypesStories.CustomType} />
+
+## ControlContext
+
+`ControlContext` gives a component the context it is rendered in: the context
+`name`, the `wrapper` classes, the `portalContainer` for its overlays, and
+`getValue` to read other fields.
+
+```jsx
+const { ControlContext } = window.tangibleFields
+
+const CustomComponent = props => {
+  const control = useContext(ControlContext)
+  // control.getValue('other-field')
+}
+```
+
+## Elements
+
+The third parameter of `types.add` selects the registry, `control` by default.
+An element is registered with `element`, and has no value to handle:
+
+```js
+tangibleFields.types.add('custom-element', CustomElement, 'element')
+```
+
+```jsx
+<Element type="custom-element" name="element-name" />
+```
+
+## Repeater layouts
+
+A repeater layout is registered with `repeater`:
+
+```js
+tangibleFields.types.add('cards', CardsLayout, 'repeater')
+```
+
+```jsx
+<Field type="repeater" name="repeater-name" layout="cards" fields={[ /* ... */ ]} />
+```
+
+## Registered types
+
+`types.get` returns a registered component, from the same three registries:
+
+```js
+const Text = tangibleFields.types.get('text')
+const Button = tangibleFields.types.get('button', 'element')
+```

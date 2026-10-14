@@ -66,6 +66,15 @@ const preview: Preview = {
     colorMode: 'light'
   },
   parameters: {
+    options: {
+      storySort: {
+        order: [
+          'Features',
+          'JavaScript API', ['Render', 'Events', 'Store', 'Custom types', 'Helpers'],
+          '*'
+        ]
+      }
+    },
     controls: {
       sort: 'requiredFirst',
       matchers: {

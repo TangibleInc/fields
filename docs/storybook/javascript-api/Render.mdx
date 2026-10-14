@@ -1,0 +1,119 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+
+import * as RenderStories from './Render.stories'
+
+<Meta of={RenderStories} />
+
+# Render
+
+When fields are enqueued, the `tangibleFields` object is available globally.
+It renders fields and elements from JavaScript, with the same attributes as
+from PHP.
+
+## Fields
+
+`Field` is a React component, the attributes are its props. The `onChange`
+callback receives the new value each time it changes.
+
+```jsx
+const { Field } = window.tangibleFields
+
+<Field
+  type="text"
+  name="field-name"
+  label="Text"
+  onChange={ value => console.log(value) }
+/>
+```
+
+The `context` attribute selects the style context, `default`, `wp`,
+`elementor` or `beaver-builder`. Elements take it as well.
+
+```jsx
+<Field
+  type="text"
+  name="field-name"
+  label="Text"
+  context="wp"
+/>
+```
+
+The `render` function returns the same element from an object of attributes:
+
+```js
+const component = tangibleFields.render({
+  type  : 'text',
+  name  : 'field-name',
+  label : 'Text'
+})
+```
+
+Both return a React element, to render inside a React app or in a DOM element
+with `createRoot`. The fields bundle is built on `wp.element`, which is the
+React instance to use in WordPress:
+
+```js
+const { createRoot } = wp.element
+
+createRoot( document.getElementById('container') ).render(component)
+```
+
+<Canvas of={RenderStories.RenderField} />
+
+## Elements
+
+Elements are UI items without a value:
+
+- `button`
+- `label`
+- `description`
+- `title`
+- `tooltip`
+- `modal`
+- `wrapper`
+- `list-box`
+
+```jsx
+const { Element } = window.tangibleFields
+
+<Element
+  type="button"
+  name="button-name"
+  layout="primary"
+  content="Button"
+/>
+```
+
+With `render`, the second parameter selects the element type:
+
+```js
+tangibleFields.render({
+  type    : 'button',
+  name    : 'button-name',
+  layout  : 'primary',
+  content : 'Button'
+}, 'element')
+```
+
+<Canvas of={RenderStories.RenderElement} />
+
+## Config
+
+The PHP side passes its data in `TangibleFieldsConfig`, read by
+`tangibleFields.init()` on page load: the fields and elements rendered from
+PHP, the dynamic values registry, the REST nonce and the allowed mime types.
+
+`getConfig()` returns it, and `setConfig()` merges values into it. Outside
+WordPress, this is how the dynamic values registry is set:
+
+```js
+tangibleFields.setConfig({
+  dynamics: {
+    categories: { /* ... */ },
+    values: { /* ... */ }
+  }
+})
+```
+
+_Note: The dynamic values registry format is documented in the
+[Dynamic Values page](?path=/docs/features-dynamic-values--docs)._
