@@ -1,0 +1,58 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+
+import * as StoreStories from './Store.stories'
+
+<Meta of={StoreStories} />
+
+# Store
+
+The store holds the value of every field rendered on the page, by name.
+
+```js
+const { store } = window.tangibleFields
+```
+
+## getValue
+
+Returns the value of a field, an empty string if it has none:
+
+```js
+const value = store.getValue('field-name')
+```
+
+## setValue
+
+Sets the value of a field. The field re-renders with the new value:
+
+```js
+store.setValue('field-name', 'new value')
+```
+
+<Canvas of={StoreStories.GetAndSet} />
+
+## getAllValues
+
+Returns every value, as an object keyed by field name:
+
+```js
+const values = store.getAllValues()
+```
+
+## getRepeater
+
+Returns a store for the rows of a repeater:
+
+```js
+const repeater = store.getRepeater('repeater-name')
+
+// A row is an object keyed by sub-field name
+const row = repeater.getRow(0)
+repeater.setRow(0, { 'sub-field': 'value' })
+
+// A single sub-field of a row
+const value = repeater.getRowValue(0, 'sub-field')
+repeater.setRowValue(0, 'sub-field', 'value')
+```
+
+Rows are numbered from 0. The getters return `false` when the row does not
+exist, and every change re-renders the whole repeater.

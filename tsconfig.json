@@ -13,6 +13,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": ["assets/src/**/*", ".storybook/**/*"],
+  "include": ["assets/src/**/*", "docs/storybook/**/*", ".storybook/**/*"],
   "exclude": ["node_modules", "assets/build", "vendor"]
 }

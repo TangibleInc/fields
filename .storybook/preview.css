@@ -27,9 +27,55 @@ body.tui-interface.tf-color-mode-light {
   color-scheme: light;
 }
 
-/* Docs story preview: wrapper fills frame */
-.docs-story .tui-interface {
+/*
+ * Docs story preview: the zoom wrapper's transform makes it the containing
+ * block of TUI's fixed portal layer, which caps popovers (dynamic value
+ * picker, selects) to the story height. Dropping it lets them open past the
+ * canvas, at the cost of the canvas zoom buttons
+ */
+.sbdocs div.docs-story > div {
+  transform: none;
+}
+
+/* Docs story preview: the context decorator's wrapper fills the frame (not the wrappers of nested fields) */
+.docs-story [class*="tf-color-mode-"] > .tui-interface {
   min-height: 100%;
   padding: 1rem;
   box-sizing: border-box;
+}
+
+/* Markdown tables of the MDX pages, the child selector leaves story canvases alone */
+.sbdocs-content > table {
+  width: 100%;
+}
+
+/* Tabs of the documentation pages, @see docs/storybook/components/ */
+.tf-tabs-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.tf-tabs-header button {
+  padding: 6px 14px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.55;
+  cursor: pointer;
+}
+
+.tf-tabs-header button[aria-selected='true'] {
+  opacity: 1;
+  background: rgba(128, 128, 128, 0.1);
+}
+
+.tf-code-tabs .docblock-source,
+.tf-story-tabs .sbdocs-preview {
+  margin-top: 0;
+  border-top-left-radius: 0;
 }

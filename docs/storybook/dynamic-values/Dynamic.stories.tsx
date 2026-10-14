@@ -1,6 +1,12 @@
+import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-import { Field, setConfig } from '../../index'
+import { Field, setConfig } from '../../../assets/src/index'
+import { createDynamicValuesAPI } from '../../../assets/src/dynamic-values'
+import DynamicFieldSettings, {
+  type DynamicFieldSettingsProps,
+  type DynamicFieldSettingsSubmitMeta,
+} from '../../../assets/src/components/dynamic/settings-modal/DynamicFieldSettings'
 
 /**
  * Dynamic values need a global config with categories and values
@@ -103,88 +109,47 @@ setConfig({
   }
 })
 
+type IntegrationExampleProps = Omit<DynamicFieldSettingsProps, 'open' | 'onOpenChange' | 'onSubmit' | 'dynamic'> & {
+  /** Categories the dialog offers, every registered one when omitted */
+  categories?: string[]
+}
+
 /**
- * Dynamic values allow fields to use values resolved at render time from PHP.
- *
- * Supported field types: `text`, `number`, `color-picker`, `date-picker`
- *
- * #### Activate on a field
- *
- * PHP:
- * ```php
- * $fields->render_field('text-with-dynamic-values', [
- *   'label'   => 'Text field',
- *   'type'    => 'text',
- *   'dynamic' => true
- * ]);
- * ```
- *
- * JS:
- * ```jsx
- * const { Field } = window.tangibleFields
- *
- * <Field
- *   type="text"
- *   name="text-with-dynamic-values"
- *   label="Text field"
- *   dynamic={true}
- * />
- * ```
- *
- * #### Register a category and value
- *
- * ```php
- * $fields->register_dynamic_value_category('post', [
- *   'label' => 'Post',
- * ]);
- *
- * $fields->register_dynamic_value([
- *   'category' => 'post',
- *   'name'     => 'post_title',
- *   'label'    => 'Post title',
- *   'type'     => 'text',
- *   'fields'   => [
- *     [
- *       'type'    => 'select',
- *       'name'    => 'format',
- *       'label'   => 'Format',
- *       'choices' => [
- *         'none'      => 'None',
- *         'lowercase' => 'Lowercase',
- *         'uppercase' => 'Uppercase'
- *       ]
- *     ]
- *   ],
- *   'callback' => function($settings, $config) {
- *     $format = $settings['format'] ?? 'none';
- *     $post_title = get_the_title($config['context']['current_post_id']);
- *     if( $format === 'lowercase' ) return strtolower($post_title);
- *     if( $format === 'uppercase' ) return strtoupper($post_title);
- *     return $post_title;
- *   },
- *   'permission_callback' => '__return_true'
- * ]);
- * ```
- *
- * #### Render a dynamic value
- *
- * Dynamic values are stored as `[[dynamic_value_name::setting=value]]`.
- * To render:
- *
- * ```php
- * $output = $fields->render_value(
- *   $fields->fetch_value('field_name')
- * );
- * ```
- *
- * Text supports two modes:
- * - `insert` (default) — mix regular text and multiple dynamic values
- * - `replace` — fully replace the field value with a single dynamic value
+ * A consumer with its own UI: a button opens the dialog, and what the dialog
+ * submits is shown underneath (the token and the pick behind it)
  */
+const IntegrationExample = ({ categories, editingRaw, ...props }: IntegrationExampleProps) => {
+  const [open, setOpen] = useState(false)
+  const [last, setLast] = useState<{ raw: string; meta: DynamicFieldSettingsSubmitMeta } | null>(null)
+  const dynamic = createDynamicValuesAPI({ categories })
+
+  return (
+    <div className="tf-interface tui-interface">
+      <button type="button" className="tui-button" onClick={() => setOpen(true)}>
+        { editingRaw ? `Edit [[${editingRaw}]]` : 'Insert a dynamic value' }
+      </button>
+      <DynamicFieldSettings
+        { ...props }
+        open={ open }
+        onOpenChange={ setOpen }
+        dynamic={ dynamic }
+        editingId={ editingRaw ? 'story' : undefined }
+        editingRaw={ editingRaw }
+        onSubmit={ (raw, meta) => setLast({ raw, meta }) }
+      />
+      { last && (
+        <pre style={{ marginTop: '1rem', fontSize: '12px' }}>
+          raw:  { last.raw }{'\n'}
+          meta: { JSON.stringify(last.meta, null, 2) }
+        </pre>
+      ) }
+    </div>
+  )
+}
+
 const meta = {
-  title: 'Dynamic Values',
+  title: 'Features/Dynamic Values',
   component: Field,
-  tags: ['autodocs'],
   decorators: [
     Story => (
       <div style={{ minWidth: '500px' }}>
@@ -195,6 +160,10 @@ const meta = {
   parameters: {
     layout: 'padded',
     docs: {
+      toc: {
+        headingSelector: 'h2, h3',
+        title: 'Contents'
+      },
       source: {
         transform: (code, story) => {
           let formatedCode = ''
@@ -314,7 +283,7 @@ export const DatePicker: Story = {
 }
 
 /**
- * Dynamic values restricted to a specific category
+ * The size of the field applies to the picker and to the pills
  */
 export const Sizes: Story = {
   name: 'Sizes (sm / md / lg)',
@@ -345,6 +314,9 @@ export const Sizes: Story = {
   ),
 }
 
+/**
+ * Dynamic values restricted to a specific category
+ */
 export const RestrictedCategories: Story = {
   args: {
     type: 'text',
@@ -353,5 +325,117 @@ export const RestrictedCategories: Story = {
     dynamic: {
       categories: ['post'],
     },
+  }
+}
+
+/**
+ * The settings dialog opened from a consumer's own button, without a host
+ * field: both modes, every category, default strings
+ */
+export const CustomIntegration: Story = {
+  name: 'Custom integration',
+  render: () => <IntegrationExample />,
+  parameters: {
+    docs: {
+      source: {
+        transform: code => code,
+        code: `const { DynamicFieldSettings, dynamicValues } = window.tangibleFields
+
+<DynamicFieldSettings
+  open={ open }
+  onOpenChange={ setOpen }
+  dynamic={ dynamicValues.createAPI() }
+  onSubmit={ (token, meta) => insert(token, meta.label) }
+/>`
+      }
+    }
+  }
+}
+
+/**
+ * Built-in values only, narrowed to one category: the Field Type toggle is
+ * hidden and only the post category is listed
+ */
+export const CustomIntegrationBuiltin: Story = {
+  name: 'Custom integration (built-in, one category)',
+  render: () => <IntegrationExample modes={ ['builtin'] } categories={ ['post'] } />,
+  parameters: {
+    docs: {
+      source: {
+        transform: code => code,
+        code: `<DynamicFieldSettings
+  open={ open }
+  onOpenChange={ setOpen }
+  dynamic={ dynamicValues.createAPI({ categories: ['post'] }) }
+  modes={ ['builtin'] }
+  onSubmit={ (token, meta) => insert(token, meta.label) }
+/>`
+      }
+    }
+  }
+}
+
+/**
+ * Every string of the dialog overridden
+ */
+export const CustomIntegrationLabels: Story = {
+  name: 'Custom integration (custom labels)',
+  render: () => (
+    <IntegrationExample
+      modes={ ['builtin'] }
+      labels={{
+        title: 'Insert a field',
+        select: 'Field',
+        selectPlaceholder: 'Search fields…',
+        cancel: 'Never mind',
+        add: 'Insert',
+      }}
+    />
+  ),
+  parameters: {
+    docs: {
+      source: {
+        transform: code => code,
+        code: `<DynamicFieldSettings
+  open={ open }
+  onOpenChange={ setOpen }
+  dynamic={ dynamicValues.createAPI() }
+  modes={ ['builtin'] }
+  labels={{
+    title: 'Insert a field',
+    select: 'Field',
+    selectPlaceholder: 'Search fields…',
+    cancel: 'Never mind',
+    add: 'Insert',
+  }}
+  onSubmit={ (token, meta) => insert(token, meta.label) }
+/>`
+      }
+    }
+  }
+}
+
+/**
+ * Editing an existing token: the value is preselected, its settings are
+ * prefilled and the submit button reads Update
+ */
+export const CustomIntegrationEditing: Story = {
+  name: 'Custom integration (editing a token)',
+  render: () => <IntegrationExample modes={ ['builtin'] } editingRaw="post-meta::field=subtitle::format=rendered" />,
+  parameters: {
+    docs: {
+      source: {
+        transform: code => code,
+        code: `<DynamicFieldSettings
+  open={ open }
+  onOpenChange={ setOpen }
+  dynamic={ dynamicValues.createAPI() }
+  modes={ ['builtin'] }
+  editingId="my-token"
+  editingRaw="post-meta::field=subtitle::format=rendered"
+  onSubmit={ (token, meta) => replace(token, meta.label) }
+/>`
+      }
+    }
   }
 }

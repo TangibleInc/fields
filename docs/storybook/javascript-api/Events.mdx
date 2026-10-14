@@ -1,0 +1,96 @@
+import { Meta, Canvas } from '@storybook/addon-docs/blocks'
+
+import * as EventsStories from './Events.stories'
+
+<Meta of={EventsStories} />
+
+# Events
+
+Fields dispatch events on `window`, and `tangibleFields` has two functions to
+work with them.
+
+## Listen
+
+`event` takes the event name and a callback. The callback receives the event
+data, then the event object.
+
+```js
+tangibleFields.event('valueChange', (field, event) => {
+  if (field.name !== 'field-name') return
+  console.log('field-name is now ' + field.value)
+})
+```
+
+<Canvas of={EventsStories.Listen} />
+
+It returns the listener added to `window`. Events are dispatched with the
+`tangible/fields/` prefix, which removes the listener:
+
+```js
+const listener = tangibleFields.event('valueChange', callback)
+
+window.removeEventListener('tangible/fields/valueChange', listener)
+```
+
+## Trigger
+
+`trigger` dispatches an event, with optional data:
+
+```js
+tangibleFields.trigger('my-event', { id: 1 })
+
+tangibleFields.event('my-event', data => {
+  console.log(data.id)
+})
+```
+
+## Event list
+
+### ready
+
+Triggered once every field and element registered from PHP is rendered. No
+data.
+
+### initField
+
+Triggered when a field registered from PHP is rendered:
+
+```js
+tangibleFields.event('initField', field => {
+  field.name  // Field name
+  field.props // Attributes of the field
+})
+```
+
+### initElement
+
+Same as `initField`, for elements.
+
+### valueChange
+
+Triggered each time a field value changes, sub-fields of repeaters and field
+groups included:
+
+```js
+tangibleFields.event('valueChange', field => {
+  field.name          // Field name, false for sub-fields
+  field.props         // Attributes of the field
+  field.value         // New value
+  field.previousValue // Value before the change
+
+  // Sub-fields can be told apart with their controlType
+  const isSubfield = field.props?.controlType === 'subfield'
+})
+```
+
+### buttonPressed
+
+Triggered each time a button is pressed:
+
+```js
+tangibleFields.event('buttonPressed', button => {
+  button.name  // Button name, false if none
+  button.props // Attributes of the button
+  button.event // Press event
+})
+```

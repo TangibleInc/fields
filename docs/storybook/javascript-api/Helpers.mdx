@@ -1,0 +1,51 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="JavaScript API/Helpers" />
+
+# Helpers
+
+## fields
+
+`fields.rerender` forces a full re-render of a field:
+
+```js
+tangibleFields.fields.rerender('field-name')
+```
+
+Two registries hold callbacks for fields rendered from PHP, where a callback
+is referenced by name:
+
+```js
+const { fields } = window.tangibleFields
+
+// Dependent attribute callback
+fields.dependent.registerCallback('callback-name', ({ attribute, value }) => value)
+
+// Header field callback of the advanced repeater layout
+fields.repeater.registerCallback('callback-name', ({ value }) => value)
+```
+
+More about the first one in the
+[Dependent Attributes page](?path=/docs/features-dependent-attributes--docs#callbacks).
+
+## utils
+
+- initJSON(value, empty): Parses a JSON string, returns `value` as-is when it
+  is already an array or object, and `empty` (`{}` by default) when it is not
+  valid JSON
+- initSet(value): Returns a `Set` from an array, a JSON array string or a
+  comma-separated string
+- uniqid(): A unique id, used for repeater rows
+- deepCopy(object): A copy of a JSON-compatible value
+- areSameObjects(a, b): Compares two values by their JSON representation
+- getOptions(choices): Converts a `choices` object to the array of options
+  used by select fields, categories included
+- getOption(value, options): The option matching a value, `false` if none
+- getRepeaterHelpers(): The repeater dispatcher, used by custom repeater
+  layouts
+
+## Dynamic values
+
+`DynamicFieldSettings`, `DynamicValueSettings` and the `dynamicValues`
+namespace are documented in the
+[Dynamic Values page](?path=/docs/features-dynamic-values--docs#custom-integration).
