@@ -5,7 +5,7 @@ import {
 
 import { 
   Button,
-  ModalTrigger 
+  ConfirmTrigger 
 } from '../../base'
 
 import { 
@@ -19,6 +19,8 @@ import {
  */
 
 const BulkActions = (props) => {
+
+  const string = props.string ?? (name => name)
 
   const [action, setAction] = useState('')
   const [checkbox, setCheckbox] = useState(false)
@@ -75,15 +77,17 @@ const BulkActions = (props) => {
         onChange={ setAction }
       />
       { action === 'deletion' 
-        ? <ModalTrigger 
-            title="Confirmation"
-            label="Apply"
-            onValidate={ applyAction }
+        ? <ConfirmTrigger
+            label={ string('bulkApply') }
+            title={ string('confirmBulkDelete') }
+            confirmText={ string('bulkDelete') }
+            buttonProps={{ type: 'action' }}
+            onConfirm={ applyAction }
           >
-            Are you sure you want to remove the selected items?
-          </ModalTrigger>  
+            { string('confirmBulkDeleteDescription') }
+          </ConfirmTrigger>
         : <Button type="action" onPress={ applyAction }>
-            Apply
+            { string('bulkApply') }
           </Button> }
     </div>
   )

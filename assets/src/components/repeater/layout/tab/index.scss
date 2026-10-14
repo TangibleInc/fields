@@ -1,16 +1,7 @@
 .tf-repeater-tab-icon-actions {
   display: flex;
   align-items: center;
-
-  button {
-    min-width: fit-content;
-  }
-}
-
-.tf-repeater-tab-add-item {
-  min-width: max-content;
-  width: 100%;
-  justify-content: flex-start;
+  gap: var(--tui-spacing-xxs, 4px);
 }
 
 // No border when tab is used inside the tab repeater

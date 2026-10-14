@@ -101,3 +101,17 @@ export const DependentTitleWithCallback: Story = {
     },
   }
 }
+
+/**
+ * Clone and Remove as ghost icon buttons in the trigger row instead of the
+ * footer; the trigger itself covers open/close
+ */
+export const HeaderActions: Story = {
+  args: {
+    actionsPosition: 'header',
+    value: JSON.stringify([
+      { key: 'a', text: 'First' },
+      { key: 'b', text: 'Second' }
+    ])
+  }
+}

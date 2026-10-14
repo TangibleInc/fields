@@ -189,7 +189,10 @@ const DynamicEditor = ({
    * Handle modal submit — either insert new or update existing.
    */
   const handleModalSubmit = useCallback(
-    (raw: string) => {
+    (token: string) => {
+      // The modal returns the full [[ ]] token; nodes keep the inside and
+      // the serialiser re-adds the delimiters
+      const raw = token.replace(/^\[\[/, '').replace(/\]\]$/, '')
       if (editingId) {
         updateDynamicValueById(editingId, raw)
       } else {

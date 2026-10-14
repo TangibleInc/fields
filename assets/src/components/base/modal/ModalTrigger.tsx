@@ -5,6 +5,11 @@ import Button from '../button/Button'
 import Dialog from '../dialog/Dialog'
 import Modal from './Modal'
 
+/**
+ * @deprecated Legacy react-aria confirm. New confirm flows should use
+ * ConfirmTrigger / ConfirmDialog (TUI Modal). Still used by the conditional
+ * panel (useModal) and the `modal` element type until those migrate.
+ */
 const ModalTrigger = props => {
 
   // Some props names are going to be different when generated from PHP

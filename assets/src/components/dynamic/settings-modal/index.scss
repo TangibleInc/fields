@@ -20,12 +20,6 @@
   }
 }
 
-.tf-dynamic-settings__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--tui-spacing-sm, 12px);
-}
-
 // Selected value inside the SearchSelect trigger — the pill treatment
 // (bolt + category + label) from the design.
 .tf-dynamic-trigger-value {

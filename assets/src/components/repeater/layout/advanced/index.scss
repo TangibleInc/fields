@@ -1,13 +1,20 @@
+// Column width for the index badge and the chevron; also the inset of the
+// open row's fields so they line up with the header values
 $advanced-item-index-width: 32px;
 $advanced-item-index-height: 40px;
+
+// Chrome of the list, on TUI primitives
+$advanced-border: var(--tui-border-width, 1px) solid var(--tui-color-border);
+$advanced-radius: var(--tui-radius-sm, 4px);
+$advanced-row-padding: var(--tui-spacing-sm, 12px) var(--tui-spacing-md, 16px);
 
 .tf-repeater-advanced-label-row {
   display: flex;
   width: 100%;
   justify-content: space-between;
-  padding: $section-padding;
+  padding: $advanced-row-padding;
   box-sizing: border-box;
-  gap: $global-spacer-sm;
+  gap: var(--tui-spacing-xs, 8px);
 
   .tf-repeater-advanced-label-row-item {
     display: flex;
@@ -18,8 +25,8 @@ $advanced-item-index-height: 40px;
   }
 
   .tf-repeater-advanced-label-row-item:first-child {
-    font-weight: bold;
-    color: $button-primary-color;
+    font-weight: var(--tui-typography-weight-semibold, 600);
+    color: var(--tui-theme-primary-base);
   }
 
   .tf-repeater-advanced-label-row-arrow,
@@ -29,25 +36,25 @@ $advanced-item-index-height: 40px;
 }
 
 .tf-repeater-advanced-header {
-  background: $field-background-secondary;
+  background: var(--tui-color-bg-muted);
   margin: 0;
-
-  border: $field-border;
-  border-radius: $field-border-radius;
-  border-color: rgba($field-border-color, 0.5);
+  border: $advanced-border;
   border-bottom: none;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
+  border-radius: $advanced-radius $advanced-radius 0 0;
 
   .tf-repeater-advanced-header-item {
     height: $field-height;
     @include label;
     margin-bottom: 0;
+    font-weight: var(--tui-typography-weight-semibold, 600);
   }
 }
 
 .tf-repeater-advanced-overview {
-  background: $field-background;
+  background: var(--tui-color-bg-surface);
+  // Hover/open wash fades on TUI's timing; TUI sets the duration to 0ms
+  // under prefers-reduced-motion, so the token carries the opt-out
+  transition: background-color var(--tui-motion-duration, 200ms) var(--tui-motion-timing, ease-in-out);
 
   .tf-repeater-advanced-label-row-arrow,
   .tf-repeater-advanced-label-row-index {
@@ -56,28 +63,43 @@ $advanced-item-index-height: 40px;
     line-height: $advanced-item-index-height;
   }
 
+  // The plain index reads like TUI's MoveHandle badge (size sm), so sortable
+  // and unsortable repeaters look like the same family
   .tf-repeater-advanced-label-row-index {
-    background: $field-background-secondary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    flex: 0 0 auto;
+    width: var(--tui-move-handle-size, 32px);
+    // Approximates the MoveHandle with its arrows (~51px), so rows keep the
+    // same rhythm whether or not the repeater is sortable
+    min-height: 48px;
+    line-height: normal;
+    border-radius: var(--tui-radius-sm, 4px);
+    background: var(--tui-color-bg-muted);
+    color: var(--tui-color-fg-muted);
+    font-size: var(--tui-typography-size-sm, 0.875rem);
+    font-weight: var(--tui-typography-weight-medium, 500);
   }
 
-  .tf-repeater-advanced-label-row-arrow {
-    cursor: pointer;
-  }
-
-  .tf-repeater-advanced-label-row-arrow > div {
-    border: solid black;
-    border-color: $field-font-color;
-    border-width: 0 1px 1px 0;
-    display: inline-block;
-    height: calc(#{$field-height} / 4);
-    width: calc(#{$field-height} / 4);
+  // Sortable rows: the MoveHandle replaces the plain number and brings its
+  // own panel
+  .tf-repeater-advanced-label-row-index:has(.tui-move-handle) {
+    min-height: 0;
+    background: none;
   }
 
   .tf-repeater-advanced-overview-item-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--tui-spacing-sm, 12px);
     width: 100%;
     height: var(--tui-control-height-sm, 25px);
-    button {
-      display: none;
+
+    // Row actions read as WP list-table row actions: no underline
+    .tui-button.is-style-link {
+      text-decoration: none;
     }
   }
 }
@@ -93,61 +115,69 @@ $advanced-item-index-height: 40px;
   display: flex;
 }
 
-.tf-repeater-advanced-overview:hover .tf-repeater-advanced-overview-item-actions button {
-  display: initial;
-}
-
 .tf-repeater-advanced-item .tf-repeater-advanced-overview:hover,
-.tf-repeater-advanced-item[data-open="true"] .tf-repeater-advanced-overview {
-  background-color: $global-theme-color-lighter-05;
+.tf-repeater-advanced-item[data-state="open"] .tf-repeater-advanced-overview {
+  background-color: var(--tui-theme-primary-subtlest);
 }
 
-.tf-repeater-advanced-item[data-open="true"] .tf-repeater-advanced-label-row-arrow > div {
-  transform: translateY(50%) rotate(-135deg);
-}
-
-.tf-repeater-advanced-item[data-open="false"] .tf-repeater-advanced-label-row-arrow > div {
-  transform: translateY(-50%) rotate(45deg);
+// The list is a flush TUI Accordion; it sits between our column-label header
+// and the footer actions, which carry the outer radius, so the accordion
+// itself goes square. Border and surface come from the same tokens the
+// header and footer use
+.tf-repeater-advanced-items.tui-accordion.is-variant-flush {
+  --tui-accordion-border: var(--tui-color-border);
+  --tui-accordion-bg: var(--tui-color-bg-surface);
+  --tui-accordion-bg-open: var(--tui-color-bg-surface);
+  // The row content carries its own margins (.tf-repeater-advanced-row), so
+  // the panel adds neither inline padding nor block spacers
+  --tui-accordion-panel-padding: 0;
+  --tui-accordion-panel-spacing: 0;
+  border-radius: 0;
+  border-top: none;
 }
 
 .tf-repeater-advanced-item {
   position: relative;
-  background-color: $field-background;
-  border: $field-border;
-  border-color: rgba($field-border-color, 0.5);
-  border-radius: $field-border-radius;
-  border-top: none;
-  border-radius: 0px;
 }
 
-.tf-repeater-advanced-item[data-open="true"]::before {
+// The chevron IconButton is an unstyled accordion trigger: TUI leaves the
+// paint to the button and hands us data-state for the open indicator
+.tf-repeater-advanced-toggle {
+  flex: 0 0 auto;
+  align-self: center;
+
+  .tui-icon {
+    transition: transform var(--tui-motion-duration, 150ms) var(--tui-motion-timing, ease);
+  }
+
+  &[data-state="open"] .tui-icon {
+    transform: rotate(180deg);
+  }
+}
+
+.tf-repeater-advanced-item[data-state="open"]::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 3px;
   height: 100%;
-  background-color: $button-primary-color;
+  background-color: var(--tui-theme-primary-base);
 }
 
 .tf-repeater-advanced-container > .tf-repeater-actions {
-  border: $field-border;
-  border-color: rgba($field-border-color, 0.5);
-  border-radius: $field-border-radius;
+  border: $advanced-border;
   border-top: none;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
-  background-color: $field-background;
+  border-radius: 0 0 $advanced-radius $advanced-radius;
+  background-color: var(--tui-color-bg-surface);
 }
 
 .tf-repeater-advanced-row {
-  margin-left: $advanced-item-index-width;
-  margin-right: $advanced-item-index-width;
-  margin-top: calc($advanced-item-index-width / 2);
-  margin-bottom: calc($advanced-item-index-width / 2);
+  margin-inline: $advanced-item-index-width;
+  margin-block: var(--tui-spacing-md, 16px);
 
   .tf-repeater-advanced-item-field {
-    padding: $section-padding;
+    padding: $advanced-row-padding;
   }
 }
 
@@ -160,7 +190,7 @@ $advanced-item-index-height: 40px;
 }
 
 .tf-repeater-advanced .tf-repeater-actions {
-  padding: $section-padding;
+  padding: $advanced-row-padding;
 }
 
 .tf-repeater-advanced-item-checkbox {

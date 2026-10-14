@@ -1,52 +1,75 @@
+// Table layout chrome on TUI tokens: one bordered surface holding the header
+// row, hairline-divided rows, and the footer actions
+
 .tf-repeater-table-container {
   display: flex;
   flex-direction: column;
   width: 100%;
-    
-  border: $field-border;
-  border-radius: $field-border-radius;
-  border-color: rgba($field-border-color, 0.5);
+  border: var(--tui-border-width, 1px) solid var(--tui-color-border);
+  border-radius: var(--tui-radius-sm, 4px);
+  background: var(--tui-color-bg-surface);
+  overflow: hidden;
 
-  .tf-repeater-actions {
+  // Only the repeater's own grid: child combinators keep these rules off any
+  // table a field renders inside a cell (a date picker's calendar, a nested
+  // repeater styles its own grid)
+  .tf-repeater-table-grid {
     width: 100%;
-    padding: 4px;
-    box-sizing: border-box;
-    justify-content: flex-start;
-    padding: $section-padding;
-  }
+    border-collapse: collapse;
 
-  table {
-    width: 100%;
-    padding: 4px;
-    padding-top: 0;
-
-    th, tr {
-      min-height: $field-height;
-      padding: 2px;
+    > thead > tr > th {
+      height: var(--tui-control-height-md, 40px);
+      padding: var(--tui-spacing-xs, 8px) var(--tui-spacing-xxs, 4px);
+      text-align: start;
+      font-weight: var(--tui-typography-weight-medium, 500);
     }
 
-    th {
-      height: $field-height;
-      text-align: left;
+    > tbody > tr {
+      border-top: var(--tui-border-width, 1px) solid var(--tui-color-border);
     }
 
-    td > div {
-      width: 100%;
-      display: flex;
-      justify-content: center;
+    > tbody > tr > td {
+      padding: var(--tui-spacing-xs, 8px) var(--tui-spacing-xxs, 4px);
+      vertical-align: middle;
 
-      & > div {
+      // Field wrappers fill their cell
+      > div {
         width: 100%;
       }
     }
-  }
 
-  .tf-repeater-row-actions {
-    width: 1%;
-    & > div {
-      display: inline-flex;
-      gap: $global-spacer-xs;
+    > thead > tr > th:first-child,
+    > tbody > tr > td:first-child {
+      padding-inline-start: var(--tui-spacing-sm, 12px);
+    }
+
+    > thead > tr > th:last-child,
+    > tbody > tr > td:last-child {
+      padding-inline-end: var(--tui-spacing-sm, 12px);
     }
   }
-  
+
+  // Fixed-width utility columns
+  .tf-repeater-table-grid > * > tr > .tf-repeater-table-handle,
+  .tf-repeater-table-grid > * > tr > .tf-repeater-table-select,
+  .tf-repeater-table-grid > * > tr > .tf-repeater-row-actions {
+    width: 1%;
+    white-space: nowrap;
+  }
+
+  .tf-repeater-table-grid > tbody > tr > .tf-repeater-row-actions > div {
+    display: inline-flex;
+    gap: var(--tui-spacing-xxs, 4px);
+  }
+
+  .tf-repeater-actions {
+    justify-content: flex-start;
+    padding: var(--tui-spacing-sm, 12px);
+    border-top: var(--tui-border-width, 1px) solid var(--tui-color-border);
+
+    // Add item leads; Remove all keeps to the far end
+    & > :last-child:not(:first-child) {
+      margin-inline-start: auto;
+    }
+  }
 }

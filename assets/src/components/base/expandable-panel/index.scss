@@ -1,93 +1,55 @@
+// Collapsible panels on TUI Accordion: the item carries border, radius and
+// surface; these rules lay out the header row around TUI's trigger, and the
+// footer beneath the content panel
+
 .tf-panel {
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  margin-bottom: $global-spacer-sm;
-  @include section;
+  margin-bottom: var(--tui-spacing-xs, 8px);
 }
 
-.tf-panel .tf-panel-header {
+.tf-panel-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 100%;
   cursor: pointer;
-  height: $field-height;
-  appearance: none;
-  box-sizing: border-box;
-  background: none;
-  text-align: left;
-  font-family: inherit;
-  font-size: 100%;
-  line-height: 1.15;
-  color: $field-font-color;
-  margin: 0;
-  padding: $section-padding;
-  border-radius: 0;
-  border: 0;
 
-  &:hover {
-    background: #f0f0f0;
+  // Side slots hold controls with their own behaviour, not the toggle
+  .tf-panel-header-left,
+  .tf-panel-header-right {
+    cursor: default;
+  }
+
+  // The trigger is TUI's own full-width button (title + chevron); side slots
+  // sit beside it and keep their controls out of the button
+  .tf-panel-header-trigger {
+    flex: 1;
+    min-width: 0;
   }
 }
 
-.tf-panel-open .tf-panel-header {
-  border-bottom: $section-border;
-}
-
-.tf-panel-header-right,
-.tf-panel-header-before-title,
-.tf-panel-header-title,
-.tf-panel-header-left {
+.tf-panel-header-left,
+.tf-panel-header-right {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  padding: $field-padding;
-  padding-top: 0;
-  padding-bottom: 0;
+  gap: var(--tui-spacing-xs, 8px);
+  flex: 0 0 auto;
+  padding-inline: var(--tui-spacing-sm, 12px);
 }
 
 .tf-panel-header-left {
-  width: 100%;
-  padding-left: 0;
+  padding-inline-end: 0;
 }
 
-.tf-panel-footer,
-.tf-panel-content {
-  padding: $field-padding;
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-// Needed when behavior is hide
-.tf-panel-closed .tf-panel-content {
-  display: none;
-}
-
-.tf-panel-footer {
-  border-top:  $section-border;
+.tf-panel-header-title {
+  display: flex;
+  align-items: center;
+  min-width: 0;
 }
 
 .tf-panel-footer {
   display: flex;
   justify-content: flex-end;
-  gap: $global-spacer-sm;
-  padding: 1em;
-}
-
-.tf-panel-arrow {
-  border: solid black;
-  border-color: $field-font-color;
-  border-width: 0 1px 1px 0;
-  display: inline-block;
-  height: calc(#{$field-height} / 4);
-  width: calc(#{$field-height} / 4);
-}
-
-.tf-panel-open .tf-panel-arrow {
-  transform: translateY(50%) rotate(-135deg);
-}
-
-.tf-panel-closed .tf-panel-arrow {
-  transform: translateY(-50%) rotate(45deg);
+  align-items: center;
+  gap: var(--tui-spacing-xs, 8px);
+  padding: var(--tui-spacing-xs, 8px) var(--tui-spacing-md, 16px);
+  border-top: var(--tui-border-width, 1px) solid var(--tui-color-border, #{$field-border-color});
 }
