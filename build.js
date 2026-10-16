@@ -4,6 +4,8 @@ import fs from 'fs-extra'
 import esbuild from 'esbuild'
 import glob from 'fast-glob'
 
+import { esbuildResolveImportsPlugin } from './tools/esbuild-resolve-imports-plugin/index.js'
+
 async function buildForNpm() {
   const sourceFolder = `assets/src`
   const targetFolder = `publish/npm`
@@ -41,6 +43,8 @@ async function buildForNpm() {
       entryPoints: [sourceFile],
       bundle: false,
       outfile: targetFile,
+      format: 'esm',
+      plugins: [esbuildResolveImportsPlugin()]
     })
   }
 
