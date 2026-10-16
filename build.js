@@ -35,7 +35,7 @@ async function buildForNpm() {
     }
 
     // Compile
-    const targetFile = path.join(targetFolder, file.replace(extension, 'js'))
+    const targetFile = path.join(targetFolder, file.substring(0, file.lastIndexOf('.')) + '.js')
 
     await esbuild.build({
       entryPoints: [sourceFile],
