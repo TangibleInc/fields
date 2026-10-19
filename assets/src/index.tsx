@@ -1,7 +1,4 @@
-import { 
-  render, 
-  createRoot 
-} from 'react-dom'
+import * as ReactDOM from 'react-dom'
 
 import { ControlContext } from './context'
 
@@ -140,9 +137,9 @@ const initItem = (name, props, type) => (
     /**
      * React 18 is used since WP 6.2 (createRoot() need to be used instead of render())
      */
-    createRoot
-      ? createRoot(element).render(component)
-      : render(component, element)
+    ReactDOM.createRoot
+      ? ReactDOM.createRoot(element).render(component)
+      : ReactDOM.render(component, element)
   })
 )
 

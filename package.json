@@ -20,7 +20,7 @@
     "stop": "wp-env stop",
     "dev": "roll dev",
     "build": "roll build",
-    "build:npm": "node build.js npm",
+    "build:npm": "node build.js npm && node tests/npm/index.js",
     "version": "node version.js",
     "format": "roll format",
     "postinstall": "roll install",
