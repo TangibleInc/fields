@@ -50,10 +50,26 @@ async function buildForNpm() {
 
   console.log('Built', i, 'files')
 
-  for (const file of ['package.json', 'readme.md']) {
-    await fs.copy(file, path.join(targetFolder, file))
-    console.log('Copied', file)
-  }
+  await fs.copy('readme.md', path.join(targetFolder, 'readme.md'))
+  console.log('Copied readme.md')
+
+  const config = await fs.readJson('package.json')
+
+  /**
+   * Both scripts and devDependencies are unneeded in the published
+   * module, and scripts.postinstall will trigger a warning if not allowed
+   *
+   * @see https://github.com/TangibleInc/fields/pull/98#issuecomment-6269142517
+   */
+  delete config.scripts
+  delete config.devDependencies
+
+  await fs.writeJson(
+    `${targetFolder}/package.json`,
+    config,
+    { spaces: 2 }
+  )
+  console.log('Generated package.json')
 }
 
 async function help() {
