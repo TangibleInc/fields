@@ -123,15 +123,6 @@ const PasswordField = forwardRef<HTMLInputElement, FieldsPasswordProps>((props, 
    */
   const submits = !props.locked && !(props.isSet && value === '')
 
-  /**
-   * The placeholder is for the empty state. Once a value is stored, the
-   * set-state text (`labels.valueSet`) takes the slot — a placeholder like
-   * "Paste your API key" would otherwise read as though nothing was saved.
-   * SecretInput lets `placeholder` win today; drop this once a release with
-   * TangibleInc/tangible-ui#165 is the minimum version.
-   */
-  const placeholder = props.isSet ? undefined : props.placeholder
-
   return (
     <div className="tf-password">
       <Field
@@ -156,7 +147,7 @@ const PasswordField = forwardRef<HTMLInputElement, FieldsPasswordProps>((props, 
             revealed={props.revealed}
             defaultRevealed={props.defaultRevealed}
             onRevealChange={props.onRevealChange}
-            placeholder={placeholder}
+            placeholder={props.placeholder}
             readOnly={props.readOnly}
             value={value}
             onChange={event => setValue(event.target.value)}
