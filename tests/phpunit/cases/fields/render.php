@@ -107,6 +107,67 @@ class RenderField_TestCase extends WP_UnitTestCase {
     $this->assertEquals('initial', $result[0]->value, 'value should not use fetch_callback if set on registration');
   }
 
+  /**
+   * A password field's stored value must never reach the browser, so
+   * render_field() does not call the fetch callback for it at all — the client
+   * is told only whether a value exists.
+   */
+  public function test_fields_render_password_never_fetches_the_secret() {
+
+    $fetched = false;
+
+    tangible_fields()->register_field('secret-with-callback', [
+      'type'         => 'password',
+      'value_is_set' => true,
+      'fetch_callback' => function() use (&$fetched) {
+        $fetched = true;
+        return 'super-secret-key';
+      },
+      'permission_callback_fetch' => function() {
+        return true;
+      },
+      'render_callback' => function($args, $field) {
+        return json_encode([$args, $field]);
+      }
+    ]);
+
+    $rendered = tangible_fields()->render_field('secret-with-callback');
+    $result = json_decode($rendered);
+
+    $this->assertFalse($fetched, 'the fetch callback was called for a password field');
+    $this->assertFalse(isset($result[0]->value), 'a password field was given a value to render');
+    $this->assertTrue($result[0]->isSet, 'value_is_set should have been rewritten as isSet');
+    $this->assertStringNotContainsString('super-secret-key', $rendered, 'the secret reached the rendered output');
+  }
+
+  /**
+   * The other route in: a value registered explicitly. format_args() strips it
+   * from the enqueued payload, but the render callback is handed the raw field
+   * as well, so that copy has to be cleaned too.
+   */
+  public function test_fields_render_password_strips_an_explicitly_registered_value() {
+
+    tangible_fields()->register_field('secret-explicit', [
+      'type'            => 'password',
+      'value'           => 'explicit-secret',
+      'value_is_set'    => true,
+      'render_callback' => function($args, $field) {
+        return json_encode([$args, $field]);
+      }
+    ]);
+
+    // The strip warns, and PHPUnit is configured to fail on warnings.
+    set_error_handler(function() { return true; }, E_USER_WARNING);
+    $rendered = tangible_fields()->render_field('secret-explicit');
+    restore_error_handler();
+
+    $this->assertStringNotContainsString(
+      'explicit-secret',
+      $rendered,
+      'the secret survived into the render callback payload'
+    );
+  }
+
   public function test_fields_render_with_fetch_value_args() {
     $fields = tangible_fields();
     $fields->register_field('test', [
