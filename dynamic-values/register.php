@@ -21,6 +21,13 @@ $fields->register_dynamic_value = function(array $dynamic_value) use($fields) : 
     trigger_error("Dynamic value {$name} is already registered, called from <b>{$caller['file']}</b> in <b>{$caller['line']}</b>. Will overwrite.", E_USER_WARNING);
   }
 
+  // Settings are saved inside the dynamic value string, so a password field
+  // here would be echoed back into the page with it — see format_groups()
+  $dynamic_value['fields'] = $fields->drop_unstorable_subfields(
+    $dynamic_value['fields'] ?? [],
+    'dynamic value'
+  );
+
   $dynamic_value['fields'] = array_map(function($args) use($fields) {
     return $fields->format_args( 
       $args['name'] ?? '',

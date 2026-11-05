@@ -9,9 +9,10 @@ describe('Repeater with a table layout', () => {
    */
   commonRepeaterTests('table')
 
-  // Remove control with subfields + hidden because no label 
+  // Remove control with subfields + hidden because no label, and password
+  // because it cannot be a repeater subfield (see Password.test.tsx)
   const controlTypes = Object.keys(fields.types._types['control']).filter(type => (
-    ! ['accordion', 'field-group', 'hidden', 'repeater', 'conditional-panel', 'tab'].includes(type)
+    ! ['accordion', 'field-group', 'hidden', 'repeater', 'conditional-panel', 'tab', 'password'].includes(type)
   ))
 
   test.each(controlTypes)('renders an hidden label in the cells for accessibility with %p type', type => {

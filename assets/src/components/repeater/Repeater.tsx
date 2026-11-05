@@ -19,12 +19,13 @@ import {
 } from '../base'
 
 import types from '../../types.ts'
+import { StoredInParentContext, withoutUnstorable } from '../../stored-in-parent.ts'
 import Item from './common/Item'
 import strings from './strings.ts'
 
 const Repeater = props => {
 
-  const fields = props.fields ?? []
+  const fields = withoutUnstorable(props.fields ?? [], 'repeater')
   const layout = props.layout && Object.keys(types._types.repeater).includes( props.layout )
     ? props.layout
     : 'table'
@@ -375,6 +376,7 @@ const Repeater = props => {
           { props.label }
         </Title> }
       <div className={ `tf-repeater-container tf-repeater-${layout}-container` }>
+        <StoredInParentContext.Provider value={ true }>
         <Layout
           items={ items }
           fields={ fields }
@@ -398,6 +400,7 @@ const Repeater = props => {
           parent={ props }
           string={ string }
         />
+        </StoredInParentContext.Provider>
       </div>
     </div>
   )

@@ -2,9 +2,38 @@
 
 <p>
   A password field never receives the stored value. The server sends
-  <code>value_is_set</code> — a boolean — and nothing else, so an untouched
-  field submits empty and the save handler reads empty as "keep the stored
-  value". Typing replaces it.
+  <code>value_is_set</code> — a boolean — and nothing else. While a value is
+  saved and nothing has been typed, the input has no name, so it is left out of
+  <code>$_POST</code> entirely. Typing replaces it.
+</p>
+
+<p>
+  The save handler has to treat a missing key as "keep the saved value" — an
+  empty string means the field was submitted empty. This page's handler only
+  stores keys that are present:
+</p>
+
+<pre><code>if( isset($_POST['password']) ) {
+  $fields->store_value('password', $_POST['password']);
+}</code></pre>
+
+<p>
+  With the Settings API, a missing option is saved as <code>null</code>, so map
+  it back in the <code>sanitize_callback</code>:
+</p>
+
+<pre><code>register_setting('my_group', 'my_api_key', [
+  'sanitize_callback' => fn($value) => $value === null
+    ? get_option('my_api_key')
+    : sanitize_text_field($value),
+]);</code></pre>
+
+<p>
+  Top-level only. A repeater, a group, tab or accordion that is not
+  <code>uncontrolled</code>, and dynamic value settings save their subfields as
+  one value and cannot leave one out, so a password subfield there is dropped
+  with a warning — at any depth, so an <code>uncontrolled</code> group inside a
+  repeater does not help.
 </p>
 
 <div class="tangible-settings-row">

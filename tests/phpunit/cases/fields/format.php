@@ -544,6 +544,154 @@ class FormatField_TestCase extends WP_UnitTestCase {
   }
 
   /**
+   * A password field relies on being left out of the submission when untouched.
+   * A parent that stores its subfields as one JSON value cannot leave one key
+   * out, so saving it would erase the secret — the subfield is dropped instead.
+   */
+  public function nested_password_parents() {
+    $password = [ 'name' => 'api_key', 'type' => 'password' ];
+    $text     = [ 'name' => 'label', 'type' => 'text' ];
+    return [
+      'repeater'    => [ 'repeater', [ 'fields' => [ $text, $password ] ] ],
+      'field_group' => [ 'field_group', [ 'fields' => [ $text, $password ] ] ],
+      'accordion'   => [ 'accordion', [ 'fields' => [ $text, $password ] ] ],
+      'conditional_panel' => [ 'conditional_panel', [ 'fields' => [ $text, $password ] ] ],
+      'acf alias'   => [ 'field_group', [ 'sub_fields' => [ $text, $password ] ] ],
+    ];
+  }
+
+  /**
+   * @dataProvider nested_password_parents
+   */
+  public function test_format_groups_drops_nested_password($type, $args) {
+
+    $warning = '';
+    set_error_handler(function($errno, $message) use (&$warning) {
+      $warning = $message;
+      return true;
+    }, E_USER_WARNING);
+
+    $args = tangible_fields()->format_args('parent', [ 'type' => $type ] + $args);
+
+    restore_error_handler();
+
+    $this->assertStringContainsString('api_key', $warning, 'no warning about the dropped subfield');
+    $this->assertEquals([ 'label' ], array_column($args['fields'], 'name'));
+  }
+
+  public function test_format_groups_drops_nested_password_in_tab() {
+
+    $warning = '';
+    set_error_handler(function($errno, $message) use (&$warning) {
+      $warning = $message;
+      return true;
+    }, E_USER_WARNING);
+
+    $args = tangible_fields()->format_args('parent', [
+      'type' => 'tab',
+      'tabs' => [ 'one' => [ 'fields' => [
+        [ 'name' => 'label', 'type' => 'text' ],
+        [ 'name' => 'api_key', 'type' => 'password' ]
+      ] ] ]
+    ]);
+
+    restore_error_handler();
+
+    $this->assertStringContainsString('api_key', $warning, 'no warning about the dropped subfield');
+    $this->assertEquals([ 'label' ], array_column($args['tabs']['one']['fields'], 'name'));
+  }
+
+  /**
+   * Below a JSON-storing parent, an uncontrolled group still saves into that
+   * parent's value, so the walk goes all the way down.
+   */
+  public function test_format_groups_drops_password_at_any_depth() {
+
+    set_error_handler(fn() => true, E_USER_WARNING);
+
+    $args = tangible_fields()->format_args('parent', [
+      'type'   => 'repeater',
+      'fields' => [ [
+        'name'         => 'group',
+        'type'         => 'field_group',
+        'uncontrolled' => true,
+        'fields'       => [
+          [ 'name' => 'label', 'type' => 'text' ],
+          [ 'name' => 'api_key', 'type' => 'password' ]
+        ]
+      ] ]
+    ]);
+
+    restore_error_handler();
+
+    $this->assertEquals([ 'label' ], array_column($args['fields'][0]['fields'], 'name'));
+  }
+
+  /**
+   * Matches React, which only treats `uncontrolled: true` as uncontrolled.
+   */
+  public function test_format_groups_uncontrolled_must_be_true() {
+
+    set_error_handler(fn() => true, E_USER_WARNING);
+
+    $args = tangible_fields()->format_args('parent', [
+      'type'         => 'field_group',
+      'uncontrolled' => 'true',
+      'fields'       => [ [ 'name' => 'api_key', 'type' => 'password' ] ]
+    ]);
+
+    restore_error_handler();
+
+    $this->assertEquals([], $args['fields']);
+  }
+
+  /**
+   * Dynamic value settings are saved inside the dynamic value string, which is
+   * echoed back into the page.
+   */
+  public function test_register_dynamic_value_drops_password() {
+
+    set_error_handler(fn() => true, E_USER_WARNING);
+
+    tangible_fields()->register_dynamic_value([
+      'name'   => 'test_password_setting',
+      'fields' => [
+        [ 'name' => 'label', 'type' => 'text' ],
+        [ 'name' => 'api_key', 'type' => 'password' ]
+      ]
+    ]);
+
+    restore_error_handler();
+
+    $this->assertEquals(
+      [ 'label' ],
+      array_column(tangible_fields()->dynamic_values['test_password_setting']['fields'], 'name')
+    );
+  }
+
+  /**
+   * Uncontrolled parents save each subfield under its own name, so a password
+   * field behaves there exactly as it does at the top level.
+   */
+  public function test_format_groups_keeps_password_when_uncontrolled() {
+
+    $group = tangible_fields()->format_args('parent', [
+      'type'         => 'field_group',
+      'uncontrolled' => true,
+      'fields'       => [ [ 'name' => 'api_key', 'type' => 'password' ] ]
+    ]);
+
+    $tab = tangible_fields()->format_args('parent', [
+      'type'         => 'tab',
+      'uncontrolled' => true,
+      'tabs'         => [ 'one' => [ 'fields' => [ [ 'name' => 'api_key', 'type' => 'password' ] ] ] ]
+    ]);
+
+    $this->assertEquals([ 'api_key' ], array_column($group['fields'], 'name'));
+    $this->assertEquals([ 'api_key' ], array_column($tab['tabs']['one']['fields'], 'name'));
+  }
+
+  /**
    * Other field types are untouched by the strip above.
    */
   public function test_format_args_text_keeps_value() {

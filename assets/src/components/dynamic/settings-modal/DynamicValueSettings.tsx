@@ -3,6 +3,7 @@ import { useRef } from 'react'
 import { getConfig } from '../../../index.tsx'
 import Control from '../../../Control'
 import { EnsureControlContext } from './ensure-context'
+import { StoredInParentContext, withoutUnstorable } from '../../../stored-in-parent.ts'
 
 export interface DynamicValueSettingsProps {
   /** The dynamic value whose declared `fields` to render. */
@@ -29,7 +30,9 @@ const DynamicValueSettings = ({
   className = '',
 }: DynamicValueSettingsProps) => {
   const { dynamics } = getConfig()
-  const fields = dynamics?.values?.[valueName]?.fields
+  const fields = Array.isArray(dynamics?.values?.[valueName]?.fields)
+    ? withoutUnstorable(dynamics.values[valueName].fields, 'dynamic value')
+    : undefined
 
   // Conditions read sibling settings through data.getValue at evaluation
   // time, so they must see the latest settings, not the render's closure.
@@ -46,6 +49,8 @@ const DynamicValueSettings = ({
 
   return (
     <EnsureControlContext>
+      {/* Settings are saved inside the dynamic value string */}
+      <StoredInParentContext.Provider value={true}>
       <div className={`tf-dynamic-settings__fields ${className}`.trim()}>
         {fields.map(field => (
           <div key={field.name} className="tf-dynamic-settings__field">
@@ -64,6 +69,7 @@ const DynamicValueSettings = ({
           </div>
         ))}
       </div>
+      </StoredInParentContext.Provider>
     </EnsureControlContext>
   )
 }

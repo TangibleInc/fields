@@ -73,9 +73,10 @@ $fields->format_args = function(
 
     /**
      * Stored secrets (API keys, tokens). The value never reaches the browser —
-     * the server sends `value_is_set` (a boolean) and nothing else, so an
-     * untouched field submits empty and the save handler reads empty as "keep
-     * the stored value".
+     * the server sends `value_is_set` (a boolean) and nothing else. While a
+     * value is stored and untouched, the input has no name, so the submission
+     * has no key for it — save handlers must treat a missing key as "keep the
+     * stored value". Top-level only: see drop_unstorable_subfields().
      *
      * A `value` passed here is stripped rather than honoured: the field type
      * exists to stop secrets being echoed into the page, and silently rendering
@@ -151,11 +152,11 @@ $fields->format_args = function(
 
     case 'field_group':
       $args['type'] = 'field-group';
-      $args = $fields->format_groups($type, $args);
+      $args = $fields->format_groups($type, $args, ( $args['uncontrolled'] ?? false ) === true);
       break;
 
     case 'accordion':
-      $args = $fields->format_groups($type, $args);
+      $args = $fields->format_groups($type, $args, ( $args['uncontrolled'] ?? false ) === true);
       $args = $fields->format_value($args, 'use_switch', 'useSwitch');
       break;
 
@@ -175,7 +176,7 @@ $fields->format_args = function(
 
     case 'tab':
       foreach( ($args['tabs'] ?? []) as $name => $tab ) {
-        $args['tabs'][ $name ] = $fields->format_groups($type, $tab);
+        $args['tabs'][ $name ] = $fields->format_groups($type, $tab, ( $args['uncontrolled'] ?? false ) === true);
       }
       break;
 
@@ -205,14 +206,27 @@ $fields->format_args = function(
 
 /**
  * Common format for fields that implement subfields
+ *
+ * $stores_own_values is true when each subfield is saved under its own name
+ * (an `uncontrolled` group, tab or accordion) rather than inside one JSON value
+ * on the parent (a repeater, or any of those when controlled). Strictly `true`,
+ * to match the React side's check.
  */
-$fields->format_groups = function(string $type, array $args) use($fields) : array {
+$fields->format_groups = function(
+  string $type,
+  array $args,
+  bool $stores_own_values = false
+) use($fields) : array {
 
   // Title can be an alias of label (to be compatible with ACF)
   if( ! empty($args['title']) ) $args['label'] = $args['title'];
 
   // Alias to be compatible with ACF
   $args = $fields->format_value($args, 'sub_fields', 'fields');
+
+  if( ! $stores_own_values ) {
+    $args['fields'] = $fields->drop_unstorable_subfields($args['fields'] ?? [], $type);
+  }
 
   $args['fields'] = array_map(function($args) use($fields) {
     return $fields->is_element( $args['type'] ?? '' )
@@ -228,6 +242,63 @@ $fields->format_groups = function(string $type, array $args) use($fields) : arra
   }, $args['fields'] ?? []);
 
   return $args;
+};
+
+/**
+ * Drops subfields that cannot be saved inside a parent's value, at any depth
+ *
+ * A password field relies on being left out of the submission when untouched,
+ * so the stored secret is kept. Inside a parent's JSON value there is no key to
+ * leave out: saving the parent would erase the secret. Below such a parent,
+ * every nested parent's subfields end up in the same value — an `uncontrolled`
+ * group inside a repeater included — so the walk does not stop at them.
+ *
+ * Mirrors ../assets/src/stored-in-parent.ts, which does the same in React for
+ * fields rendered without going through PHP.
+ */
+$fields->drop_unstorable_subfields = function(
+  array $subfields,
+  string $parent
+) use($fields) : array {
+
+  $kept = [];
+
+  foreach( $subfields as $field ) {
+
+    if( ! is_array($field) ) {
+      $kept[] = $field;
+      continue;
+    }
+
+    if( ( $field['type'] ?? '' ) === 'password' ) {
+      $name = $field['name'] ?? '';
+      trigger_error(
+        "Field {$name} is a password field inside a {$parent}, which saves its subfields "
+        . 'as one value, and has been dropped: saving it would erase the stored secret. '
+        . 'Render it as a top-level field, or inside parents that are all "uncontrolled".',
+        E_USER_WARNING
+      );
+      continue;
+    }
+
+    foreach( [ 'fields', 'sub_fields' ] as $key ) {
+      if( is_array($field[ $key ] ?? null) ) {
+        $field[ $key ] = $fields->drop_unstorable_subfields($field[ $key ], $parent);
+      }
+    }
+
+    foreach( ( is_array($field['tabs'] ?? null) ? $field['tabs'] : [] ) as $tab_name => $tab ) {
+      foreach( [ 'fields', 'sub_fields' ] as $key ) {
+        if( is_array($tab[ $key ] ?? null) ) {
+          $field['tabs'][ $tab_name ][ $key ] = $fields->drop_unstorable_subfields($tab[ $key ], $parent);
+        }
+      }
+    }
+
+    $kept[] = $field;
+  }
+
+  return $kept;
 };
 
 $fields->format_value = function(

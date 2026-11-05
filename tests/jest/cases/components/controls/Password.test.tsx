@@ -147,4 +147,177 @@ describe('Password component', () => {
 
     expect(setContainer.querySelector('input').placeholder).toBe('•••••••• Enregistrée')
   })
+  /**
+   * A stored-but-untouched field and an emptied one would both post `''`, and a
+   * handler storing what it receives erases the secret on every save. Leaving
+   * the name off makes "untouched" a missing key instead.
+   */
+  describe('submission', () => {
+
+    it('is left out of the submission while stored and untouched', () => {
+
+      const { container } = render(
+        fields.render({ type: 'password', name: 'api_key', label: 'API Key', isSet: true })
+      )
+
+      expect(container.querySelector('input').hasAttribute('name')).toBe(false)
+    })
+
+    it('submits once typed into, and drops out again when cleared', async () => {
+
+      const { container } = render(
+        fields.render({ type: 'password', name: 'api_key', label: 'API Key', isSet: true })
+      )
+
+      const user = userEvent.setup()
+      const input = container.querySelector('input')
+
+      await user.type(input, 'new-key')
+      expect(input.name).toBe('api_key')
+
+      // Clearing is not "erase the stored value" — that stays an explicit action.
+      await user.clear(input)
+      expect(input.hasAttribute('name')).toBe(false)
+    })
+
+    it('is never submitted when locked', () => {
+
+      // No isSet, so this is locked alone keeping it out — not the set state.
+      const { container } = render(
+        fields.render({
+          type   : 'password',
+          name   : 'api_key',
+          label  : 'API Key',
+          locked : true
+        })
+      )
+
+      expect(container.querySelector('input').hasAttribute('name')).toBe(false)
+    })
+  })
+
+  describe('placeholder', () => {
+
+    it('shows when nothing is stored', () => {
+
+      const { container } = render(
+        fields.render({ type: 'password', name: 'api_key', label: 'API Key', placeholder: 'Paste your key' })
+      )
+
+      expect(container.querySelector('input').placeholder).toBe('Paste your key')
+    })
+
+    it('gives way to the set state once a value is stored', () => {
+
+      const { container } = render(
+        fields.render({
+          type        : 'password',
+          name        : 'api_key',
+          label       : 'API Key',
+          placeholder : 'Paste your key',
+          isSet       : true,
+          labels      : { valueSet: '•••••••• Saved' }
+        })
+      )
+
+      expect(container.querySelector('input').placeholder).toBe('•••••••• Saved')
+    })
+  })
+
+  /**
+   * Inside a parent that stores its subfields as one JSON value there is no
+   * key to leave out, so saving the parent would erase the secret. The parent
+   * drops the field, so it draws no label, column or row for it either.
+   */
+  describe('as a subfield', () => {
+
+    const subfield = { type: 'password', name: 'api_key', label: 'API Key', isSet: true }
+
+    it('is dropped from a repeater, with no orphaned column header, and says why', () => {
+
+      console.warn = jest.fn()
+
+      const { container } = render(
+        fields.render({
+          type   : 'repeater',
+          name   : 'keys_table',
+          layout : 'table',
+          value  : [ { key: 1 } ],
+          fields : [ { type: 'text', name: 'label', label: 'Label' }, subfield ]
+        })
+      )
+
+      expect(container.querySelector('input[type="password"]')).toBeNull()
+      expect(container.textContent).not.toContain('API Key')
+      expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('was dropped from a repeater'))
+    })
+
+    it('is dropped from a controlled field group', () => {
+
+      console.warn = jest.fn()
+
+      const { container } = render(
+        fields.render({ type: 'field-group', name: 'group', fields: [ subfield ] })
+      )
+
+      expect(container.querySelector('input[type="password"]')).toBeNull()
+      expect(container.textContent).not.toContain('API Key')
+    })
+
+    it('is dropped from an uncontrolled group inside a repeater', () => {
+
+      console.warn = jest.fn()
+
+      const { container } = render(
+        fields.render({
+          type   : 'repeater',
+          name   : 'keys_nested',
+          layout : 'block',
+          value  : [ { key: 1 } ],
+          fields : [ { type: 'field-group', name: 'group', uncontrolled: true, fields: [ subfield ] } ]
+        })
+      )
+
+      expect(container.querySelector('input[type="password"]')).toBeNull()
+    })
+
+    it('renders, and submits under its own name, inside an uncontrolled field group', async () => {
+
+      const { container } = render(
+        fields.render({ type: 'field-group', name: 'group', uncontrolled: true, fields: [ subfield ] })
+      )
+
+      const input = container.querySelector('input[type="password"]')
+      expect(input).not.toBeNull()
+
+      const user = userEvent.setup()
+      await user.type(input, 'new-key')
+      expect(input.name).toBe('api_key')
+    })
+
+    it('is dropped from dynamic value settings', () => {
+
+      console.warn = jest.fn()
+
+      const values = fields.getConfig().dynamics.values
+      values['test-password-setting'] = {
+        fields: [ { type: 'text', name: 'label', label: 'Label' }, subfield ]
+      }
+
+      try {
+        const { container } = render(
+          <fields.DynamicValueSettings
+            valueName="test-password-setting"
+            settings={ {} }
+            onChange={ () => {} }
+          />
+        )
+        expect(container.querySelector('input[type="password"]')).toBeNull()
+        expect(container.textContent).not.toContain('API Key')
+      }
+      finally {
+        delete values['test-password-setting']
+      }
+    })
+  })
 })

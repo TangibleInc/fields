@@ -1,6 +1,11 @@
 # Unreleased
 
-- **New field type: `password`** — stored secrets (API keys, tokens) that never reach the browser. The server sends `value_is_set` (a boolean) instead of the value, an untouched field submits empty so the save handler can read empty as "keep the stored value", and `locked` marks a value defined outside the screen (a `wp-config.php` constant) as read-only with an explanation. A `value` passed to the field is dropped with a warning, and `render_field()` does not call the fetch callback for it at all — the field type exists to stop secrets being echoed into the page, so honouring one would defeat it. Renders TUI's `SecretInput`; every string it renders or exposes to assistive technology is overridable via `labels` for i18n.
+- **New field type: `password`** — stored secrets (API keys, tokens) that never reach the browser. Renders TUI's `SecretInput`.
+    - The server sends `value_is_set` (a boolean), never the value. A `value` passed to the field is dropped with a warning, and `render_field()` does not call the fetch callback for it at all.
+    - While a value is stored and nothing has been typed, the input has no `name`, so the submission has no key for it. Save handlers must treat a missing key as "keep the stored value": an empty string means the field was submitted empty. WordPress's Settings API saves `null` for a missing option unless a `sanitize_callback` maps it back to the stored value.
+    - `locked` marks a value defined outside the screen (a `wp-config.php` constant): read-only, with an explanation, and never submitted.
+    - Top-level only. A repeater, a group, tab or accordion that is not `uncontrolled`, and dynamic value settings save their subfields as one value and cannot leave one out, so a password subfield there is dropped with a warning, at any depth (an `uncontrolled` group inside a repeater still saves into the repeater).
+    - A `placeholder` applies only while nothing is stored; once a value is, the set-state text (`labels.valueSet`) shows instead. Every string the field renders or exposes to assistive technology is overridable via `labels` for i18n.
 
 # 20250107
 

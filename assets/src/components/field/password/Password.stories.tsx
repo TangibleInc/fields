@@ -11,8 +11,11 @@ const meta = {
       description: {
         component:
           'Stored secrets (API keys, tokens). The value never reaches the browser — ' +
-          'the server sends `isSet` (a boolean) and nothing else, so an untouched field ' +
-          'submits empty and the save handler reads empty as "keep the stored value".'
+          'the server sends `isSet` (a boolean) and nothing else. While a value is stored and ' +
+          'nothing has been typed, the input has no `name`, so it is left out of the submission; ' +
+          'the save handler must treat a missing key as "keep the stored value". Top-level only: ' +
+          'a repeater, a group/tab/accordion that is not `uncontrolled`, or dynamic value ' +
+          'settings drop it, at any depth.'
       }
     }
   },
