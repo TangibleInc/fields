@@ -1,11 +1,13 @@
 import { 
   useState,
   useEffect,
-  useRef
+  useRef,
+  useContext
 } from 'react'
 
 import { initJSON } from '../../../utils'
 import FieldGroupItem from './FieldGroupItem'
+import { StoredInParentContext, withoutUnstorable } from '../../../stored-in-parent.ts'
 
 /**
  * Display other field and save all values in a single json object
@@ -20,6 +22,13 @@ const FieldGroup = props => {
    * don't want the FieldGroup itself to hold a value
    */
   const uncontrolled = (props.uncontrolled ?? false) === true
+
+  /**
+   * Subfields end up in a single saved value if this group is controlled, or
+   * if any parent above it is — being uncontrolled inside a repeater does not
+   * give a subfield a value of its own
+   */
+  const storedInParent = useContext(StoredInParentContext) || ! uncontrolled
 
   const [onChangeCallback, setChangeCallback] = useState([])
   const [fieldUpdateCallback, setFieldUpdateCallback] = useState(false)
@@ -66,7 +75,9 @@ const FieldGroup = props => {
     setFieldUpdateCallback(false)
   }, [value])
 
-  const fields = props.fields ?? []
+  const fields = storedInParent
+    ? withoutUnstorable(props.fields ?? [], props.type ?? 'field group')
+    : (props.fields ?? [])
 
   const hasField = name => (
     fields.map(
@@ -75,6 +86,7 @@ const FieldGroup = props => {
   )
 
   return(
+    <StoredInParentContext.Provider value={ storedInParent }>
     <div className="tf-field-group">
       { ! uncontrolled && 
         <input
@@ -116,6 +128,7 @@ const FieldGroup = props => {
         </div>
         )) }
     </div>
+    </StoredInParentContext.Provider>
   )
 }
 

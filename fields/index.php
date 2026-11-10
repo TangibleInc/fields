@@ -63,11 +63,26 @@ $fields->render_field = function(
 
   $field = array_merge( $field, $args );
 
-  if( ! isset($field['value']) && isset($field['fetch_callback']) ) {
+  /**
+   * A password field's stored value must never reach the browser, so it is not
+   * fetched for rendering at all — the client is told only whether a value
+   * exists, via "value_is_set". See the "password" case in ./format.php, which
+   * strips a value passed explicitly as a backstop.
+   */
+  $is_secret = ( $field['type'] ?? '' ) === 'password';
+
+  if( ! $is_secret && ! isset($field['value']) && isset($field['fetch_callback']) ) {
     $field['value'] = $fields->fetch_value( $name, $render_args );
   }
 
   $args = $fields->format_args( $name, $field );
+
+  /**
+   * format_args() strips a password field's value from the enqueued payload,
+   * but the render callback below is handed the raw field as well — keep the
+   * secret out of that copy too, or a custom callback can still echo it.
+   */
+  if( $is_secret ) unset( $field['value'] );
 
   $fields->enqueue_item( $name, 'fields', $args );
 
