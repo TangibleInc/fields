@@ -63,3 +63,29 @@
     }
   }
 }
+
+// A dynamic number: the dynamic group puts the insert button after the input,
+// where the absolutely positioned arrows would sit under it. Lay the group out
+// as a grid instead: the arrows share the input's cell, inside its right edge
+// (the input keeps room for them in its padding), and the button gets a column
+// of its own.
+.tf-number-field .tf-dynamic-group:has(> .tf-number-button-group) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+
+  > .tui-input-group {
+    grid-area: 1 / 1;
+  }
+
+  > .tf-number-button-group {
+    grid-area: 1 / 1;
+    justify-self: end;
+    position: static;
+    margin: var(--tui-border-width, 1px);
+  }
+
+  > .tui-input-group__suffix {
+    grid-area: 1 / 2;
+  }
+}
