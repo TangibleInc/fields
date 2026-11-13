@@ -79,7 +79,12 @@ const DateField = (props: any) => {
           <Field.Label hidden={Boolean(props.labelVisuallyHidden)}>{props.label}</Field.Label>
         )}
         <Field.Control>
-          <FieldWrapper {...props} value={value} onValueSelection={setValue}>
+          <FieldWrapper
+            {...props}
+            value={value}
+            onValueSelection={setValue}
+            onValueRemove={() => setValue('')}
+          >
             <>
               {/* Hidden input lives with the picker so it's absent when a
                   dynamic value replaces the control (FieldWrapper owns that

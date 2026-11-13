@@ -28,7 +28,14 @@ const NumberComponent = props => {
 
   const defaultFormatOptions = useMemo(() => ({ maximumFractionDigits: 10, useGrouping: false }), [])
   const formatOptions = props.formatOptions ?? defaultFormatOptions
-  const state = useNumberFieldState({ ...props, formatOptions, locale })
+  // react-stately reads '' as 0 and then raises it to minValue, so an empty
+  // number would show 0 (or its minimum) and post ''. NaN is its empty state.
+  const state = useNumberFieldState({
+    ...props,
+    value: props.value === '' ? NaN : props.value,
+    formatOptions,
+    locale
+  })
   const inputRef = useRef()
 
   const {
@@ -56,6 +63,7 @@ const NumberComponent = props => {
           { ...props } 
           value={ value }
           onValueSelection={ setValue }
+          onValueRemove={ () => setValue('') }
           ref={ inputRef } 
           inputProps={ inputProps }
         >

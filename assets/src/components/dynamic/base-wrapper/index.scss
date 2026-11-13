@@ -6,8 +6,10 @@
 
   // The picker has no trigger inside it (the bolt button is the trigger) and
   // its panel is portaled, so the inline wrapper renders nothing and only
-  // takes a slot in the flex row
-  > .tui-search-select {
+  // takes a slot in the flex row. The doubled class outranks TUI's
+  // `.tf-interface.tui-interface .tui-search-select { display: inline-block }`,
+  // which loads after this sheet at the same specificity.
+  &.tf-dynamic-wrapper > .tui-search-select {
     display: none;
   }
 }
